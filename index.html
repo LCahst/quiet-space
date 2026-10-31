@@ -161,6 +161,11 @@ dialog.sysd::backdrop{background:rgba(8,12,18,.6)}
 .feat .f-station{color:var(--muted)}
 .feat .f-clone{color:var(--accent)}
 .feat .f-ice{color:#3aa6c9}
+.f-btn.f-ins{color:#d33a2c}
+.f-btn.f-ins:hover{color:#ff5a45}
+.lvl{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.lvl .bar{width:70px;height:7px;border-radius:4px;background:var(--line);overflow:hidden}
+.lvl .bar i{display:block;height:100%;border-radius:4px}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--cond);color:var(--muted);font-size:.9rem;padding:10px 2px 8px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend .feat{margin-left:0;vertical-align:0}
@@ -433,6 +438,7 @@ footer p{margin:0 0 10px}
     <p>Systems missing from ESI’s jump list had zero jumps. Wormhole space isn’t included, because ESI only counts stargate jumps. System names and security are cached in your browser for 30 days after the first load.</p>
     <p>Station markers cover NPC stations only. Player-owned structures, including ones with clone bays, aren’t visible through public ESI. Installing a jump clone at an NPC station may need standings with the station’s owner.</p>
     <p>On the hosted site, map data, 30-day averages, weekly patterns and system sizes are prepared by a scheduled job, so they load instantly. Opened as a local file, the page fetches what it needs from ESI instead.</p>
+    <p>Pirate insurgency warnings come from CCP’s Frontlines data, checked hourly on the hosted site. It isn’t an official API, so warnings disappear rather than go stale if that data stops updating.</p>
     <p>Ice belt systems come from the EVE University wiki, since ESI doesn’t list ice. That list covers high and low sec, but is still missing Caldari and Minmatar low-sec ice systems and all null-sec ice.</p>
   </footer>
 </div>
@@ -946,6 +952,7 @@ footer p{margin:0 0 10px}
   // ---------- Station and jump clone markers ----------
   const ICONS = {
     station: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="3.5" width="5" height="9" rx="1" fill="currentColor"/><rect x="0.8" y="6.5" width="3.6" height="3" fill="currentColor"/><rect x="11.6" y="6.5" width="3.6" height="3" fill="currentColor"/><path d="M4.4 8h1.1M10.5 8h1.1M8 1v2.5" stroke="currentColor" stroke-width="1.2"/></svg>',
+    insurgency: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2l7 12.6H1z" fill="currentColor"/><path d="M8 5.6v4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.9" r="1" fill="#fff"/></svg>',
     ice: '<svg viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"><path d="M8 1.5v13M2.4 4.75l11.2 6.5M2.4 11.25l11.2-6.5"/><path d="M6.2 2.6L8 4.2l1.8-1.6M6.2 13.4L8 11.8l1.8 1.6M2.6 7l2.1.6-.5 2.1M13.4 7l-2.1.6.5 2.1"/></g></svg>',
     fw: '<svg viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"><path d="M2.5 2.5l8 8M13.5 2.5l-8 8"/><path d="M8.6 12.4l3.8-3.8M3.6 8.6l3.8 3.8"/><path d="M11.5 11.5l2 2M4.5 11.5l-2 2"/></g></svg>',
     clone: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="10.6" cy="4.8" r="2.1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M10.4 9.1c2.2.1 4 1.8 4 4.4h-2.7" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="5.8" cy="5.2" r="2.4" fill="currentColor"/><path d="M1.4 14c0-2.8 2-4.6 4.4-4.6s4.4 1.8 4.4 4.6z" fill="currentColor"/></svg>'
@@ -1295,11 +1302,81 @@ footer p{margin:0 0 10px}
     return b;
   }
 
+  // Pirate insurgencies (hosted site only; from CCP's Frontlines feed via the GitHub Action)
+  const PIRATES = { 500010: "Guristas Pirates", 500011: "Angel Cartel", 500012: "Blood Raider Covenant", 500019: "Sansha's Nation", 500020: "Serpentis" };
+  const pirateName = id => PIRATES[id] || nameOf(id);
+  function insCampaign(entry) {
+    return prebuilt.insurgency && prebuilt.insurgency.campaigns.find(c => c.id === entry.c);
+  }
+  // Gate jumps from the campaign's origin, using the pre-built map links (up to 20 jumps).
+  function jumpsBetween(from, to) {
+    if (from === to) return 0;
+    const links = getMapData().links;
+    let frontier = [from]; const seen = new Set([from]);
+    for (let d = 1; d <= 20 && frontier.length; d++) {
+      const next = [];
+      for (const s of frontier) for (const n of links[s] || []) {
+        if (n === to) return d;
+        if (!seen.has(n)) { seen.add(n); next.push(n); }
+      }
+      frontier = next;
+    }
+    return null;
+  }
+  function levelValue(state, pct, color) {
+    const wrap = el("span", "lvl");
+    const label = state === null ? "Unknown" : `Level ${state} of 5${pct !== null ? `, ${Math.round(pct * 10) / 10}%` : ""}`;
+    wrap.append(label);
+    if (pct !== null) {
+      const bar = el("span", "bar"); const fill = document.createElement("i");
+      fill.style.width = Math.max(0, Math.min(100, pct)) + "%"; fill.style.background = color;
+      bar.append(fill); wrap.append(bar);
+    }
+    return wrap;
+  }
+  function buildInsPop(id) {
+    return (pop, isCurrent) => {
+      const sys = catalog.systems[id];
+      const entry = prebuilt.insurgency && prebuilt.insurgency.systems[id];
+      const head = el("h4", null, `Pirate insurgency in ${sys ? sys.n : "this system"}`);
+      pop.append(head);
+      if (!entry) { pop.append(el("p", "d-note", "No insurgency data.")); return; }
+      const camp = insCampaign(entry);
+      const fill = () => {
+        const dl = el("dl");
+        if (camp && camp.faction) dl.append(kv("Pirate faction", pirateName(camp.faction)));
+        dl.append(kv("Corruption", levelValue(entry.cs, entry.cp, "#d33a2c")));
+        dl.append(kv("Suppression", levelValue(entry.ss, entry.sp, "#3a8fd3")));
+        if (camp && camp.origin) {
+          const j = camp.origin.id ? jumpsBetween(camp.origin.id, id) : null;
+          const where = catalog.systems[camp.origin.id] ? catalog.systems[camp.origin.id].n : (camp.origin.name || "Unknown");
+          dl.append(kv("Campaign origin", j === null ? where : j === 0 ? `${where} (this system)` : `${where}, ${j} jump${j === 1 ? "" : "s"} away`));
+        }
+        if (camp && camp.systems) dl.append(kv("Systems in campaign", camp.systems));
+        if (camp && camp.start) dl.append(kv("Campaign started", new Date(camp.start).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })));
+        const upd = new Date(prebuilt.insurgency.updated);
+        pop.replaceChildren(head, dl, el("p", "d-note", `From CCP’s Frontlines data, checked ${upd.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}.`));
+        positionPop();
+      };
+      if (camp && camp.faction && !PIRATES[camp.faction]) resolveNames([camp.faction]).then(() => { if (isCurrent()) fill(); }); else fill();
+    };
+  }
+  function insurgencyButton(id) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "f-btn f-ins";
+    b.setAttribute("aria-label", "Pirate insurgency in this system. Show details");
+    b.innerHTML = ICONS.insurgency;
+    attachPop(b, "ins:" + id, buildInsPop(id));
+    return b;
+  }
+
   function featureIcons(id, sys) {
     const wrap = document.createElement("span"); wrap.className = "feat";
     const n = sys.sid ? sys.sid.length : 0;
     if (n > 0) wrap.append(stationButton(id, n));
     if (sys.jc) wrap.append(featIcon("clone", "Jump clone service available"));
+    const ins = prebuilt.insurgency && prebuilt.insurgency.systems[id];
+    if (ins) wrap.append(insurgencyButton(id));
     const fw = fwMap && fwMap.get(id);
     if (fw) wrap.append(fwButton(id, fw));
     const ice = iceTypeOf(sys);
@@ -1320,7 +1397,13 @@ footer p{margin:0 0 10px}
     const d = document.createElement("span");
     const fd = document.createElement("span"); fd.className = "feat"; fd.append(featIcon("ice", "Ice belt"));
     d.append(fd, "Ice belt system");
-    $("legend").append(a, b, c, d);
+    const e = document.createElement("span");
+    const fe = document.createElement("span"); fe.className = "feat";
+    const insIcon = document.createElement("span"); insIcon.style.color = "#d33a2c"; insIcon.innerHTML = ICONS.insurgency;
+    insIcon.setAttribute("role", "img"); insIcon.setAttribute("aria-label", "Pirate insurgency");
+    fe.append(insIcon);
+    e.append(fe, "Pirate insurgency");
+    $("legend").append(a, b, c, d, e);
   }
 
   // ---------- System details ----------
@@ -1522,6 +1605,13 @@ footer p{margin:0 0 10px}
           const pct = Math.round(fw.victory_points / fw.victory_points_threshold * 100);
           dl.append(kv("Victory points", `${fw.victory_points.toLocaleString()} of ${fw.victory_points_threshold.toLocaleString()} (${pct}%)`));
         }
+      }
+      const insEntry = prebuilt.insurgency && prebuilt.insurgency.systems[id];
+      if (insEntry) {
+        const camp = insCampaign(insEntry);
+        dl.append(kv("Pirate insurgency", camp && camp.faction ? pirateName(camp.faction) : "Active"));
+        dl.append(kv("Corruption", levelValue(insEntry.cs, insEntry.cp, "#d33a2c")));
+        dl.append(kv("Suppression", levelValue(insEntry.ss, insEntry.sp, "#3a8fd3")));
       }
       if (inc) {
         const staging = catalog.systems[inc.staging_solar_system_id];
@@ -1935,7 +2025,7 @@ footer p{margin:0 0 10px}
   // ---------- Hosted data (built by the GitHub Action) ----------
   // When the page runs from GitHub Pages, the Action publishes ready-made files in data/.
   // Opened as a local file, none of this exists and the page fetches everything from ESI itself.
-  const prebuilt = { activity: null, stations: null, profiles: new Map() };
+  const prebuilt = { activity: null, stations: null, profiles: new Map(), insurgency: null };
   async function fetchData(name) {
     if (location.protocol === "file:") return null;
     try {
@@ -1944,7 +2034,9 @@ footer p{margin:0 0 10px}
     } catch (e) { return null; }
   }
   async function loadPrebuilt() {
-    const [cat, md, act] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json")]);
+    const [cat, md, act, ins] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json")]);
+    // Only trust insurgency data from the last 12 hours; older means the feed has been failing.
+    if (ins && ins.systems && ins.updated && Date.now() - Date.parse(ins.updated) < 12 * 3600e3) prebuilt.insurgency = ins;
     if (cat && cat.systems && Object.keys(cat.systems).length) {
       const keepFaction = catalog.regionFaction;
       catalog = { ...cat, cloneRule: CLONE_RULE, regionFaction: keepFaction };
