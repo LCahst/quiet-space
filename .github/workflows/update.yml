@@ -1,0 +1,87 @@
+name: Update data and publish site
+
+on:
+  schedule:
+    - cron: "17 * * * *"     # every hour: record traffic, refresh averages and patterns
+    - cron: "45 11 * * *"    # daily after EVE downtime: rebuild map, station and size data
+  push:
+    branches: [main]          # republish when you change the site
+  workflow_dispatch:
+    inputs:
+      full_rebuild:
+        description: "Rebuild all map and station data from scratch"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # to save the data branch
+  pages: write      # to publish the site
+  id-token: write
+
+# Never run two updates at once; they share the data branch.
+concurrency:
+  group: quiet-space-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      DATA_DIR: data
+    steps:
+      - name: Get the site code
+        uses: actions/checkout@v4
+
+      - name: Get the saved data (if any)
+        run: |
+          git clone --quiet --depth 1 --branch data \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data \
+            || mkdir -p data
+          rm -rf data/.git
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build map, station and size data (daily, manual, or first run)
+        if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch' || hashFiles('data/public/catalog.json') == ''
+        continue-on-error: true
+        env:
+          FULL_REBUILD: ${{ inputs.full_rebuild }}
+        run: node scripts/build-map.mjs
+
+      - name: Record traffic and update averages and weekly patterns
+        continue-on-error: true
+        run: node scripts/collect-activity.mjs
+
+      - name: Save samples of feeds for upcoming features (daily or manual)
+        if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch'
+        continue-on-error: true
+        run: node scripts/save-samples.mjs
+
+      - name: Save data branch (overwritten each run so it never grows)
+        run: |
+          cd data
+          git init --quiet --initial-branch=data
+          git config user.name "quiet-space-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit --quiet -m "Data update $(date -u +%Y-%m-%dT%H:%MZ)" || exit 0
+          git push --quiet --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data
+
+      - name: Assemble the site
+        run: |
+          mkdir -p _site/data
+          cp index.html _site/
+          if [ -d data/public ]; then cp -r data/public/. _site/data/; fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
