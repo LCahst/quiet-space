@@ -62,11 +62,6 @@ jobs:
         continue-on-error: true
         run: node scripts/collect-insurgency.mjs
 
-      - name: Check official ice belt data (once, then kept)
-        if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch'
-        continue-on-error: true
-        run: node scripts/build-ice.mjs
-
       - name: Update public player structures (daily, manual, or if missing)
         if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch' || hashFiles('data/public/structures-count.json') == ''
         continue-on-error: true
