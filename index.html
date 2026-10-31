@@ -82,6 +82,7 @@ button,select,input[type=search]{font:inherit;color:var(--ink)}
 .control select,.control input[type=search]{width:100%;background:var(--bg);border:1px solid var(--line);padding:7px 9px;border-radius:3px}
 fieldset.control{border:0;margin:0;padding:0}
 .hint{margin:8px 0 0;font-size:.85rem;color:var(--muted);line-height:1.35}
+.checkline[hidden]{display:none}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips label{display:flex;align-items:center;gap:5px;font-size:.92rem;color:var(--ink);margin:0;cursor:pointer}
 .checkline{display:flex;align-items:center;gap:8px;font-size:.92rem;color:var(--ink)!important;cursor:pointer;margin-top:8px}
@@ -357,6 +358,7 @@ footer p{margin:0 0 10px}
       <label class="checkline"><input type="checkbox" id="onlyClones"> Jump clone services</label>
       <label class="checkline"><input type="checkbox" id="onlyFactory"> Manufacturing services</label>
       <label class="checkline"><input type="checkbox" id="onlyFW"> Faction warfare</label>
+      <label class="checkline" id="onlyInsLabel" hidden><input type="checkbox" id="onlyIns"> Pirate insurgency</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
   </form>
@@ -748,6 +750,7 @@ footer p{margin:0 0 10px}
     const onlyClones = $("onlyClones").checked;
     const onlyFactory = $("onlyFactory").checked;
     const onlyFW = $("onlyFW").checked;
+    const onlyIns = $("onlyIns").checked;
 
     const rows = [];
     for (const idStr in catalog.systems) {
@@ -764,6 +767,7 @@ footer p{margin:0 0 10px}
       if (onlyClones && sys.jc !== true) continue;
       if (onlyFactory && !systemHas(sys, "factory")) continue;
       if (onlyFW && !(fwMap && fwMap.has(id))) continue;
+      if (onlyIns && !(prebuilt.insurgency && prebuilt.insurgency.systems[id])) continue;
       rows.push({ id, sys, reg, a: activity(id) });
     }
     const pvp = r => r.a.ship + r.a.pod;
@@ -860,7 +864,7 @@ footer p{margin:0 0 10px}
   }
 
   function withFilterText() {
-    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"]]
+    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"]]
       .filter(([id]) => $(id).checked).map(([, label]) => label);
     if (!parts.length) return "";
     const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
@@ -2063,6 +2067,8 @@ footer p{margin:0 0 10px}
 
   function applyHostedColumns() {
     const t = $("sysTable");
+    $("onlyInsLabel").hidden = !prebuilt.insurgency;
+    if (!prebuilt.insurgency) $("onlyIns").checked = false;
     t.classList.toggle("hide-avg", !prebuilt.activity);
     t.classList.toggle("hide-size", !Object.values(catalog.systems).some(x => typeof x.r === "number"));
     if (prebuilt.activity && !$("sort").querySelector('option[value="avg"]')) {
@@ -2294,6 +2300,7 @@ footer p{margin:0 0 10px}
   $("onlyClones").addEventListener("change", onFilterChange);
   $("onlyFactory").addEventListener("change", onFilterChange);
   $("onlyFW").addEventListener("change", onFilterChange);
+  $("onlyIns").addEventListener("change", onFilterChange);
   $("moreBtn").addEventListener("click", () => { shown += PAGE; render(); });
   $("anotherBtn").addEventListener("click", pickAnother);
   $("copyHero").addEventListener("click", () => {
