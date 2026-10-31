@@ -1,0 +1,2256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiet Space: EVE Online’s emptiest systems</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%232a64a8'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='28' text-anchor='middle' fill='%23ffffff'%3EQS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e7ecf2; --panel:#f6f8fb; --ink:#18212d; --muted:#556172; --line:#c6d0db;
+  --accent:#2a64a8; --row-hover:#e9eff6; --focus:#2a64a8;
+  --sans:"Saira", "Segoe UI", system-ui, sans-serif;
+  --cond:"Saira Semi Condensed", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131b26; --panel:#1b2532; --ink:#dde5ee; --muted:#8a97a8; --line:#2b394a;
+    --accent:#72aef0; --row-hover:#212d3c; --focus:#72aef0; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131b26; --panel:#1b2532; --ink:#dde5ee; --muted:#8a97a8; --line:#2b394a;
+  --accent:#72aef0; --row-hover:#212d3c; --focus:#72aef0; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+header.site{padding:28px 0 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
+.brand-mark{flex:none;width:52px;height:52px;display:grid;place-items:center;background:var(--accent);color:var(--bg);font-weight:700;font-size:1.45rem;letter-spacing:.04em;line-height:1;border-radius:3px;position:relative;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.brand-mark::after{content:"";position:absolute;inset:4px;border:1px solid currentColor;opacity:.35;clip-path:inherit}
+.brand-text{display:flex;flex-direction:column;line-height:1.1}
+.brand-name{font-weight:700;font-size:1.75rem;letter-spacing:.06em;text-transform:uppercase}
+.brand-tag{font-weight:400;font-size:.95rem;color:var(--muted);letter-spacing:0;margin-top:3px}
+@media (max-width:480px){ .brand-mark{width:44px;height:44px;font-size:1.2rem} .brand-name{font-size:1.4rem} }
+.status{font-family:var(--cond);color:var(--muted);font-size:.95rem;text-align:right}
+
+/* Hero: the quietest system, set large, placed on EVE's security scale */
+.hero{padding:48px 0 40px}
+.hero-label{color:var(--muted);font-size:1rem;margin:0 0 4px}
+.hero-name{font-weight:600;font-size:clamp(3rem,11vw,7.5rem);line-height:.95;letter-spacing:-.01em;margin:0;word-break:break-word}
+.hero-name.placeholder{color:var(--line)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:28px;margin:22px 0 26px;font-family:var(--cond)}
+.hero-meta div{min-width:90px}
+.hero-meta dt{color:var(--muted);font-size:.9rem}
+.hero-meta dd{margin:0;font-size:1.6rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scale{position:relative;max-width:640px;padding-top:18px}
+.scale-bar{display:flex;height:14px}
+.scale-bar span{flex:1}
+.scale-ticks{display:flex;font-family:var(--cond);font-size:.8rem;color:var(--muted);margin-top:4px}
+.scale-ticks span{flex:1;text-align:center}
+.marker{position:absolute;top:0;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:12px solid var(--ink);transform:translateX(-50%);transition:left .5s ease}
+.hero-actions{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap}
+
+button,select,input[type=search]{font:inherit;color:var(--ink)}
+.btn{background:var(--panel);border:1px solid var(--line);padding:8px 16px;cursor:pointer;border-radius:3px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+
+.progress{background:var(--panel);border:1px solid var(--line);padding:14px 16px;margin-bottom:24px;display:none}
+.progress.on{display:block}
+.progress p{margin:0 0 8px}
+.progress-track{height:6px;background:var(--line)}
+.progress-fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.error{border-color:#bb1116}
+
+/* Controls */
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px 18px;padding:18px;background:var(--panel);border:1px solid var(--line);margin-bottom:0}
+.control label,.control legend{display:block;font-size:.85rem;color:var(--muted);margin-bottom:4px;padding:0}
+.control select,.control input[type=search]{width:100%;background:var(--bg);border:1px solid var(--line);padding:7px 9px;border-radius:3px}
+fieldset.control{border:0;margin:0;padding:0}
+.hint{margin:8px 0 0;font-size:.85rem;color:var(--muted);line-height:1.35}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{display:flex;align-items:center;gap:5px;font-size:.92rem;color:var(--ink);margin:0;cursor:pointer}
+.checkline{display:flex;align-items:center;gap:8px;font-size:.92rem;color:var(--ink)!important;cursor:pointer;margin-top:8px}
+
+/* Table */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-top:0;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-family:var(--cond);font-size:.98rem}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:500;color:var(--muted);font-size:.88rem}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--row-hover)}
+td.sys{font-family:var(--sans);font-weight:500}
+.zero{color:var(--muted)}
+.sec{display:inline-block;min-width:3.1em;text-align:center;padding:1px 6px;border-radius:2px;font-weight:600;font-variant-numeric:tabular-nums}
+.sec.unknown{border:1px dashed var(--line);color:var(--muted);font-weight:400}
+.sec.pochven{background:#5a1a2e;color:#fff}
+.links a{margin-right:10px}
+.copy{background:none;border:0;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline;font:inherit}
+.more{text-align:center;padding:18px}
+.summary{font-family:var(--cond);color:var(--muted);padding:14px 0 10px}
+
+/* Region and constellation summary */
+.summary-panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px}
+.panel{background:var(--panel);border:1px solid var(--line);padding:16px 18px}
+.panel h2{font-size:1.1rem;font-weight:600;margin:0 0 6px}
+.panel ol{margin:0;padding:0;list-style:none;counter-reset:rank}
+.panel li{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--line);counter-increment:rank}
+.panel li:first-child{border-top:0}
+.panel li::before{content:counter(rank);font-family:var(--cond);color:var(--muted);min-width:1em}
+.panel li.empty{color:var(--muted)}
+.panel li.empty::before{content:none}
+.li-main{flex:1;min-width:0}
+.li-name{font-weight:500}
+button.li-name{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit;font-weight:500;text-align:left;text-decoration:underline;text-underline-offset:3px}
+.li-sub{font-family:var(--cond);color:var(--muted);font-size:.9rem}
+.li-stat{font-family:var(--cond);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.li-stat b{display:block;font-size:1.3rem;font-weight:500}
+.li-stat small{color:var(--muted);font-size:.8rem}
+.panel-note{grid-column:1/-1;margin:-6px 0 0;color:var(--muted);font-size:.9rem}
+@media (max-width:720px){ .summary-panels{grid-template-columns:1fr} }
+
+/* System details dialog */
+.sys-link{background:none;border:0;padding:0;font:inherit;font-weight:500;color:inherit;cursor:pointer;text-align:left;text-decoration:underline dotted;text-underline-offset:3px}
+.sys-link:hover{color:var(--accent)}
+dialog.sysd{width:min(800px,calc(100% - 24px));max-height:min(88vh,920px);padding:0;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px}
+dialog.sysd::backdrop{background:rgba(8,12,18,.6)}
+.d-head{padding:20px 22px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.d-head h2{margin:0;font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.05;font-weight:600;word-break:break-word}
+.d-sub{font-family:var(--cond);color:var(--muted);margin-top:6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.d-body{padding:18px 22px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px 28px}
+.d-sec h3{font-size:.95rem;font-weight:600;margin:0 0 6px}
+.d-sec dl{margin:0}
+.d-sec.wide{grid-column:1/-1}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid var(--line);font-family:var(--cond)}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.d-note{color:var(--muted);font-family:var(--cond);margin:0}
+.pct{margin:8px 0 0;color:var(--muted);font-family:var(--cond);font-size:.92rem}
+.nb-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.nb{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);padding:6px 10px;cursor:pointer;font:inherit;color:var(--ink);text-align:left;border-radius:3px}
+.nb:hover{border-color:var(--accent)}
+.nb-name{flex:1;font-weight:500}
+.nb-j{font-family:var(--cond);color:var(--muted);font-size:.9rem;white-space:nowrap}
+.d-sec ul{margin:0;padding-left:18px;font-family:var(--cond)}
+.d-links{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+
+/* Station and jump clone markers */
+.feat{display:inline-flex;gap:4px;margin-left:8px;vertical-align:-3px}
+.feat svg{width:16px;height:16px;display:block}
+.feat .f-station{color:var(--muted)}
+.feat .f-clone{color:var(--accent)}
+.feat .f-ice{color:#3aa6c9}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--cond);color:var(--muted);font-size:.9rem;padding:10px 2px 8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .feat{margin-left:0;vertical-align:0}
+
+/* Station services pop-up */
+.f-btn{background:none;border:0;padding:0;margin:0;cursor:pointer;display:block;line-height:0;color:var(--muted)}
+.f-btn:hover{color:var(--accent)}
+.st-pop{position:fixed;z-index:50;width:max-content;max-width:min(380px,calc(100vw - 16px));max-height:60vh;overflow:auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:4px;box-shadow:0 10px 28px rgba(0,0,0,.28);padding:12px 14px;font-size:.92rem}
+.st-pop[hidden]{display:none}
+.st-pop h4{margin:0 0 4px;font-size:.95rem;font-weight:600}
+.st-pop .d-note{font-size:.9rem}
+.st-item{padding:8px 0;border-top:1px solid var(--line)}
+.st-item:first-of-type{border-top:0}
+.st-name{font-weight:500;line-height:1.3;margin-bottom:5px}
+.svc{display:flex;flex-wrap:wrap;gap:4px}
+.svc span{font-family:var(--cond);font-size:.8rem;line-height:1.5;padding:0 6px;border:1px solid var(--line);border-radius:2px;color:var(--muted)}
+.svc span.clone{border-color:var(--accent);color:var(--accent)}
+.d-sec ul.st-list{list-style:none;padding:0}
+.st-list li{padding:6px 0;border-bottom:1px solid var(--line)}
+
+.reg-link{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:3px}
+.reg-link:hover{color:var(--accent)}
+.st-pop h5{margin:12px 0 2px;font-size:.88rem;font-weight:600;color:var(--muted)}
+.st-pop .kv{gap:24px}
+
+.fbox{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
+
+/* 2D region map */
+dialog.mapd{width:min(1120px,calc(100% - 16px));height:min(92vh,900px);max-height:none;padding:0;border:1px solid var(--m-line);background:var(--m-bg);color:var(--m-ink);border-radius:4px}
+dialog.mapd::backdrop{background:rgba(5,8,12,.7)}
+dialog.mapd[data-maptheme="dark"]{--m-bg:#0e1622;--m-panel:#162232;--m-ink:#d8e1ec;--m-muted:#7f8ea2;--m-line:#26364a;--m-edge:#3d516b;--m-edge-x:#6aa9e8;--m-focus:#ffffff;color-scheme:dark}
+dialog.mapd[data-maptheme="light"]{--m-bg:#f2f5f9;--m-panel:#ffffff;--m-ink:#18212d;--m-muted:#5a6676;--m-line:#c9d3de;--m-edge:#a3b2c3;--m-edge-x:#2a64a8;--m-focus:#101a28;color-scheme:light}
+.map-wrap{display:flex;flex-direction:column;height:100%}
+.map-head{display:flex;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--m-line);flex-wrap:wrap;align-items:flex-start}
+.map-head h2{margin:0;font-size:1.5rem;font-weight:600;line-height:1.15}
+.map-sub{color:var(--m-muted);font-family:var(--cond);font-size:.95rem;margin-top:2px}
+.map-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-family:var(--cond);font-size:.92rem;color:var(--m-muted)}
+.map-tools label{display:flex;align-items:center;gap:6px}
+.map-tools select,.mbtn{font:inherit;color:var(--m-ink);background:var(--m-panel);border:1px solid var(--m-line);border-radius:3px;padding:5px 10px;cursor:pointer}
+.mbtn:hover{border-color:var(--m-edge-x)}
+.map-stage{position:relative;flex:1;min-height:0;overflow:hidden}
+#mapSvg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none}
+#mapSvg.dragging{cursor:grabbing}
+.map-zoom{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px}
+.map-zoom .mbtn{width:36px;padding:4px 0;font-size:1rem;line-height:1.4}
+.map-status{position:absolute;left:16px;right:16px;top:45%;text-align:center;color:var(--m-muted);font-family:var(--cond);margin:0;pointer-events:none}
+.map-info{flex:none;height:58px;padding:0 18px;border-top:1px solid var(--m-line);display:flex;gap:16px;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;overflow-y:hidden;font-family:var(--cond)}
+.map-info .mbtn{flex:none}
+.map-head,.map-legend{flex:none}
+.map-info b{font-family:var(--sans);font-weight:600;font-size:1.05rem}
+.map-info .mi-sub{color:var(--m-muted)}
+.map-legend{padding:0 18px 12px;display:flex;gap:6px 18px;flex-wrap:wrap;color:var(--m-muted);font-family:var(--cond);font-size:.85rem;align-items:center}
+.map-legend span{display:inline-flex;align-items:center;gap:6px}
+.map-legend i{display:inline-block;width:11px;height:11px;border-radius:50%}
+.map-legend .lg-line{width:22px;height:0;border-top:2px dashed var(--m-edge-x);border-radius:0}
+.map-legend .lg-ring{background:none;border:2px solid var(--m-focus)}
+.m-edge{stroke:var(--m-edge);stroke-width:1.3;vector-effect:non-scaling-stroke;fill:none}
+.m-edge.cross{stroke-dasharray:2 3}
+.m-edge.out{stroke:var(--m-edge-x);stroke-dasharray:6 4}
+.m-node{cursor:pointer}
+.m-node .dot{stroke:var(--m-bg);stroke-width:1.5;vector-effect:non-scaling-stroke}
+.m-node.dim{opacity:.55}
+.m-node.out .dot{fill:var(--m-bg);stroke:var(--m-edge-x);stroke-width:1.6}
+.m-node .ring{fill:none;stroke:none;vector-effect:non-scaling-stroke;stroke-width:2}
+.m-node.here .ring{stroke:var(--m-focus)}
+.m-node.sel .ring{stroke:var(--m-edge-x);stroke-dasharray:3 2}
+.m-node.here.sel .ring{stroke:var(--m-focus);stroke-dasharray:none}
+.m-node text{fill:var(--m-ink);font-family:var(--cond);paint-order:stroke;stroke:var(--m-bg);stroke-width:.3em;stroke-linejoin:round}
+.m-node.out text{fill:var(--m-muted)}
+.m-node:hover .dot,.m-node:focus-visible .dot{stroke:var(--m-focus)}
+.m-node.far{opacity:.7}
+.seg{display:inline-flex;border:1px solid var(--m-line);border-radius:3px;overflow:hidden}
+.seg button{font:inherit;color:var(--m-muted);background:var(--m-panel);border:0;padding:5px 10px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--m-line)}
+.seg button[aria-pressed="true"]{background:var(--m-edge-x);color:var(--m-bg)}
+.links .copy+.copy{margin-left:10px}
+.m-cons{fill:var(--m-muted);opacity:.35;font-family:var(--sans);font-weight:600;text-anchor:middle;pointer-events:none}
+.m-cons.focus{opacity:.6}
+
+/* Hosted-data columns and weekly heat map */
+table.hide-avg .c-avg, table.hide-size .c-size{display:none}
+.avg-link{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:3px;font-variant-numeric:tabular-nums}
+.avg-link:hover{color:var(--accent)}
+.hm{display:grid;grid-template-columns:2.6em repeat(24,11px);gap:2px;margin:10px 0 4px;font-family:var(--cond);font-size:.72rem;color:var(--muted);align-items:center}
+.hm span{height:11px;border-radius:2px}
+.hm .hm-h{height:auto;grid-column:span 6;text-align:left}
+.hm .hm-d{height:auto;text-align:left}
+.hm .hm-x{background:repeating-linear-gradient(45deg,var(--line) 0 2px,transparent 2px 4px)}
+.hm-key{display:flex;align-items:center;gap:6px;font-family:var(--cond);font-size:.78rem;color:var(--muted);margin-bottom:6px}
+.hm-key i{display:inline-block;width:11px;height:11px;border-radius:2px}
+.st-pop .kv dd small{display:block;color:var(--muted);font-size:.85em}
+
+footer{color:var(--muted);font-size:.9rem;padding:40px 0 60px;max-width:72ch}
+footer p{margin:0 0 10px}
+
+@media (prefers-reduced-motion: reduce){ .marker,.progress-fill{transition:none} }
+@media (max-width:640px){ .status{text-align:left} .hero{padding:32px 0} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="brand" href="#" aria-label="Quiet Space, back to top">
+      <span class="brand-mark" aria-hidden="true">QS</span>
+      <span class="brand-text">
+        <span class="brand-name">Quiet Space</span>
+        <span class="brand-tag">Where nobody else is flying in New Eden right now</span>
+      </span>
+    </a>
+    <div class="status" id="status">Connecting to ESI…</div>
+  </header>
+
+  <section class="hero" aria-live="polite">
+    <p class="hero-label" id="heroLabel">Quietest system matching your filters</p>
+    <h1 class="hero-name placeholder" id="heroName">Scanning</h1>
+    <dl class="hero-meta">
+      <div><dt>Region</dt><dd id="heroRegion">…</dd></div>
+      <div><dt>Gate jumps, last hour</dt><dd id="heroJumps">…</dd></div>
+      <div><dt>Ships and pods killed</dt><dd id="heroKills">…</dd></div>
+      <div><dt>NPCs killed</dt><dd id="heroNpc">…</dd></div>
+    </dl>
+    <div class="scale" aria-hidden="true">
+      <div class="marker" id="marker" style="left:-20px"></div>
+      <div class="scale-bar" id="scaleBar"></div>
+      <div class="scale-ticks" id="scaleTicks"></div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn primary" id="anotherBtn" disabled>Show another quiet system</button>
+      <button class="btn" id="detailHero" disabled>View system details</button>
+      <button class="btn" id="mapHero" disabled>Region map</button>
+      <button class="btn" id="nearHero" disabled>Nearby map</button>
+      <button class="btn" id="copyHero" disabled>Copy name</button>
+      <button class="btn" id="refreshBtn">Refresh ESI data</button>
+    </div>
+  </section>
+
+  <div class="progress" id="progress" role="status">
+    <p id="progressText"></p>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <section class="summary-panels" aria-label="Quietest regions and constellations">
+    <div class="panel">
+      <h2>Quietest regions</h2>
+      <ol id="topRegions"><li class="empty">Waiting for live traffic…</li></ol>
+    </div>
+    <div class="panel">
+      <h2>Quietest constellations</h2>
+      <ol id="topCons"><li class="empty">Waiting for live traffic…</li></ol>
+    </div>
+    <p class="panel-note">Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.</p>
+  </section>
+
+  <form class="controls" id="controls" onsubmit="return false">
+    <div class="control">
+      <label for="search">Find a system</label>
+      <input type="search" id="search" placeholder="Name contains…" autocomplete="off">
+    </div>
+    <div class="control">
+      <label for="region">Region</label>
+      <select id="region"><option value="">All regions</option></select>
+    </div>
+    <div class="control">
+      <label for="constellation">Constellation</label>
+      <select id="constellation"><option value="">All constellations</option></select>
+    </div>
+    <div class="control">
+      <label for="sort">Rank by</label>
+      <select id="sort">
+        <option value="overall">Least activity overall</option>
+        <option value="jumps">Fewest gate jumps</option>
+        <option value="kills">Fewest ship and pod kills</option>
+        <option value="name">System name</option>
+      </select>
+    </div>
+    <fieldset class="control">
+      <legend>Security</legend>
+      <div class="chips">
+        <label><input type="checkbox" name="sec" value="high" checked> High</label>
+        <label><input type="checkbox" name="sec" value="low" checked> Low</label>
+        <label><input type="checkbox" name="sec" value="null" checked> Null</label>
+        <label><input type="checkbox" name="sec" value="pochven" checked> Pochven</label>
+      </div>
+      <label class="checkline"><input type="checkbox" id="hideExordium" checked> Hide Exordium (new-player region)</label>
+    </fieldset>
+    <fieldset class="control">
+      <legend>Show systems with</legend>
+      <label class="checkline"><input type="checkbox" id="onlyStations"> NPC stations</label>
+      <label class="checkline"><input type="checkbox" id="onlyClones"> Jump clone services</label>
+      <label class="checkline"><input type="checkbox" id="onlyFactory"> Manufacturing services</label>
+      <label class="checkline"><input type="checkbox" id="onlyFW"> Faction warfare</label>
+      <p class="hint">Tick more than one to find systems that have all of them.</p>
+    </fieldset>
+  </form>
+
+  <div class="legend" id="legend"></div>
+  <div class="table-wrap">
+    <table id="sysTable" class="hide-avg hide-size">
+      <thead><tr>
+        <th scope="col">System</th><th scope="col">Sec</th><th scope="col">Region</th><th scope="col">Constellation</th>
+        <th scope="col" class="num">Jumps</th><th scope="col" class="num c-avg" title="Average gate jumps per hour over the last 30 days">30-day avg</th>
+        <th scope="col" class="num">Ship kills</th>
+        <th scope="col" class="num">Pod kills</th><th scope="col" class="num">NPC kills</th>
+        <th scope="col" class="num c-size" title="Distance from the star to the farthest planet, stargate or station">Size (AU)</th>
+        <th scope="col">Links</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="summary" id="summary"></div>
+  <div class="more"><button class="btn" id="moreBtn" hidden>Show 100 more</button></div>
+
+  <dialog class="sysd" id="sysDialog" aria-labelledby="dName">
+    <div>
+      <div class="d-head">
+        <div>
+          <h2 id="dName"></h2>
+          <div class="d-sub" id="dSub"></div>
+        </div>
+        <button class="btn" id="dClose" type="button">Close</button>
+      </div>
+      <div class="d-body" id="dBody"></div>
+    </div>
+  </dialog>
+
+  <div class="st-pop" id="stPop" role="tooltip" hidden></div>
+
+  <dialog class="mapd" id="mapDialog" aria-labelledby="mapTitle" data-maptheme="dark">
+    <div class="map-wrap">
+      <div class="map-head">
+        <div>
+          <h2 id="mapTitle">Map</h2>
+          <div class="map-sub" id="mapSub"></div>
+        </div>
+        <div class="map-tools">
+          <div class="seg" role="group" aria-label="Map view">
+            <button type="button" id="mapModeRegion" aria-pressed="true">Region</button>
+            <button type="button" id="mapModeNear" aria-pressed="false">Within 3 jumps</button>
+          </div>
+          <label for="mapColour">Colour by
+            <select id="mapColour"><option value="sec">Security</option><option value="act">Gate jumps, last hour</option></select>
+          </label>
+          <button class="mbtn" id="mapTheme" type="button">Light mode</button>
+          <button class="mbtn" id="mapClose" type="button">Close</button>
+        </div>
+      </div>
+      <div class="map-stage">
+        <svg id="mapSvg" aria-label="Region map"></svg>
+        <div class="map-zoom">
+          <button class="mbtn" id="mapZoomIn" type="button" aria-label="Zoom in">+</button>
+          <button class="mbtn" id="mapZoomOut" type="button" aria-label="Zoom out">−</button>
+          <button class="mbtn" id="mapReset" type="button" aria-label="Fit region">⤢</button>
+        </div>
+        <p class="map-status" id="mapStatus"></p>
+      </div>
+      <div class="map-info" id="mapInfo"></div>
+      <div class="map-legend" id="mapLegend"></div>
+    </div>
+  </dialog>
+
+  <footer>
+    <p>Traffic comes from ESI’s public <code>/universe/system_jumps/</code> and <code>/universe/system_kills/</code> routes, which CCP updates once an hour. ESI doesn’t publish player counts per system, so gate jumps in the last hour are the closest stand-in for population. NPC kills usually mean someone is ratting there.</p>
+    <p>Systems missing from ESI’s jump list had zero jumps. Wormhole space isn’t included, because ESI only counts stargate jumps. System names and security are cached in your browser for 30 days after the first load.</p>
+    <p>Station markers cover NPC stations only. Player-owned structures, including ones with clone bays, aren’t visible through public ESI. Installing a jump clone at an NPC station may need standings with the station’s owner.</p>
+    <p>On the hosted site, map data, 30-day averages, weekly patterns and system sizes are prepared by a scheduled job, so they load instantly. Opened as a local file, the page fetches what it needs from ESI instead.</p>
+    <p>Ice belt systems come from the EVE University wiki, since ESI doesn’t list ice. That list covers high and low sec, but is still missing Caldari and Minmatar low-sec ice systems and all null-sec ice.</p>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const ESI = "https://esi.evetech.net";
+  const COMPAT_DATE = "2026-08-18";
+  const CACHE_KEY = "quietspace.catalog.v1";
+  const CACHE_TTL = 30 * 24 * 3600 * 1000;
+  const UNREACHABLE = new Set([10000004, 10000017, 10000019]); // A821-A, J7HZ-F, UUA-F4
+  const POCHVEN = 10000070;
+  const PAGE = 100;
+  // Systems that spawn ice belts in high and low security space, by ice type.
+  // Source: EVE University wiki ice belt pages. Systems lost to Pochven are left out.
+  // The wiki does not yet list Caldari (White Glaze) or Minmatar (Glacial Mass) low-sec ice systems, or null-sec ice.
+  const ICE_SYSTEMS = {
+    "Clear Icicle": "Avada Gamis Gelhan Ihal Moh Orva Serad Arveyil Dihra Esescama Riavayed Afivad Arera Arshat Azizora Bashakru Clarelam Esteban Fabum Gosalav Isamm Jerma Knophtikoo Luromooh Martha Nalu Pedel Raren Warouh Agal Avyuh Hadji Iderion Manatirid Sigga Ervekam Geztic Gidali Keberz Molea Moniyyuku Moro Saloti Talidal Chanoun Dantan Jakri Kamda Koona Kothe Miah Munory Neburab Rayeret Turba Choga Ordion Anjedin Goram Ivih Jarzalad Kari Moutid Seil Erkinen Hoseen Illi Kamih Sadana Tisot Yahyerer Zazamye Astabih Faspera Futzchag Kenobanala Lilmad Mahti Majamar Nakah Yishinoon Sosan Ussad Bourar Naguton Access Angur Assez Gonditsa Keri Menai Nardiarang Partod Petidu Bordan Gasavak Menri Oberen Cabeki Claini Hezere Upt Vezila Enal Nebian Schmaeel Zatamaka Zorenyen Gemodi Modun Haras Sosala Tannakan",
+    "White Glaze": "Uchomida Halaima Kamio Uotila Ahtulaima Gekutami Hentogaira Hurtoken Mitsolen Osmon Outuni Silen Sirseshin Vattuolen Wuos Aakari Elonaya Jotenen Kiskoken Oishami Piekura Yoma",
+    "Glacial Mass": "Abudban Emolgranlan Endrulf Aderkan Asgeir Barkrik Dantbeinn Eygfe Finanar Gedugaud Hodrold Nakugard Nein Oppold Teonusude Varigne",
+    "Blue Ice": "Actee Deninard Antollare Ardallabier Aydoteaux Carirgnottin Jaschercis Tolle Vaurent Brapelille Chelien Misneden Stegette Niballe Aeschee Fliet Hulmate Indregulle Palmon Alachene Mannar Agoze Alparena Alsavoinon Aubenall Avaux Cumemare Eugales Gallusiene Maut Mercomesie Ruerrotta Uphallant Carrou Lamadent Rancer Thelan Cadelanne Ratillose Vevelonel Costolle"
+  };
+  const ICE_BY_NAME = new Map();
+  Object.entries(ICE_SYSTEMS).forEach(([type, names]) => names.split(" ").forEach(n => ICE_BY_NAME.set(n.toLowerCase(), type)));
+  const iceTypeOf = sys => (sys && sys.n ? ICE_BY_NAME.get(sys.n.toLowerCase()) : undefined);
+  // Empire and NPC factions that own high and low security space, with their traditional colours.
+  const FACTIONS = {
+    500001: { name: "Caldari State", color: "#4a7fc1" },
+    500002: { name: "Minmatar Republic", color: "#a8432e" },
+    500003: { name: "Amarr Empire", color: "#d4a72c" },
+    500004: { name: "Gallente Federation", color: "#3f9a6b" },
+    500005: { name: "Jove Empire", color: "#7a6bb3" },
+    500006: { name: "CONCORD Assembly", color: "#8796a5" },
+    500007: { name: "Ammatar Mandate", color: "#a0662a" },
+    500008: { name: "Khanid Kingdom", color: "#6e3b7d" }
+  };
+  const CLONE_RULE = 3; // bump to re-check cached station services
+  const hasCloneService = services => (services || []).some(x => x === "cloning" || x === "jump-clone-facility");
+  function setSystemServices(sys, services) {
+    sys.sv = services.slice().sort();
+    sys.jc = hasCloneService(sys.sv);
+  }
+  const systemHas = (sys, service) => !!(sys.sv && sys.sv.includes(service));
+  const SEC_COLORS = {"1.0":"#2c75e1","0.9":"#399aeb","0.8":"#4ecef8","0.7":"#60dba3","0.6":"#71e554",
+    "0.5":"#f3fd82","0.4":"#dc6d07","0.3":"#ce440f","0.2":"#bb1116","0.1":"#731f1f","0.0":"#8d3264"};
+  const SCALE = ["1.0","0.9","0.8","0.7","0.6","0.5","0.4","0.3","0.2","0.1","0.0"];
+
+  const $ = id => document.getElementById(id);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  // ---------- ESI client ----------
+  let sendCompat = true;
+  let pauseUntil = 0;
+
+  async function esi(path, opts = {}, attempt = 0) {
+    const wait = pauseUntil - Date.now();
+    if (wait > 0) await sleep(wait);
+    const headers = { ...(opts.headers || {}) };
+    if (sendCompat) headers["X-Compatibility-Date"] = opts.compatDate || COMPAT_DATE;
+    let res;
+    try {
+      res = await fetch(ESI + path, { ...opts, headers });
+    } catch (e) {
+      // If a CORS preflight on the custom header is refused, carry on without it.
+      if (sendCompat && attempt === 0) { sendCompat = false; return esi(path, opts, 1); }
+      if (attempt < 4) { await sleep(800 * 2 ** attempt); return esi(path, opts, attempt + 1); }
+      throw new Error("Couldn’t reach ESI. Check your connection and try again.");
+    }
+    const errRemain = res.headers.get("X-ESI-Error-Limit-Remain");
+    const errReset = res.headers.get("X-ESI-Error-Limit-Reset");
+    if (errRemain !== null && +errRemain < 15) pauseUntil = Date.now() + ((+errReset || 10) + 1) * 1000;
+    const rlRemain = res.headers.get("X-Ratelimit-Remaining");
+    if (rlRemain !== null && +rlRemain < 5) pauseUntil = Math.max(pauseUntil, Date.now() + 2000);
+
+    if (res.status === 429 && attempt < 6) {
+      const ra = +res.headers.get("Retry-After") || 5;
+      pauseUntil = Math.max(pauseUntil, Date.now() + ra * 1000);
+      return esi(path, opts, attempt + 1);
+    }
+    if (res.status >= 500 && attempt < 4) { await sleep(1000 * 2 ** attempt); return esi(path, opts, attempt + 1); }
+    if (!res.ok) throw new Error(`ESI answered ${res.status} for ${path}`);
+    return { data: await res.json(), res };
+  }
+
+  async function pool(items, size, fn) {
+    let i = 0;
+    const worker = async () => {
+      while (i < items.length) {
+        const item = items[i++];
+        try { await fn(item); } catch (e) { console.warn(e); }
+      }
+    };
+    await Promise.all(Array.from({ length: size }, worker));
+  }
+
+  // ---------- Static catalog (names, security, regions) ----------
+  let catalog = { savedAt: 0, cloneRule: CLONE_RULE, regions: {}, consToRegion: {}, constellations: {}, systems: {} };
+
+  function loadCatalog() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return;
+      const c = JSON.parse(raw);
+      if (Date.now() - c.savedAt < CACHE_TTL) {
+        catalog = c;
+        catalog.constellations = catalog.constellations || {};
+        if (catalog.cloneRule !== CLONE_RULE) {
+          // Results saved under the old check are unreliable: clear them so they're looked up again.
+          Object.values(catalog.systems).forEach(x => { delete x.jc; delete x.sv; });
+          catalog.cloneRule = CLONE_RULE;
+        }
+      }
+    } catch (e) { /* storage unavailable: build fresh */ }
+  }
+  function saveCatalog() {
+    try { catalog.savedAt = catalog.savedAt || Date.now(); localStorage.setItem(CACHE_KEY, JSON.stringify(catalog)); }
+    catch (e) { /* storage full or blocked: keep in memory */ }
+  }
+
+  function showProgress(text, frac) {
+    $("progress").classList.add("on");
+    $("progress").classList.remove("error");
+    $("progressText").textContent = text;
+    $("progressFill").style.width = Math.round((frac || 0) * 100) + "%";
+  }
+  function hideProgress() { $("progress").classList.remove("on"); }
+  function showError(msg) {
+    $("progress").classList.add("on", "error");
+    $("progressText").textContent = msg;
+    $("progressFill").style.width = "0";
+  }
+
+  async function buildCatalog() {
+    const firstRun = !Object.keys(catalog.systems).length;
+    if (firstRun) showProgress("First visit: loading the map from ESI. This happens once, then it’s cached in your browser.", 0);
+
+    if (!Object.keys(catalog.regions).length) {
+      const { data: regionIds } = await esi("/universe/regions/");
+      const kspace = regionIds.filter(id => id < 11000000);
+      let done = 0;
+      await pool(kspace, 10, async id => {
+        const { data } = await esi(`/universe/regions/${id}/`);
+        catalog.regions[id] = data.name;
+        (data.constellations || []).forEach(c => { catalog.consToRegion[c] = id; });
+        showProgress("Loading regions…", ++done / kspace.length * 0.1);
+      });
+      populateRegions();
+      saveCatalog();
+    } else {
+      populateRegions();
+    }
+
+    const { data: allIds } = await esi("/universe/systems/");
+    const ids = allIds.filter(id => id < 31000000);
+    const unnamed = ids.filter(id => !catalog.systems[id]);
+    for (let i = 0; i < unnamed.length; i += 1000) {
+      const chunk = unnamed.slice(i, i + 1000);
+      const { data } = await esi("/universe/names/", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(chunk)
+      });
+      data.forEach(d => { catalog.systems[d.id] = { n: d.name }; });
+      showProgress("Loading system names…", 0.1 + (i + chunk.length) / unnamed.length * 0.05);
+    }
+    if (unnamed.length) { saveCatalog(); render(); }
+
+    const needDetail = ids.filter(id => catalog.systems[id] && (catalog.systems[id].s === undefined || catalog.systems[id].sid === undefined));
+    if (needDetail.length) {
+      let done = 0;
+      await pool(needDetail, 16, async id => {
+        const { data } = await esi(`/universe/systems/${id}/`);
+        catalog.systems[id].s = data.security_status;
+        catalog.systems[id].c = data.constellation_id;
+        catalog.systems[id].sid = data.stations || [];
+        done++;
+        if (done % 50 === 0 || done === needDetail.length) {
+          showProgress(`Loading security status and stations: ${done.toLocaleString()} of ${needDetail.length.toLocaleString()} systems. You can browse while this finishes.`,
+            0.15 + done / needDetail.length * 0.6);
+          throttledRender();
+        }
+        if (done % 300 === 0) saveCatalog();
+      });
+      saveCatalog();
+    }
+
+    // Station services: record every service offered by any station in each system.
+    const needClone = ids.filter(id => { const x = catalog.systems[id]; return x && x.sid && x.sid.length && x.sv === undefined; });
+    if (needClone.length) {
+      let done = 0;
+      await pool(needClone, 16, async id => {
+        const sys = catalog.systems[id];
+        const all = new Set();
+        let checked = 0;
+        for (const st of sys.sid) {
+          try {
+            const { data } = await esi(`/universe/stations/${st}/`);
+            checked++;
+            (data.services || []).forEach(x => all.add(x));
+          } catch (e) { /* try the next station */ }
+        }
+        if (checked === sys.sid.length) setSystemServices(sys, [...all]); // leave unknown if a lookup failed
+        done++;
+        if (done % 50 === 0 || done === needClone.length) {
+          showProgress(`Checking station services: ${done.toLocaleString()} of ${needClone.length.toLocaleString()} systems.`,
+            0.75 + done / needClone.length * 0.25);
+          throttledRender();
+        }
+        if (done % 300 === 0) saveCatalog();
+      });
+      saveCatalog();
+    }
+
+    const unnamedCons = Object.keys(catalog.consToRegion).map(Number).filter(id => !catalog.constellations[id]);
+    for (let i = 0; i < unnamedCons.length; i += 1000) {
+      const chunk = unnamedCons.slice(i, i + 1000);
+      const { data } = await esi("/universe/names/", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(chunk)
+      });
+      data.forEach(d => { catalog.constellations[d.id] = d.name; });
+    }
+    if (unnamedCons.length) saveCatalog();
+    populateConstellations();
+
+    hideProgress();
+    render();
+  }
+
+  // ---------- Live traffic ----------
+  let jumps = {}, kills = {}, liveLoaded = false, refreshTimer = null;
+
+  async function fetchLive() {
+    $("refreshBtn").disabled = true;
+    try {
+      const [j, k] = await Promise.all([esi("/universe/system_jumps/"), esi("/universe/system_kills/")]);
+      jumps = {}; kills = {};
+      j.data.forEach(r => { jumps[r.system_id] = r.ship_jumps; });
+      k.data.forEach(r => { kills[r.system_id] = { ship: r.ship_kills, pod: r.pod_kills, npc: r.npc_kills }; });
+      liveLoaded = true;
+      loadFW();
+      const modified = j.res.headers.get("Last-Modified");
+      const expires = j.res.headers.get("Expires");
+      const fmt = d => d.toISOString().slice(11, 16);
+      let text = modified ? `ESI data from ${fmt(new Date(modified))} EVE time` : `Fetched ${fmt(new Date())} EVE time`;
+      if (expires) text += `, next update ${fmt(new Date(expires))}`;
+      $("status").textContent = text;
+      clearTimeout(refreshTimer);
+      const ms = expires ? new Date(expires) - Date.now() + 30000 : 15 * 60000;
+      refreshTimer = setTimeout(fetchLive, Math.min(Math.max(ms, 60000), 3600000));
+      render();
+    } catch (e) {
+      $("status").textContent = "Live traffic unavailable";
+      showError(e.message);
+    } finally {
+      $("refreshBtn").disabled = false;
+    }
+  }
+
+  // ---------- Helpers ----------
+  function displaySec(s) {
+    if (s === undefined || s === null) return null;
+    if (s > 0 && s < 0.05) return 0.1;
+    return Math.round(s * 10) / 10;
+  }
+  function isExordium(regionId) {
+    const name = catalog.regions[regionId];
+    return !!name && name.toLowerCase() === "exordium";
+  }
+  function regionOf(sys) { return sys.c !== undefined ? catalog.consToRegion[sys.c] : undefined; }
+  function secClass(sys) {
+    if (regionOf(sys) === POCHVEN) return "pochven";
+    const d = displaySec(sys.s);
+    if (d === null) return "unknown";
+    if (d >= 0.5) return "high";
+    if (d > 0) return "low";
+    return "null";
+  }
+  function secKey(d) { return d <= 0 ? "0.0" : d.toFixed(1); }
+  function secChip(sys) {
+    const cls = secClass(sys);
+    const d = displaySec(sys.s);
+    const span = document.createElement("span");
+    span.className = "sec";
+    if (d === null) { span.classList.add("unknown"); span.textContent = "…"; return span; }
+    span.textContent = d.toFixed(1);
+    if (cls === "pochven") { span.classList.add("pochven"); span.title = "Pochven"; return span; }
+    const key = secKey(d);
+    span.style.background = SEC_COLORS[key];
+    span.style.color = ["1.0","0.9","0.3","0.2","0.1","0.0"].includes(key) ? "#fff" : "#10161e";
+    return span;
+  }
+  function activity(id) {
+    const k = kills[id] || { ship: 0, pod: 0, npc: 0 };
+    return { jumps: jumps[id] || 0, ship: k.ship, pod: k.pod, npc: k.npc };
+  }
+  const dotlan = name => "https://evemaps.dotlan.net/system/" + encodeURIComponent(name.replace(/ /g, "_"));
+
+  // ---------- Filtering and ranking ----------
+  let shown = PAGE, heroId = null, currentRows = [];
+
+  function getRows() {
+    const q = $("search").value.trim().toLowerCase();
+    const region = $("region").value;
+    const constellation = $("constellation").value;
+    const sort = $("sort").value;
+    const secs = new Set([...document.querySelectorAll("input[name=sec]:checked")].map(i => i.value));
+    const hideExo = $("hideExordium").checked;
+    const onlyStations = $("onlyStations").checked;
+    const onlyClones = $("onlyClones").checked;
+    const onlyFactory = $("onlyFactory").checked;
+    const onlyFW = $("onlyFW").checked;
+
+    const rows = [];
+    for (const idStr in catalog.systems) {
+      const id = +idStr, sys = catalog.systems[idStr];
+      const reg = regionOf(sys);
+      if (UNREACHABLE.has(reg)) continue;
+      if (hideExo && isExordium(reg)) continue;
+      if (region && String(reg) !== region) continue;
+      if (constellation && String(sys.c) !== constellation) continue;
+      const cls = secClass(sys);
+      if (cls !== "unknown" && !secs.has(cls)) continue;
+      if (q && !sys.n.toLowerCase().includes(q)) continue;
+      if (onlyStations && !(sys.sid && sys.sid.length)) continue;
+      if (onlyClones && sys.jc !== true) continue;
+      if (onlyFactory && !systemHas(sys, "factory")) continue;
+      if (onlyFW && !(fwMap && fwMap.has(id))) continue;
+      rows.push({ id, sys, reg, a: activity(id) });
+    }
+    const pvp = r => r.a.ship + r.a.pod;
+    const cmp = {
+      overall: (x, y) => (x.a.jumps + pvp(x)) - (y.a.jumps + pvp(y)) || x.a.npc - y.a.npc,
+      avg: (x, y) => avgOf(x.id) - avgOf(y.id) || x.a.jumps - y.a.jumps,
+      jumps: (x, y) => x.a.jumps - y.a.jumps || pvp(x) - pvp(y),
+      kills: (x, y) => pvp(x) - pvp(y) || x.a.jumps - y.a.jumps,
+      name: () => 0
+    }[sort];
+    rows.sort((x, y) => cmp(x, y) || x.sys.n.localeCompare(y.sys.n));
+    return rows;
+  }
+
+  function renderSummary() {
+    if (!liveLoaded) return;
+    const secs = new Set([...document.querySelectorAll("input[name=sec]:checked")].map(i => i.value));
+    const hideExo = $("hideExordium").checked;
+    const regs = new Map(), cons = new Map();
+    const add = (map, key, reg, a) => {
+      const g = map.get(key) || { key, reg, n: 0, act: 0, zero: 0, npc: 0 };
+      g.n++; g.act += a.jumps + a.ship + a.pod; g.npc += a.npc; if (a.jumps === 0) g.zero++;
+      map.set(key, g);
+    };
+    for (const idStr in catalog.systems) {
+      const sys = catalog.systems[idStr];
+      const reg = regionOf(sys);
+      if (reg === undefined || UNREACHABLE.has(reg)) continue;
+      if (hideExo && isExordium(reg)) continue;
+      if (!secs.has(secClass(sys))) continue;
+      const a = activity(+idStr);
+      add(regs, reg, reg, a);
+      add(cons, sys.c, reg, a);
+    }
+    // Lowest average activity per system; ties go to the larger group, then less ratting.
+    const rank = map => [...map.values()]
+      .sort((x, y) => x.act / x.n - y.act / y.n || y.n - x.n || x.npc - y.npc)
+      .slice(0, 5);
+    fillList($("topRegions"), rank(regs), true);
+    fillList($("topCons"), rank(cons), false);
+  }
+
+  function fillList(ol, groups, isRegion) {
+    if (!groups.length) {
+      const li = document.createElement("li"); li.className = "empty";
+      li.textContent = Object.keys(catalog.systems).length ? "Nothing matches your filters." : "Loading the map…";
+      ol.replaceChildren(li); return;
+    }
+    const fmt = v => v < 10 ? v.toFixed(1) : Math.round(v).toLocaleString();
+    ol.replaceChildren(...groups.map(g => {
+      const li = document.createElement("li");
+      const main = document.createElement("div"); main.className = "li-main";
+      const regionName = catalog.regions[g.reg] || "Unknown region";
+      let name;
+      if (isRegion) {
+        name = document.createElement("button"); name.type = "button"; name.className = "li-name";
+        name.textContent = regionName;
+        const box = factionBox(g.reg); if (box) name.prepend(box);
+        name.addEventListener("click", () => {
+          $("region").value = String(g.reg);
+          $("constellation").value = "";
+          populateConstellations();
+          onFilterChange();
+          $("controls").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        });
+      } else {
+        name = document.createElement("button"); name.type = "button"; name.className = "li-name";
+        name.textContent = catalog.constellations[g.key] || `Constellation ${g.key}`;
+        name.addEventListener("click", () => {
+          $("region").value = String(g.reg);
+          populateConstellations();
+          $("constellation").value = String(g.key);
+          onFilterChange();
+          $("controls").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        });
+      }
+      const sub = document.createElement("div"); sub.className = "li-sub";
+      const counts = `${g.n} system${g.n === 1 ? "" : "s"}, ${g.zero} with no jumps`;
+      sub.textContent = isRegion ? counts : `In ${regionName}, ${counts}`;
+      main.append(name, sub);
+      const stat = document.createElement("div"); stat.className = "li-stat";
+      const b = document.createElement("b"); b.textContent = fmt(g.act / g.n);
+      const small = document.createElement("small"); small.textContent = "activity per system";
+      stat.append(b, small);
+      li.append(main, stat);
+      return li;
+    }));
+  }
+
+  let renderTimer = null;
+  function throttledRender() {
+    if (renderTimer) return;
+    renderTimer = setTimeout(() => { renderTimer = null; render(); }, 500);
+  }
+
+  function withFilterText() {
+    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"]]
+      .filter(([id]) => $(id).checked).map(([, label]) => label);
+    if (!parts.length) return "";
+    const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
+    return ` with ${list}`;
+  }
+
+  let renderDeferred = false;
+  function render() {
+    if (popAnchor && !$("stPop").hidden) { renderDeferred = true; return; }
+    currentRows = getRows();
+    renderHero();
+    renderSummary();
+    const tbody = $("rows");
+    const frag = document.createDocumentFragment();
+    currentRows.slice(0, shown).forEach(r => frag.appendChild(rowEl(r)));
+    tbody.replaceChildren(frag);
+    if (popAnchor && !document.contains(popAnchor)) hidePop();
+
+    const zero = currentRows.filter(r => r.a.jumps === 0).length;
+    const n = currentRows.length;
+    let text = "";
+    if (Object.keys(catalog.systems).length) {
+      if (n === 0) text = `No systems match${withFilterText()}. Untick a box or widen your filters.`;
+      else {
+        text = `${n.toLocaleString()} system${n === 1 ? " matches" : "s match"}${withFilterText()}. `;
+        if (!liveLoaded) text += "Waiting for live traffic…";
+        else if (zero === n) text += n === 1 ? "It had no gate jumps in the last hour." : "None of them had any gate jumps in the last hour.";
+        else if (zero === 0) text += n === 1 ? "It had gate traffic in the last hour." : "All of them had gate traffic in the last hour.";
+        else text += `${zero.toLocaleString()} of them had no gate jumps in the last hour.`;
+      }
+    }
+    $("summary").textContent = text;
+    $("moreBtn").hidden = shown >= currentRows.length;
+  }
+
+  function cell(text, cls) {
+    const td = document.createElement("td");
+    if (cls) td.className = cls;
+    td.textContent = text;
+    return td;
+  }
+  function numCell(n) { return cell(liveLoaded ? n.toLocaleString() : "…", "num" + (n === 0 ? " zero" : "")); }
+
+  function rowEl(r) {
+    const tr = document.createElement("tr");
+    const nameTd = document.createElement("td"); nameTd.className = "sys";
+    const nameBtn = document.createElement("button"); nameBtn.type = "button"; nameBtn.className = "sys-link";
+    nameBtn.textContent = r.sys.n; nameBtn.addEventListener("click", () => openSystem(r.id));
+    nameTd.append(nameBtn, featureIcons(r.id, r.sys)); tr.appendChild(nameTd);
+    const sec = document.createElement("td"); sec.appendChild(secChip(r.sys)); tr.appendChild(sec);
+    if (r.reg !== undefined) {
+      const regTd = document.createElement("td");
+      const box = factionBox(r.reg); if (box) regTd.append(box);
+      regTd.append(regionButton(r.reg)); tr.appendChild(regTd);
+    }
+    else tr.appendChild(cell("…"));
+    if (r.sys.c !== undefined && catalog.constellations[r.sys.c]) {
+      const consTd = document.createElement("td"); consTd.append(constellationButton(r.sys.c)); tr.appendChild(consTd);
+    } else tr.appendChild(cell("…"));
+    tr.appendChild(numCell(r.a.jumps));
+    const avgTd = document.createElement("td"); avgTd.className = "num c-avg";
+    if (prebuilt.activity) {
+      const v = avgOf(r.id);
+      const b = document.createElement("button"); b.type = "button"; b.className = "avg-link";
+      b.textContent = v.toFixed(1);
+      b.setAttribute("aria-label", `${v.toFixed(1)} jumps per hour over 30 days. Show weekly pattern`);
+      attachPop(b, "avg:" + r.id, buildAvgPop(r.id));
+      avgTd.append(b);
+    }
+    tr.appendChild(avgTd);
+    tr.appendChild(numCell(r.a.ship));
+    tr.appendChild(numCell(r.a.pod));
+    tr.appendChild(numCell(r.a.npc));
+    tr.appendChild(cell(typeof r.sys.r === "number" ? r.sys.r.toFixed(1) : "…", "num c-size"));
+    const links = document.createElement("td"); links.className = "links";
+    const d = document.createElement("a"); d.href = dotlan(r.sys.n); d.target = "_blank"; d.rel = "noopener"; d.textContent = "Dotlan";
+    const z = document.createElement("a"); z.href = `https://zkillboard.com/system/${r.id}/`; z.target = "_blank"; z.rel = "noopener"; z.textContent = "zKill";
+    const c = document.createElement("button"); c.type = "button"; c.className = "copy"; c.textContent = "Copy";
+    c.addEventListener("click", () => copyName(r.sys.n, c));
+    const mr = document.createElement("button"); mr.type = "button"; mr.className = "copy"; mr.textContent = "Map";
+    mr.setAttribute("aria-label", `Region map for ${r.sys.n}`); mr.addEventListener("click", () => openMap(r.id, "region"));
+    const mn = document.createElement("button"); mn.type = "button"; mn.className = "copy"; mn.textContent = "Nearby";
+    mn.setAttribute("aria-label", `Map of systems within 3 jumps of ${r.sys.n}`); mn.addEventListener("click", () => openMap(r.id, "nearby"));
+    links.append(d, z, c, mr, mn);
+    tr.appendChild(links);
+    return tr;
+  }
+
+  // ---------- Station and jump clone markers ----------
+  const ICONS = {
+    station: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="3.5" width="5" height="9" rx="1" fill="currentColor"/><rect x="0.8" y="6.5" width="3.6" height="3" fill="currentColor"/><rect x="11.6" y="6.5" width="3.6" height="3" fill="currentColor"/><path d="M4.4 8h1.1M10.5 8h1.1M8 1v2.5" stroke="currentColor" stroke-width="1.2"/></svg>',
+    ice: '<svg viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"><path d="M8 1.5v13M2.4 4.75l11.2 6.5M2.4 11.25l11.2-6.5"/><path d="M6.2 2.6L8 4.2l1.8-1.6M6.2 13.4L8 11.8l1.8 1.6M2.6 7l2.1.6-.5 2.1M13.4 7l-2.1.6.5 2.1"/></g></svg>',
+    fw: '<svg viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"><path d="M2.5 2.5l8 8M13.5 2.5l-8 8"/><path d="M8.6 12.4l3.8-3.8M3.6 8.6l3.8 3.8"/><path d="M11.5 11.5l2 2M4.5 11.5l-2 2"/></g></svg>',
+    clone: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="10.6" cy="4.8" r="2.1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M10.4 9.1c2.2.1 4 1.8 4 4.4h-2.7" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="5.8" cy="5.2" r="2.4" fill="currentColor"/><path d="M1.4 14c0-2.8 2-4.6 4.4-4.6s4.4 1.8 4.4 4.6z" fill="currentColor"/></svg>'
+  };
+  const SERVICE_LABELS = {
+    "bounty-missions": "Bounty missions", "assasination-missions": "Assassination missions", "courier-missions": "Courier missions",
+    "interbus": "Interbus", "reprocessing-plant": "Reprocessing", "refinery": "Refinery", "market": "Market",
+    "black-market": "Black market", "stock-exchange": "Stock exchange", "cloning": "Clone bay", "surgery": "Surgery",
+    "dna-therapy": "DNA therapy", "repair-facilities": "Repair shop", "factory": "Factory", "labratory": "Laboratory",
+    "gambling": "Gambling", "fitting": "Fitting", "paintshop": "Paint shop", "news": "News", "storage": "Storage",
+    "insurance": "Insurance", "docking": "Docking", "office-rental": "Office rental", "jump-clone-facility": "Jump clones",
+    "loyalty-point-store": "LP store", "navy-offices": "Navy offices", "security-offices": "Security offices"
+  };
+  const serviceLabel = k => SERVICE_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1)).replace(/[-_]/g, " ");
+  function serviceChips(services) {
+    const wrap = document.createElement("div"); wrap.className = "svc";
+    const sorted = (services || []).slice().sort((a, b) => serviceLabel(a).localeCompare(serviceLabel(b)));
+    if (!sorted.length) { const sp = document.createElement("span"); sp.textContent = "No services listed"; wrap.append(sp); }
+    sorted.forEach(k => {
+      const sp = document.createElement("span");
+      if (k === "cloning" || k === "jump-clone-facility") sp.className = "clone";
+      sp.textContent = serviceLabel(k);
+      wrap.append(sp);
+    });
+    return wrap;
+  }
+
+  // Station names and services, fetched on demand and kept for the visit.
+  const stationCache = new Map();
+  function loadStations(systemId, ids) {
+    if (stationCache.has(systemId)) return stationCache.get(systemId);
+    const p = (async () => {
+      const pre = await loadPrebuiltStations();
+      if (pre && pre[systemId]) return pre[systemId].map(([name, services]) => ({ name, services }));
+      const out = [];
+      await pool(ids, 6, async st => {
+        const { data } = await esi(`/universe/stations/${st}/`);
+        out.push({ id: st, name: data.name, services: data.services || [] });
+      });
+      if (ids.length && !out.length) throw new Error("Station lookups failed");
+      out.sort((a, b) => a.name.localeCompare(b.name));
+      const sys = catalog.systems[systemId];
+      if (sys && sys.sv === undefined && out.length === ids.length) setSystemServices(sys, [...new Set(out.flatMap(st => st.services))]);
+      return out;
+    })();
+    stationCache.set(systemId, p);
+    p.catch(() => stationCache.delete(systemId));
+    return p;
+  }
+
+  // ---------- Shared hover pop-up ----------
+  let popAnchor = null, popId = null, popHideTimer = null;
+  function positionPop() {
+    const pop = $("stPop");
+    if (!popAnchor || pop.hidden) return;
+    const r = popAnchor.getBoundingClientRect();
+    const pw = pop.offsetWidth, ph = pop.offsetHeight;
+    let left = Math.max(8, Math.min(r.left - 6, innerWidth - pw - 8));
+    let top = r.bottom + 6;
+    if (top + ph > innerHeight - 8 && r.top - ph - 6 > 8) top = r.top - ph - 6;
+    pop.style.left = left + "px"; pop.style.top = top + "px";
+  }
+  function hidePop() {
+    clearTimeout(popHideTimer);
+    $("stPop").hidden = true;
+    if (popAnchor) popAnchor.setAttribute("aria-expanded", "false");
+    popAnchor = null; popId = null;
+    if (renderDeferred) { renderDeferred = false; render(); }
+  }
+  function scheduleHidePop() { clearTimeout(popHideTimer); popHideTimer = setTimeout(hidePop, 180); }
+  function showPopover(anchor, key, build) {
+    clearTimeout(popHideTimer);
+    if (popAnchor === anchor && !$("stPop").hidden) return;
+    if (popAnchor) popAnchor.setAttribute("aria-expanded", "false");
+    popAnchor = anchor; popId = key;
+    anchor.setAttribute("aria-expanded", "true");
+    const pop = $("stPop");
+    pop.replaceChildren();
+    pop.hidden = false;
+    build(pop, () => popId === key);
+    positionPop();
+  }
+  function attachPop(btn, key, build) {
+    btn.setAttribute("aria-expanded", "false"); btn.setAttribute("aria-controls", "stPop");
+    btn.addEventListener("mouseenter", () => showPopover(btn, key, build));
+    btn.addEventListener("mouseleave", scheduleHidePop);
+    btn.addEventListener("focus", () => showPopover(btn, key, build));
+    btn.addEventListener("blur", scheduleHidePop);
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      if (popAnchor === btn && !$("stPop").hidden) hidePop(); else showPopover(btn, key, build);
+    });
+  }
+
+  // Station pop-up
+  function buildStationPop(id) {
+    return (pop, isCurrent) => {
+      const sys = catalog.systems[id];
+      const ids = (sys && sys.sid) || [];
+      const head = document.createElement("h4");
+      head.textContent = `${ids.length} NPC station${ids.length === 1 ? "" : "s"} in ${sys ? sys.n : "this system"}`;
+      const note = document.createElement("p"); note.className = "d-note"; note.textContent = "Loading station services…";
+      pop.append(head, note);
+      loadStations(id, ids).then(list => {
+        if (!isCurrent()) return;
+        const items = list.map(st => {
+          const item = document.createElement("div"); item.className = "st-item";
+          const nm = document.createElement("div"); nm.className = "st-name"; nm.textContent = st.name;
+          item.append(nm, serviceChips(st.services));
+          return item;
+        });
+        pop.replaceChildren(head, ...items);
+        positionPop();
+      }).catch(() => {
+        if (!isCurrent()) return;
+        note.textContent = "Couldn’t load station services from ESI. Hover again to retry.";
+        positionPop();
+      });
+    };
+  }
+  function stationButton(id, n) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "f-btn";
+    b.setAttribute("aria-label", `${n} NPC station${n === 1 ? "" : "s"}. Show station services`);
+    b.innerHTML = ICONS.station;
+    attachPop(b, "st:" + id, buildStationPop(id));
+    return b;
+  }
+
+  // Region pop-up: size, security mix and who controls it
+  // Shared pieces for region and constellation pop-ups
+  function secMixText(sysIds) {
+    const mix = { high: 0, low: 0, null: 0, pochven: 0 };
+    sysIds.forEach(id => { const cls = secClass(catalog.systems[id]); if (cls in mix) mix[cls]++; });
+    return [["high", "high"], ["low", "low"], ["null", "null"], ["pochven", "Pochven"]]
+      .filter(([k]) => mix[k]).map(([k, label]) => `${mix[k]} ${label}`).join(", ");
+  }
+  const plural = (n, word) => `${n.toLocaleString()} ${word}${n === 1 ? "" : "s"}`;
+  function appendOwnership(pop, sysIds, isCurrent, isPochven) {
+    const ctrlHead = el("h5", null, "Ownership");
+    const note = el("p", "d-note", "Loading ownership…");
+    pop.append(ctrlHead, note);
+    if (isPochven) {
+      const dl = el("dl"); dl.append(kv("Triglavian Collective", plural(sysIds.length, "system")));
+      note.replaceWith(dl); positionPop(); return;
+    }
+    const slowTimer = setTimeout(() => {
+      if (isCurrent() && note.isConnected) {
+        note.textContent = "Still waiting on ESI. It may be busy with the background station check.";
+        positionPop();
+      }
+    }, 10000);
+    loadGlobal().then(async g => {
+      clearTimeout(slowTimer);
+      if (!g.sov) throw new Error(g.sovError || "No sovereignty data");
+      const counts = new Map();
+      let fw = 0;
+      sysIds.forEach(id => {
+        const sv = g.sov.get(id);
+        const key = sv && sv.alliance_id ? "a" + sv.alliance_id : sv && sv.faction_id ? "f" + sv.faction_id : "none";
+        counts.set(key, (counts.get(key) || 0) + 1);
+        if (g.fw && g.fw.has(id)) fw++;
+      });
+      const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+      const top = ranked.slice(0, 5), rest = ranked.slice(5);
+      await resolveNames(top.filter(([k]) => k !== "none").map(([k]) => +k.slice(1)));
+      if (!isCurrent()) return;
+      const dl = el("dl");
+      top.forEach(([k, n]) => {
+        const label = k === "none" ? "Unclaimed" : `${nameOf(+k.slice(1))}${k[0] === "a" ? " (alliance)" : ""}`;
+        dl.append(kv(label, plural(n, "system")));
+      });
+      if (rest.length) {
+        const n = rest.reduce((t, [, c]) => t + c, 0);
+        dl.append(kv(`${rest.length} other holder${rest.length === 1 ? "" : "s"}`, plural(n, "system")));
+      }
+      if (fw) dl.append(kv("Faction warfare", plural(fw, "system")));
+      note.replaceWith(dl);
+      positionPop();
+    }).catch(err => {
+      clearTimeout(slowTimer);
+      if (!isCurrent()) return;
+      note.textContent = `Couldn’t load ownership (${err && err.message ? err.message : "unknown error"}). Hover again to retry.`;
+      positionPop();
+    });
+  }
+
+  function buildRegionPop(reg) {
+    return (pop, isCurrent) => {
+      const head = document.createElement("h4");
+      head.textContent = catalog.regions[reg] || "Unknown region";
+      const hbox = factionBox(reg); if (hbox) head.prepend(hbox);
+      const consCount = Object.values(catalog.consToRegion).filter(r => r === reg).length;
+      const sysIds = Object.keys(catalog.systems).map(Number).filter(id => regionOf(catalog.systems[id]) === reg);
+      const facts = el("dl");
+      const fac = regionFaction(reg);
+      if (fac) facts.append(kv("Main faction", fac.name));
+      facts.append(kv("Constellations", consCount), kv("Systems", sysIds.length));
+      const mixText = secMixText(sysIds);
+      if (mixText) facts.append(kv("Security", mixText));
+      pop.append(head, facts);
+      appendOwnership(pop, sysIds, isCurrent, reg === POCHVEN);
+    };
+  }
+
+  // Constellation pop-up: where it is, how busy it is, what's there, who holds it
+  function buildConstellationPop(cons) {
+    return (pop, isCurrent) => {
+      const reg = catalog.consToRegion[cons];
+      const head = el("h4", null, catalog.constellations[cons] || `Constellation ${cons}`);
+      const sysIds = Object.keys(catalog.systems).map(Number).filter(id => catalog.systems[id].c === cons);
+
+      const facts = el("dl");
+      const regVal = document.createElement("span");
+      const box = factionBox(reg); if (box) regVal.append(box);
+      regVal.append(catalog.regions[reg] || "Unknown region");
+      facts.append(kv("Region", regVal), kv("Systems", sysIds.length));
+      const mixText = secMixText(sysIds);
+      if (mixText) facts.append(kv("Security", mixText));
+
+      const busy = el("dl");
+      if (liveLoaded) {
+        let jumps = 0, pvp = 0, npc = 0, zero = 0;
+        sysIds.forEach(id => { const a = activity(id); jumps += a.jumps; pvp += a.ship + a.pod; npc += a.npc; if (a.jumps === 0) zero++; });
+        busy.append(kv("Gate jumps", jumps.toLocaleString()), kv("Ship and pod kills", pvp.toLocaleString()),
+          kv("NPC kills", npc.toLocaleString()), kv("Systems with no jumps", `${zero} of ${sysIds.length}`));
+      } else {
+        busy.append(kv("Live traffic", "Loading…"));
+      }
+
+      const st = el("dl");
+      const withSt = sysIds.filter(id => (catalog.systems[id].sid || []).length);
+      const pending = withSt.some(id => catalog.systems[id].sv === undefined);
+      const count = test => withSt.filter(id => test(catalog.systems[id])).length;
+      st.append(kv("Systems with NPC stations", `${withSt.length} of ${sysIds.length}`));
+      st.append(kv("With jump clones", pending ? "Checking…" : count(x => x.jc === true)));
+      st.append(kv("With manufacturing", pending ? "Checking…" : count(x => systemHas(x, "factory"))));
+
+      pop.append(head, facts, el("h5", null, "Last hour"), busy, el("h5", null, "Stations"), st);
+      appendOwnership(pop, sysIds, isCurrent, reg === POCHVEN);
+    };
+  }
+  function constellationButton(cons) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "reg-link";
+    b.textContent = catalog.constellations[cons] || `Constellation ${cons}`;
+    b.setAttribute("aria-label", `${b.textContent}. Show constellation details`);
+    attachPop(b, "cn:" + cons, buildConstellationPop(cons));
+    return b;
+  }
+
+  // Main faction of each high or low security region, worked out from ESI's sovereignty data.
+  function computeRegionFactions(sov) {
+    const tally = {};
+    for (const idStr in catalog.systems) {
+      const sys = catalog.systems[idStr];
+      const reg = regionOf(sys);
+      if (reg === undefined || reg === POCHVEN) continue;
+      const t = tally[reg] || (tally[reg] = { empire: 0, other: 0, factions: {} });
+      const cls = secClass(sys);
+      if (cls === "high" || cls === "low") t.empire++; else t.other++;
+      const claim = sov.get(+idStr);
+      if (claim && claim.faction_id && !claim.alliance_id) t.factions[claim.faction_id] = (t.factions[claim.faction_id] || 0) + 1;
+    }
+    const result = {};
+    for (const reg in tally) {
+      const t = tally[reg];
+      if (t.empire <= t.other) continue; // mostly null-sec: not an empire region
+      const top = Object.entries(t.factions).sort((a, b) => b[1] - a[1])[0];
+      if (top && FACTIONS[top[0]]) result[reg] = +top[0];
+    }
+    catalog.regionFaction = result;
+    saveCatalog();
+    render();
+  }
+  function regionFaction(reg) {
+    const fid = catalog.regionFaction && catalog.regionFaction[reg];
+    return fid ? { id: fid, ...FACTIONS[fid] } : null;
+  }
+  function factionBox(reg) {
+    const f = regionFaction(reg);
+    if (!f) return null;
+    const box = document.createElement("span");
+    box.className = "fbox"; box.style.background = f.color;
+    box.setAttribute("role", "img"); box.setAttribute("aria-label", f.name); box.title = f.name;
+    return box;
+  }
+
+  function regionButton(reg) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "reg-link";
+    b.textContent = catalog.regions[reg] || "Unknown";
+    b.setAttribute("aria-label", `${b.textContent}. Show region details`);
+    attachPop(b, "rg:" + reg, buildRegionPop(reg));
+    return b;
+  }
+
+  function featIcon(kind, label) {
+    const span = document.createElement("span");
+    span.className = kind === "station" ? "f-station" : kind === "ice" ? "f-ice" : "f-clone";
+    span.setAttribute("role", "img"); span.setAttribute("aria-label", label); span.title = label;
+    span.innerHTML = ICONS[kind];
+    return span;
+  }
+  // Faction warfare: loaded once per hour, shown as a crossed-swords marker in the occupier's colour.
+  let fwMap = null;
+  function loadFW() {
+    return cachedGet("/fw/systems/").then(data => {
+      if (!Array.isArray(data)) return;
+      fwMap = new Map(data.map(x => [x.solar_system_id, x]));
+      render();
+    }).catch(e => console.warn("Faction warfare data unavailable:", e));
+  }
+  const factionName = id => (FACTIONS[id] && FACTIONS[id].name) || nameOf(id);
+  function buildFwPop(id) {
+    return (pop, isCurrent) => {
+      const sys = catalog.systems[id];
+      const fw = fwMap && fwMap.get(id);
+      const head = document.createElement("h4");
+      head.textContent = `Faction warfare in ${sys ? sys.n : "this system"}`;
+      pop.append(head);
+      if (!fw) { pop.append(el("p", "d-note", "No faction warfare data.")); return; }
+      const ids = [fw.owner_faction_id, fw.occupier_faction_id].filter(f => f && !FACTIONS[f]);
+      const fill = () => {
+        const dl = el("dl");
+        if (fw.occupier_faction_id) dl.append(kv("Occupied by", factionName(fw.occupier_faction_id)));
+        if (fw.owner_faction_id && fw.owner_faction_id !== fw.occupier_faction_id) dl.append(kv("Owned by", factionName(fw.owner_faction_id)));
+        if (fw.contested) dl.append(kv("Status", fw.contested.charAt(0).toUpperCase() + fw.contested.slice(1)));
+        if (fw.victory_points_threshold) {
+          const pct = Math.round(fw.victory_points / fw.victory_points_threshold * 100);
+          dl.append(kv("Victory points", `${fw.victory_points.toLocaleString()} of ${fw.victory_points_threshold.toLocaleString()} (${pct}%)`));
+        }
+        pop.replaceChildren(head, dl);
+        positionPop();
+      };
+      if (ids.length) resolveNames(ids).then(() => { if (isCurrent()) fill(); }); else fill();
+    };
+  }
+  function fwButton(id, fw) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "f-btn";
+    const occ = FACTIONS[fw.occupier_faction_id];
+    if (occ) b.style.color = occ.color;
+    b.setAttribute("aria-label", `Faction warfare system${occ ? ", occupied by " + occ.name : ""}. Show details`);
+    b.innerHTML = ICONS.fw;
+    attachPop(b, "fw:" + id, buildFwPop(id));
+    return b;
+  }
+
+  function featureIcons(id, sys) {
+    const wrap = document.createElement("span"); wrap.className = "feat";
+    const n = sys.sid ? sys.sid.length : 0;
+    if (n > 0) wrap.append(stationButton(id, n));
+    if (sys.jc) wrap.append(featIcon("clone", "Jump clone service available"));
+    const fw = fwMap && fwMap.get(id);
+    if (fw) wrap.append(fwButton(id, fw));
+    const ice = iceTypeOf(sys);
+    if (ice) wrap.append(featIcon("ice", `Ice belt system: ${ice}`));
+    return wrap;
+  }
+  function buildLegend() {
+    const a = document.createElement("span"), b = document.createElement("span");
+    const fa = document.createElement("span"); fa.className = "feat"; fa.append(featIcon("station", "NPC station"));
+    const fb = document.createElement("span"); fb.className = "feat"; fb.append(featIcon("clone", "Jump clone service"));
+    a.append(fa, "Has NPC stations"); b.append(fb, "Jump clone service in a station");
+    const c = document.createElement("span");
+    const fc = document.createElement("span"); fc.className = "feat";
+    const fwIcon = document.createElement("span"); fwIcon.className = "f-station"; fwIcon.innerHTML = ICONS.fw;
+    fwIcon.setAttribute("role", "img"); fwIcon.setAttribute("aria-label", "Faction warfare");
+    fc.append(fwIcon);
+    c.append(fc, "Faction warfare system, coloured by occupier");
+    const d = document.createElement("span");
+    const fd = document.createElement("span"); fd.className = "feat"; fd.append(featIcon("ice", "Ice belt"));
+    d.append(fd, "Ice belt system");
+    $("legend").append(a, b, c, d);
+  }
+
+  // ---------- System details ----------
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  function kv(label, value) {
+    const row = el("div", "kv"); const dd = el("dd");
+    if (value instanceof Node) dd.append(value); else dd.textContent = String(value);
+    row.append(el("dt", null, label), dd); return row;
+  }
+  function section(title, body, wide) {
+    const sec = el("section", "d-sec" + (wide ? " wide" : ""));
+    sec.append(el("h3", null, title), body); return sec;
+  }
+  const loadingNote = () => el("p", "d-note", "Loading…");
+
+  const detailCache = new Map();
+  function loadSystemDetail(id) {
+    if (detailCache.has(id)) return detailCache.get(id);
+    const p = (async () => {
+      const { data: sys } = await esi(`/universe/systems/${id}/`);
+      const out = { sys, star: null, neighbours: [], stations: [] };
+      const tasks = [];
+      if (sys.star_id) tasks.push(esi(`/universe/stars/${sys.star_id}/`).then(r => { out.star = r.data; }).catch(() => {}));
+      tasks.push(pool(sys.stargates || [], 6, async g => {
+        const { data } = await esi(`/universe/stargates/${g}/`);
+        out.neighbours.push(data.destination.system_id);
+      }));
+      tasks.push(loadStations(id, sys.stations || []).then(list => {
+        out.stations = list.map(st => ({ name: st.name, services: st.services, jc: hasCloneService(st.services) }));
+      }).catch(() => {}));
+      await Promise.all(tasks);
+      out.neighbours = [...new Set(out.neighbours)];
+      out.stations.sort((a, b) => a.name.localeCompare(b.name));
+      return out;
+    })();
+    detailCache.set(id, p);
+    p.catch(() => detailCache.delete(id));
+    return p;
+  }
+
+  const getMemo = new Map();
+  function cachedGet(path, ttl = 3600000) {
+    const m = getMemo.get(path);
+    if (m && Date.now() - m.at < ttl) return m.p;
+    const p = esi(path).then(r => r.data);
+    getMemo.set(path, { p, at: Date.now() });
+    p.catch(() => getMemo.delete(path)); // a failed request is retried next time
+    return p;
+  }
+  // Find a numeric field anywhere inside a (possibly nested) claim object.
+  function findId(obj, key, depth = 0) {
+    if (!obj || typeof obj !== "object" || depth > 5) return undefined;
+    if (typeof obj[key] === "number") return obj[key];
+    for (const v of Object.values(obj)) {
+      const found = findId(v, key, depth + 1);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  }
+  // Normalise both sovereignty formats to Map(systemId -> {alliance_id, faction_id}).
+  function normaliseSov(data) {
+    const list = Array.isArray(data) ? data : (data && Array.isArray(data.solar_systems) ? data.solar_systems : null);
+    if (!list) throw new Error("ESI returned an unexpected sovereignty format");
+    const map = new Map();
+    list.forEach(e => {
+      const id = e.solar_system_id !== undefined ? e.solar_system_id : e.system_id;
+      if (id === undefined) return;
+      const src = e.claim !== undefined ? e.claim : e;
+      map.set(id, { alliance_id: findId(src, "alliance_id"), faction_id: findId(src, "faction_id") });
+    });
+    return map;
+  }
+  let sovMemo = null;
+  function loadSov() {
+    if (sovMemo && Date.now() - sovMemo.at < 3600000) return sovMemo.p;
+    const p = esi("/sovereignty/systems/")
+      .then(r => normaliseSov(r.data))
+      .catch(() => esi("/sovereignty/map/", { compatDate: "2025-12-16" }).then(r => normaliseSov(r.data)));
+    sovMemo = { p, at: Date.now() };
+    p.catch(() => { sovMemo = null; });
+    return p;
+  }
+  async function loadGlobal() {
+    const [sov, fw, inc] = await Promise.allSettled([
+      loadSov(), cachedGet("/fw/systems/"), cachedGet("/incursions/")
+    ]);
+    const ok = r => r.status === "fulfilled" && Array.isArray(r.value);
+    return {
+      sov: sov.status === "fulfilled" ? sov.value : null,
+      sovError: sov.status === "rejected" ? sov.reason.message : null,
+      fw: ok(fw) ? new Map(fw.value.map(x => [x.solar_system_id, x])) : null,
+      inc: ok(inc) ? inc.value : null
+    };
+  }
+
+  const nameCache = {};
+  async function resolveNames(ids) {
+    const need = [...new Set(ids.filter(i => i && !nameCache[i]))];
+    if (!need.length) return;
+    try {
+      const { data } = await esi("/universe/names/", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(need)
+      });
+      data.forEach(d => { nameCache[d.id] = d.name; });
+    } catch (e) {
+      if (need.length > 1) {
+        await pool(need, 4, async id => {
+          try {
+            const { data } = await esi("/universe/names/", {
+              method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify([id])
+            });
+            data.forEach(d => { nameCache[d.id] = d.name; });
+          } catch (e2) { /* leave as an id */ }
+        });
+      }
+    }
+  }
+  const nameOf = id => nameCache[id] || `#${id}`;
+
+  function quietPercent(id) {
+    const score = x => { const a = activity(x); return a.jumps + a.ship + a.pod; };
+    const mine = score(id);
+    let total = 0, busier = 0;
+    for (const idStr in catalog.systems) {
+      if (UNREACHABLE.has(regionOf(catalog.systems[idStr]))) continue;
+      total++;
+      if (score(+idStr) > mine) busier++;
+    }
+    return total ? Math.round(busier / total * 100) : 0;
+  }
+
+  let detailId = null;
+  async function openSystem(id) {
+    const sys = catalog.systems[id];
+    if (!sys) return;
+    detailId = id;
+    const dlg = $("sysDialog");
+    const reg = regionOf(sys);
+    const regionName = reg !== undefined ? (catalog.regions[reg] || "Unknown region") : "…";
+    const consName = sys.c !== undefined ? (catalog.constellations[sys.c] || `Constellation ${sys.c}`) : "…";
+
+    $("dName").textContent = sys.n;
+    $("dSub").replaceChildren(secChip(sys), el("span", null, `${regionName}, ${consName}`));
+
+    const a = activity(id);
+    const live = el("dl");
+    live.append(kv("Gate jumps", a.jumps.toLocaleString()), kv("Ship kills", a.ship.toLocaleString()),
+      kv("Pod kills", a.pod.toLocaleString()), kv("NPC kills", a.npc.toLocaleString()));
+    if (prebuilt.activity) live.append(kv("30-day average", `${avgOf(id).toFixed(1)} jumps per hour`));
+    const liveWrap = el("div"); liveWrap.append(live);
+    if (liveLoaded) liveWrap.append(el("p", "pct", `Quieter than ${quietPercent(id)}% of systems right now`));
+
+    const controlBox = el("div"); controlBox.append(loadingNote());
+    const celestialBox = el("div"); celestialBox.append(loadingNote());
+    const starBox = el("div"); starBox.append(loadingNote());
+    const stationBox = el("div"); stationBox.append(loadingNote());
+    const nbBox = el("div"); nbBox.append(loadingNote());
+
+    const links = el("div", "d-links");
+    const d = el("a", null, "Dotlan map"); d.href = dotlan(sys.n); d.target = "_blank"; d.rel = "noopener";
+    const z = el("a", null, "zKillboard"); z.href = `https://zkillboard.com/system/${id}/`; z.target = "_blank"; z.rel = "noopener";
+    const c = el("button", "btn", "Copy name"); c.type = "button"; c.addEventListener("click", () => copyName(sys.n, c));
+    const mb = el("button", "btn", "Region map"); mb.type = "button"; mb.addEventListener("click", () => openMap(id, "region"));
+    const mn = el("button", "btn", "Nearby map"); mn.type = "button"; mn.addEventListener("click", () => openMap(id, "nearby"));
+    links.append(d, z, c, mb, mn);
+
+    $("dBody").replaceChildren(
+      section("Last hour", liveWrap),
+      section("Control", controlBox),
+      section("Celestials", celestialBox),
+      section("Star", starBox),
+      section("Neighbouring systems", nbBox, true),
+      section("Stations", stationBox, true),
+      section("Links", links, true)
+    );
+    if (!dlg.open) dlg.showModal();
+    $("sysDialog").scrollTop = 0;
+
+    const [detailRes, globalRes] = await Promise.allSettled([loadSystemDetail(id), loadGlobal()]);
+    if (detailId !== id) return; // another system was opened meanwhile
+
+    // Control: sovereignty, faction warfare, incursions
+    if (globalRes.status === "fulfilled") {
+      const g = globalRes.value;
+      const sov = g.sov && g.sov.get(id);
+      const fw = g.fw && g.fw.get(id);
+      const inc = g.inc && g.inc.find(x => (x.infested_solar_systems || []).includes(id));
+      await resolveNames([sov && sov.alliance_id, sov && sov.faction_id, fw && fw.occupier_faction_id, fw && fw.owner_faction_id]);
+      if (detailId !== id) return;
+      const dl = el("dl");
+      if (reg === POCHVEN) dl.append(kv("Held by", "Triglavian Collective"));
+      else if (sov && sov.alliance_id) dl.append(kv("Sovereignty", nameOf(sov.alliance_id)));
+      else if (sov && sov.faction_id) dl.append(kv("Faction", nameOf(sov.faction_id)));
+      else dl.append(kv("Sovereignty", g.sov ? "Unclaimed" : "Unavailable"));
+      if (fw) {
+        dl.append(kv("Faction warfare", fw.contested ? fw.contested.charAt(0).toUpperCase() + fw.contested.slice(1) : "Yes"));
+        dl.append(kv("Occupied by", nameOf(fw.occupier_faction_id)));
+        if (fw.victory_points_threshold) {
+          const pct = Math.round(fw.victory_points / fw.victory_points_threshold * 100);
+          dl.append(kv("Victory points", `${fw.victory_points.toLocaleString()} of ${fw.victory_points_threshold.toLocaleString()} (${pct}%)`));
+        }
+      }
+      if (inc) {
+        const staging = catalog.systems[inc.staging_solar_system_id];
+        dl.append(kv("Incursion", inc.state ? inc.state.charAt(0).toUpperCase() + inc.state.slice(1) : "Active"));
+        if (staging) dl.append(kv("Staging system", staging.n));
+      } else if (g.inc) {
+        dl.append(kv("Incursion", "None"));
+      }
+      controlBox.replaceChildren(dl);
+    } else {
+      controlBox.replaceChildren(el("p", "d-note", "Couldn’t load control data from ESI."));
+    }
+
+    if (detailRes.status !== "fulfilled") {
+      const msg = "Couldn’t load this from ESI. Close and reopen the system to try again.";
+      [celestialBox, starBox, stationBox, nbBox].forEach(b => b.replaceChildren(el("p", "d-note", msg)));
+      return;
+    }
+    const det = detailRes.value;
+
+    // Celestials
+    const planets = det.sys.planets || [];
+    const moons = planets.reduce((n, p) => n + (p.moons || []).length, 0);
+    const belts = planets.reduce((n, p) => n + (p.asteroid_belts || []).length, 0);
+    const cel = el("dl");
+    cel.append(kv("True security", typeof det.sys.security_status === "number" ? det.sys.security_status.toFixed(3) : "Unknown"), kv("Planets", planets.length), kv("Moons", moons),
+      kv("Asteroid belts", belts), kv("Stargates", (det.sys.stargates || []).length), kv("Stations", (det.sys.stations || []).length),
+      kv("Jump clone service", det.stations.some(st => st.jc) ? "Yes" : "No"),
+      kv("Ice belts", iceTypeOf(catalog.systems[id]) || "None listed"));
+    if (typeof catalog.systems[id].r === "number") cel.append(kv("Size (radius)", `${catalog.systems[id].r.toFixed(1)} AU`));
+    celestialBox.replaceChildren(cel);
+
+    // Star
+    if (det.star) {
+      const st = el("dl");
+      const sd = det.star;
+      if (sd.name) st.append(kv("Name", sd.name));
+      if (sd.spectral_class) st.append(kv("Spectral class", sd.spectral_class));
+      if (typeof sd.temperature === "number") st.append(kv("Temperature", `${sd.temperature.toLocaleString()} K`));
+      if (typeof sd.luminosity === "number") st.append(kv("Luminosity", sd.luminosity.toFixed(3)));
+      if (typeof sd.age === "number") st.append(kv("Age", `${(sd.age / 1e9).toFixed(1)} billion years`));
+      starBox.replaceChildren(st);
+    } else {
+      starBox.replaceChildren(el("p", "d-note", "No star data for this system."));
+    }
+
+    // Neighbours, quietest first
+    if (det.neighbours.length) {
+      const list = el("div", "nb-list");
+      const sorted = det.neighbours.slice().sort((x, y) => {
+        const ax = activity(x), ay = activity(y);
+        return (ax.jumps + ax.ship + ax.pod) - (ay.jumps + ay.ship + ay.pod);
+      });
+      sorted.forEach(nid => {
+        const nsys = catalog.systems[nid];
+        const b = el("button", "nb"); b.type = "button";
+        if (nsys) {
+          const j = activity(nid).jumps;
+          b.append(secChip(nsys), el("span", "nb-name", nsys.n), el("span", "nb-j", `${j} jump${j === 1 ? "" : "s"}`));
+          b.addEventListener("click", () => openSystem(nid));
+        } else {
+          b.append(el("span", "nb-name", `System ${nid}`)); b.disabled = true;
+        }
+        list.append(b);
+      });
+      nbBox.replaceChildren(list);
+    } else {
+      nbBox.replaceChildren(el("p", "d-note", "No stargates in this system."));
+    }
+
+    // Stations
+    if (det.stations.length) {
+      const ul = el("ul", "st-list");
+      det.stations.forEach(st => {
+        const li = el("li");
+        li.append(el("div", "st-name", st.name), serviceChips(st.services));
+        ul.append(li);
+      });
+      stationBox.replaceChildren(ul);
+    } else {
+      stationBox.replaceChildren(el("p", "d-note", "No NPC stations."));
+    }
+  }
+
+  // ---------- 2D maps: whole region, or everything within 3 jumps ----------
+  const MAP_KEY = "quietspace.mapdata.v1";
+  const NEAR_JUMPS = 3;
+  let mapData = null; // { pos: {id: [x, z]}, links: {id: [destId, ...]} }
+  function getMapData() {
+    if (mapData) return mapData;
+    try { mapData = JSON.parse(localStorage.getItem(MAP_KEY)) || null; } catch (e) { mapData = null; }
+    if (!mapData || !mapData.pos || !mapData.links) mapData = { pos: {}, links: {} };
+    return mapData;
+  }
+  function saveMapData() { try { localStorage.setItem(MAP_KEY, JSON.stringify(mapData)); } catch (e) { /* storage full: keep in memory */ } }
+
+  // Positions and stargate links for the given systems (cached once fetched).
+  async function fetchSystemsAndLinks(ids, progress) {
+    const md = getMapData();
+    const need = ids.filter(id => !md.pos[id] || !md.links[id]);
+    if (!need.length) return;
+    const gateOwner = new Map(), gatesBySys = new Map();
+    let done = 0;
+    await pool(need, 12, async id => {
+      const { data } = await esi(`/universe/systems/${id}/`);
+      if (data.position) md.pos[id] = [data.position.x, data.position.z];
+      const gates = data.stargates || [];
+      gatesBySys.set(id, { total: gates.length, dests: [] });
+      gates.forEach(g => gateOwner.set(g, id));
+      progress(`Loading map: systems ${++done} of ${need.length}`);
+    });
+    const gates = [...gateOwner.keys()];
+    done = 0;
+    await pool(gates, 12, async g => {
+      const { data } = await esi(`/universe/stargates/${g}/`);
+      gatesBySys.get(gateOwner.get(g)).dests.push(data.destination.system_id);
+      progress(`Loading map: connections ${++done} of ${gates.length}`);
+    });
+    gatesBySys.forEach((v, id) => { if (v.dests.length === v.total) md.links[id] = [...new Set(v.dests)]; });
+  }
+  async function fetchPositions(ids, progress) {
+    const md = getMapData();
+    const need = ids.filter(id => !md.pos[id]);
+    let done = 0;
+    await pool(need, 12, async id => {
+      const { data } = await esi(`/universe/systems/${id}/`);
+      if (data.position) md.pos[id] = [data.position.x, data.position.z];
+      progress(`Loading map: positions ${++done} of ${need.length}`);
+    });
+  }
+  async function ensureRegionGraph(reg, progress) {
+    const md = getMapData();
+    const ids = Object.keys(catalog.systems).map(Number).filter(id => regionOf(catalog.systems[id]) === reg);
+    await fetchSystemsAndLinks(ids, progress);
+    const inRegion = new Set(ids);
+    await fetchPositions([...new Set(ids.flatMap(id => md.links[id] || []).filter(d => !inRegion.has(d)))], progress);
+    saveMapData();
+  }
+  // Breadth-first walk along stargates; returns Map(systemId -> jumps from the centre).
+  async function ensureNearbyGraph(center, depth, progress) {
+    const md = getMapData();
+    const dist = new Map([[center, 0]]);
+    let frontier = [center];
+    for (let d = 0; d < depth && frontier.length; d++) {
+      await fetchSystemsAndLinks(frontier, msg => progress(`${msg} (${d + 1} of ${depth} jumps out)`));
+      const next = [];
+      frontier.forEach(id => (md.links[id] || []).forEach(n => { if (!dist.has(n)) { dist.set(n, d + 1); next.push(n); } }));
+      frontier = next;
+    }
+    await fetchPositions([...dist.keys()], progress);
+    saveMapData();
+    return dist;
+  }
+
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const svgEl = (tag, attrs) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const map = { mode: "region", reg: null, focus: null, sel: null, dist: null, vb: null, bounds: null, nodes: new Map(), consLabels: [], loading: 0, dragged: false };
+
+  function activityColor(j, max) {
+    if (!j) return "#5f6f82";
+    const t = max > 1 ? Math.log1p(j) / Math.log1p(max) : 1;
+    const a = [242, 201, 76], b = [214, 64, 42]; // amber to red
+    const c = a.map((v, i) => Math.round(v + (b[i] - v) * t));
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+  }
+  function nodeFill(id, maxJumps) {
+    const sys = catalog.systems[id];
+    if (!sys) return "#5f6f82";
+    if ($("mapColour").value === "act") return activityColor(activity(id).jumps, maxJumps);
+    if (regionOf(sys) === POCHVEN) return "#7a2a44";
+    const d = displaySec(sys.s);
+    return d === null ? "#5f6f82" : SEC_COLORS[secKey(d)];
+  }
+
+  function mapScale() {
+    const svg = $("mapSvg");
+    const cw = svg.clientWidth || 800, ch = svg.clientHeight || 500;
+    return Math.max(map.vb.w / cw, map.vb.h / ch); // map units per screen pixel
+  }
+  function applyViewBox() {
+    const v = map.vb;
+    $("mapSvg").setAttribute("viewBox", `${v.x} ${v.y} ${v.w} ${v.h}`);
+    const k = mapScale();
+    map.nodes.forEach(n => {
+      const big = n.here ? 1.4 : 1;
+      n.dot.setAttribute("r", (n.out ? 4 : 5) * big * k);
+      n.ring.setAttribute("r", 10 * k);
+      n.text.setAttribute("x", n.x + 8 * k); n.text.setAttribute("y", n.y + 4 * k);
+      n.text.setAttribute("font-size", 12 * k);
+    });
+    map.consLabels.forEach(t => t.setAttribute("font-size", 15 * k));
+  }
+  function fitMap() {
+    const b = map.bounds, pad = Math.max(b.w, b.h) * 0.08 + 1;
+    map.vb = { x: b.x - pad, y: b.y - pad, w: b.w + pad * 2, h: b.h + pad * 2 };
+    applyViewBox();
+  }
+  function zoomMap(f, cx, cy) {
+    const v = map.vb, size = Math.max(map.bounds.w, map.bounds.h);
+    const nw = Math.min(size * 3 + 10, Math.max(size / 25 + 1, v.w * f));
+    const real = nw / v.w;
+    if (cx === undefined) { cx = v.x + v.w / 2; cy = v.y + v.h / 2; }
+    map.vb = { x: cx - (cx - v.x) * real, y: cy - (cy - v.y) * real, w: v.w * real, h: v.h * real };
+    applyViewBox();
+  }
+  function svgPoint(clientX, clientY) {
+    const svg = $("mapSvg"), pt = svg.createSVGPoint();
+    pt.x = clientX; pt.y = clientY;
+    const ctm = svg.getScreenCTM();
+    return ctm ? pt.matrixTransform(ctm.inverse()) : { x: map.vb.x, y: map.vb.y };
+  }
+
+  function renderMapLegend() {
+    const lg = $("mapLegend"); lg.replaceChildren();
+    const item = (swatch, text) => { const s = document.createElement("span"); s.append(swatch, text); lg.append(s); };
+    const dot = color => { const i = document.createElement("i"); i.style.background = color; return i; };
+    if ($("mapColour").value === "act") {
+      item(dot("#5f6f82"), "No jumps");
+      item(dot(activityColor(1, 1000)), "Few jumps");
+      item(dot(activityColor(1000, 1000)), map.mode === "nearby" ? "Busiest on this map" : "Busiest in region");
+    } else {
+      ["1.0", "0.7", "0.5", "0.3", "0.0"].forEach(k => item(dot(SEC_COLORS[k]), k === "0.0" ? "≤0.0" : k));
+    }
+    const ring = document.createElement("i"); ring.className = "lg-ring"; item(ring, "Selected system");
+    const line = document.createElement("i"); line.className = "lg-line"; item(line, "Gate to another region");
+  }
+
+  // Draws a set of systems. outSet: systems drawn hollow (region view's neighbours). dist: jumps from the centre (nearby view).
+  function renderGraph(ids, outSet, dist) {
+    const md = getMapData();
+    const svg = $("mapSvg");
+    svg.replaceChildren();
+    map.nodes = new Map(); map.consLabels = [];
+    const all = ids.filter(id => md.pos[id]);
+    if (!all.length) { $("mapStatus").textContent = "No map data for these systems."; return; }
+    const shown = new Set(all);
+
+    // Normalise EVE coordinates (metres, top-down x/z) to a 0–1000 box.
+    const xs = all.map(id => md.pos[id][0]), zs = all.map(id => -md.pos[id][1]);
+    const minX = Math.min(...xs), minZ = Math.min(...zs);
+    const span = Math.max(Math.max(...xs) - minX, Math.max(...zs) - minZ) || 1;
+    const pts = new Map(all.map(id => [id, { x: (md.pos[id][0] - minX) / span * 1000, y: (-md.pos[id][1] - minZ) / span * 1000 }]));
+    const px = all.map(id => pts.get(id).x), py = all.map(id => pts.get(id).y);
+    map.bounds = { x: Math.min(...px), y: Math.min(...py), w: Math.max(...px) - Math.min(...px), h: Math.max(...py) - Math.min(...py) };
+
+    const focusSys = catalog.systems[map.focus];
+    const focusCons = focusSys ? focusSys.c : undefined;
+    const focusReg = focusSys ? regionOf(focusSys) : undefined;
+    const gEdges = svgEl("g", {}), gCons = svgEl("g", {}), gNodes = svgEl("g", {});
+    svg.append(gEdges, gCons, gNodes);
+
+    const drawn = new Set();
+    all.forEach(id => {
+      (md.links[id] || []).forEach(d => {
+        if (!shown.has(d)) return;
+        const key = id < d ? `${id}-${d}` : `${d}-${id}`;
+        if (drawn.has(key)) return;
+        drawn.add(key);
+        const a = pts.get(id), b = pts.get(d);
+        const sa = catalog.systems[id], sb = catalog.systems[d];
+        let cls = "m-edge";
+        if (!sa || !sb || regionOf(sa) !== regionOf(sb)) cls += " out";
+        else if (sa.c !== sb.c) cls += " cross";
+        gEdges.append(svgEl("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: cls }));
+      });
+    });
+
+    // Faint constellation names at each constellation's centre
+    const byCons = new Map();
+    all.forEach(id => {
+      if (outSet.has(id) || !catalog.systems[id]) return;
+      const c = catalog.systems[id].c;
+      if (!byCons.has(c)) byCons.set(c, []);
+      byCons.get(c).push(pts.get(id));
+    });
+    byCons.forEach((list, c) => {
+      const cx = list.reduce((t, p) => t + p.x, 0) / list.length, cy = list.reduce((t, p) => t + p.y, 0) / list.length;
+      const t = svgEl("text", { x: cx, y: cy - 14, class: "m-cons" + (c === focusCons ? " focus" : "") });
+      t.textContent = catalog.constellations[c] || "";
+      gCons.append(t); map.consLabels.push(t);
+    });
+
+    const maxJumps = Math.max(1, ...all.filter(id => !outSet.has(id)).map(id => activity(id).jumps));
+    all.forEach(id => {
+      const p = pts.get(id), out = outSet.has(id);
+      const sys = catalog.systems[id];
+      const reg = sys ? regionOf(sys) : undefined;
+      const g = svgEl("g", { class: "m-node", tabindex: "0", role: "button" });
+      const here = id === map.focus;
+      if (out) g.classList.add("out");
+      else if (!dist && focusCons !== undefined && sys && sys.c !== focusCons) g.classList.add("dim");
+      if (dist && dist.get(id) === NEAR_JUMPS) g.classList.add("far");
+      if (here) g.classList.add("here");
+      const ring = svgEl("circle", { cx: p.x, cy: p.y, class: "ring" });
+      const dot = svgEl("circle", { cx: p.x, cy: p.y, class: "dot" });
+      if (!out) dot.setAttribute("fill", nodeFill(id, maxJumps));
+      const text = svgEl("text", {});
+      const name = sys ? sys.n : `System ${id}`;
+      const otherRegion = reg !== focusReg;
+      text.textContent = (out || (dist && otherRegion)) ? `${name} (${catalog.regions[reg] || "other region"})` : name;
+      const dj = dist ? dist.get(id) : null;
+      g.setAttribute("aria-label", text.textContent + (dj === null || dj === undefined ? "" : dj === 0 ? ", centre" : `, ${dj} jump${dj === 1 ? "" : "s"} away`));
+      g.append(ring, dot, text);
+      g.addEventListener("click", () => { if (!map.dragged) selectMapSystem(id); });
+      g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectMapSystem(id); } });
+      g.addEventListener("mouseenter", () => showMapInfo(id));
+      g.addEventListener("mouseleave", () => showMapInfo(map.sel));
+      gNodes.append(g);
+      map.nodes.set(id, { g, dot, ring, text, x: p.x, y: p.y, out, here, maxJumps });
+    });
+    renderMapLegend();
+  }
+
+  function recolourMap() {
+    map.nodes.forEach((n, id) => { if (!n.out) n.dot.setAttribute("fill", nodeFill(id, n.maxJumps)); });
+    renderMapLegend();
+  }
+
+  function showMapInfo(id) {
+    const box = $("mapInfo");
+    box.replaceChildren();
+    const sys = id !== null && id !== undefined && catalog.systems[id];
+    if (!sys) { box.append(el("span", "mi-sub", "Select a system to see its details. Drag to pan, scroll or use the buttons to zoom.")); return; }
+    const reg = regionOf(sys);
+    const a = activity(id);
+    box.append(secChip(sys), el("b", null, sys.n),
+      el("span", "mi-sub", `${catalog.constellations[sys.c] || "…"}, ${catalog.regions[reg] || "…"}`),
+      el("span", null, `${a.jumps} jump${a.jumps === 1 ? "" : "s"}, ${a.ship + a.pod} kill${a.ship + a.pod === 1 ? "" : "s"} last hour`));
+    if (map.mode === "nearby" && map.dist && map.dist.has(id) && id !== map.focus) {
+      const n = map.dist.get(id);
+      box.append(el("span", "mi-sub", `${n} gate jump${n === 1 ? "" : "s"} from ${catalog.systems[map.focus].n}`));
+    }
+    const btn = (label, fn) => { const b = el("button", "mbtn", label); b.type = "button"; b.addEventListener("click", fn); box.append(b); };
+    btn("View details", () => { $("mapDialog").close(); openSystem(id); });
+    if (map.mode === "nearby") {
+      if (id !== map.focus) btn("Centre map here", () => openMap(id, "nearby"));
+      btn("Region map", () => openMap(id, "region"));
+    } else {
+      if (reg !== undefined && reg !== map.reg) btn(`Open ${catalog.regions[reg] || "that region"} map`, () => openMap(id, "region"));
+      btn("Within 3 jumps", () => openMap(id, "nearby"));
+    }
+  }
+  function selectMapSystem(id) {
+    if (map.sel !== null && map.nodes.has(map.sel)) map.nodes.get(map.sel).g.classList.remove("sel");
+    map.sel = id;
+    if (map.nodes.has(id)) map.nodes.get(id).g.classList.add("sel");
+    showMapInfo(id);
+  }
+
+  function setModeButtons() {
+    $("mapModeRegion").setAttribute("aria-pressed", String(map.mode === "region"));
+    $("mapModeNear").setAttribute("aria-pressed", String(map.mode === "nearby"));
+  }
+
+  async function openMap(systemId, mode) {
+    const sys = catalog.systems[systemId];
+    const dlg = $("mapDialog");
+    if (!dlg.open) dlg.showModal();
+    map.mode = mode || map.mode || "region";
+    setModeButtons();
+    const ticket = ++map.loading;
+    $("mapSvg").replaceChildren(); $("mapLegend").replaceChildren(); $("mapInfo").replaceChildren();
+    map.vb = null; map.nodes = new Map();
+    const reg = sys ? regionOf(sys) : undefined;
+    map.focus = systemId; map.sel = systemId; map.dist = null; map.reg = reg;
+    const title = $("mapTitle");
+    if (!sys || (map.mode === "region" && reg === undefined)) {
+      title.textContent = sys ? sys.n : "Map";
+      $("mapSub").textContent = "";
+      $("mapStatus").textContent = "This system’s region is still loading. Try again once the background map check finishes.";
+      return;
+    }
+    if (map.mode === "region") {
+      title.textContent = catalog.regions[reg] || "Region";
+      const box = factionBox(reg); if (box) title.prepend(box);
+      $("mapSub").textContent = `Highlighting ${sys.n} and the ${catalog.constellations[sys.c] || "its"} constellation. Dashed blue links lead to neighbouring regions.`;
+    } else {
+      title.textContent = `Within ${NEAR_JUMPS} jumps of ${sys.n}`;
+      $("mapSub").textContent = "Loading nearby systems…";
+    }
+    $("mapStatus").textContent = "Loading map…";
+    const progress = msg => { if (ticket === map.loading) $("mapStatus").textContent = msg; };
+    try {
+      if (map.mode === "region") {
+        await ensureRegionGraph(reg, progress);
+        if (ticket !== map.loading || !dlg.open) return;
+        const md = getMapData();
+        const ids = Object.keys(catalog.systems).map(Number).filter(id => regionOf(catalog.systems[id]) === reg);
+        const inRegion = new Set(ids);
+        const outside = [...new Set(ids.flatMap(id => md.links[id] || []).filter(d => !inRegion.has(d)))];
+        $("mapStatus").textContent = "";
+        renderGraph(ids.concat(outside), new Set(outside), null);
+      } else {
+        const dist = await ensureNearbyGraph(systemId, NEAR_JUMPS, progress);
+        if (ticket !== map.loading || !dlg.open) return;
+        map.dist = dist;
+        const regions = new Set([...dist.keys()].map(id => catalog.systems[id] && regionOf(catalog.systems[id])).filter(r => r !== undefined));
+        $("mapSub").textContent = `${dist.size} systems across ${regions.size} region${regions.size === 1 ? "" : "s"}. Dashed blue links cross into another region, and systems ${NEAR_JUMPS} jumps out are slightly faded.`;
+        $("mapStatus").textContent = "";
+        renderGraph([...dist.keys()], new Set(), dist);
+      }
+    } catch (e) {
+      if (ticket === map.loading) $("mapStatus").textContent = `Couldn’t load the map from ESI (${e.message}). Close and reopen to try again.`;
+      return;
+    }
+    if (!map.bounds) return;
+    fitMap();
+    selectMapSystem(systemId);
+  }
+
+  // ---------- Hosted data (built by the GitHub Action) ----------
+  // When the page runs from GitHub Pages, the Action publishes ready-made files in data/.
+  // Opened as a local file, none of this exists and the page fetches everything from ESI itself.
+  const prebuilt = { activity: null, stations: null, profiles: new Map() };
+  async function fetchData(name) {
+    if (location.protocol === "file:") return null;
+    try {
+      const r = await fetch(`data/${name}`, { cache: "no-cache" });
+      return r.ok ? await r.json() : null;
+    } catch (e) { return null; }
+  }
+  async function loadPrebuilt() {
+    const [cat, md, act] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json")]);
+    if (cat && cat.systems && Object.keys(cat.systems).length) {
+      const keepFaction = catalog.regionFaction;
+      catalog = { ...cat, cloneRule: CLONE_RULE, regionFaction: keepFaction };
+      catalog.constellations = catalog.constellations || {};
+      saveCatalog();
+    }
+    if (md && md.pos && md.links) {
+      const cur = getMapData();
+      mapData = { pos: { ...cur.pos, ...md.pos }, links: { ...cur.links, ...md.links } };
+      saveMapData();
+    }
+    if (act && act.systems) prebuilt.activity = act;
+  }
+  let stationsPromise = null;
+  function loadPrebuiltStations() {
+    if (!stationsPromise) stationsPromise = fetchData("stations.json");
+    return stationsPromise;
+  }
+  function loadProfiles(reg) {
+    if (!prebuilt.profiles.has(reg)) prebuilt.profiles.set(reg, fetchData(`profiles/${reg}.json`));
+    return prebuilt.profiles.get(reg);
+  }
+  const avgOf = id => { const v = prebuilt.activity && prebuilt.activity.systems[id]; return v ? v[0] : 0; };
+
+  function applyHostedColumns() {
+    const t = $("sysTable");
+    t.classList.toggle("hide-avg", !prebuilt.activity);
+    t.classList.toggle("hide-size", !Object.values(catalog.systems).some(x => typeof x.r === "number"));
+    if (prebuilt.activity && !$("sort").querySelector('option[value="avg"]')) {
+      const o = new Option("Lowest 30-day average", "avg");
+      $("sort").insertBefore(o, $("sort").options[1] || null);
+    }
+  }
+
+  // Weekly pattern pop-up
+  const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  // Monday 00:00 UTC of the current week, so local times use today's daylight-saving rules.
+  function thisMonday() {
+    const now = new Date();
+    return Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - ((now.getUTCDay() + 6) % 7) * 86400e3;
+  }
+  function slotLabel(slot, len, utc) {
+    const opt = utc ? { timeZone: "UTC" } : {};
+    const monday = thisMonday();
+    const fmt = s => {
+      const d = new Date(monday + s * 3600e3);
+      return {
+        day: d.toLocaleDateString(undefined, { weekday: "short", ...opt }),
+        time: d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hourCycle: "h23", ...opt })
+      };
+    };
+    const a = fmt(slot), b = fmt(slot + len);
+    return `${a.day} ${a.time}–${b.day !== a.day ? b.day + " " : ""}${b.time}`;
+  }
+  function bestWindow(values, len, busiest) {
+    let best = null, bestSum = null;
+    for (let s = 0; s < 168; s++) {
+      let sum = 0, ok = true;
+      for (let k = 0; k < len; k++) { const v = values[(s + k) % 168]; if (v === null) { ok = false; break; } sum += v; }
+      if (!ok) continue;
+      if (bestSum === null || (busiest ? sum > bestSum : sum < bestSum)) { best = s; bestSum = sum; }
+    }
+    return best;
+  }
+  function windowValue(slot) {
+    const wrap = document.createElement("span");
+    wrap.append(`${slotLabel(slot, 3, true)} EVE`);
+    if (new Date().getTimezoneOffset() !== 0) {
+      const local = document.createElement("small");
+      local.textContent = `Your time: ${slotLabel(slot, 3, false)}`;
+      wrap.append(local);
+    }
+    return wrap;
+  }
+  function buildAvgPop(id) {
+    return (pop, isCurrent) => {
+      const sys = catalog.systems[id];
+      const v = (prebuilt.activity && prebuilt.activity.systems[id]) || [0, 0, 0];
+      const head = el("h4", null, `Weekly pattern in ${sys ? sys.n : "this system"}`);
+      const facts = el("dl");
+      facts.append(kv("30-day average", `${v[0].toFixed(1)} jumps per hour`),
+        kv("Ship and pod kills", `${v[1].toFixed(2)} per hour`), kv("NPC kills", `${v[2].toFixed(1)} per hour`));
+      const note = el("p", "d-note", "Loading weekly pattern…");
+      pop.append(head, facts, note);
+      const reg = sys ? regionOf(sys) : undefined;
+      if (reg === undefined) { note.textContent = "No weekly pattern for this system yet."; return; }
+      loadProfiles(reg).then(p => {
+        if (!isCurrent()) return;
+        const prof = p && p.systems ? p.systems[id] : undefined;
+        if (!p || prof === undefined || prof === null) { note.textContent = "No weekly pattern for this system yet."; positionPop(); return; }
+        const values = prof === 0 ? Array(168).fill(0) : prof;
+        const max = Math.max(1, ...values.filter(x => x !== null));
+        const span = p.weeks >= 12 ? "the last 12 weeks" : `${p.weeks} week${p.weeks === 1 ? "" : "s"} so far`;
+        const sub = el("p", "d-note", `Average gate jumps per hour by day and hour (EVE time), from ${span}. One-off spikes are trimmed out.`);
+        const grid = el("div", "hm");
+        grid.append(el("span", "hm-d", ""));
+        [0, 6, 12, 18].forEach(h => grid.append(el("span", "hm-h", String(h).padStart(2, "0"))));
+        for (let d = 0; d < 7; d++) {
+          grid.append(el("span", "hm-d", WEEKDAYS[d]));
+          for (let h = 0; h < 24; h++) {
+            const val = values[d * 24 + h];
+            const c = el("span");
+            if (val === null) { c.className = "hm-x"; c.title = `${WEEKDAYS[d]} ${String(h).padStart(2, "0")}:00 EVE: no data yet`; }
+            else { c.style.background = activityColor(val, max); c.title = `${WEEKDAYS[d]} ${String(h).padStart(2, "0")}:00 EVE: ${val} jumps`; }
+            grid.append(c);
+          }
+        }
+        const key = el("div", "hm-key");
+        const sw = color => { const i = document.createElement("i"); i.style.background = color; return i; };
+        key.append(sw(activityColor(0, 1)), "No jumps", sw(activityColor(1, 100)), "Some", sw(activityColor(max, max)), "Busiest");
+        const win = el("dl");
+        if (values.every(x => x === null || x === 0)) {
+          win.append(kv("Pattern", `No gate jumps recorded in ${span}`));
+        } else {
+          const busy = bestWindow(values, 3, true), quiet = bestWindow(values, 3, false);
+          if (busy !== null) win.append(kv("Busiest", windowValue(busy)));
+          if (quiet !== null) win.append(kv("Quietest", windowValue(quiet)));
+        }
+        note.replaceWith(sub, grid, key, win);
+        positionPop();
+      });
+    };
+  }
+
+  async function copyName(name, btn) {
+    try { await navigator.clipboard.writeText(name); const t = btn.textContent; btn.textContent = "Copied"; setTimeout(() => btn.textContent = t, 1200); }
+    catch (e) { btn.textContent = "Copy failed"; }
+  }
+
+  // ---------- Hero ----------
+  function buildScale() {
+    SCALE.forEach(k => {
+      const s = document.createElement("span"); s.style.background = SEC_COLORS[k]; $("scaleBar").appendChild(s);
+      const t = document.createElement("span"); t.textContent = k === "0.0" ? "≤0.0" : k; $("scaleTicks").appendChild(t);
+    });
+  }
+
+  function renderHero() {
+    const ready = liveLoaded && currentRows.length;
+    if (!ready) {
+      if (liveLoaded && !currentRows.length && Object.keys(catalog.systems).length) {
+        setHeroEmpty("No systems match. Widen the filters above.");
+      }
+      return;
+    }
+    if (heroId === null || !currentRows.some(r => r.id === heroId) || !$("anotherBtn").dataset.picked) {
+      heroId = currentRows[0].id;
+    }
+    const r = currentRows.find(x => x.id === heroId);
+    $("heroName").classList.remove("placeholder");
+    $("heroName").textContent = r.sys.n;
+    $("heroRegion").textContent = r.reg !== undefined ? (catalog.regions[r.reg] || "Unknown") : "…";
+    $("heroJumps").textContent = r.a.jumps.toLocaleString();
+    $("heroKills").textContent = (r.a.ship + r.a.pod).toLocaleString();
+    $("heroNpc").textContent = r.a.npc.toLocaleString();
+    const d = displaySec(r.sys.s);
+    if (d === null) { $("marker").style.left = "-20px"; }
+    else {
+      const idx = d <= 0 ? 10 : Math.round((1 - d) * 10);
+      $("marker").style.left = ((idx + 0.5) / 11 * 100) + "%";
+    }
+    $("anotherBtn").disabled = false;
+    $("copyHero").disabled = false;
+    $("detailHero").disabled = false;
+    $("mapHero").disabled = false;
+    $("nearHero").disabled = false;
+  }
+  function setHeroEmpty(msg) {
+    $("heroName").classList.add("placeholder");
+    $("heroName").textContent = "Nothing here";
+    $("heroLabel").textContent = msg;
+    ["heroRegion","heroJumps","heroKills","heroNpc"].forEach(id => $(id).textContent = "…");
+    $("anotherBtn").disabled = true; $("copyHero").disabled = true; $("detailHero").disabled = true; $("mapHero").disabled = true; $("nearHero").disabled = true;
+  }
+
+  function pickAnother() {
+    if (!currentRows.length) return;
+    const score = r => r.a.jumps + r.a.ship + r.a.pod;
+    const best = score(currentRows[0]);
+    const pool = currentRows.filter(r => score(r) === best && r.id !== heroId);
+    if (!pool.length) return;
+    heroId = pool[Math.floor(Math.random() * pool.length)].id;
+    $("anotherBtn").dataset.picked = "1";
+    $("heroLabel").textContent = best === 0
+      ? "Another system with no traffic in the last hour"
+      : "Another system tied for the least traffic";
+    renderHero();
+  }
+
+  function populateRegions() {
+    const sel = $("region");
+    const current = sel.value;
+    const hideExo = $("hideExordium").checked;
+    const opts = Object.entries(catalog.regions)
+      .filter(([id]) => !UNREACHABLE.has(+id) && !(hideExo && isExordium(+id)))
+      .sort((a, b) => a[1].localeCompare(b[1]));
+    sel.replaceChildren(new Option("All regions", ""));
+    opts.forEach(([id, name]) => sel.appendChild(new Option(name, id)));
+    if ([...sel.options].some(o => o.value === current)) sel.value = current;
+  }
+
+  function populateConstellations() {
+    const sel = $("constellation");
+    const current = sel.value;
+    const region = $("region").value;
+    const hideExo = $("hideExordium").checked;
+    const opts = Object.entries(catalog.consToRegion)
+      .filter(([, reg]) => !UNREACHABLE.has(reg) && !(hideExo && isExordium(reg)) && (!region || String(reg) === region))
+      .map(([id, reg]) => {
+        const name = catalog.constellations[id] || `Constellation ${id}`;
+        return [id, region ? name : `${name} (${catalog.regions[reg] || "Unknown"})`];
+      })
+      .sort((a, b) => a[1].localeCompare(b[1]));
+    sel.replaceChildren(new Option("All constellations", ""));
+    opts.forEach(([id, label]) => sel.appendChild(new Option(label, id)));
+    sel.value = [...sel.options].some(o => o.value === current) ? current : "";
+  }
+
+  // ---------- Wiring ----------
+  function onFilterChange() {
+    shown = PAGE;
+    delete $("anotherBtn").dataset.picked;
+    $("heroLabel").textContent = "Quietest system matching your filters";
+    render();
+  }
+  $("search").addEventListener("input", onFilterChange);
+  $("region").addEventListener("change", () => { populateConstellations(); onFilterChange(); });
+  $("constellation").addEventListener("change", onFilterChange);
+  $("sort").addEventListener("change", onFilterChange);
+  document.querySelectorAll("input[name=sec]").forEach(i => i.addEventListener("change", onFilterChange));
+  $("hideExordium").addEventListener("change", () => { populateRegions(); populateConstellations(); onFilterChange(); });
+  $("onlyStations").addEventListener("change", onFilterChange);
+  $("onlyClones").addEventListener("change", onFilterChange);
+  $("onlyFactory").addEventListener("change", onFilterChange);
+  $("onlyFW").addEventListener("change", onFilterChange);
+  $("moreBtn").addEventListener("click", () => { shown += PAGE; render(); });
+  $("anotherBtn").addEventListener("click", pickAnother);
+  $("copyHero").addEventListener("click", () => {
+    const r = currentRows.find(x => x.id === heroId); if (r) copyName(r.sys.n, $("copyHero"));
+  });
+  $("refreshBtn").addEventListener("click", fetchLive);
+
+  $("detailHero").addEventListener("click", () => { if (heroId !== null) openSystem(heroId); });
+  $("mapHero").addEventListener("click", () => { if (heroId !== null) openMap(heroId, "region"); });
+  $("nearHero").addEventListener("click", () => { if (heroId !== null) openMap(heroId, "nearby"); });
+  $("mapModeRegion").addEventListener("click", () => { if (map.focus !== null && map.mode !== "region") openMap(map.sel ?? map.focus, "region"); });
+  $("mapModeNear").addEventListener("click", () => { if (map.focus !== null && map.mode !== "nearby") openMap(map.sel ?? map.focus, "nearby"); });
+  $("mapClose").addEventListener("click", () => $("mapDialog").close());
+  $("mapDialog").addEventListener("close", () => { map.loading++; });
+  $("mapColour").addEventListener("change", recolourMap);
+  $("mapTheme").addEventListener("click", () => {
+    const dlg = $("mapDialog");
+    const dark = dlg.dataset.maptheme !== "light";
+    dlg.dataset.maptheme = dark ? "light" : "dark";
+    $("mapTheme").textContent = dark ? "Dark mode" : "Light mode";
+  });
+  $("mapZoomIn").addEventListener("click", () => { if (map.vb) zoomMap(1 / 1.4); });
+  $("mapZoomOut").addEventListener("click", () => { if (map.vb) zoomMap(1.4); });
+  $("mapReset").addEventListener("click", () => { if (map.bounds) fitMap(); });
+  (() => {
+    const svg = $("mapSvg");
+    let drag = null;
+    svg.addEventListener("wheel", e => {
+      if (!map.vb) return;
+      e.preventDefault();
+      const p = svgPoint(e.clientX, e.clientY);
+      zoomMap(Math.exp(e.deltaY * 0.0015), p.x, p.y);
+    }, { passive: false });
+    svg.addEventListener("pointerdown", e => {
+      if (!map.vb || e.button !== 0) return;
+      drag = { x: e.clientX, y: e.clientY, vb: { ...map.vb }, k: mapScale(), id: e.pointerId };
+      map.dragged = false;
+    });
+    svg.addEventListener("pointermove", e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!map.dragged && Math.hypot(dx, dy) < 4) return;
+      if (!map.dragged) { map.dragged = true; svg.setPointerCapture(e.pointerId); svg.classList.add("dragging"); }
+      map.vb = { ...drag.vb, x: drag.vb.x - dx * drag.k, y: drag.vb.y - dy * drag.k };
+      applyViewBox();
+    });
+    const end = e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      drag = null; svg.classList.remove("dragging");
+      setTimeout(() => { map.dragged = false; }, 0);
+    };
+    svg.addEventListener("pointerup", end);
+    svg.addEventListener("pointercancel", end);
+    window.addEventListener("resize", () => { if (map.vb && $("mapDialog").open) applyViewBox(); });
+  })();
+  $("dClose").addEventListener("click", () => $("sysDialog").close());
+  $("sysDialog").addEventListener("click", e => { if (e.target === $("sysDialog")) $("sysDialog").close(); });
+  $("sysDialog").addEventListener("close", () => { detailId = null; });
+
+  $("stPop").addEventListener("mouseenter", () => clearTimeout(popHideTimer));
+  $("stPop").addEventListener("mouseleave", scheduleHidePop);
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("stPop").hidden) hidePop(); });
+  document.addEventListener("pointerdown", e => {
+    if ($("stPop").hidden) return;
+    if ($("stPop").contains(e.target) || (popAnchor && popAnchor.contains(e.target))) return;
+    hidePop();
+  });
+  window.addEventListener("scroll", positionPop, { passive: true, capture: true });
+  window.addEventListener("resize", positionPop);
+
+  buildScale();
+  buildLegend();
+  loadCatalog();
+  if (Object.keys(catalog.regions).length) { populateRegions(); populateConstellations(); }
+  render();
+  fetchLive();
+  loadPrebuilt().then(() => {
+    if (Object.keys(catalog.regions).length) { populateRegions(); populateConstellations(); }
+    applyHostedColumns();
+    render();
+    return buildCatalog();
+  })
+    .then(() => loadSov().then(computeRegionFactions).catch(e => console.warn("Region factions unavailable:", e)))
+    .catch(e => showError(e.message + " Reload the page to resume; progress so far is saved."));
+})();
+</script>
+</body>
+</html>
