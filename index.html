@@ -162,6 +162,9 @@ dialog.sysd::backdrop{background:rgba(8,12,18,.6)}
 .feat .f-station{color:var(--muted)}
 .feat .f-clone{color:var(--accent)}
 .feat .f-ice{color:#3aa6c9}
+.f-btn.f-str{color:#c98a2b}
+.f-btn.f-str:hover{color:#e8a53c}
+.svc span.mkt{border-color:#c98a2b;color:#c98a2b}
 .f-btn.f-ins{color:#d33a2c}
 .f-btn.f-ins:hover{color:#ff5a45}
 .lvl{display:flex;align-items:center;gap:8px;justify-content:flex-end}
@@ -359,6 +362,7 @@ footer p{margin:0 0 10px}
       <label class="checkline"><input type="checkbox" id="onlyFactory"> Manufacturing services</label>
       <label class="checkline"><input type="checkbox" id="onlyFW"> Faction warfare</label>
       <label class="checkline" id="onlyInsLabel" hidden><input type="checkbox" id="onlyIns"> Pirate insurgency</label>
+      <label class="checkline" id="onlyStructLabel" hidden><input type="checkbox" id="onlyStruct"> Public player structures</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
   </form>
@@ -438,7 +442,7 @@ footer p{margin:0 0 10px}
   <footer>
     <p>Traffic comes from ESI’s public <code>/universe/system_jumps/</code> and <code>/universe/system_kills/</code> routes, which CCP updates once an hour. ESI doesn’t publish player counts per system, so gate jumps in the last hour are the closest stand-in for population. NPC kills usually mean someone is ratting there.</p>
     <p>Systems missing from ESI’s jump list had zero jumps. Wormhole space isn’t included, because ESI only counts stargate jumps. System names and security are cached in your browser for 30 days after the first load.</p>
-    <p>Station markers cover NPC stations only. Player-owned structures, including ones with clone bays, aren’t visible through public ESI. Installing a jump clone at an NPC station may need standings with the station’s owner.</p>
+    <p>Station markers cover NPC stations only. On the hosted site, public player structures come from EVE Ref’s daily structure data; private ones can’t be seen by anyone outside their owners. Installing a jump clone at an NPC station may need standings with the station’s owner.</p>
     <p>On the hosted site, map data, 30-day averages, weekly patterns and system sizes are prepared by a scheduled job, so they load instantly. Opened as a local file, the page fetches what it needs from ESI instead.</p>
     <p>Pirate insurgency warnings come from CCP’s Frontlines data, checked hourly on the hosted site. It isn’t an official API, so warnings disappear rather than go stale if that data stops updating.</p>
     <p>Ice belt systems come from the EVE University wiki, since ESI doesn’t list ice. That list covers high and low sec, but is still missing Caldari and Minmatar low-sec ice systems and all null-sec ice.</p>
@@ -751,6 +755,7 @@ footer p{margin:0 0 10px}
     const onlyFactory = $("onlyFactory").checked;
     const onlyFW = $("onlyFW").checked;
     const onlyIns = $("onlyIns").checked;
+    const onlyStruct = $("onlyStruct").checked;
 
     const rows = [];
     for (const idStr in catalog.systems) {
@@ -768,6 +773,7 @@ footer p{margin:0 0 10px}
       if (onlyFactory && !systemHas(sys, "factory")) continue;
       if (onlyFW && !(fwMap && fwMap.has(id))) continue;
       if (onlyIns && !(prebuilt.insurgency && prebuilt.insurgency.systems[id])) continue;
+      if (onlyStruct && !(prebuilt.structCounts && prebuilt.structCounts[id])) continue;
       rows.push({ id, sys, reg, a: activity(id) });
     }
     const pvp = r => r.a.ship + r.a.pod;
@@ -864,7 +870,7 @@ footer p{margin:0 0 10px}
   }
 
   function withFilterText() {
-    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"]]
+    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"], ["onlyStruct", "public player structures"]]
       .filter(([id]) => $(id).checked).map(([, label]) => label);
     if (!parts.length) return "";
     const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
@@ -956,6 +962,7 @@ footer p{margin:0 0 10px}
   // ---------- Station and jump clone markers ----------
   const ICONS = {
     station: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="3.5" width="5" height="9" rx="1" fill="currentColor"/><rect x="0.8" y="6.5" width="3.6" height="3" fill="currentColor"/><rect x="11.6" y="6.5" width="3.6" height="3" fill="currentColor"/><path d="M4.4 8h1.1M10.5 8h1.1M8 1v2.5" stroke="currentColor" stroke-width="1.2"/></svg>',
+    structure: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .8l2.2 3.4v2.6l3.3 2.4V15h-11V9.2l3.3-2.4V4.2z" fill="currentColor"/><rect x="6.6" y="10.6" width="2.8" height="4.4" rx=".4" fill="var(--panel)"/></svg>',
     insurgency: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2l7 12.6H1z" fill="currentColor"/><path d="M8 5.6v4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.9" r="1" fill="#fff"/></svg>',
     ice: '<svg viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"><path d="M8 1.5v13M2.4 4.75l11.2 6.5M2.4 11.25l11.2-6.5"/><path d="M6.2 2.6L8 4.2l1.8-1.6M6.2 13.4L8 11.8l1.8 1.6M2.6 7l2.1.6-.5 2.1M13.4 7l-2.1.6.5 2.1"/></g></svg>',
     fw: '<svg viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"><path d="M2.5 2.5l8 8M13.5 2.5l-8 8"/><path d="M8.6 12.4l3.8-3.8M3.6 8.6l3.8 3.8"/><path d="M11.5 11.5l2 2M4.5 11.5l-2 2"/></g></svg>',
@@ -1306,6 +1313,43 @@ footer p{margin:0 0 10px}
     return b;
   }
 
+  // Public player structures (hosted site only; from EVE Ref's structure dataset via the GitHub Action)
+  const STRUCT_LIST_MAX = 40;
+  function buildStructPop(id, count) {
+    return (pop, isCurrent) => {
+      const sys = catalog.systems[id];
+      const head = el("h4", null, `${count} public player structure${count === 1 ? "" : "s"} in ${sys ? sys.n : "this system"}`);
+      const note = el("p", "d-note", "Loading structures…");
+      pop.append(head, note);
+      loadPrebuiltStructures().then(d => {
+        if (!isCurrent()) return;
+        const list = d && d.systems ? d.systems[id] : null;
+        if (!list) { note.textContent = "Couldn’t load the structure list. Hover again to retry."; structuresPromise = null; positionPop(); return; }
+        const items = list.slice(0, STRUCT_LIST_MAX).map(([name, type, market]) => {
+          const item = el("div", "st-item");
+          item.append(el("div", "st-name", name || "Unnamed structure"));
+          const tags = el("div", "svc");
+          tags.append(el("span", null, (d.types && d.types[type]) || (type ? `Type ${type}` : "Unknown type")));
+          if (market) tags.append(el("span", "mkt", "Market"));
+          item.append(tags);
+          return item;
+        });
+        const extra = list.length > STRUCT_LIST_MAX ? [el("p", "d-note", `…and ${list.length - STRUCT_LIST_MAX} more.`)] : [];
+        const src = el("p", "d-note", "Public structures only, from EVE Ref’s daily structure data.");
+        pop.replaceChildren(head, ...items, ...extra, src);
+        positionPop();
+      });
+    };
+  }
+  function structureButton(id, count) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "f-btn f-str";
+    b.setAttribute("aria-label", `${count} public player structure${count === 1 ? "" : "s"}. Show list`);
+    b.innerHTML = ICONS.structure;
+    attachPop(b, "str:" + id, buildStructPop(id, count));
+    return b;
+  }
+
   // Pirate insurgencies (hosted site only; from CCP's Frontlines feed via the GitHub Action)
   const PIRATES = { 500010: "Guristas Pirates", 500011: "Angel Cartel", 500012: "Blood Raider Covenant", 500019: "Sansha's Nation", 500020: "Serpentis" };
   const pirateName = id => PIRATES[id] || nameOf(id);
@@ -1378,6 +1422,8 @@ footer p{margin:0 0 10px}
     const wrap = document.createElement("span"); wrap.className = "feat";
     const n = sys.sid ? sys.sid.length : 0;
     if (n > 0) wrap.append(stationButton(id, n));
+    const sc = prebuilt.structCounts && prebuilt.structCounts[id];
+    if (sc) wrap.append(structureButton(id, sc));
     if (sys.jc) wrap.append(featIcon("clone", "Jump clone service available"));
     const ins = prebuilt.insurgency && prebuilt.insurgency.systems[id];
     if (ins) wrap.append(insurgencyButton(id));
@@ -1407,7 +1453,13 @@ footer p{margin:0 0 10px}
     insIcon.setAttribute("role", "img"); insIcon.setAttribute("aria-label", "Pirate insurgency");
     fe.append(insIcon);
     e.append(fe, "Pirate insurgency");
-    $("legend").append(a, b, c, d, e);
+    const g = document.createElement("span");
+    const fg = document.createElement("span"); fg.className = "feat";
+    const stIcon = document.createElement("span"); stIcon.style.color = "#c98a2b"; stIcon.innerHTML = ICONS.structure;
+    stIcon.setAttribute("role", "img"); stIcon.setAttribute("aria-label", "Public player structures");
+    fg.append(stIcon);
+    g.append(fg, "Public player structures");
+    $("legend").append(a, g, b, c, d, e);
   }
 
   // ---------- System details ----------
@@ -1646,6 +1698,7 @@ footer p{margin:0 0 10px}
       kv("Jump clone service", det.stations.some(st => st.jc) ? "Yes" : "No"),
       kv("Ice belts", iceTypeOf(catalog.systems[id]) || "None listed"));
     if (typeof catalog.systems[id].r === "number") cel.append(kv("Size (radius)", `${catalog.systems[id].r.toFixed(1)} AU`));
+    if (prebuilt.structCounts) cel.append(kv("Public player structures", prebuilt.structCounts[id] || 0));
     celestialBox.replaceChildren(cel);
 
     // Star
@@ -2029,7 +2082,7 @@ footer p{margin:0 0 10px}
   // ---------- Hosted data (built by the GitHub Action) ----------
   // When the page runs from GitHub Pages, the Action publishes ready-made files in data/.
   // Opened as a local file, none of this exists and the page fetches everything from ESI itself.
-  const prebuilt = { activity: null, stations: null, profiles: new Map(), insurgency: null };
+  const prebuilt = { activity: null, stations: null, profiles: new Map(), insurgency: null, structCounts: null };
   async function fetchData(name) {
     if (location.protocol === "file:") return null;
     try {
@@ -2038,7 +2091,9 @@ footer p{margin:0 0 10px}
     } catch (e) { return null; }
   }
   async function loadPrebuilt() {
-    const [cat, md, act, ins] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json")]);
+    const [cat, md, act, ins, sc] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json"), fetchData("structures-count.json")]);
+    // Structure lists change slowly; accept data up to 7 days old.
+    if (sc && sc.systems && sc.updated && Date.now() - Date.parse(sc.updated) < 7 * 86400e3) prebuilt.structCounts = sc.systems;
     // Only trust insurgency data from the last 12 hours; older means the feed has been failing.
     if (ins && ins.systems && ins.updated && Date.now() - Date.parse(ins.updated) < 12 * 3600e3) prebuilt.insurgency = ins;
     if (cat && cat.systems && Object.keys(cat.systems).length) {
@@ -2053,6 +2108,11 @@ footer p{margin:0 0 10px}
       saveMapData();
     }
     if (act && act.systems) prebuilt.activity = act;
+  }
+  let structuresPromise = null;
+  function loadPrebuiltStructures() {
+    if (!structuresPromise) structuresPromise = fetchData("structures.json");
+    return structuresPromise;
   }
   let stationsPromise = null;
   function loadPrebuiltStations() {
@@ -2069,6 +2129,8 @@ footer p{margin:0 0 10px}
     const t = $("sysTable");
     $("onlyInsLabel").hidden = !prebuilt.insurgency;
     if (!prebuilt.insurgency) $("onlyIns").checked = false;
+    $("onlyStructLabel").hidden = !prebuilt.structCounts;
+    if (!prebuilt.structCounts) $("onlyStruct").checked = false;
     t.classList.toggle("hide-avg", !prebuilt.activity);
     t.classList.toggle("hide-size", !Object.values(catalog.systems).some(x => typeof x.r === "number"));
     if (prebuilt.activity && !$("sort").querySelector('option[value="avg"]')) {
@@ -2301,6 +2363,7 @@ footer p{margin:0 0 10px}
   $("onlyFactory").addEventListener("change", onFilterChange);
   $("onlyFW").addEventListener("change", onFilterChange);
   $("onlyIns").addEventListener("change", onFilterChange);
+  $("onlyStruct").addEventListener("change", onFilterChange);
   $("moreBtn").addEventListener("click", () => { shown += PAGE; render(); });
   $("anotherBtn").addEventListener("click", pickAnother);
   $("copyHero").addEventListener("click", () => {
