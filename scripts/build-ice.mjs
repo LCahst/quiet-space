@@ -2,6 +2,9 @@
 // and checks the result against the EVE University wiki list built into index.html. If at least 90% of
 // the wiki's ice systems are also in CCP's data, the official list is saved and used from then on;
 // the SDE is not downloaded again. Otherwise the wiki list stays and a report explains why.
+//
+// Not currently run by the workflow: CCP's static data had no ice belts when checked (October 2026).
+// To try again, add a step running "node scripts/build-ice.mjs" to .github/workflows/update.yml.
 import { readFile, writeFile, mkdir, unlink } from "node:fs/promises";
 import { createWriteStream } from "node:fs";
 import { Readable } from "node:stream";
