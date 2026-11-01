@@ -29,6 +29,13 @@
   --bg:#131b26; --panel:#1b2532; --ink:#dde5ee; --muted:#8a97a8; --line:#2b394a;
   --accent:#72aef0; --row-hover:#212d3c; --focus:#72aef0; color-scheme:dark;
 }
+@media (prefers-color-scheme: dark){
+  :root.loud:not([data-theme="light"]){--accent:#ff7a3d;--focus:#ff7a3d}
+  :root.loud:not([data-theme="light"]) .loud-btn{background:#72aef0;border-color:#72aef0;color:#10161e}
+  :root.loud:not([data-theme="light"]) .loud-btn:hover{background:#94c3f5;border-color:#94c3f5}
+}
+:root.loud[data-theme="dark"]{--accent:#ff7a3d;--focus:#ff7a3d}
+:root.loud[data-theme="dark"] .loud-btn{background:#72aef0;border-color:#72aef0;color:#10161e}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5}
@@ -264,6 +271,46 @@ table.hide-avg .c-avg, table.hide-size .c-size{display:none}
 .hm-key i{display:inline-block;width:11px;height:11px;border-radius:2px}
 .st-pop .kv dd small{display:block;color:var(--muted);font-size:.85em}
 
+/* Go Loud! mode */
+.head-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:flex-end}
+.loud-btn{font:inherit;font-weight:700;font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;border:2px solid #d9480f;color:#d9480f;background:transparent;padding:7px 16px;border-radius:3px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.loud-btn:hover{background:#d9480f;color:#fff}
+.map-link{font:inherit;font-weight:600;font-size:.9rem;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--panel);padding:7px 14px;border-radius:3px;display:inline-flex;align-items:center;gap:7px}
+.map-link:hover{border-color:var(--accent)}
+.map-link .pip{width:8px;height:8px;border-radius:50%;background:#ff4d2e;box-shadow:0 0 6px #ff4d2e}
+.loud-only{display:none}
+:root.loud .loud-only{display:block}
+:root.loud .quiet-only{display:none}
+:root.loud{--accent:#c2410c;--focus:#c2410c}
+:root.loud .loud-btn{background:#2a64a8;border-color:#2a64a8;color:#fff}
+:root.loud .loud-btn:hover{background:#1f4f88;border-color:#1f4f88}
+:root.loud .hero-name{color:var(--accent)}
+:root.loud .brand-mark{background:#d9480f}
+.isk-card{background:var(--panel);border:1px solid var(--line);padding:16px 18px;margin-bottom:28px}
+.isk-card.pending{border-style:dashed;border-color:var(--accent)}
+.isk-card h2{font-size:1.1rem;font-weight:600;margin:0 0 4px}
+.isk-card > p{margin:0;color:var(--muted);font-size:.92rem;max-width:70ch}
+.isk-sample{display:inline-block;margin:8px 0 0;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);font-family:var(--cond);font-size:.85rem;border-radius:2px}
+.isk-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;margin-top:12px}
+.isk-cols h3{font-size:.95rem;font-weight:600;margin:0 0 4px;color:var(--muted)}
+.isk-cols ol{margin:0;padding:0;list-style:none;counter-reset:rank}
+.isk-cols li{padding:9px 0;border-top:1px solid var(--line);counter-increment:rank}
+.isk-cols li:first-child{border-top:0}
+.isk-row{display:flex;align-items:baseline;gap:10px}
+.isk-row::before{content:counter(rank);font-family:var(--cond);color:var(--muted);min-width:1.3em}
+.isk-row .sec{font-size:.85rem}
+.isk-sys{flex:1;min-width:0}
+.isk-sys .li-sub{display:block}
+.isk-total{font-family:var(--cond);text-align:right;white-space:nowrap}
+.isk-total b{display:block;font-size:1.2rem;font-weight:600;color:var(--accent)}
+.isk-total small{color:var(--muted);font-size:.8rem}
+.isk-kills{margin:5px 0 0 calc(1.3em + 10px);padding:0;list-style:none;font-family:var(--cond);font-size:.88rem}
+.isk-kills li{display:flex;gap:10px;padding:1px 0;border:0;counter-increment:none}
+.isk-kills .k-ship{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.isk-kills .k-val{font-variant-numeric:tabular-nums}
+table.hide-isk .c-isk{display:none}
+@media (max-width:820px){ .isk-cols{grid-template-columns:1fr} }
+
 footer{color:var(--muted);font-size:.9rem;padding:40px 0 60px;max-width:72ch}
 footer p{margin:0 0 10px}
 
@@ -281,7 +328,11 @@ footer p{margin:0 0 10px}
         <span class="brand-tag">Where nobody else is flying in New Eden right now</span>
       </span>
     </a>
-    <div class="status" id="status">Connecting to ESI…</div>
+    <div class="head-right">
+      <a class="map-link" href="killmap.html"><span class="pip" aria-hidden="true"></span>Live kill map</a>
+      <button class="loud-btn" id="loudBtn" type="button" aria-pressed="false">Go Loud!</button>
+      <div class="status" id="status">Connecting to ESI…</div>
+    </div>
   </header>
 
   <section class="hero" aria-live="polite">
@@ -313,16 +364,21 @@ footer p{margin:0 0 10px}
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
-  <section class="summary-panels" aria-label="Quietest regions and constellations">
+  <section class="isk-card loud-only" id="iskCard" aria-label="Most lucrative systems">
+    <h2>Most lucrative systems</h2>
+    <div id="iskBody"></div>
+  </section>
+
+  <section class="summary-panels" aria-label="Region and constellation rankings">
     <div class="panel">
-      <h2>Quietest regions</h2>
+      <h2 id="regHead">Quietest regions</h2>
       <ol id="topRegions"><li class="empty">Waiting for live traffic…</li></ol>
     </div>
     <div class="panel">
-      <h2>Quietest constellations</h2>
+      <h2 id="consHead">Quietest constellations</h2>
       <ol id="topCons"><li class="empty">Waiting for live traffic…</li></ol>
     </div>
-    <p class="panel-note">Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.</p>
+    <p class="panel-note" id="panelNote">Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.</p>
   </section>
 
   <form class="controls" id="controls" onsubmit="return false">
@@ -378,6 +434,8 @@ footer p{margin:0 0 10px}
           <th scope="col" rowspan="2">System</th><th scope="col" rowspan="2">Sec</th><th scope="col" rowspan="2">Region</th><th scope="col" rowspan="2">Constellation</th>
           <th scope="colgroup" colspan="4" class="grp">Last hour</th>
           <th scope="col" rowspan="2" class="num two c-avg" title="Average gate jumps per hour over the last 30 days">30-day<br>avg</th>
+          <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 7 days">ISK<br>7d</th>
+          <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 30 days">ISK<br>30d</th>
           <th scope="col" rowspan="2" class="num two c-size" title="Distance from the star to the farthest planet, stargate or station">Size<br>(AU)</th>
           <th scope="col" rowspan="2">Links</th>
         </tr>
@@ -448,6 +506,7 @@ footer p{margin:0 0 10px}
     <p>Station markers cover NPC stations only. On the hosted site, public player structures come from EVE Ref’s daily structure data; private ones can’t be seen by anyone outside their owners. Installing a jump clone at an NPC station may need standings with the station’s owner.</p>
     <p>On the hosted site, map data, 30-day averages, weekly patterns and system sizes are prepared by a scheduled job, so they load instantly. Opened as a local file, the page fetches what it needs from ESI instead.</p>
     <p>Pirate insurgency warnings come from CCP’s Frontlines data, checked hourly on the hosted site. It isn’t an official API, so warnings disappear rather than go stale if that data stops updating.</p>
+    <p>In Loud mode, ISK destroyed and each system’s biggest kills come from zKillboard’s live kill feed, collected hourly on the hosted site.</p>
     <p id="iceNote">Ice belt systems come from the EVE University wiki, since ESI doesn’t list ice. That list covers high and low sec, but is still missing Caldari and Minmatar low-sec ice systems and all null-sec ice.</p>
   </footer>
 </div>
@@ -791,11 +850,14 @@ footer p{margin:0 0 10px}
     const cmp = {
       overall: (x, y) => (x.a.jumps + pvp(x)) - (y.a.jumps + pvp(y)) || x.a.npc - y.a.npc,
       avg: (x, y) => avgOf(x.id) - avgOf(y.id) || x.a.jumps - y.a.jumps,
+      isk7: (x, y) => iskOf(x.id, "7") - iskOf(y.id, "7") || x.a.jumps - y.a.jumps,
+      isk30: (x, y) => iskOf(x.id, "30") - iskOf(y.id, "30") || x.a.jumps - y.a.jumps,
       jumps: (x, y) => x.a.jumps - y.a.jumps || pvp(x) - pvp(y),
       kills: (x, y) => pvp(x) - pvp(y) || x.a.jumps - y.a.jumps,
       name: () => 0
     }[sort];
-    rows.sort((x, y) => cmp(x, y) || x.sys.n.localeCompare(y.sys.n));
+    const dir = loud && sort !== "name" ? -1 : 1;
+    rows.sort((x, y) => dir * cmp(x, y) || x.sys.n.localeCompare(y.sys.n));
     return rows;
   }
 
@@ -805,8 +867,9 @@ footer p{margin:0 0 10px}
     const hideExo = $("hideExordium").checked;
     const regs = new Map(), cons = new Map();
     const add = (map, key, reg, a) => {
-      const g = map.get(key) || { key, reg, n: 0, act: 0, zero: 0, npc: 0 };
+      const g = map.get(key) || { key, reg, n: 0, act: 0, zero: 0, npc: 0, pvp: 0, k30: 0 };
       g.n++; g.act += a.jumps + a.ship + a.pod; g.npc += a.npc; if (a.jumps === 0) g.zero++;
+      g.pvp += a.ship + a.pod; g.k30 += a.k30;
       map.set(key, g);
     };
     for (const idStr in catalog.systems) {
@@ -816,12 +879,18 @@ footer p{margin:0 0 10px}
       if (hideExo && isExordium(reg)) continue;
       if (!secs.has(secClass(sys))) continue;
       const a = activity(+idStr);
+      const v30 = prebuilt.activity && prebuilt.activity.systems[idStr];
+      a.k30 = v30 ? v30[1] : 0;
       add(regs, reg, reg, a);
       add(cons, sys.c, reg, a);
     }
     // Lowest average activity per system; ties go to the larger group, then less ratting.
+    // Loud: most ship and pod kills (30-day rate when available, else the last hour), in total.
+    const use30 = !!prebuilt.activity;
     const rank = map => [...map.values()]
-      .sort((x, y) => x.act / x.n - y.act / y.n || y.n - x.n || x.npc - y.npc)
+      .sort(loud
+        ? (x, y) => (use30 ? y.k30 - x.k30 : 0) || y.pvp - x.pvp || y.act - x.act
+        : (x, y) => x.act / x.n - y.act / y.n || y.n - x.n || x.npc - y.npc)
       .slice(0, 5);
     fillList($("topRegions"), rank(regs), true);
     fillList($("topCons"), rank(cons), false);
@@ -862,12 +931,17 @@ footer p{margin:0 0 10px}
         });
       }
       const sub = document.createElement("div"); sub.className = "li-sub";
-      const counts = `${g.n} system${g.n === 1 ? "" : "s"}, ${g.zero} with no jumps`;
+      const counts = loud
+        ? `${g.n} system${g.n === 1 ? "" : "s"}, ${g.pvp} ship and pod kill${g.pvp === 1 ? "" : "s"} last hour`
+        : `${g.n} system${g.n === 1 ? "" : "s"}, ${g.zero} with no jumps`;
       sub.textContent = isRegion ? counts : `In ${regionName}, ${counts}`;
       main.append(name, sub);
       const stat = document.createElement("div"); stat.className = "li-stat";
-      const b = document.createElement("b"); b.textContent = fmt(g.act / g.n);
-      const small = document.createElement("small"); small.textContent = "activity per system";
+      const loud30 = loud && prebuilt.activity;
+      const b = document.createElement("b");
+      b.textContent = loud ? (loud30 ? fmt(g.k30 * 24) : String(g.pvp)) : fmt(g.act / g.n);
+      const small = document.createElement("small");
+      small.textContent = loud ? (loud30 ? "kills per day, 30-day avg" : "kills last hour") : "activity per system";
       stat.append(b, small);
       li.append(main, stat);
       return li;
@@ -955,6 +1029,8 @@ footer p{margin:0 0 10px}
       avgTd.append(b);
     }
     tr.appendChild(avgTd);
+    tr.appendChild(cell(prebuilt.isk ? fmtIsk(iskOf(r.id, "7")) : "", "num c-isk"));
+    tr.appendChild(cell(prebuilt.isk ? fmtIsk(iskOf(r.id, "30")) : "", "num c-isk"));
     tr.appendChild(cell(typeof r.sys.r === "number" ? r.sys.r.toFixed(1) : "…", "num c-size"));
     const links = document.createElement("td"); links.className = "links";
     const d = document.createElement("a"); d.href = dotlan(r.sys.n); d.target = "_blank"; d.rel = "noopener"; d.textContent = "Dotlan";
@@ -2199,7 +2275,7 @@ footer p{margin:0 0 10px}
   // ---------- Hosted data (built by the GitHub Action) ----------
   // When the page runs from GitHub Pages, the Action publishes ready-made files in data/.
   // Opened as a local file, none of this exists and the page fetches everything from ESI itself.
-  const prebuilt = { activity: null, stations: null, profiles: new Map(), insurgency: null, structCounts: null };
+  const prebuilt = { activity: null, stations: null, profiles: new Map(), insurgency: null, structCounts: null, isk: null, iskSample: false };
   async function fetchData(name) {
     if (location.protocol === "file:") return null;
     try {
@@ -2208,7 +2284,8 @@ footer p{margin:0 0 10px}
     } catch (e) { return null; }
   }
   async function loadPrebuilt() {
-    const [cat, md, act, ins, sc, ice] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json"), fetchData("structures-count.json"), fetchData("ice.json")]);
+    const [cat, md, act, ins, sc, ice, isk] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json"), fetchData("structures-count.json"), fetchData("ice.json"), fetchData("isk.json")]);
+    if (isk && isk.windows && isk.windows["7"]) prebuilt.isk = isk;
     if (ice && Array.isArray(ice.systems) && ice.systems.length) officialIce = new Set(ice.systems.map(Number));
     // Structure lists change slowly; accept data up to 7 days old.
     if (sc && sc.systems && sc.updated && Date.now() - Date.parse(sc.updated) < 7 * 86400e3) prebuilt.structCounts = sc.systems;
@@ -2251,9 +2328,18 @@ footer p{margin:0 0 10px}
     $("onlyStructLabel").hidden = !prebuilt.structCounts;
     if (!prebuilt.structCounts) $("onlyStruct").checked = false;
     t.classList.toggle("hide-avg", !prebuilt.activity);
-    t.classList.toggle("hide-size", !Object.values(catalog.systems).some(x => typeof x.r === "number"));
+    t.classList.toggle("hide-size", loud && !!prebuilt.isk ? true : !Object.values(catalog.systems).some(x => typeof x.r === "number"));
+    t.classList.toggle("hide-isk", !(loud && prebuilt.isk));
+    const sortSel = $("sort");
+    const haveIsk = !!(loud && prebuilt.isk);
+    ["isk7", "isk30"].forEach(v => {
+      const o = sortSel.querySelector(`option[value="${v}"]`);
+      if (haveIsk && !o) sortSel.insertBefore(new Option((loud ? LOUD_TEXT.loud : LOUD_TEXT.quiet).sort[v], v), sortSel.options[sortSel.options.length - 1]);
+      if (!haveIsk && o) { if (sortSel.value === v) sortSel.value = "overall"; o.remove(); }
+    });
+    renderIskCard();
     if (prebuilt.activity && !$("sort").querySelector('option[value="avg"]')) {
-      const o = new Option("Lowest 30-day average", "avg");
+      const o = new Option(loud ? "Highest 30-day average" : "Lowest 30-day average", "avg");
       $("sort").insertBefore(o, $("sort").options[1] || null);
     }
   }
@@ -2362,6 +2448,110 @@ footer p{margin:0 0 10px}
     return b;
   }
 
+  // ---------- Most lucrative systems (ISK destroyed, from zKillboard via the Action at launch) ----------
+  // Expected isk.json shape: { updated, days, types: {typeId: name},
+  //   windows: { "7": { systems: {id: [isk, kills]}, top: [[id, isk, kills, [[killId, value, shipTypeId], ...3]], ...10] }, "30": {...} } }
+  function fmtIsk(v) {
+    if (!v) return "–";
+    if (v >= 1e12) return (v / 1e12).toFixed(2) + "T";
+    if (v >= 1e9) return (v / 1e9).toFixed(1) + "B";
+    if (v >= 1e6) return Math.round(v / 1e6) + "M";
+    return Math.round(v / 1e3) + "K";
+  }
+  const iskOf = (id, w) => { const e = prebuilt.isk && prebuilt.isk.windows[w] && prebuilt.isk.windows[w].systems[id]; return e ? e[0] : 0; };
+  function iskList(win, typeNames) {
+    const ol = document.createElement("ol");
+    if (!win || !win.top || !win.top.length) { const li = el("li", "d-note", "No kills recorded yet."); ol.append(li); return ol; }
+    win.top.slice(0, 10).forEach(([id, isk, kills, top3]) => {
+      const sys = catalog.systems[id];
+      const li = document.createElement("li");
+      const row = el("div", "isk-row");
+      const name = el("div", "isk-sys");
+      if (sys) {
+        const btn = el("button", "sys-link", sys.n); btn.type = "button";
+        btn.addEventListener("click", () => openSystem(id));
+        name.append(secChip(sys), " ", btn, el("span", "li-sub", catalog.regions[regionOf(sys)] || ""));
+      } else name.append(`System ${id}`);
+      const total = el("div", "isk-total");
+      total.append(el("b", null, `${fmtIsk(isk)} ISK`), el("small", null, `${kills.toLocaleString()} kill${kills === 1 ? "" : "s"}`));
+      row.append(name, total);
+      const ks = el("ul", "isk-kills");
+      (top3 || []).slice(0, 3).forEach(([killId, value, typeId]) => {
+        const k = document.createElement("li");
+        k.append(el("span", "k-ship", (typeNames && typeNames[typeId]) || `Type ${typeId}`), el("span", "k-val", fmtIsk(value)));
+        const a = el("a", null, "zKill");
+        a.href = prebuilt.iskSample ? "https://zkillboard.com/" : `https://zkillboard.com/kill/${killId}/`;
+        a.target = "_blank"; a.rel = "noopener";
+        k.append(a); ks.append(k);
+      });
+      li.append(row, ks); ol.append(li);
+    });
+    return ol;
+  }
+  function renderIskCard() {
+    const body = $("iskBody"), card = $("iskCard");
+    body.replaceChildren();
+    if (!prebuilt.isk) {
+      card.classList.add("pending");
+      const p = el("p", null, location.protocol === "file:"
+        ? "Shown on the hosted site: the ten systems with the most ISK destroyed in the last 7 and 30 days, each with its three biggest kills, from zKillboard."
+        : "Collecting kills from zKillboard. The first rankings appear within the hour.");
+      body.append(p);
+      return;
+    }
+    card.classList.remove("pending");
+    const d = prebuilt.isk;
+    if (prebuilt.iskSample) body.append(el("span", "isk-sample", "Preview: made-up numbers, not real kills"));
+    const cols = el("div", "isk-cols");
+    const soFar = (label, need) => d.days && d.days < need ? `${label} (${d.days} so far)` : label;
+    const c7 = el("div"); c7.append(el("h3", null, soFar("Last 7 days", 7)), iskList(d.windows["7"], d.types));
+    const label30 = soFar("Last 30 days", 30);
+    const c30 = el("div"); c30.append(el("h3", null, label30), iskList(d.windows["30"], d.types));
+    cols.append(c7, c30);
+    body.append(cols);
+  }
+  // ---------- Go Loud! ----------
+  let loud = false;
+  const LOUD_TEXT = {
+    quiet: {
+      btn: "Go Loud!", mark: "QS", name: "Quiet Space", tag: "Where nobody else is flying in New Eden right now",
+      another: "Show another quiet system", reg: "Quietest regions", cons: "Quietest constellations",
+      note: "Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.",
+      sort: { overall: "Least activity overall", jumps: "Fewest gate jumps", kills: "Fewest ship and pod kills", avg: "Lowest 30-day average", isk7: "Least ISK destroyed, 7 days", isk30: "Least ISK destroyed, 30 days" },
+      title: "Quiet Space: EVE Online’s emptiest systems"
+    },
+    loud: {
+      btn: "Go Quiet", mark: "LS", name: "Loud Space", tag: "Where everyone else is flying, and dying, right now",
+      another: "Show another busy system", reg: "Most dangerous regions", cons: "Most dangerous constellations",
+      note: "Ranked by ship and pod kills: the 30-day rate where available, otherwise the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.",
+      sort: { overall: "Most activity overall", jumps: "Most gate jumps", kills: "Most ship and pod kills", avg: "Highest 30-day average", isk7: "Most ISK destroyed, 7 days", isk30: "Most ISK destroyed, 30 days" },
+      title: "Loud Space: EVE Online’s busiest systems"
+    }
+  };
+  function applyLoudText() {
+    const t = loud ? LOUD_TEXT.loud : LOUD_TEXT.quiet;
+    $("loudBtn").textContent = t.btn;
+    $("loudBtn").setAttribute("aria-pressed", String(loud));
+    document.querySelector(".brand-name").textContent = t.name;
+    document.querySelector(".brand-mark").textContent = t.mark;
+    document.querySelector(".brand-tag").textContent = t.tag;
+    document.querySelector(".brand").setAttribute("aria-label", `${t.name}, back to top`);
+    $("anotherBtn").textContent = t.another;
+    $("regHead").textContent = t.reg; $("consHead").textContent = t.cons; $("panelNote").textContent = t.note;
+    [...$("sort").options].forEach(o => { if (t.sort[o.value]) o.textContent = t.sort[o.value]; });
+    document.title = t.title;
+  }
+  function setLoud(on) {
+    loud = on;
+    document.documentElement.classList.toggle("loud", on);
+    applyLoudText();
+    $("mapColour").value = on ? "act" : "sec";
+    if ($("mapDialog").open) recolourMap();
+    try { localStorage.setItem("quietspace.loud", on ? "1" : "0"); } catch (e) {}
+    applyHostedColumns();
+    onFilterChange();
+  }
+
   async function copyName(name, btn) {
     const isIcon = btn.classList.contains("icon-btn");
     const before = isIcon ? btn.innerHTML : btn.textContent, tip = btn.title;
@@ -2423,6 +2613,15 @@ footer p{margin:0 0 10px}
 
   function pickAnother() {
     if (!currentRows.length) return;
+    if (loud) {
+      const top = currentRows.slice(0, 10).filter(r => r.id !== heroId);
+      if (!top.length) return;
+      heroId = top[Math.floor(Math.random() * top.length)].id;
+      $("anotherBtn").dataset.picked = "1";
+      $("heroLabel").textContent = "Another of the ten busiest systems right now";
+      renderHero();
+      return;
+    }
     const score = r => r.a.jumps + r.a.ship + r.a.pod;
     const best = score(currentRows[0]);
     const pool = currentRows.filter(r => score(r) === best && r.id !== heroId);
@@ -2468,7 +2667,7 @@ footer p{margin:0 0 10px}
   function onFilterChange() {
     shown = PAGE;
     delete $("anotherBtn").dataset.picked;
-    $("heroLabel").textContent = "Quietest system matching your filters";
+    $("heroLabel").textContent = loud ? "Busiest system matching your filters" : "Quietest system matching your filters";
     render();
   }
   $("search").addEventListener("input", onFilterChange);
@@ -2553,6 +2752,9 @@ footer p{margin:0 0 10px}
   });
   window.addEventListener("scroll", positionPop, { passive: true, capture: true });
   window.addEventListener("resize", positionPop);
+
+  $("loudBtn").addEventListener("click", () => setLoud(!loud));
+  try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); applyLoudText(); $("mapColour").value = "act"; } } catch (e) {}
 
   buildScale();
   buildLegend();
