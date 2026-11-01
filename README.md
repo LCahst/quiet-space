@@ -2,15 +2,20 @@
 
 Find the emptiest systems in EVE Online, using live data from CCP's ESI API.
 
-The site shows each system's last-hour traffic, a 30-day average with weekly patterns, station services, faction warfare, ice belts, system sizes, and region maps. A scheduled GitHub Action collects traffic every hour and prepares map data every day, so the site loads quickly for everyone.
+The site shows each system's last-hour traffic, a 30-day average with weekly patterns, station services, faction warfare, pirate insurgencies, player structures, high-sec islands, ice belts, system sizes, and region maps. A **Go Loud!** button flips everything to show the busiest and most dangerous places instead, including the systems with the most ISK destroyed, and a **live kill map** shows kills across New Eden as they happen. A scheduled GitHub Action collects traffic every hour and prepares map data every day, so the site loads quickly for everyone.
 
 ## What's in this repository
 
-- `index.html` is the whole website. You can also open it straight from your computer; it then fetches everything from ESI itself.
+- `index.html` is the main website (Quiet Space and Loud Space). You can also open it straight from your computer; it then fetches what it needs from ESI itself, and the features that rely on collected data stay hidden.
+- `killmap.html` is the live kill map, in 2D and 3D, with a scrolling kill feed from zKillboard.
 - `scripts/` holds the jobs the Action runs:
   - `collect-activity.mjs` records traffic hourly and builds the averages and weekly patterns.
-  - `build-map.mjs` prepares map, station and system size data daily.
-  - `save-samples.mjs` saves samples of data feeds for upcoming features.
+  - `collect-isk.mjs` reads zKillboard's live kill feed hourly and builds the 7- and 30-day ISK destroyed rankings.
+  - `collect-insurgency.mjs` records pirate insurgencies hourly from CCP's Frontlines data.
+  - `collect-structures.mjs` updates the list of public player structures daily from EVE Ref.
+  - `build-map.mjs` prepares map, station, system size and 3D position data daily.
+  - `save-samples.mjs` saves samples of outside data feeds, for checking their format.
+  - `build-ice.mjs` checks CCP's static data for ice belts (not currently run; see the note at its top).
 - `.github/workflows/update.yml` tells GitHub when to run those jobs and how to publish the site.
 
 ## Setting it up
@@ -56,6 +61,10 @@ Edit `index.html` on GitHub (open it and click the pencil icon) or upload a new 
 ## Data sources
 
 - Traffic, systems, stations, sovereignty and faction warfare: [EVE ESI](https://developers.eveonline.com/docs/services/esi/overview/), the official EVE Online API.
+- Kills and their ISK values: [zKillboard](https://zkillboard.com/)'s R2Z2 live feed.
+- Public player structures: [EVE Ref](https://docs.everef.net/datasets/structures).
+- Pirate insurgencies: CCP's Frontlines data on eveonline.com.
+- System sizes: CCP's static data export.
 - Ice belt systems: the [EVE University wiki](https://wiki.eveuniversity.org/Ice_harvesting).
 
 EVE Online and all related names are trademarks of CCP hf. This is a fan-made tool and isn't affiliated with or endorsed by CCP.
