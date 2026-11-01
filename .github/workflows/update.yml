@@ -58,6 +58,10 @@ jobs:
         continue-on-error: true
         run: node scripts/collect-activity.mjs
 
+      - name: Record kills and ISK destroyed (zKillboard live feed)
+        continue-on-error: true
+        run: node scripts/collect-isk.mjs
+
       - name: Record pirate insurgencies
         continue-on-error: true
         run: node scripts/collect-insurgency.mjs
@@ -85,7 +89,7 @@ jobs:
       - name: Assemble the site
         run: |
           mkdir -p _site/data
-          cp index.html _site/
+          cp index.html killmap.html _site/
           if [ -d data/public ]; then cp -r data/public/. _site/data/; fi
 
       - uses: actions/configure-pages@v6
