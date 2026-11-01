@@ -1,5 +1,6 @@
 // Daily job: builds the static map data the site would otherwise download from ESI in every visitor's browser.
-// Writes data/public/catalog.json, mapdata.json and stations.json, and keeps a cache in data/cache/static.json
+// Writes data/public/catalog.json, mapdata.json, stations.json and galaxy.json (3D positions for the kill map),
+// and keeps a cache in data/cache/static.json
 // so later runs only fetch what is missing. Planet positions (for system sizes) are filled in over several runs.
 import { readFile, writeFile, mkdir, unlink } from "node:fs/promises";
 import { createWriteStream } from "node:fs";
@@ -52,14 +53,15 @@ log(`Regions: ${Object.keys(c.regions).length}, constellations: ${consIds.length
 // 2. Systems
 const systemIds = (await esi("/universe/systems/")).data.filter(id => id < 31000000);
 let n = 0;
-const needSys = systemIds.filter(id => !c.systems[id]);
+const needSys = systemIds.filter(id => !c.systems[id] || !c.systems[id].p3); // p3: full 3D position, added later
 await pool(needSys, 16, async id => {
   const { data } = await esi(`/universe/systems/${id}/`);
   c.systems[id] = {
     n: data.name, s: data.security_status, c: data.constellation_id,
     st: data.stations || [], g: data.stargates || [],
     pl: (data.planets || []).map(p => p.planet_id),
-    p: data.position ? [data.position.x, data.position.z] : null
+    p: data.position ? [data.position.x, data.position.z] : null,
+    p3: data.position ? [data.position.x, data.position.y, data.position.z] : null
   };
   if (++n % 500 === 0) log(`  systems ${n} of ${needSys.length}`);
 });
@@ -154,6 +156,8 @@ for (const [id, r] of Object.entries(c.regions)) {
   r.cons.forEach(cid => { catalog.consToRegion[cid] = +id; catalog.constellations[cid] = c.constellations[cid] || `Constellation ${cid}`; });
 }
 const mapdata = { pos: {}, links: {} };
+const LY = 9.4607e15; // metres per light year
+const galaxy = { unit: "light years", pos: {} };
 const stations = {};
 let sized = 0;
 for (const [id, s] of Object.entries(c.systems)) {
@@ -174,10 +178,12 @@ for (const [id, s] of Object.entries(c.systems)) {
   }
   catalog.systems[id] = out;
   if (s.p) mapdata.pos[id] = s.p;
+  if (s.p3) galaxy.pos[id] = s.p3.map(v => Math.round(v / LY * 1000) / 1000);
   if (gates.every(Boolean)) mapdata.links[id] = [...new Set(gates.map(g => g.d))];
 }
 await writeJSON(`${PUB}/catalog.json`, catalog);
 await writeJSON(`${PUB}/mapdata.json`, mapdata);
 await writeJSON(`${PUB}/stations.json`, stations);
+await writeJSON(`${PUB}/galaxy.json`, galaxy);
 log(`Wrote public files. Systems with a size so far: ${sized} of ${Object.keys(c.systems).length}`);
 log(`ESI requests: ${stats.requests}, retries: ${stats.retries}, failures: ${stats.failures}`);
