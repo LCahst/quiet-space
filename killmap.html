@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loud Space: live kill map</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%23d9480f'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='28' text-anchor='middle' fill='%23ffffff'%3ELS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1018; --panel:#121a26; --panel2:#182233; --ink:#dfe6ee; --muted:#8190a3; --line:#243246;
+  --accent:#ff7a3d; --hot:#ff4d2e; --gold:#ffc145;
+  --sans:"Saira","Segoe UI",system-ui,sans-serif; --cond:"Saira Semi Condensed","Arial Narrow","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none !important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.mark{width:40px;height:40px;display:grid;place-items:center;background:#d9480f;color:#fff;font-weight:700;font-size:1.1rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.brand b{display:block;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
+.brand small{color:var(--muted);font-size:.85rem}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--cond);font-size:.92rem;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{font:inherit;color:var(--muted);background:var(--panel2);border:0;padding:5px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#120a05;font-weight:600}
+.tools select,.tbtn{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:3px;padding:5px 10px;cursor:pointer}
+.tbtn:hover{border-color:var(--accent)}
+.tools label{display:flex;align-items:center;gap:6px}
+.back{color:#72aef0;text-decoration:none;border:1px solid #2b4a6e;border-radius:3px;padding:5px 10px}
+.back:hover{border-color:#72aef0}
+.status{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.live{background:#3fd27a;box-shadow:0 0 6px #3fd27a;animation:blink 1.6s infinite}
+.dot.err{background:var(--hot)}
+@keyframes blink{50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){ .dot.live{animation:none} }
+
+main{display:grid;grid-template-columns:1fr 360px;min-height:0}
+.stage{position:relative;min-width:0;min-height:0;overflow:hidden}
+#c2d,#c3d{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#c2d{cursor:grab}
+#c2d.drag{cursor:grabbing}
+.tip{position:absolute;pointer-events:none;background:rgba(18,26,38,.92);border:1px solid var(--line);border-radius:3px;padding:3px 8px;font-family:var(--cond);font-size:.85rem;white-space:nowrap;transform:translate(10px,-50%)}
+.regstats{position:absolute;left:12px;top:12px;background:rgba(18,26,38,.88);border:1px solid var(--line);border-radius:3px;padding:10px 14px;font-family:var(--cond);font-size:.88rem;min-width:220px;max-width:calc(100% - 24px)}
+.regstats h3{margin:0 0 6px;font-family:var(--sans);font-size:1.05rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.regstats dl{margin:0;display:grid;grid-template-columns:auto auto;gap:2px 16px}
+.regstats dt{color:var(--muted)}
+.regstats dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.regstats .grp{grid-column:1/-1;margin-top:6px;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+.legend{position:absolute;left:12px;bottom:12px;font-family:var(--cond);font-size:.8rem;color:var(--muted);background:rgba(11,16,24,.75);border:1px solid var(--line);border-radius:3px;padding:6px 10px;display:flex;gap:12px;flex-wrap:wrap;max-width:calc(100% - 24px)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.hint{position:absolute;right:12px;bottom:12px;font-family:var(--cond);font-size:.8rem;color:var(--muted)}
+.notice{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);text-align:center;color:var(--muted);font-family:var(--cond);max-width:460px;padding:0 16px}
+
+aside{border-left:1px solid var(--line);background:var(--panel);display:grid;grid-template-rows:auto 1fr;min-height:0}
+.feed-head{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.feed-head h2{margin:0;font-size:1rem;font-weight:600}
+.feed-head span{font-family:var(--cond);font-size:.82rem;color:var(--muted)}
+#feed{list-style:none;margin:0;padding:0;overflow-y:auto;overflow-anchor:none} /* the page keeps the reader's place itself */
+.kill{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 14px;border-bottom:1px solid var(--line);cursor:pointer;overflow:hidden;transition:background-color .2s}
+.kill:hover,.kill.sel{background:var(--panel2)}
+.kill.enter{animation:grow .5s ease-out}
+.kill.flash{animation:grow .5s ease-out,flash 1.6s ease-out}
+@keyframes grow{from{max-height:0;opacity:0;padding-top:0;padding-bottom:0}to{max-height:110px;opacity:1}}
+@keyframes flash{from{background-color:rgba(255,122,61,.18)}to{background-color:transparent}}
+@media (prefers-reduced-motion: reduce){ .kill.enter,.kill.flash{animation:none} }
+.k-ship{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.k-isk{font-family:var(--cond);font-weight:600;font-size:1.05rem;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.k-isk.big{color:var(--accent)}
+.k-isk.huge{color:var(--gold);text-shadow:0 0 8px rgba(255,193,69,.45)}
+.k-sub{grid-column:1/-1;font-family:var(--cond);font-size:.88rem;color:var(--ink);display:flex;gap:6px;align-items:center;min-width:0}
+.k-sub span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.k-meta{grid-column:1/-1;font-family:var(--cond);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.sec{display:inline-block;min-width:2.4em;text-align:center;padding:0 4px;border-radius:2px;font-weight:600;font-size:.8rem;color:#10161e}
+.k-meta a{margin-left:6px}
+.empty{padding:16px 14px;color:var(--muted);font-family:var(--cond);overflow-wrap:anywhere}
+
+@media (max-width:900px){
+  main{grid-template-columns:1fr;grid-template-rows:55vh 1fr}
+  aside{border-left:0;border-top:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html" title="Back to Loud Space">
+    <span class="mark" aria-hidden="true">LS</span>
+    <span><b>Live kill map</b><small>Every kill in New Eden as zKillboard reports it</small></span>
+  </a>
+  <div class="tools">
+    <div class="seg" role="group" aria-label="Map view">
+      <button type="button" id="v2d" aria-pressed="true">2D</button>
+      <button type="button" id="v3d" aria-pressed="false">3D</button>
+    </div>
+    <label for="regionSel">Region
+      <select id="regionSel"><option value="">All regions</option></select>
+    </label>
+    <label for="minIsk">Show kills over
+      <select id="minIsk">
+        <option value="0">Any value</option>
+        <option value="10000000">10M ISK</option>
+        <option value="100000000">100M ISK</option>
+        <option value="1000000000">1B ISK</option>
+        <option value="10000000000">10B ISK</option>
+      </select>
+    </label>
+    <button class="tbtn" id="pause" type="button" aria-pressed="false">Pause</button>
+    <span class="status" id="status" role="status"><span class="dot" id="dot"></span><span id="statusText">Starting…</span></span>
+    <a class="back" href="index.html">Back to the site</a>
+  </div>
+</header>
+<main>
+  <div class="stage" id="stage">
+    <canvas id="c2d" aria-label="2D map of New Eden with live kills"></canvas>
+    <div id="c3d" hidden aria-label="3D map of New Eden with live kills"></div>
+    <div class="tip" id="tip" hidden></div>
+    <div class="regstats" id="regstats" hidden aria-live="polite"></div>
+    <div class="notice" id="notice">Loading the map…</div>
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:#4ecef8"></i>High sec</span>
+      <span><i style="background:#dc6d07"></i>Low sec</span>
+      <span><i style="background:#8d3264"></i>Null sec</span>
+      <span><i style="background:#ff7a3d"></i>Kill</span>
+      <span><i style="background:#ffc145"></i>Kill over 1B ISK</span>
+    </div>
+    <div class="hint" id="hint">Drag to move, scroll to zoom</div>
+  </div>
+  <aside aria-label="Kill feed">
+    <div class="feed-head"><h2>Kill feed</h2><span id="feedCount">0 kills</span></div>
+    <ul id="feed"><li class="empty">Waiting for kills…</li></ul>
+  </aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  // Development copy: opened as a local file, read the live site's data files.
+  const DATA_BASE = location.protocol === "file:" ? "https://lcahst.github.io/quiet-space/data/" : "data/";
+  const R2Z2 = "https://r2z2.zkillboard.com/ephemeral";
+  const ESI = "https://esi.evetech.net";
+  const BACKFILL = 40;          // kills to load from just before "now" when the page opens
+  const FEED_MAX = 150;         // entries kept in the feed
+  const PULSE_MS = 4500;        // how long a kill flash lasts on the map
+  const SEC_COLORS = {"1.0":"#2c75e1","0.9":"#399aeb","0.8":"#4ecef8","0.7":"#60dba3","0.6":"#71e554","0.5":"#f3fd82","0.4":"#dc6d07","0.3":"#ce440f","0.2":"#bb1116","0.1":"#731f1f","0.0":"#8d3264"};
+  const POCHVEN = 10000070;
+
+  // ---------- Data ----------
+  let galaxy = {}, systems = {}, consToRegion = {}, regions = {}, links = {};
+  let regionCenters = []; // [{id, name, x, y, z}] in light years
+  let regionFilter = "";   // region ID as a string, or "" for all regions
+  const UNREACHABLE = new Set(["10000004", "10000017", "10000019"]); // Jove regions with no gates in
+  const regionOfSys = id => { const s = systems[id]; return s ? String(consToRegion[s.c]) : ""; };
+  const inRegion = id => !regionFilter || regionOfSys(id) === regionFilter;
+  let liveJumps = {}, liveKills = {}, liveAt = null; // ESI last-hour numbers per system
+  const typeNames = {};
+  async function getJSON(url, opts) {
+    const r = await fetch(url, opts);
+    if (!r.ok) throw new Error(`${r.status} for ${url}`);
+    return r.json();
+  }
+  function displaySec(s) {
+    if (s === undefined || s === null) return null;
+    if (s > 0 && s < 0.05) return 0.1;
+    return Math.round(s * 10) / 10;
+  }
+  function secColor(id) {
+    const sys = systems[id];
+    if (!sys) return "#5f6f82";
+    if (consToRegion[sys.c] === POCHVEN) return "#7a2a44";
+    const d = displaySec(sys.s);
+    return d === null ? "#5f6f82" : SEC_COLORS[d <= 0 ? "0.0" : d.toFixed(1)];
+  }
+  const fmtIsk = v => !v ? "0" : v >= 1e12 ? (v / 1e12).toFixed(2) + "T" : v >= 1e9 ? (v / 1e9).toFixed(2) + "B" : v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : Math.round(v / 1e3) + "K";
+
+  // Resolve ship type names in small batches.
+  const pendingTypes = new Set();
+  let typeTimer = null;
+  function wantType(id) {
+    if (!id || typeNames[id] || pendingTypes.has(id)) return;
+    pendingTypes.add(id);
+    clearTimeout(typeTimer);
+    typeTimer = setTimeout(async () => {
+      const ids = [...pendingTypes]; pendingTypes.clear();
+      try {
+        const data = await getJSON(`${ESI}/universe/names/`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(ids) });
+        data.forEach(d => { typeNames[d.id] = d.name; });
+        document.querySelectorAll(".k-ship[data-type]").forEach(el => { const n = typeNames[el.dataset.type]; if (n) el.textContent = n; });
+      } catch (e) { /* names stay as type numbers */ }
+    }, 400);
+  }
+
+  // ---------- Kill feed (zKillboard R2Z2) ----------
+  const kills = [];         // newest first
+  let seq = null, paused = false, minIsk = 0, selectedId = null;
+  function setStatus(text, state) {
+    $("statusText").textContent = text;
+    $("dot").className = "dot" + (state ? " " + state : "");
+  }
+  // R2Z2 entries carry the ESI killmail plus zKillboard's "zkb" block; read both tolerantly.
+  function parseEntry(d) {
+    const km = d.esi || d.killmail || (d.victim ? d : null);
+    if (!km || !km.victim) return null;
+    const zkb = d.zkb || km.zkb || {};
+    return {
+      id: d.killmail_id || km.killmail_id,
+      time: km.killmail_time ? Date.parse(km.killmail_time) : Date.now(),
+      system: km.solar_system_id,
+      ship: km.victim.ship_type_id,
+      attackers: Array.isArray(km.attackers) ? km.attackers.length : null,
+      value: +zkb.totalValue || 0,
+      destroyed: +zkb.destroyedValue || 0,
+      dropped: +zkb.droppedValue || 0,
+      npc: !!zkb.npc
+    };
+  }
+  async function fetchSeq(n) {
+    const r = await fetch(`${R2Z2}/${n}.json`, { cache: "no-store" });
+    if (r.status === 404) return null;
+    if (r.status === 429) { await sleep(5000); return fetchSeq(n); }
+    if (!r.ok) throw new Error(`zKillboard answered ${r.status}`);
+    return r.json();
+  }
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  let backfilling = true;
+  function addKill(k, fromBackfill) {
+    if (!k || !k.id || kills.some(x => x.id === k.id)) return;
+    kills.push(k);
+    kills.sort((a, b) => b.time - a.time);
+    if (kills.length > FEED_MAX) kills.length = FEED_MAX;
+    wantType(k.ship);
+    if (fromBackfill || backfilling) return; // drawn once when the backfill finishes
+    if (visible(k)) { insertKill(k); pulse(k); }
+    if (regionFilter && inRegion(k.system)) renderRegionStats();
+  }
+  async function follow() {
+    try {
+      setStatus("Connecting to zKillboard…");
+      const start = await getJSON(`${R2Z2}/sequence.json`, { cache: "no-store" });
+      // sequence.json lags by up to 50 kills; back up a little further to fill the feed.
+      let n = Math.max(1, start.sequence - BACKFILL);
+      setStatus("Loading recent kills…");
+      for (; n <= start.sequence; n++) {
+        const d = await fetchSeq(n).catch(() => null);
+        if (d) addKill(parseEntry(d), true);
+        await sleep(60);
+      }
+      seq = start.sequence + 1;
+      backfilling = false;
+      renderFeed();
+      setStatus("Live", "live");
+      while (true) {
+        if (paused) { await sleep(500); continue; }
+        const d = await fetchSeq(seq);
+        if (d) { addKill(parseEntry(d), false); seq++; await sleep(150); }
+        else await sleep(6000); // caught up: wait for new kills
+        if (!paused) setStatus("Live", "live");
+      }
+    } catch (e) {
+      setStatus("Feed unavailable", "err");
+      $("feed").replaceChildren(Object.assign(document.createElement("li"), {
+        className: "empty",
+        textContent: `Couldn’t reach zKillboard’s live feed (${e.message}). If this keeps happening, your browser may be blocking it; tell Claude what this message says.`
+      }));
+    }
+  }
+
+  const feedNodes = new Map(); // kill id -> list item
+  const visible = k => k.value >= minIsk && inRegion(k.system);
+  const agoText = (k, now) => {
+    const mins = Math.max(0, Math.round((now - k.time) / 60000));
+    return `${mins < 1 ? "just now" : mins < 60 ? mins + "m ago" : Math.round(mins / 60) + "h ago"}${k.attackers ? `, ${k.attackers} attacker${k.attackers === 1 ? "" : "s"}` : ""}`;
+  };
+  function buildKill(k) {
+    const li = document.createElement("li");
+    li.className = "kill" + (k.id === selectedId ? " sel" : "");
+    li.dataset.id = k.id;
+    const ship = document.createElement("div"); ship.className = "k-ship";
+    ship.dataset.type = k.ship; ship.textContent = typeNames[k.ship] || `Ship type ${k.ship}`;
+    const isk = document.createElement("div");
+    isk.className = "k-isk" + (k.value >= 1e10 ? " huge" : k.value >= 1e9 ? " big" : "");
+    isk.textContent = `${fmtIsk(k.value)} ISK`;
+    isk.title = `ISK lost: ${Math.round(k.value).toLocaleString()} (destroyed ${fmtIsk(k.destroyed)}, dropped ${fmtIsk(k.dropped)})`;
+    const sub = document.createElement("div"); sub.className = "k-sub";
+    const sys = systems[k.system];
+    const chip = document.createElement("span"); chip.className = "sec";
+    const ds = sys ? displaySec(sys.s) : null;
+    chip.textContent = ds === null ? "?" : ds.toFixed(1); chip.style.background = secColor(k.system);
+    if (ds !== null && (ds <= 0.3 || ds >= 0.9)) chip.style.color = "#fff";
+    const where = document.createElement("span");
+    where.textContent = sys ? `${sys.n}, ${regions[consToRegion[sys.c]] || ""}` : `System ${k.system}`;
+    sub.append(chip, where);
+    const meta = document.createElement("div"); meta.className = "k-meta";
+    const ago = document.createElement("span"); ago.className = "k-ago"; ago.textContent = agoText(k, Date.now());
+    const a = document.createElement("a"); a.href = `https://zkillboard.com/kill/${k.id}/`; a.target = "_blank"; a.rel = "noopener"; a.textContent = "zKill";
+    a.addEventListener("click", e => e.stopPropagation());
+    meta.append(ago, a);
+    li.append(ship, isk, sub, meta);
+    li.tabIndex = 0;
+    const go = () => { selectKill(k); };
+    li.addEventListener("click", go);
+    li.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+    feedNodes.set(k.id, li);
+    return li;
+  }
+  function updateCount() {
+    const n = kills.filter(visible).length;
+    $("feedCount").textContent = `${n} kill${n === 1 ? "" : "s"}`;
+  }
+  // Full redraw: only when the list is first shown or the value filter changes. No animations.
+  function renderFeed() {
+    const shown = kills.filter(visible);
+    feedNodes.clear();
+    const ul = $("feed");
+    if (!shown.length) {
+      ul.replaceChildren(Object.assign(document.createElement("li"), { className: "empty", textContent: !kills.length ? "Waiting for kills…" : regionFilter ? `No kills in ${regions[regionFilter]} matching this value yet.` : "No kills above this value yet." }));
+    } else ul.replaceChildren(...shown.map(buildKill));
+    updateCount();
+  }
+  // A single new kill: slide it in at its place without touching the rest of the list.
+  function insertKill(k) {
+    const ul = $("feed");
+    const empty = ul.querySelector(".empty"); if (empty) empty.remove();
+    const shown = kills.filter(visible);
+    const idx = shown.findIndex(x => x.id === k.id);
+    if (idx < 0) return;
+    const li = buildKill(k);
+    const next = shown.slice(idx + 1).map(x => feedNodes.get(x.id)).find(Boolean);
+    const reading = ul.scrollTop > 8; // the reader has scrolled down: don't move what they're reading
+    ul.insertBefore(li, next || null);
+    if (reading) ul.scrollTop += li.offsetHeight;
+    else li.classList.add(idx === 0 ? "flash" : "enter");
+    li.addEventListener("animationend", () => li.classList.remove("enter", "flash"), { once: true });
+    // Drop anything that fell off the end of the list
+    const keep = new Set(shown.map(x => x.id));
+    for (const [id, node] of feedNodes) if (!keep.has(id)) { node.remove(); feedNodes.delete(id); }
+    updateCount();
+  }
+  function selectKill(k) {
+    const old = selectedId !== null && feedNodes.get(selectedId);
+    if (old) old.classList.remove("sel");
+    selectedId = k.id;
+    const li = feedNodes.get(k.id); if (li) li.classList.add("sel");
+    flyTo(k.system);
+  }
+  // Keep "minutes ago" fresh in place.
+  setInterval(() => {
+    const now = Date.now();
+    for (const k of kills) { const li = feedNodes.get(k.id); if (li) li.querySelector(".k-ago").textContent = agoText(k, now); }
+  }, 30000);
+
+  // ---------- Map: shared ----------
+  let mode = "2d";
+  const pulses = [];        // {system, value, start}
+  let bounds = null;
+  function pulse(k) {
+    if (!galaxy[k.system] || !inRegion(k.system)) return;
+    pulses.push({ system: k.system, value: k.value, start: performance.now() });
+    if (mode === "3d") add3dPulse(k);
+  }
+  const pulseColor = v => v >= 1e9 ? "255,193,69" : "255,122,61";
+  const pulseSize = v => 6 + Math.max(0, Math.log10(Math.max(v, 1e6)) - 6) * 7; // px: ~6 for 1M, ~34 for 10B
+
+  // ---------- Map: 2D (canvas, top-down) ----------
+  const c2 = $("c2d"), g2 = c2.getContext("2d");
+  const view = { x: 0, y: 0, scale: 1 };
+  let staticLayer = null, staticKey = "";
+  function resize2d() {
+    const r = c2.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    c2.width = Math.max(1, Math.round(r.width * dpr)); c2.height = Math.max(1, Math.round(r.height * dpr));
+    staticKey = "";
+  }
+  const toScreen = (id) => { const p = galaxy[id]; return [(p[0] - view.x) * view.scale + c2.width / 2, -(p[2] - view.y) * view.scale + c2.height / 2]; };
+  function areaBounds() {
+    if (!regionFilter) return bounds;
+    const pts = Object.keys(galaxy).filter(inRegion).map(id => galaxy[id]);
+    if (!pts.length) return bounds;
+    return { minX: Math.min(...pts.map(p => p[0])), maxX: Math.max(...pts.map(p => p[0])), minY: Math.min(...pts.map(p => p[1])), maxY: Math.max(...pts.map(p => p[1])), minZ: Math.min(...pts.map(p => p[2])), maxZ: Math.max(...pts.map(p => p[2])) };
+  }
+  function fit2d() {
+    const b = areaBounds();
+    const w = Math.max(0.5, b.maxX - b.minX), h = Math.max(0.5, b.maxZ - b.minZ);
+    const pad = regionFilter ? 1.25 : 1.08; // room for system names around a region
+    const dpr = window.devicePixelRatio || 1;
+    const panel = regionFilter && c2.width / dpr > 700 ? 290 * dpr : 0; // keep the region panel clear of the map
+    view.scale = Math.min((c2.width - panel) / (w * pad), c2.height / (h * pad));
+    view.x = (b.minX + b.maxX) / 2 - (panel / 2) / view.scale; view.y = (b.minZ + b.maxZ) / 2;
+    staticKey = "";
+  }
+  function drawStatic() {
+    const key = `${c2.width}x${c2.height}:${view.x.toFixed(3)},${view.y.toFixed(3)},${view.scale.toFixed(4)}:${regionFilter}`;
+    if (key === staticKey && staticLayer) return;
+    staticKey = key;
+    if (!staticLayer) staticLayer = document.createElement("canvas");
+    staticLayer.width = c2.width; staticLayer.height = c2.height;
+    const g = staticLayer.getContext("2d");
+    g.fillStyle = "#0b1018"; g.fillRect(0, 0, c2.width, c2.height);
+    // Gate links
+    g.strokeStyle = "rgba(90,120,160,0.22)"; g.lineWidth = Math.max(0.5, (window.devicePixelRatio || 1) * 0.6);
+    g.beginPath();
+    if (regionFilter) { g.strokeStyle = "rgba(110,145,190,0.45)"; g.lineWidth = Math.max(1, (window.devicePixelRatio || 1) * 1.1); }
+    for (const id in links) {
+      if (!galaxy[id] || !inRegion(id)) continue;
+      const [x1, y1] = toScreen(id);
+      for (const d of links[id]) {
+        if (d < id || !galaxy[d] || !inRegion(d)) continue;
+        const [x2, y2] = toScreen(d);
+        g.moveTo(x1, y1); g.lineTo(x2, y2);
+      }
+    }
+    g.stroke();
+    // Systems
+    const dpr = window.devicePixelRatio || 1;
+    const r = (regionFilter ? Math.max(4, Math.min(7, view.scale * 0.05)) : Math.max(1.6, Math.min(3.5, view.scale * 0.04))) * dpr;
+    for (const id in galaxy) {
+      if (!inRegion(id)) continue;
+      const [x, y] = toScreen(id);
+      if (x < -5 || y < -5 || x > c2.width + 5 || y > c2.height + 5) continue;
+      g.fillStyle = secColor(id);
+      g.fillRect(x - r / 2, y - r / 2, r, r);
+    }
+    // Region names: faint, spaced capitals at each region's centre, a little stronger when zoomed in
+    const taken = [];
+    const overlaps = (bx, by, w, h) => taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + t[3] && by + h > t[1]);
+    if (!regionFilter) {
+      const size = (view.scale > 25 ? 12 : 10) * dpr;
+      g.font = `600 ${size}px "Saira", sans-serif`;
+      if ("letterSpacing" in g) g.letterSpacing = `${0.14 * size}px`;
+      g.textAlign = "center";
+      g.fillStyle = view.scale > 25 ? "rgba(150,172,204,0.5)" : "rgba(150,172,204,0.32)";
+      for (const r of regionCenters) {
+        const sx = (r.x - view.x) * view.scale + c2.width / 2, sy = -(r.z - view.y) * view.scale + c2.height / 2;
+        if (sx < -100 || sy < -20 || sx > c2.width + 100 || sy > c2.height + 20) continue;
+        const label = r.name.toUpperCase(), w = g.measureText(label).width;
+        if (overlaps(sx - w / 2, sy - size, w, size * 1.3)) continue;
+        taken.push([sx - w / 2, sy - size, w, size * 1.3]);
+        g.strokeStyle = "rgba(11,16,24,0.7)"; g.lineWidth = 3 * dpr; g.lineJoin = "round";
+        g.strokeText(label, sx, sy);
+        g.fillText(label, sx, sy);
+      }
+      g.textAlign = "left";
+      if ("letterSpacing" in g) g.letterSpacing = "0px";
+    }
+    // System names once zoomed in (always in a single region), skipping any that would overlap
+    if (view.scale > 90 || regionFilter) {
+      const fsz = (regionFilter ? 12 : 11) * dpr;
+      g.font = `${fsz}px "Saira Semi Condensed", sans-serif`; g.fillStyle = regionFilter ? "rgba(223,230,238,0.9)" : "rgba(223,230,238,0.78)";
+      const h = fsz * 1.2;
+      for (const id in galaxy) {
+        if (!systems[id] || !inRegion(id)) continue;
+        const [x, y] = toScreen(id);
+        if (x < 0 || y < 0 || x > c2.width || y > c2.height) continue;
+        const w = g.measureText(systems[id].n).width, bx = x + 5 * dpr, by = y - 8 * dpr;
+        if (overlaps(bx, by, w + 4 * dpr, h)) continue;
+        taken.push([bx, by, w + 4 * dpr, h]);
+        g.fillText(systems[id].n, bx, y + 3 * dpr);
+        if (taken.length > 400) break;
+      }
+    }
+  }
+  function draw2d(now) {
+    drawStatic();
+    g2.drawImage(staticLayer, 0, 0);
+    const dpr = window.devicePixelRatio || 1;
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i], t = (now - p.start) / PULSE_MS;
+      if (t >= 1) { pulses.splice(i, 1); continue; }
+      const [x, y] = toScreen(p.system), base = pulseSize(p.value) * dpr, col = pulseColor(p.value);
+      g2.beginPath(); g2.arc(x, y, base * (0.35 + t * 1.4), 0, Math.PI * 2);
+      g2.strokeStyle = `rgba(${col},${(1 - t) * 0.9})`; g2.lineWidth = 2 * dpr; g2.stroke();
+      g2.beginPath(); g2.arc(x, y, Math.max(2 * dpr, base * 0.18), 0, Math.PI * 2);
+      g2.fillStyle = `rgba(${col},${1 - t})`; g2.fill();
+    }
+    if (selectedSystem && galaxy[selectedSystem]) {
+      const [x, y] = toScreen(selectedSystem);
+      g2.beginPath(); g2.arc(x, y, 9 * dpr, 0, Math.PI * 2); g2.strokeStyle = "#ffffff"; g2.lineWidth = 1.5 * dpr; g2.stroke();
+    }
+  }
+  // 2D interaction
+  let drag2 = null;
+  c2.addEventListener("pointerdown", e => { drag2 = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false }; c2.setPointerCapture(e.pointerId); });
+  c2.addEventListener("pointermove", e => {
+    const dpr = window.devicePixelRatio || 1;
+    if (drag2) {
+      const dx = (e.clientX - drag2.x) * dpr, dy = (e.clientY - drag2.y) * dpr;
+      if (Math.hypot(dx, dy) > 3) { drag2.moved = true; c2.classList.add("drag"); }
+      view.x = drag2.vx - dx / view.scale; view.y = drag2.vy + dy / view.scale;
+      $("tip").hidden = true;
+      return;
+    }
+    const id = nearestSystem2d(e.offsetX * dpr, e.offsetY * dpr, 8 * dpr);
+    const tip = $("tip");
+    if (id && systems[id]) {
+      tip.hidden = false;
+      let txt = `${systems[id].n} (${(displaySec(systems[id].s) ?? 0).toFixed(1)})`;
+      if (liveAt) {
+        const lk = liveKills[id] || { s: 0, n: 0 }, j = liveJumps[id] || 0;
+        txt += `: ${j} jump${j === 1 ? "" : "s"}, ${lk.s} ship and pod kill${lk.s === 1 ? "" : "s"} last hour`;
+      }
+      tip.textContent = txt; tip.style.left = e.offsetX + "px"; tip.style.top = e.offsetY + "px";
+    }
+    else tip.hidden = true;
+  });
+  const endDrag2 = () => { drag2 = null; c2.classList.remove("drag"); };
+  c2.addEventListener("pointerup", endDrag2); c2.addEventListener("pointercancel", endDrag2);
+  c2.addEventListener("pointerleave", () => { $("tip").hidden = true; });
+  c2.addEventListener("wheel", e => {
+    e.preventDefault();
+    const dpr = window.devicePixelRatio || 1;
+    const mx = e.offsetX * dpr, my = e.offsetY * dpr;
+    const wx = (mx - c2.width / 2) / view.scale + view.x, wy = -(my - c2.height / 2) / view.scale + view.y;
+    const f = Math.exp(-e.deltaY * 0.0015);
+    view.scale = Math.min(800, Math.max(2, view.scale * f));
+    view.x = wx - (mx - c2.width / 2) / view.scale; view.y = wy + (my - c2.height / 2) / view.scale;
+  }, { passive: false });
+  function nearestSystem2d(sx, sy, maxD) {
+    let best = null, bd = maxD;
+    for (const id in galaxy) {
+      if (!inRegion(id)) continue;
+      const [x, y] = toScreen(id);
+      const d = Math.hypot(x - sx, y - sy);
+      if (d < bd) { bd = d; best = id; }
+    }
+    return best;
+  }
+
+  // ---------- Map: 3D (three.js) ----------
+  let three = null, selectedSystem = null;
+  function init3d() {
+    if (three || !window.THREE) return !!three;
+    const host = $("c3d");
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setClearColor(0x0b1018);
+    host.append(renderer.domElement);
+    renderer.domElement.style.width = "100%"; renderer.domElement.style.height = "100%";
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 2000);
+    // Systems as points, coloured by security. EVE's z axis is flipped so the 3D view matches the 2D one.
+    const ids = Object.keys(galaxy);
+    const pos = new Float32Array(ids.length * 3), col = new Float32Array(ids.length * 3);
+    const tmp = new THREE.Color();
+    ids.forEach((id, i) => {
+      const p = galaxy[id];
+      pos[i * 3] = p[0]; pos[i * 3 + 1] = p[1]; pos[i * 3 + 2] = -p[2];
+      tmp.set(secColor(id)); col[i * 3] = tmp.r; col[i * 3 + 1] = tmp.g; col[i * 3 + 2] = tmp.b;
+    });
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.12, vertexColors: true, sizeAttenuation: true })));
+    // Gate links
+    const seg = [];
+    for (const id in links) {
+      if (!galaxy[id]) continue;
+      for (const d of links[id]) {
+        if (d < id || !galaxy[d]) continue;
+        const a = galaxy[id], b = galaxy[d];
+        seg.push(a[0], a[1], -a[2], b[0], b[1], -b[2]);
+      }
+    }
+    const lg = new THREE.BufferGeometry();
+    lg.setAttribute("position", new THREE.BufferAttribute(new Float32Array(seg), 3));
+    scene.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x5a78a0, transparent: true, opacity: 0.18 })));
+    // Soft round sprite for kill flashes
+    const cv = document.createElement("canvas"); cv.width = cv.height = 64;
+    const cg = cv.getContext("2d"), grd = cg.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0, "rgba(255,255,255,1)"); grd.addColorStop(0.35, "rgba(255,255,255,0.55)"); grd.addColorStop(1, "rgba(255,255,255,0)");
+    cg.fillStyle = grd; cg.fillRect(0, 0, 64, 64);
+    const glow = new THREE.CanvasTexture(cv);
+    // Region names as faint labels that grow as you fly closer
+    for (const r of regionCenters) {
+      const label = r.name.toUpperCase();
+      const lc = document.createElement("canvas"), lg2 = lc.getContext("2d");
+      const fs = 48;
+      lg2.font = `600 ${fs}px "Saira", sans-serif`;
+      if ("letterSpacing" in lg2) lg2.letterSpacing = `${0.14 * fs}px`;
+      lc.width = Math.ceil(lg2.measureText(label).width + fs); lc.height = Math.ceil(fs * 1.5);
+      lg2.font = `600 ${fs}px "Saira", sans-serif`;
+      if ("letterSpacing" in lg2) lg2.letterSpacing = `${0.14 * fs}px`;
+      lg2.fillStyle = "rgba(150,172,204,1)"; lg2.textAlign = "center"; lg2.textBaseline = "middle";
+      lg2.fillText(label, lc.width / 2, lc.height / 2);
+      const tex = new THREE.CanvasTexture(lc);
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.42, depthWrite: false }));
+      const h = 1.1; sp.scale.set(h * lc.width / lc.height, h, 1);
+      sp.position.set(r.x, r.y + 1.2, -r.z);
+      scene.add(sp);
+    }
+    const cx = (bounds.minX + bounds.maxX) / 2, cz = -(bounds.minZ + bounds.maxZ) / 2, cy = (bounds.minY + bounds.maxY) / 2;
+    three = { renderer, scene, camera, glow, sprites: [], orbit: { theta: 0, phi: 0.75, radius: Math.max(bounds.maxX - bounds.minX, bounds.maxZ - bounds.minZ) * 0.9, target: new THREE.Vector3(cx, cy, cz) } };
+    // Orbit controls: drag to rotate, right-drag or shift-drag to pan, scroll to zoom
+    let d3 = null;
+    const el = renderer.domElement;
+    el.addEventListener("contextmenu", e => e.preventDefault());
+    el.addEventListener("pointerdown", e => { d3 = { x: e.clientX, y: e.clientY, pan: e.button === 2 || e.shiftKey }; el.setPointerCapture(e.pointerId); });
+    el.addEventListener("pointermove", e => {
+      if (!d3) return;
+      const dx = e.clientX - d3.x, dy = e.clientY - d3.y; d3.x = e.clientX; d3.y = e.clientY;
+      const o = three.orbit;
+      if (d3.pan) {
+        const s = o.radius * 0.0015;
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+        o.target.addScaledVector(right, -dx * s).addScaledVector(up, dy * s);
+      } else {
+        o.theta -= dx * 0.005; o.phi = Math.min(Math.PI - 0.05, Math.max(0.05, o.phi - dy * 0.005));
+      }
+    });
+    const end3 = () => { d3 = null; };
+    el.addEventListener("pointerup", end3); el.addEventListener("pointercancel", end3);
+    el.addEventListener("wheel", e => { e.preventDefault(); three.orbit.radius = Math.min(400, Math.max(0.5, three.orbit.radius * Math.exp(e.deltaY * 0.0012))); }, { passive: false });
+    resize3d();
+    return true;
+  }
+  function resize3d() {
+    if (!three) return;
+    const r = $("stage").getBoundingClientRect();
+    three.renderer.setSize(r.width, r.height, false);
+    three.camera.aspect = r.width / Math.max(1, r.height); three.camera.updateProjectionMatrix();
+  }
+  function add3dPulse(k) {
+    if (!three) return;
+    const p = galaxy[k.system];
+    const mat = new THREE.SpriteMaterial({ map: three.glow, color: k.value >= 1e9 ? 0xffc145 : 0xff7a3d, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    const s = new THREE.Sprite(mat); s.position.set(p[0], p[1], -p[2]);
+    three.scene.add(s);
+    three.sprites.push({ s, system: k.system, start: performance.now(), size: 0.4 + Math.max(0, Math.log10(Math.max(k.value, 1e6)) - 6) * 0.45 });
+  }
+  function draw3d(now) {
+    const { renderer, scene, camera, orbit, sprites } = three;
+    for (let i = sprites.length - 1; i >= 0; i--) {
+      const sp = sprites[i], t = (now - sp.start) / PULSE_MS;
+      if (t >= 1) { scene.remove(sp.s); sp.s.material.dispose(); sprites.splice(i, 1); continue; }
+      const sc = sp.size * (0.6 + t * 1.6) * Math.max(0.4, orbit.radius / 40);
+      sp.s.scale.set(sc, sc, 1); sp.s.material.opacity = 1 - t;
+    }
+    const o = orbit;
+    camera.position.set(o.target.x + o.radius * Math.sin(o.phi) * Math.sin(o.theta), o.target.y + o.radius * Math.cos(o.phi), o.target.z + o.radius * Math.sin(o.phi) * Math.cos(o.theta));
+    camera.lookAt(o.target);
+    renderer.render(scene, camera);
+  }
+
+  // ---------- Region view ----------
+  async function loadLive() {
+    try {
+      const [j, k] = await Promise.all([getJSON(`${ESI}/universe/system_jumps/`, { cache: "no-cache" }), getJSON(`${ESI}/universe/system_kills/`, { cache: "no-cache" })]);
+      liveJumps = {}; liveKills = {};
+      j.forEach(r => { liveJumps[r.system_id] = r.ship_jumps; });
+      k.forEach(r => { liveKills[r.system_id] = { s: (r.ship_kills || 0) + (r.pod_kills || 0), n: r.npc_kills || 0 }; });
+      liveAt = new Date();
+      renderRegionStats();
+    } catch (e) { /* the panel just leaves out the last-hour numbers */ }
+  }
+  function renderRegionStats() {
+    const box = $("regstats");
+    if (!regionFilter) { box.hidden = true; return; }
+    const ids = Object.keys(galaxy).filter(inRegion);
+    let jumps = 0, pvp = 0, npc = 0;
+    ids.forEach(id => { jumps += liveJumps[id] || 0; const lk = liveKills[id]; if (lk) { pvp += lk.s; npc += lk.n; } });
+    const feedKills = kills.filter(k => inRegion(k.system));
+    const isk = feedKills.reduce((t, k) => t + k.value, 0);
+    const row = (a, b) => { const dt = document.createElement("dt"); dt.textContent = a; const dd = document.createElement("dd"); dd.textContent = b; return [dt, dd]; };
+    const grp = t => { const d = document.createElement("div"); d.className = "grp"; d.textContent = t; return d; };
+    const dl = document.createElement("dl");
+    dl.append(...row("Systems", ids.length));
+    if (liveAt) {
+      dl.append(grp(`Last hour (ESI, ${liveAt.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })})`));
+      dl.append(...row("Gate jumps", jumps.toLocaleString()), ...row("Ship and pod kills", pvp.toLocaleString()), ...row("NPC kills", npc.toLocaleString()));
+    }
+    dl.append(grp("In the feed"));
+    dl.append(...row("Kills", feedKills.length.toLocaleString()), ...row("ISK lost", fmtIsk(isk) + " ISK"));
+    const h = document.createElement("h3"); h.textContent = regions[regionFilter] || "Region";
+    box.replaceChildren(h, dl);
+    box.hidden = false;
+  }
+  function setRegion(id) {
+    regionFilter = id;
+    selectedSystem = null;
+    for (let i = pulses.length - 1; i >= 0; i--) if (!inRegion(pulses[i].system)) pulses.splice(i, 1);
+    if (three) for (let i = three.sprites.length - 1; i >= 0; i--) {
+      const sp = three.sprites[i];
+      if (sp.system && !inRegion(sp.system)) { three.scene.remove(sp.s); sp.s.material.dispose(); three.sprites.splice(i, 1); }
+    }
+    $("tip").hidden = true;
+    renderFeed();
+    renderRegionStats();
+    if (mode === "2d") fit2d();
+    else if (three) {
+      const b = areaBounds(), o = three.orbit;
+      const extent = Math.max(b.maxX - b.minX, b.maxZ - b.minZ, 1);
+      flight = { mode: "3d", start: performance.now(), from: { t: o.target.clone(), r: o.radius },
+        to: { t: new THREE.Vector3((b.minX + b.maxX) / 2, (b.minY + b.maxY) / 2, -(b.minZ + b.maxZ) / 2), r: regionFilter ? extent * 1.3 : Math.max(bounds.maxX - bounds.minX, bounds.maxZ - bounds.minZ) * 0.9 } };
+    }
+  }
+  function populateRegions() {
+    const sel = $("regionSel");
+    regionCenters.filter(r => !UNREACHABLE.has(r.id)).slice().sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(r => sel.append(new Option(r.name, r.id)));
+  }
+
+  // ---------- Fly to a system ----------
+  let flight = null;
+  function flyTo(id) {
+    if (!galaxy[id]) return;
+    selectedSystem = id;
+    const p = galaxy[id], start = performance.now();
+    if (mode === "2d") {
+      flight = { mode: "2d", start, from: { x: view.x, y: view.y, s: view.scale }, to: { x: p[0], y: p[2], s: Math.max(view.scale, 140) } };
+    } else if (three) {
+      const o = three.orbit;
+      flight = { mode: "3d", start, from: { t: o.target.clone(), r: o.radius }, to: { t: new THREE.Vector3(p[0], p[1], -p[2]), r: Math.min(o.radius, 8) } };
+    }
+  }
+  function stepFlight(now) {
+    if (!flight) return;
+    const t = Math.min(1, (now - flight.start) / 900), e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    if (flight.mode === "2d") {
+      view.x = flight.from.x + (flight.to.x - flight.from.x) * e;
+      view.y = flight.from.y + (flight.to.y - flight.from.y) * e;
+      view.scale = flight.from.s + (flight.to.s - flight.from.s) * e;
+    } else if (three) {
+      three.orbit.target.lerpVectors(flight.from.t, flight.to.t, e);
+      three.orbit.radius = flight.from.r + (flight.to.r - flight.from.r) * e;
+    }
+    if (t >= 1) flight = null;
+  }
+
+  // ---------- Loop ----------
+  function frame(now) {
+    stepFlight(now);
+    if (bounds) { if (mode === "2d") draw2d(now); else if (three) draw3d(now); }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- Controls ----------
+  function setMode(m) {
+    if (m === "3d" && !init3d()) { setStatus("3D isn’t available in this browser", "err"); m = "2d"; }
+    mode = m;
+    $("v2d").setAttribute("aria-pressed", String(m === "2d"));
+    $("v3d").setAttribute("aria-pressed", String(m === "3d"));
+    c2.hidden = m !== "2d"; $("c3d").hidden = m !== "3d";
+    $("hint").textContent = m === "2d" ? "Drag to move, scroll to zoom" : "Drag to rotate, right-drag to pan, scroll to zoom";
+    $("tip").hidden = true;
+    if (m === "3d") resize3d(); else { resize2d(); if (regionFilter) fit2d(); }
+  }
+  $("v2d").addEventListener("click", () => setMode("2d"));
+  $("v3d").addEventListener("click", () => setMode("3d"));
+  $("minIsk").addEventListener("change", e => { minIsk = +e.target.value; renderFeed(); });
+  $("regionSel").addEventListener("change", e => setRegion(e.target.value));
+  $("pause").addEventListener("click", () => {
+    paused = !paused;
+    $("pause").textContent = paused ? "Resume" : "Pause";
+    $("pause").setAttribute("aria-pressed", String(paused));
+    setStatus(paused ? "Paused" : "Live", paused ? "" : "live");
+  });
+  window.addEventListener("resize", () => { if (mode === "2d") resize2d(); else resize3d(); });
+
+  // ---------- Start ----------
+  (async () => {
+    try {
+      const [g, cat, md] = await Promise.all([getJSON(DATA_BASE + "galaxy.json"), getJSON(DATA_BASE + "catalog.json"), getJSON(DATA_BASE + "mapdata.json")]);
+      galaxy = g.pos; systems = cat.systems; consToRegion = cat.consToRegion; regions = cat.regions; links = md.links;
+      const sums = {};
+      for (const id in galaxy) {
+        const sys = systems[id]; if (!sys) continue;
+        const reg = consToRegion[sys.c]; if (reg === undefined || !regions[reg]) continue;
+        const t = sums[reg] || (sums[reg] = { x: 0, y: 0, z: 0, n: 0 });
+        const p = galaxy[id]; t.x += p[0]; t.y += p[1]; t.z += p[2]; t.n++;
+      }
+      regionCenters = Object.entries(sums).map(([reg, t]) => ({ id: reg, name: regions[reg], x: t.x / t.n, y: t.y / t.n, z: t.z / t.n, n: t.n }))
+        .sort((a, b) => b.n - a.n); // bigger regions get first claim on label space
+      const ps = Object.values(galaxy);
+      bounds = { minX: Math.min(...ps.map(p => p[0])), maxX: Math.max(...ps.map(p => p[0])), minY: Math.min(...ps.map(p => p[1])), maxY: Math.max(...ps.map(p => p[1])), minZ: Math.min(...ps.map(p => p[2])), maxZ: Math.max(...ps.map(p => p[2])) };
+      $("notice").hidden = true;
+      resize2d(); fit2d();
+      requestAnimationFrame(frame);
+      populateRegions();
+      loadLive();
+      setInterval(loadLive, 10 * 60 * 1000); // ESI refreshes these hourly
+      follow();
+    } catch (e) {
+      $("notice").textContent = `Couldn’t load the map data (${e.message}).`;
+      setStatus("Map data unavailable", "err");
+    }
+  })();
+})();
+</script>
+</body>
+</html>
