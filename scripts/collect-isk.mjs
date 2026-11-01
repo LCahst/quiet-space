@@ -10,9 +10,12 @@ const R2Z2 = process.env.R2Z2_BASE || "https://r2z2.zkillboard.com/ephemeral";
 const HIST = `${DATA}/history-isk`;
 const STATE = `${DATA}/cache/r2z2.json`;
 const KEEP_DAYS = 30;
-const FIRST_RUN_BACKFILL = +(process.env.ISK_BACKFILL || 12000); // roughly a day of kills on the very first run
-const MAX_PER_RUN = +(process.env.ISK_MAX_PER_RUN || 40000);
-const CONCURRENCY = 6;
+const FIRST_RUN_BACKFILL = +(process.env.ISK_BACKFILL || 6000); // about half a day of kills on the very first run
+const MAX_PER_RUN = +(process.env.ISK_MAX_PER_RUN || 20000);
+const CONCURRENCY = 3;
+// zKillboard allows 20 requests per second per IP. Stay well under it: requests start at least
+// MIN_GAP_MS apart however many are in flight, and a 429 pauses every request.
+const MIN_GAP_MS = +(process.env.ISK_MIN_GAP_MS || 100);
 const UA = `QuietSpace/1.0 (+https://github.com/${process.env.GITHUB_REPOSITORY || "local"})`;
 const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -22,10 +25,25 @@ const writeJSON = async (file, obj) => {
   await writeFile(file, JSON.stringify(obj));
 };
 
+let nextSlot = 0, pausedUntil = 0, rateLimited = 0;
+async function slot() {
+  for (;;) {
+    const now = Date.now();
+    const at = Math.max(nextSlot, pausedUntil);
+    if (at <= now) { nextSlot = now + MIN_GAP_MS; return; }
+    await sleep(at - now);
+  }
+}
 async function getSeq(n, attempt = 0) {
+  await slot();
   const res = await fetch(`${R2Z2}/${n}.json`, { headers: { "User-Agent": UA } });
   if (res.status === 404) return null;
-  if (res.status === 429 && attempt < 5) { await sleep(3000 * (attempt + 1)); return getSeq(n, attempt + 1); }
+  if (res.status === 429) {
+    rateLimited++;
+    const wait = (+res.headers.get("retry-after") || 10) * 1000;
+    pausedUntil = Math.max(pausedUntil, Date.now() + wait); // everyone waits, not just this request
+    if (attempt < 8) return getSeq(n, attempt + 1);
+  }
   if (res.status >= 500 && attempt < 3) { await sleep(2000); return getSeq(n, attempt + 1); }
   if (!res.ok) throw new Error(`R2Z2 answered ${res.status} for ${n}`);
   return res.json();
@@ -54,9 +72,9 @@ try {
 
   // Fetch forward with a few requests in flight, stopping at the first sequence that doesn't exist yet.
   const got = new Map();
-  let next = start, end = Infinity, failures = 0;
+  let next = start, end = Infinity, firstFailed = Infinity;
   async function worker() {
-    while (next < end) {
+    while (next < end && next < firstFailed) {
       const n = next++;
       try {
         const d = await getSeq(n);
@@ -66,13 +84,16 @@ try {
           continue;
         }
         got.set(n, d);
-      } catch (e) { failures++; if (failures <= 3) log(`  skipped ${n}: ${e.message}`); }
-      await sleep(60);
+      } catch (e) {
+        // Stop here and let the next run resume from this kill, rather than leaving a gap.
+        if (n < firstFailed) { firstFailed = n; log(`  stopping at ${n}: ${e.message}; the next run resumes here`); }
+      }
     }
   }
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  for (const n of [...got.keys()]) if (n >= firstFailed) got.delete(n); // keep only the unbroken run of kills
   const last = Math.max(start - 1, ...got.keys());
-  log(`Fetched ${got.size} kills (${failures} failed requests)`);
+  log(`Fetched ${got.size} kills${rateLimited ? ` (asked to slow down ${rateLimited} time${rateLimited === 1 ? "" : "s"})` : ""}`);
 
   // Add kills to their day's file: systems[id] = [isk, kills, [[killId, value, shipTypeId] x3 biggest]]
   const byDay = {};
@@ -95,7 +116,7 @@ try {
     }
     await writeJSON(file, h);
   }
-  await writeJSON(STATE, { next: last + 1, updated: new Date().toISOString() });
+  await writeJSON(STATE, { next: Math.min(last + 1, firstFailed), updated: new Date().toISOString() });
 
   // Drop days older than 30 days, then build the 7- and 30-day windows.
   await mkdir(HIST, { recursive: true });
