@@ -164,6 +164,7 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
   const inRegion = id => !regionFilter || regionOfSys(id) === regionFilter;
   let liveJumps = {}, liveKills = {}, liveAt = null; // ESI last-hour numbers per system
   const typeNames = {};
+  const extraSystemNames = {}; // wormhole system names (J123456), looked up as kills arrive
   async function getJSON(url, opts) {
     const r = await fetch(url, opts);
     if (!r.ok) throw new Error(`${r.status} for ${url}`);
@@ -186,16 +187,22 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
   // Resolve ship type names in small batches.
   const pendingTypes = new Set();
   let typeTimer = null;
+  // Wormhole systems aren't in the site's map data; their names come from the same ESI lookup.
+  function wantSystem(id) {
+    if (!id || id < 31000000 || id >= 32000000 || extraSystemNames[id] || pendingTypes.has(id)) return;
+    wantType(id);
+  }
   function wantType(id) {
-    if (!id || typeNames[id] || pendingTypes.has(id)) return;
+    if (!id || typeNames[id] || extraSystemNames[id] || pendingTypes.has(id)) return;
     pendingTypes.add(id);
     clearTimeout(typeTimer);
     typeTimer = setTimeout(async () => {
       const ids = [...pendingTypes]; pendingTypes.clear();
       try {
         const data = await getJSON(`${ESI}/universe/names/`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(ids) });
-        data.forEach(d => { typeNames[d.id] = d.name; });
+        data.forEach(d => { if (d.category === "solar_system") extraSystemNames[d.id] = d.name; else typeNames[d.id] = d.name; });
         document.querySelectorAll(".k-ship[data-type]").forEach(el => { const n = typeNames[el.dataset.type]; if (n) el.textContent = n; });
+        document.querySelectorAll(".k-where[data-sys]").forEach(el => { const n = extraSystemNames[el.dataset.sys]; if (n) el.textContent = `${n}, Wormhole space`; });
       } catch (e) { /* names stay as type numbers */ }
     }, 400);
   }
@@ -239,6 +246,7 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
     kills.sort((a, b) => b.time - a.time);
     if (kills.length > FEED_MAX) kills.length = FEED_MAX;
     wantType(k.ship);
+    wantSystem(k.system);
     if (fromBackfill || backfilling) return; // drawn once when the backfill finishes
     if (visible(k)) { insertKill(k); pulse(k); }
     if (regionFilter && inRegion(k.system)) renderRegionStats();
@@ -297,8 +305,14 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
     const ds = sys ? displaySec(sys.s) : null;
     chip.textContent = ds === null ? "?" : ds.toFixed(1); chip.style.background = secColor(k.system);
     if (ds !== null && (ds <= 0.3 || ds >= 0.9)) chip.style.color = "#fff";
-    const where = document.createElement("span");
-    where.textContent = sys ? `${sys.n}, ${regions[consToRegion[sys.c]] || ""}` : `System ${k.system}`;
+    const where = document.createElement("span"); where.className = "k-where";
+    if (sys) where.textContent = `${sys.n}, ${regions[consToRegion[sys.c]] || ""}`;
+    else if (k.system >= 32000000) { where.textContent = "Abyssal deadspace"; chip.textContent = "AB"; chip.style.background = "#5b3a8c"; chip.style.color = "#fff"; }
+    else if (k.system >= 31000000) {
+      where.dataset.sys = k.system;
+      where.textContent = `${extraSystemNames[k.system] || "Unknown J-space system"}, Wormhole space`;
+      chip.textContent = "WH"; chip.style.background = "#3d4f6b"; chip.style.color = "#fff";
+    } else where.textContent = `System ${k.system}`;
     sub.append(chip, where);
     const meta = document.createElement("div"); meta.className = "k-meta";
     const ago = document.createElement("span"); ago.className = "k-ago"; ago.textContent = agoText(k, Date.now());
