@@ -122,7 +122,9 @@ try {
     }
     await writeJSON(file, h);
   }
-  await writeJSON(STATE, { next: Math.min(last + 1, firstFailed), updated: new Date().toISOString() });
+  // "since" is the first day of collection, for "N days so far" (kills can arrive days after they happen).
+  const since = state?.since || new Date().toISOString().slice(0, 10);
+  await writeJSON(STATE, { next: Math.min(last + 1, firstFailed), since, updated: new Date().toISOString() });
 
   // Drop days older than 30 days, then build the 7- and 30-day windows.
   await mkdir(HIST, { recursive: true });
@@ -152,11 +154,14 @@ try {
   };
   const windows = { "7": build(7), "30": build(30) };
   const typeIds = [...new Set(Object.values(windows).flatMap(w => w.top.flatMap(t => t[3].map(k => k[2]))).filter(Boolean))];
-  let types = {};
+  // Wormhole (31xxxxxx) and Abyssal (32xxxxxx) systems aren't on the site's map, so send their names along.
+  const extraSystems = [...new Set(Object.values(windows).flatMap(w => w.top.map(t => t[0])).filter(id => id >= 31000000))];
+  let types = {}, systemNames = {};
   try { types = await names(typeIds); } catch (e) { log(`Couldn't resolve ship names (${e.message})`); }
-  const collected = days.filter(Boolean).length;
-  await writeJSON(`${DATA}/public/isk.json`, { updated: new Date().toISOString(), days: collected, types, windows });
-  log(`ISK windows built from ${collected} day(s): ${Object.keys(windows["30"].systems).length} systems with kills in 30 days`);
+  try { if (extraSystems.length) systemNames = await names(extraSystems); } catch (e) { log(`Couldn't resolve system names (${e.message})`); }
+  const collected = Math.min(KEEP_DAYS, today - dayNum(since) + 1);
+  await writeJSON(`${DATA}/public/isk.json`, { updated: new Date().toISOString(), days: collected, types, systemNames, windows });
+  log(`ISK windows built after ${collected} day(s) of collecting: ${Object.keys(windows["30"].systems).length} systems with kills in 30 days`);
 } catch (e) {
   let kept = "no previous file";
   try { kept = `keeping file from ${JSON.parse(await readFile(`${DATA}/public/isk.json`, "utf8")).updated}`; } catch {}
