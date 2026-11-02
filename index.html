@@ -301,6 +301,7 @@ table.hide-avg .c-avg, table.hide-size .c-size{display:none}
 .isk-row .sec{font-size:.85rem}
 .isk-sys{flex:1;min-width:0}
 .isk-sys .li-sub{display:block}
+.isk-unmapped{font-weight:500}
 .isk-total{font-family:var(--cond);text-align:right;white-space:nowrap}
 .isk-total b{display:block;font-size:1.2rem;font-weight:600;color:var(--accent)}
 .isk-total small{color:var(--muted);font-size:.8rem}
@@ -2471,7 +2472,12 @@ footer p{margin:0 0 10px}
         const btn = el("button", "sys-link", sys.n); btn.type = "button";
         btn.addEventListener("click", () => openSystem(id));
         name.append(secChip(sys), " ", btn, el("span", "li-sub", catalog.regions[regionOf(sys)] || ""));
-      } else name.append(`System ${id}`);
+      } else {
+        // Wormhole and Abyssal systems aren't on the map; the collector sends their names.
+        const label = (prebuilt.isk.systemNames && prebuilt.isk.systemNames[id]) || `System ${id}`;
+        const space = id >= 32000000 ? "Abyssal deadspace" : id >= 31000000 ? "Wormhole space" : "";
+        name.append(el("span", "isk-unmapped", label), el("span", "li-sub", space));
+      }
       const total = el("div", "isk-total");
       total.append(el("b", null, `${fmtIsk(isk)} ISK`), el("small", null, `${kills.toLocaleString()} kill${kills === 1 ? "" : "s"}`));
       row.append(name, total);
