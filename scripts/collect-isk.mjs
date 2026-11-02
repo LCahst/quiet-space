@@ -16,6 +16,11 @@ const CONCURRENCY = 3;
 // zKillboard allows 20 requests per second per IP. Stay well under it: requests start at least
 // MIN_GAP_MS apart however many are in flight, and a 429 pauses every request.
 const MIN_GAP_MS = +(process.env.ISK_MIN_GAP_MS || 100);
+// Keep each hourly run short: stop after this long and carry on next run. A request gets this long to answer.
+const RUN_BUDGET_MS = +(process.env.ISK_BUDGET_MS || 12 * 60 * 1000);
+const REQUEST_TIMEOUT_MS = +(process.env.ISK_REQUEST_TIMEOUT_MS || 20000);
+const startedAt = Date.now();
+const outOfTime = () => Date.now() - startedAt > RUN_BUDGET_MS;
 const UA = `QuietSpace/1.0 (+https://github.com/${process.env.GITHUB_REPOSITORY || "local"})`;
 const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -36,7 +41,7 @@ async function slot() {
 }
 async function getSeq(n, attempt = 0) {
   await slot();
-  const res = await fetch(`${R2Z2}/${n}.json`, { headers: { "User-Agent": UA } });
+  const res = await fetch(`${R2Z2}/${n}.json`, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
   if (res.status === 404) return null;
   if (res.status === 429) {
     rateLimited++;
@@ -64,7 +69,7 @@ function parse(d) {
 
 try {
   const state = await readJSON(STATE, null);
-  const head = await (await fetch(`${R2Z2}/sequence.json`, { headers: { "User-Agent": UA } })).json();
+  const head = await (await fetch(`${R2Z2}/sequence.json`, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) })).json();
   if (typeof head.sequence !== "number") throw new Error("sequence.json has no sequence number");
   let start = state?.next ?? Math.max(1, head.sequence - FIRST_RUN_BACKFILL);
   if (head.sequence - start > MAX_PER_RUN) start = head.sequence - MAX_PER_RUN; // don't fall hopelessly behind
@@ -72,9 +77,10 @@ try {
 
   // Fetch forward with a few requests in flight, stopping at the first sequence that doesn't exist yet.
   const got = new Map();
-  let next = start, end = Infinity, firstFailed = Infinity;
+  let next = start, end = Infinity, firstFailed = Infinity, stoppedForTime = false;
   async function worker() {
     while (next < end && next < firstFailed) {
+      if (outOfTime()) { if (!stoppedForTime) { stoppedForTime = true; log(`  time budget reached at ${next}; the next run carries on from here`); } end = Math.min(end, next); break; }
       const n = next++;
       try {
         const d = await getSeq(n);
@@ -93,7 +99,7 @@ try {
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
   for (const n of [...got.keys()]) if (n >= firstFailed) got.delete(n); // keep only the unbroken run of kills
   const last = Math.max(start - 1, ...got.keys());
-  log(`Fetched ${got.size} kills${rateLimited ? ` (asked to slow down ${rateLimited} time${rateLimited === 1 ? "" : "s"})` : ""}`);
+  log(`Fetched ${got.size} kills in ${Math.round((Date.now() - startedAt) / 1000)}s${rateLimited ? ` (asked to slow down ${rateLimited} time${rateLimited === 1 ? "" : "s"})` : ""}`);
 
   // Add kills to their day's file: systems[id] = [isk, kills, [[killId, value, shipTypeId] x3 biggest]]
   const byDay = {};
