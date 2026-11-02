@@ -106,6 +106,7 @@ try {
   for (const d of got.values()) {
     const k = parse(d);
     if (!k || !k.id) continue;
+    if (k.system >= 32000000) continue; // Abyssal deadspace isn't part of the rankings
     (byDay[k.day] ||= []).push(k);
   }
   for (const [day, list] of Object.entries(byDay)) {
@@ -140,6 +141,7 @@ try {
     const totals = {};
     for (const h of days.filter(Boolean).filter(h => today - dayNum(h.day) < span)) {
       for (const [id, [isk, n, top]] of Object.entries(h.systems)) {
+        if (+id >= 32000000) continue; // drop any Abyssal kills recorded before they were excluded
         const t = (totals[id] ||= [0, 0, []]);
         t[0] += isk; t[1] += n; t[2].push(...top);
       }
@@ -154,7 +156,7 @@ try {
   };
   const windows = { "7": build(7), "30": build(30) };
   const typeIds = [...new Set(Object.values(windows).flatMap(w => w.top.flatMap(t => t[3].map(k => k[2]))).filter(Boolean))];
-  // Wormhole (31xxxxxx) and Abyssal (32xxxxxx) systems aren't on the site's map, so send their names along.
+  // Wormhole systems (31xxxxxx, named J123456) aren't on the site's map, so send their names along.
   const extraSystems = [...new Set(Object.values(windows).flatMap(w => w.top.map(t => t[0])).filter(id => id >= 31000000))];
   let types = {}, systemNames = {};
   try { types = await names(typeIds); } catch (e) { log(`Couldn't resolve ship names (${e.message})`); }
