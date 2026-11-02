@@ -66,6 +66,10 @@ jobs:
         continue-on-error: true
         run: node scripts/collect-insurgency.mjs
 
+      - name: Save the faction warfare feed (for the FW page in development)
+        continue-on-error: true
+        run: node scripts/collect-warzone.mjs
+
       - name: Update public player structures (daily, manual, or if missing)
         if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch' || hashFiles('data/public/structures-count.json') == ''
         continue-on-error: true
