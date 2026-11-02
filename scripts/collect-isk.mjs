@@ -1,6 +1,7 @@
 // Hourly job: reads every new kill from zKillboard's R2Z2 feed (https://github.com/zKillboard/zKillboard/wiki/API-(R2Z2))
 // since the last run, keeps 30 days of ISK destroyed per system (with each system's biggest kills), and writes
-// data/public/isk.json for the "Most lucrative systems" card and the ISK columns. R2Z2 keeps each kill for at
+// data/public/isk.json for the "Most lucrative systems" card and the ISK columns. It also keeps a rolling
+// 24-hour kill count per system (data/public/kills24.json) for the faction warfare page. R2Z2 keeps each kill for at
 // least 24 hours, so a skipped run is caught up next time. If the feed is unavailable, the last file is kept.
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { names } from "./lib/esi.mjs";
@@ -61,6 +62,7 @@ function parse(d) {
   return {
     id: d.killmail_id || km.killmail_id,
     day: (km.killmail_time || new Date().toISOString()).slice(0, 10),
+    hour: (km.killmail_time || new Date().toISOString()).slice(0, 13), // "2026-11-02T15"
     system: km.solar_system_id,
     ship: km.victim.ship_type_id || 0,
     value: +zkb.totalValue || 0
@@ -109,6 +111,7 @@ try {
     if (k.system >= 32000000) continue; // Abyssal deadspace isn't part of the rankings
     (byDay[k.day] ||= []).push(k);
   }
+  const hourly = await readJSON(`${DATA}/cache/kills-hourly.json`, {}); // { "2026-11-02T15": { systemId: kills } }
   for (const [day, list] of Object.entries(byDay)) {
     const file = `${HIST}/${day}.json`;
     const h = await readJSON(file, { day, ids: [], systems: {} });
@@ -116,6 +119,8 @@ try {
     for (const k of list) {
       if (seen.has(k.id)) continue;
       seen.add(k.id); h.ids.push(k.id);
+      const bucket = (hourly[k.hour] ||= {});
+      bucket[k.system] = (bucket[k.system] || 0) + 1;
       const e = (h.systems[k.system] ||= [0, 0, []]);
       e[0] += k.value; e[1]++;
       e[2].push([k.id, Math.round(k.value), k.ship]);
@@ -126,6 +131,15 @@ try {
   // "since" is the first day of collection, for "N days so far" (kills can arrive days after they happen).
   const since = state?.since || new Date().toISOString().slice(0, 10);
   await writeJSON(STATE, { next: Math.min(last + 1, firstFailed), since, updated: new Date().toISOString() });
+
+  // Rolling 24-hour kill counts: keep the last 24 hourly buckets and total them per system.
+  const cutoff = new Date(Date.now() - 24 * 3600e3).toISOString().slice(0, 13);
+  for (const key of Object.keys(hourly)) if (key <= cutoff) delete hourly[key]; // keep only hours within the last 24
+  const kills24 = {};
+  for (const bucket of Object.values(hourly)) for (const [id, n] of Object.entries(bucket)) kills24[id] = (kills24[id] || 0) + n;
+  await writeJSON(`${DATA}/cache/kills-hourly.json`, hourly);
+  await writeJSON(`${DATA}/public/kills24.json`, { updated: new Date().toISOString(), hours: Object.keys(hourly).length, systems: kills24 });
+  log(`24-hour kill counts: ${Object.values(kills24).reduce((a, b) => a + b, 0)} kills across ${Object.keys(kills24).length} systems`);
 
   // Drop days older than 30 days, then build the 7- and 30-day windows.
   await mkdir(HIST, { recursive: true });
