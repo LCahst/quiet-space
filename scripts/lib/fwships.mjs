@@ -9,6 +9,7 @@ const DATA = process.env.DATA_DIR || "data";
 const STORE = `${DATA}/cache/fw-kills.json`;
 const TYPES = `${DATA}/cache/fw-types.json`;
 const OUT = `${DATA}/public/fw-ships.json`;
+const OUT_SYS = `${DATA}/public/fw-systems.json`; // per-system breakdown, for filtering by system
 const KEEP_S = 7 * 86400;
 const EMPIRES = { 500001: "cg", 500004: "cg", 500003: "am", 500002: "am" };
 const PIRATES = { 500010: "cg", 500011: "am" };
@@ -84,6 +85,24 @@ function aggregate(records) {
   return S;
 }
 
+// Per warzone system: kills, ISK, each faction's kills and losses, and each ship's kills and losses there.
+function bySystem(records) {
+  const out = {};
+  for (const r of records) {
+    const S = (out[r.s] ||= { z: r.z, kills: 0, isk: 0, factions: {}, ships: {} });
+    S.kills++; S.isk += r.val;
+    const f = (id) => (S.factions[id] ||= [0, 0]), sh = (id) => (S.ships[id] ||= [0, 0]);
+    f(r.vf)[1]++; sh(r.v)[1]++;
+    const shipsSeen = new Set(), facsSeen = new Set();
+    for (const [sid, fid] of r.a) {
+      if (CAPSULES.has(sid)) continue;
+      if (!shipsSeen.has(sid)) { shipsSeen.add(sid); sh(sid)[0]++; }
+      if (!facsSeen.has(fid)) { facsSeen.add(fid); f(fid)[0]++; }
+    }
+  }
+  return out;
+}
+
 // Ship names with their group (class), module names. Looked up once and cached.
 async function resolveTypes(shipIds, modIds) {
   const cache = await readJSON(TYPES, { ships: {}, groups: {}, mods: {} });
@@ -123,9 +142,10 @@ export async function updateFwShips(entries, log = console.log) {
   const kept = store.filter(r => now - r.t < KEEP_S && r.w); // also drops kills outside the warzones saved before this rule
   await writeJSON(STORE, kept);
 
-  const windows = {};
+  const windows = {}, sysWindows = {};
   for (const [name, span] of [["24h", 86400], ["7d", KEEP_S]]) {
     const inWindow = kept.filter(r => now - r.t < span);
+    sysWindows[name] = { militia: bySystem(inWindow.filter(r => r.m)), all: bySystem(inWindow) };
     windows[name] = {};
     for (const zone of ["all", "cg", "am"]) {
       const inZone = inWindow.filter(r => zone === "all" || r.z === zone);
@@ -140,9 +160,11 @@ export async function updateFwShips(entries, log = console.log) {
       Object.keys(s.mods).forEach(x => modIds.add(+x));
     }
   }
+  for (const w of Object.values(sysWindows)) for (const scope of Object.values(w)) for (const S of Object.values(scope)) Object.keys(S.ships).forEach(x => shipIds.add(+x));
   let types = { ships: {}, mods: {} };
   try { types = await resolveTypes([...shipIds], [...modIds]); } catch (e) { log(`  couldn't resolve some ship names (${e.message})`); }
   const oldest = kept.length ? Math.min(...kept.map(r => r.t)) : now;
   await writeJSON(OUT, { updated: new Date().toISOString(), since: new Date(oldest * 1000).toISOString(), types, windows });
+  await writeJSON(OUT_SYS, { updated: new Date().toISOString(), windows: sysWindows });
   log(`FW ship stats: ${added} new FW kills, ${kept.length} kept for 7 days (${kept.filter(r => r.m).length} involving militia)`);
 }
