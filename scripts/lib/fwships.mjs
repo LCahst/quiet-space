@@ -14,6 +14,8 @@ const EMPIRES = { 500001: "cg", 500004: "cg", 500003: "am", 500002: "am" };
 const PIRATES = { 500010: "cg", 500011: "am" };
 const FW = { ...EMPIRES, ...PIRATES };
 const MAX_SHIPS = 150; // per list, to keep the file small
+// Capsules can't shoot; pilots appear on killmails in one after their ship died. They count as losses only.
+const CAPSULES = new Set([670, 33328]);
 // fitted slots: high, medium, low, rig, subsystem
 const isFitted = f => (f >= 27 && f <= 34) || (f >= 19 && f <= 26) || (f >= 11 && f <= 18) || (f >= 92 && f <= 99) || (f >= 125 && f <= 132);
 const readJSON = async (file, fallback) => { try { return JSON.parse(await readFile(file, "utf8")); } catch { return fallback; } };
@@ -30,7 +32,7 @@ function compact(d, zoneOf) {
   // player attackers only, grouped by ship and faction: [ship, faction, count, final blow]
   const groups = new Map();
   for (const a of km.attackers || []) {
-    if (!a.character_id || !a.ship_type_id) continue;
+    if (!a.character_id || !a.ship_type_id || CAPSULES.has(a.ship_type_id)) continue;
     const key = `${a.ship_type_id}:${a.faction_id || 0}`;
     const g = groups.get(key) || [a.ship_type_id, a.faction_id || 0, 0, 0];
     g[2]++; if (a.final_blow) g[3] = 1;
@@ -68,6 +70,7 @@ function aggregate(records) {
     // the killers: each ship type and each faction counts once per kill
     const shipsSeen = new Set(), facsSeen = new Set();
     for (const [sid, fid, , fb] of r.a) {
+      if (CAPSULES.has(sid)) continue; // also clears capsule "attackers" saved before this rule
       const K = ship(sid);
       if (!shipsSeen.has(sid)) { shipsSeen.add(sid); K.k++; K.iskK += r.val; bump(K.sys, r.s); bump(K.kills, r.v); bump(L.killedBy, sid); }
       bump(K.kf, fid);
