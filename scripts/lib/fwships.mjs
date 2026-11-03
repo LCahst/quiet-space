@@ -1,7 +1,7 @@
 // Faction warfare ship statistics, built from the zKillboard kills the hourly ISK collector already reads
-// (no extra requests to zKillboard). A kill counts as faction warfare if it happened in a warzone system or
-// involved a militia pilot (empire or pirate faction) anywhere in known space. Kept for 7 days; writes
-// data/public/fw-ships.json with 24-hour and 7-day totals per warzone, for militia kills and for all FW kills.
+// (no extra requests to zKillboard). Only kills inside warzone systems count, so the figures show what's
+// flown in the warzones themselves. Kept for 7 days; writes data/public/fw-ships.json with 24-hour and 7-day
+// totals per warzone, for kills involving militia pilots (empire or pirate) and for all kills in the warzones.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { esi, pool, names } from "./esi.mjs";
 
@@ -37,10 +37,10 @@ function compact(d, zoneOf) {
     groups.set(key, g);
   }
   const att = [...groups.values()];
+  if (!zoneOf.has(sys)) return null; // warzone systems only
   const militia = !!(FW[vf] || att.some(a => FW[a[1]]));
-  const inZone = zoneOf.has(sys);
-  if (!militia && !inZone) return null;
-  const zone = zoneOf.get(sys) || FW[vf] || (att.find(a => FW[a[1]]) ? FW[att.find(a => FW[a[1]])[1]] : "");
+  const inZone = true;
+  const zone = zoneOf.get(sys);
   const mods = [...new Set((v.items || []).filter(i => isFitted(i.flag)).map(i => i.item_type_id))];
   return {
     id: d.killmail_id || km.killmail_id,
@@ -117,7 +117,7 @@ export async function updateFwShips(entries, log = console.log) {
     if (r && r.id && !seen.has(r.id)) { store.push(r); seen.add(r.id); added++; }
   }
   const now = Math.floor(Date.now() / 1000);
-  const kept = store.filter(r => now - r.t < KEEP_S);
+  const kept = store.filter(r => now - r.t < KEEP_S && r.w); // also drops kills outside the warzones saved before this rule
   await writeJSON(STORE, kept);
 
   const windows = {};
