@@ -5,6 +5,7 @@
 // least 24 hours, so a skipped run is caught up next time. If the feed is unavailable, the last file is kept.
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { names } from "./lib/esi.mjs";
+import { updateFwShips } from "./lib/fwships.mjs";
 
 const DATA = process.env.DATA_DIR || "data";
 const R2Z2 = process.env.R2Z2_BASE || "https://r2z2.zkillboard.com/ephemeral";
@@ -178,6 +179,8 @@ try {
   const collected = Math.min(KEEP_DAYS, today - dayNum(since) + 1);
   await writeJSON(`${DATA}/public/isk.json`, { updated: new Date().toISOString(), days: collected, types, systemNames, windows });
   log(`ISK windows built after ${collected} day(s) of collecting: ${Object.keys(windows["30"].systems).length} systems with kills in 30 days`);
+  // Faction warfare ship statistics from the same kills (kept separate so a problem there can't affect the rankings).
+  try { await updateFwShips([...got.values()], log); } catch (e) { log(`FW ship stats skipped (${e.message})`); }
 } catch (e) {
   let kept = "no previous file";
   try { kept = `keeping file from ${JSON.parse(await readFile(`${DATA}/public/isk.json`, "utf8")).updated}`; } catch {}
