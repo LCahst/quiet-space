@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Faction warfare: ships in the fight</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%23596b86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EFW%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080d15; --panel:#101826; --panel2:#162132; --ink:#dfe6ee; --muted:#8392a6; --line:#223146; --accent:#9fb4d4; --kill:#e0522d; --loss:#7f8ea6;
+  --sans:"Saira","Segoe UI",system-ui,sans-serif; --cond:"Saira Semi Condensed","Arial Narrow","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none !important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+a{color:#8fbaf0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.mark{width:40px;height:40px;display:grid;place-items:center;background:#596b86;color:#fff;font-weight:700;font-size:1.05rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.brand b{display:block;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
+.brand small{color:var(--muted);font-size:.85rem}
+.links{display:flex;gap:10px;font-family:var(--cond)}
+.links a{text-decoration:none;border:1px solid #2b4a6e;border-radius:3px;padding:5px 10px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);font-family:var(--cond);font-size:.92rem;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{font:inherit;color:var(--muted);background:var(--panel2);border:0;padding:5px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{color:var(--ink);background:#1e2c42;box-shadow:inset 0 -2px 0 var(--accent);font-weight:600}
+.controls select{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:3px;padding:5px 8px}
+.controls label{display:flex;align-items:center;gap:6px;cursor:pointer}
+#sysSel{border-left:4px solid var(--line)}
+#sysSel option,#sysSel optgroup{background:var(--panel2)}
+.note{padding:6px 20px;font-family:var(--cond);font-size:.85rem;color:var(--muted)}
+main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;padding:16px 20px 30px;align-items:start}
+.factions{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-top:3px solid;border-radius:4px;padding:8px 10px;font-family:var(--cond);cursor:pointer;text-align:left;color:inherit;font-size:inherit}
+.fcard:hover{border-color:var(--accent)}
+.fcard[aria-pressed="true"]{background:#1a2638;box-shadow:0 0 0 1px var(--accent) inset}
+.fcard:disabled{cursor:default;opacity:.85}
+.fcard:disabled:hover{border-color:var(--line)}
+.insys{background:#1a2638;border-radius:4px;padding:6px 8px;margin:-2px 0 10px}
+.rows .r button.sysbtn{color:inherit;text-decoration:none}
+.rows .r button.sysbtn:hover{color:#8fbaf0;text-decoration:underline}
+.fcard.pirate{border-style:dashed;border-top-style:solid}
+.fcard .nm{font-family:var(--sans);font-weight:600;display:flex;justify-content:space-between;gap:6px}
+.tag{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:0 5px;border-radius:2px;border:1px solid;align-self:center}
+.fcard .kl{font-size:1.15rem;font-weight:600;margin-top:2px}
+.fcard .kl .k{color:var(--kill)} .fcard .kl .l{color:var(--loss)}
+.fcard .sub{color:var(--muted);font-size:.8rem}
+.eff{height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:5px;display:flex}
+.eff i{display:block;height:100%}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.list{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:12px 14px}
+.list h2{margin:0 0 2px;font-size:1.05rem}
+.list .h2sub{color:var(--muted);font-family:var(--cond);font-size:.82rem;margin-bottom:8px}
+ol.ships{list-style:none;margin:0;padding:0;font-family:var(--cond)}
+ol.ships li{display:grid;grid-template-columns:1.6em 1fr auto;gap:0 8px;align-items:center;padding:6px 4px;border-top:1px solid var(--line);cursor:pointer;border-radius:3px}
+ol.ships li:first-child{border-top:0}
+ol.ships li:hover{background:rgba(255,255,255,.03)}
+ol.ships li[aria-selected="true"]{background:#1a2638}
+.rk{color:var(--muted);text-align:right}
+.sn{font-family:var(--sans);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc{color:var(--muted);font-size:.78rem}
+.sv{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.sv small{display:block;color:var(--muted);font-weight:400;font-size:.75rem}
+.fbar{grid-column:2/-1;display:flex;height:5px;border-radius:3px;overflow:hidden;background:var(--line);margin-top:4px}
+.fbar i{display:block;height:100%}
+.empty{color:var(--muted);font-family:var(--cond);padding:8px 0}
+aside{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:14px 16px;font-family:var(--cond);position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}
+aside h3{margin:0;font-family:var(--sans);font-size:1.3rem}
+aside h4{margin:16px 0 6px;font-family:var(--sans);font-size:.95rem}
+.cls{color:var(--muted);margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--panel2);border-radius:4px;padding:6px 8px}
+.stat b{display:block;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.78rem}
+.rows .r{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:3px 0}
+.rows .r .bar{grid-column:1/-1;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.rows .r .bar i{display:block;height:100%}
+.rows .r button{font:inherit;color:#8fbaf0;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.chip{display:inline-block;padding:0 5px;border-radius:2px;font-weight:600;font-size:.75rem;color:#0b1018;margin-right:4px}
+.muted{color:var(--muted)}
+.prompt{color:var(--muted);border:1px dashed var(--line);border-radius:4px;padding:10px}
+@media (max-width:1100px){ main{grid-template-columns:1fr} aside{position:static;max-height:none} }
+@media (max-width:760px){ .lists{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="fw.html" title="Faction warfare map">
+    <span class="mark" aria-hidden="true">FW</span>
+    <span><b>Ships in the fight</b><small>What’s flying, killing and dying in the warzones</small></span>
+  </a>
+  <nav class="links"><a href="fw.html">Faction warfare map</a><a href="fw-guide.html">FW Guide</a><a href="index.html">Back to the site</a></nav>
+</header>
+<div class="controls">
+  <div class="seg" role="group" aria-label="Warzone" id="zoneSeg">
+    <button type="button" data-v="all" aria-pressed="true">Both warzones</button>
+    <button type="button" data-v="cg" aria-pressed="false">Caldari vs Gallente</button>
+    <button type="button" data-v="am" aria-pressed="false">Amarr vs Minmatar</button>
+  </div>
+  <div class="seg" role="group" aria-label="Time window" id="winSeg">
+    <button type="button" data-v="24h" aria-pressed="true">24 hours</button>
+    <button type="button" data-v="7d" aria-pressed="false">7 days</button>
+  </div>
+  <label for="scope">Kills
+    <select id="scope">
+      <option value="militia" title="Kills in warzone systems where a militia pilot was the victim or an attacker">Militia pilots involved</option>
+      <option value="all" title="Every kill in warzone systems, including pilots not in militia">All kills in the warzones</option>
+    </select>
+  </label>
+  <label for="cls">Class
+    <select id="cls">
+      <option value="">All classes</option>
+      <option value="frigate">Frigates</option>
+      <option value="destroyer">Destroyers</option>
+      <option value="cruiser">Cruisers</option>
+      <option value="battlecruiser">Battlecruisers</option>
+      <option value="battleship">Battleships</option>
+      <option value="other">Other</option>
+    </select>
+  </label>
+  <label for="sysSel">System
+    <select id="sysSel"><option value="">All warzone systems</option></select>
+  </label>
+  <label><input type="checkbox" id="hidePods" checked> Hide capsules</label>
+</div>
+<div class="note" id="note">Loading…</div>
+<main>
+  <section>
+    <div class="factions" id="factions" aria-label="Factions: select one to filter"></div>
+    <div class="lists">
+      <div class="list"><h2>Top ships for kills</h2><div class="h2sub" id="killsSub"></div><ol class="ships" id="killList"></ol></div>
+      <div class="list"><h2>Top ships lost</h2><div class="h2sub" id="lossSub"></div><ol class="ships" id="lossList"></ol></div>
+    </div>
+  </section>
+  <aside id="detail" aria-live="polite"><div class="prompt">Select a ship to see who flies it, where, what it kills, what kills it, and the modules on its lost fits.</div></aside>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  // Development copy: opened as a local file, read the live site's data files.
+  const DATA_BASE = location.protocol === "file:" ? "https://lcahst.github.io/quiet-space/data/" : "data/";
+  const FACTIONS = {
+    500001: { name: "Caldari State", short: "Caldari", color: "#3f7fd6" },
+    500004: { name: "Gallente Federation", short: "Gallente", color: "#2f9e6a" },
+    500003: { name: "Amarr Empire", short: "Amarr", color: "#d8a22a" },
+    500002: { name: "Minmatar Republic", short: "Minmatar", color: "#b5482f" },
+    500010: { name: "Guristas Pirates", short: "Guristas", color: "#e6c84a", pirate: true },
+    500011: { name: "Angel Cartel", short: "Angels", color: "#c2306b", pirate: true },
+    0: { name: "Non-militia pilots", short: "Non-militia", color: "#7f8ea6" }
+  };
+  const ZONE_FACTIONS = { all: [500001, 500004, 500003, 500002, 500010, 500011, 0], cg: [500001, 500004, 500010, 0], am: [500003, 500002, 500011, 0] };
+  const SEC_COLORS = {"1.0":"#2c75e1","0.9":"#399aeb","0.8":"#4ecef8","0.7":"#60dba3","0.6":"#71e554","0.5":"#f3fd82","0.4":"#dc6d07","0.3":"#ce440f","0.2":"#bb1116","0.1":"#731f1f","0.0":"#8d3264"};
+  let data = null, catalog = null, sysData = null;
+  const ownerOf = {}; // warzone system -> original owner faction, from the Frontlines feed
+  const state = { zone: "all", win: "24h", scope: "militia", cls: "", hidePods: true, faction: null, ship: null, system: "" };
+  // The selected system's figures, or null when looking at the whole warzone.
+  const SYS = () => (state.system && sysData && sysData.windows[state.win][state.scope][state.system]) || null;
+
+  const fmtIsk = v => !v ? "0" : v >= 1e12 ? (v / 1e12).toFixed(2) + "T" : v >= 1e9 ? (v / 1e9).toFixed(1) + "B" : v >= 1e6 ? Math.round(v / 1e6) + "M" : Math.round(v / 1e3) + "K";
+  const byCount = o => Object.entries(o || {}).sort((a, b) => b[1] - a[1]);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const shipName = id => (data.types.ships[id] ? data.types.ships[id][0] : `Ship ${id}`);
+  const groupOf = id => (data.types.ships[id] ? data.types.ships[id][1] : "");
+  // Broad classes from the ship's group name.
+  function classOf(id) {
+    const g = groupOf(id);
+    if (g === "Capsule") return "capsule";
+    if (/Battlecruiser|Command Ship/.test(g)) return "battlecruiser";
+    if (/Battleship|Black Ops|Marauder/.test(g)) return "battleship";
+    if (/Destroyer|Interdictor/.test(g)) return "destroyer";
+    if (/Frigate|Interceptor|Covert Ops|Stealth Bomber|Electronic Attack|Exploration/.test(g)) return "frigate";
+    if (/Cruiser|Recon|Logistics$|^Logistics|Strategic/.test(g)) return "cruiser";
+    return "other";
+  }
+  const S = () => data.windows[state.win][state.zone][state.scope];
+  // A ship's kills and losses, for the selected faction if there is one.
+  const killsOf = s => state.faction === null ? s.k : (s.kf[state.faction] || 0);
+  const lossesOf = s => state.faction === null ? s.l : (s.lf[state.faction] || 0);
+  const shipVisible = id => (!state.hidePods || classOf(id) !== "capsule") && (!state.cls || classOf(id) === state.cls);
+  function sysLabel(id) {
+    const s = catalog && catalog.systems[id];
+    if (!s) return { name: `System ${id}`, sec: null, region: "" };
+    const d = s.s > 0 && s.s < 0.05 ? 0.1 : Math.round(s.s * 10) / 10;
+    return { name: s.n, sec: d, region: catalog.regions[catalog.consToRegion[s.c]] || "" };
+  }
+  const secChip = d => { const c = el("span", "chip", d === null ? "?" : d.toFixed(1)); c.style.background = d === null ? "#5f6f82" : SEC_COLORS[d <= 0 ? "0.0" : d.toFixed(1)]; if (d !== null && (d <= 0.3 || d >= 0.9)) c.style.color = "#fff"; return c; };
+  function factionBar(dist) {
+    const bar = el("div", "fbar");
+    const total = Object.values(dist).reduce((a, b) => a + b, 0) || 1;
+    Object.entries(dist).sort((a, b) => b[1] - a[1]).forEach(([f, n]) => {
+      const i = document.createElement("i"); const F = FACTIONS[f] || FACTIONS[0];
+      i.style.cssText = `width:${n / total * 100}%;background:${F.color}`; i.title = `${F.short}: ${n}`; bar.append(i);
+    });
+    return bar;
+  }
+
+  function fillSystems() {
+    const sel = $("sysSel");
+    if (!sysData) { sel.disabled = true; return; }
+    const W = sysData.windows[state.win][state.scope];
+    const ids = Object.keys(W).filter(id => state.zone === "all" || W[id].z === state.zone).sort((a, b) => W[b].kills - W[a].kills);
+    if (state.system && !ids.includes(state.system)) ids.unshift(state.system); // keep the choice even with no kills now
+    // Grouped by original owner (so ownership shows even where a browser ignores option colours), busiest first.
+    const groups = new Map();
+    ids.forEach(id => { const o = ownerOf[id] || 0; if (!groups.has(o)) groups.set(o, []); groups.get(o).push(id); });
+    const order = [500001, 500004, 500003, 500002, 0].filter(o => groups.has(o));
+    sel.replaceChildren(new Option("All warzone systems", ""), ...order.map(o => {
+      const F = FACTIONS[o], og = document.createElement("optgroup");
+      og.label = o ? `${F.name} space` : "Other";
+      if (o) og.style.color = F.color;
+      groups.get(o).forEach(id => {
+        const L = sysLabel(id), k = W[id] ? W[id].kills : 0;
+        const opt = new Option(`${L.name} (${L.sec === null ? "?" : L.sec.toFixed(1)}), ${k} kill${k === 1 ? "" : "s"}`, id);
+        if (o) opt.style.color = F.color;
+        og.append(opt);
+      });
+      return og;
+    }));
+    sel.value = state.system;
+    // the dropdown's edge takes the selected system's owner colour
+    const own = state.system ? ownerOf[state.system] : null;
+    sel.style.borderLeftColor = own && FACTIONS[own] ? FACTIONS[own].color : "";
+  }
+
+  // ---------- Rendering ----------
+  function render() {
+    const s = S();
+    const sys = SYS();
+    fillSystems();
+    // faction cards
+    const fbox = $("factions"); fbox.replaceChildren();
+    for (const f of ZONE_FACTIONS[state.zone]) {
+      const F = FACTIONS[f];
+      const v = state.system ? (sys && sys.factions[f] ? { k: sys.factions[f][0], l: sys.factions[f][1], iskK: null, iskL: null } : { k: 0, l: 0, iskK: null, iskL: null }) : (s.factions[f] || { k: 0, l: 0, iskK: 0, iskL: 0 });
+      const card = el("button", "fcard" + (F.pirate ? " pirate" : "")); card.type = "button";
+      card.style.borderTopColor = F.color;
+      card.setAttribute("aria-pressed", String(state.faction === f));
+      const nm = el("div", "nm"); nm.append(el("span", null, F.short));
+      if (F.pirate) { const t = el("span", "tag", "Pirate"); t.style.color = F.color; nm.append(t); }
+      const kl = el("div", "kl"); kl.append(el("span", "k", v.k.toLocaleString()), el("span", "muted", " / "), el("span", "l", v.l.toLocaleString()));
+      card.append(nm, kl, el("div", "sub", state.system ? `kills / losses in ${sysLabel(state.system).name}` : "kills / losses"));
+      if (!state.system) {
+        const effPct = v.iskK + v.iskL ? v.iskK / (v.iskK + v.iskL) : 0;
+        const eff = el("div", "eff"); const ei = document.createElement("i"); ei.style.cssText = `width:${effPct * 100}%;background:${F.color}`; eff.append(ei);
+        card.append(el("div", "sub", `${fmtIsk(v.iskK)} destroyed, ${fmtIsk(v.iskL)} lost`), eff, el("div", "sub", `${Math.round(effPct * 100)}% ISK efficiency`));
+        card.addEventListener("click", () => { state.faction = state.faction === f ? null : f; render(); });
+      } else { card.disabled = true; card.title = "Faction filtering isn't available for a single system"; }
+      fbox.append(card);
+    }
+    // ship lists
+    const fName = state.faction === null ? "" : ` flown by ${FACTIONS[state.faction].short}`;
+    if (state.system) {
+      // a single system: each ship's kills and losses there
+      const rows = Object.entries(sys ? sys.ships : {}).filter(([id]) => shipVisible(id)).map(([id, [k, l]]) => [id, { k, l, sysOnly: true }]);
+      fillList($("killList"), rows.filter(([, v]) => v.k > 0).sort((a, b) => b[1].k - a[1].k).slice(0, 15), "k");
+      fillList($("lossList"), rows.filter(([, v]) => v.l > 0).sort((a, b) => b[1].l - a[1].l).slice(0, 15), "l");
+      const nm = sysLabel(state.system).name;
+      $("killsSub").textContent = `Kills each ship took part in, in ${nm}`;
+      $("lossSub").textContent = `Ships destroyed in ${nm}`;
+    } else {
+      const ships = Object.entries(s.ships).filter(([id]) => shipVisible(id));
+      fillList($("killList"), ships.filter(([, v]) => killsOf(v) > 0).sort((a, b) => killsOf(b[1]) - killsOf(a[1])).slice(0, 15), "k");
+      fillList($("lossList"), ships.filter(([, v]) => lossesOf(v) > 0).sort((a, b) => lossesOf(b[1]) - lossesOf(a[1])).slice(0, 15), "l");
+      $("killsSub").textContent = `Kills each ship took part in${fName}`;
+      $("lossSub").textContent = `Ships destroyed${state.faction === null ? "" : `, flown by ${FACTIONS[state.faction].short}`}`;
+    }
+    // note about coverage
+    const days = Math.max(1, Math.round((Date.parse(data.updated) - Date.parse(data.since)) / 86400e3));
+    const win = state.win === "7d" && days < 7 ? `7 days (about ${days} day${days === 1 ? "" : "s"} collected so far)` : state.win === "7d" ? "7 days" : "24 hours";
+    $("note").textContent = state.system
+      ? `${(sys ? sys.kills : 0).toLocaleString()} kills worth ${fmtIsk(sys ? sys.isk : 0)} ISK in ${sysLabel(state.system).name} in the last ${win}. Choose “All warzone systems” to see the whole warzone again.`
+      : `${s.kills.toLocaleString()} kills in warzone systems worth ${fmtIsk(s.isk)} ISK in the last ${win}. Updated ${new Date(data.updated).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}. Select a faction card to filter by faction.`;
+    renderDetail();
+  }
+  function fillList(ol, rows, mode) {
+    ol.replaceChildren();
+    if (!rows.length) { ol.append(el("li", "empty", "No ships match these filters yet.")); return; }
+    rows.forEach(([id, v], i) => {
+      const li = el("li"); li.tabIndex = 0;
+      li.setAttribute("aria-selected", String(String(state.ship) === String(id)));
+      const nameBox = el("div"); nameBox.append(el("div", "sn", shipName(id)), el("div", "sc", groupOf(id)));
+      const n = v.sysOnly ? (mode === "k" ? v.k : v.l) : (mode === "k" ? killsOf(v) : lossesOf(v));
+      const val = el("div", "sv", n.toLocaleString());
+      if (!v.sysOnly) val.append(el("small", null, mode === "k" ? `${fmtIsk(v.iskK)} destroyed` : `${fmtIsk(v.iskL)} lost`));
+      li.append(el("span", "rk", String(i + 1)), nameBox, val);
+      if (!v.sysOnly) li.append(factionBar(mode === "k" ? v.kf : v.lf));
+      const go = () => { state.ship = id; render(); };
+      li.addEventListener("click", go); li.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+      ol.append(li);
+    });
+  }
+  function renderDetail() {
+    const box = $("detail"); box.replaceChildren();
+    const v = state.ship !== null ? S().ships[state.ship] : null; // whole-warzone figures for the ship
+    if (!v) { box.append(el("div", "prompt", state.ship !== null ? `${shipName(state.ship)} hasn’t been seen with these filters.` : "Select a ship to see who flies it, where, what it kills, what kills it, and the modules on its lost fits.")); return; }
+    const id = state.ship;
+    box.append(el("h3", null, shipName(id)), el("div", "cls", groupOf(id)));
+    if (state.system) {
+      const sys = SYS(), here = sys && sys.ships[id] ? sys.ships[id] : [0, 0];
+      box.append(el("div", "insys", `In ${sysLabel(state.system).name}: ${here[0]} kill${here[0] === 1 ? "" : "s"}, ${here[1]} loss${here[1] === 1 ? "" : "es"}. The figures below cover the whole warzone.`));
+    }
+    const stats = el("div", "stats");
+    const stat = (n, label, color) => { const d = el("div", "stat"); const b = el("b", null, n); if (color) b.style.color = color; d.append(b, el("span", null, label)); stats.append(d); };
+    const eff = v.iskK + v.iskL ? Math.round(v.iskK / (v.iskK + v.iskL) * 100) : 0;
+    stat(v.k.toLocaleString(), "kills", "var(--kill)"); stat(v.l.toLocaleString(), "losses", "var(--loss)"); stat(`${eff}%`, "ISK efficiency");
+    stat(v.fb.toLocaleString(), "final blows"); stat(v.solo.toLocaleString(), "solo kills"); stat(fmtIsk(v.iskK), "ISK destroyed");
+    box.append(stats);
+    // who flies it / who loses it
+    const facRows = (title, dist) => {
+      box.append(el("h4", null, title));
+      const total = Object.values(dist).reduce((a, b) => a + b, 0);
+      if (!total) { box.append(el("div", "muted", "None yet.")); return; }
+      const rows = el("div", "rows");
+      Object.entries(dist).sort((a, b) => b[1] - a[1]).forEach(([f, n]) => {
+        const F = FACTIONS[f] || FACTIONS[0]; const r = el("div", "r");
+        r.append(el("span", null, F.short + (F.pirate ? " (pirate)" : "")), el("span", null, `${n} (${Math.round(n / total * 100)}%)`));
+        const bar = el("div", "bar"), i = document.createElement("i"); i.style.cssText = `width:${n / total * 100}%;background:${F.color}`; bar.append(i); r.append(bar);
+        rows.append(r);
+      });
+      box.append(rows);
+    };
+    facRows("Who gets kills in it", v.kf);
+    facRows("Who loses it", v.lf);
+    // where it's used
+    box.append(el("h4", null, "Where it’s used most"));
+    const where = el("div", "rows");
+    const sysTotal = Math.max(...Object.values(v.sys), 1);
+    byCount(v.sys).forEach(([sid, n]) => {
+      const L = sysLabel(sid), r = el("div", "r"), name = el("button", "sysbtn"); name.type = "button";
+      name.title = `Show only ${L.name}`;
+      name.append(secChip(L.sec), `${L.name}${L.region ? `, ${L.region}` : ""}`);
+      name.addEventListener("click", () => { state.system = String(sid); state.faction = null; render(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+      r.append(name, el("span", null, String(n)));
+      const bar = el("div", "bar"), i = document.createElement("i"); i.style.cssText = `width:${n / sysTotal * 100}%;background:var(--accent)`; bar.append(i); r.append(bar);
+      where.append(r);
+    });
+    box.append(Object.keys(v.sys).length ? where : el("div", "muted", "No systems recorded."));
+    // what it kills / what kills it (clickable)
+    const shipRows = (title, dist, color) => {
+      box.append(el("h4", null, title));
+      const entries = byCount(dist);
+      if (!entries.length) { box.append(el("div", "muted", "None yet.")); return; }
+      const rows = el("div", "rows"), max = Math.max(...entries.map(e => e[1]));
+      entries.forEach(([sid, n]) => {
+        const r = el("div", "r"), b = el("button", null, shipName(sid)); b.type = "button";
+        b.addEventListener("click", () => { state.ship = sid; render(); $("detail").scrollTop = 0; });
+        r.append(b, el("span", null, String(n)));
+        const bar = el("div", "bar"), i = document.createElement("i"); i.style.cssText = `width:${n / max * 100}%;background:${color}`; bar.append(i); r.append(bar);
+        rows.append(r);
+      });
+      box.append(rows);
+    };
+    shipRows("What it kills most", v.kills, "var(--kill)");
+    shipRows("What kills it most", v.killedBy, "var(--loss)");
+    // modules on lost fits
+    box.append(el("h4", null, `Common modules on lost fits${v.l ? ` (${v.l} loss${v.l === 1 ? "" : "es"})` : ""}`));
+    const mods = byCount(v.mods);
+    if (!mods.length) box.append(el("div", "muted", "No losses recorded with these filters."));
+    else {
+      const rows = el("div", "rows");
+      mods.forEach(([mid, n]) => {
+        const r = el("div", "r"), pct = v.l ? n / v.l : 0;
+        r.append(el("span", null, data.types.mods[mid] || `Module ${mid}`), el("span", null, `${Math.round(pct * 100)}% of fits`));
+        const bar = el("div", "bar"), i = document.createElement("i"); i.style.cssText = `width:${pct * 100}%;background:var(--accent)`; bar.append(i); r.append(bar);
+        rows.append(r);
+      });
+      box.append(rows);
+    }
+    const z = el("div", "muted"); z.style.marginTop = "14px";
+    z.innerHTML = `<a href="https://zkillboard.com/ship/${id}/" target="_blank" rel="noopener">${shipName(id)} on zKillboard</a>`;
+    box.append(z);
+  }
+
+  // ---------- Controls ----------
+  function segment(id, key) {
+    $(id).querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+      state[key] = b.dataset.v;
+      $(id).querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      if (key === "zone" && state.faction !== null && !ZONE_FACTIONS[state.zone].includes(state.faction)) state.faction = null;
+      if (key === "zone" && state.system && sysData) { const e = sysData.windows[state.win][state.scope][state.system]; if (state.zone !== "all" && (!e || e.z !== state.zone)) state.system = ""; }
+      render();
+    }));
+  }
+  segment("zoneSeg", "zone"); segment("winSeg", "win");
+  $("scope").addEventListener("change", e => { state.scope = e.target.value; render(); });
+  $("cls").addEventListener("change", e => { state.cls = e.target.value; render(); });
+  $("hidePods").addEventListener("change", e => { state.hidePods = e.target.checked; render(); });
+  $("sysSel").addEventListener("change", e => { state.system = e.target.value; if (state.system) state.faction = null; render(); });
+
+  // ---------- Start ----------
+  (async () => {
+    try {
+      fetch(DATA_BASE + "warzone.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(w => {
+        for (const x of (w && w.feed) || []) if (typeof x.solarsystemID === "number") ownerOf[x.solarsystemID] = x.ownerFaction;
+        if (data) render();
+      }).catch(() => {});
+      const [d, cat, sd] = await Promise.all([fetch(DATA_BASE + "fw-ships.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }), fetch(DATA_BASE + "catalog.json").then(r => r.ok ? r.json() : null).catch(() => null), fetch(DATA_BASE + "fw-systems.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null).catch(() => null)]);
+      data = d; catalog = cat; sysData = sd;
+      render();
+      setInterval(async () => {
+        try {
+          const [r, rs] = await Promise.all([fetch(DATA_BASE + "fw-ships.json", { cache: "no-cache" }), fetch(DATA_BASE + "fw-systems.json", { cache: "no-cache" })]);
+          if (r.ok) data = await r.json();
+          if (rs.ok) sysData = await rs.json();
+          render();
+        } catch (e) {}
+      }, 10 * 60 * 1000);
+    } catch (e) {
+      $("note").textContent = `Couldn’t load the ship data (${e.message}).`;
+    }
+  })();
+})();
+</script>
+</body>
+</html>
