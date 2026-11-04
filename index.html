@@ -278,6 +278,7 @@ table.hide-avg .c-avg, table.hide-size .c-size{display:none}
 .map-link{font:inherit;font-weight:600;font-size:.9rem;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--panel);padding:7px 14px;border-radius:3px;display:inline-flex;align-items:center;gap:7px}
 .map-link:hover{border-color:var(--accent)}
 .map-link .pip{width:8px;height:8px;border-radius:50%;background:#ff4d2e;box-shadow:0 0 6px #ff4d2e}
+.map-link .pip.fw{border-radius:2px;background:linear-gradient(135deg,#3f7fd6 0 50%,#d8a22a 50% 100%);box-shadow:none}
 .loud-only{display:none}
 :root.loud .loud-only{display:block}
 :root.loud .quiet-only{display:none}
@@ -330,6 +331,7 @@ footer p{margin:0 0 10px}
       </span>
     </a>
     <div class="head-right">
+      <a class="map-link" href="fw.html"><span class="pip fw" aria-hidden="true"></span>Faction warfare</a>
       <a class="map-link" href="killmap.html"><span class="pip" aria-hidden="true"></span>Live kill map</a>
       <button class="loud-btn" id="loudBtn" type="button" aria-pressed="false">Go Loud!</button>
       <div class="status" id="status">Connecting to ESI…</div>
