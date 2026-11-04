@@ -93,7 +93,7 @@ jobs:
       - name: Assemble the site
         run: |
           mkdir -p _site/data
-          cp index.html killmap.html _site/
+          cp index.html killmap.html fw.html ships.html fw-guide.html _site/
           if [ -d data/public ]; then cp -r data/public/. _site/data/; fi
 
       - uses: actions/configure-pages@v6
