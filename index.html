@@ -143,6 +143,40 @@ button.li-name{background:none;border:0;padding:0;color:var(--accent);cursor:poi
 .sys-link:hover{color:var(--accent)}
 dialog.sysd{width:min(800px,calc(100% - 24px));max-height:min(88vh,920px);padding:0;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px}
 dialog.sysd::backdrop{background:rgba(8,12,18,.6)}
+/* Quiet route planner */
+dialog.routed{width:min(900px,calc(100% - 24px))}
+dialog.routed .d-body{display:block;columns:auto;column-count:auto}
+.route-btn{border-color:var(--accent);color:var(--accent);font-weight:600}
+.r-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px;align-items:start;margin-bottom:14px}
+.r-field{display:grid;gap:4px;font-size:.92rem;color:var(--muted);border:0;margin:0;padding:0;min-width:0}
+.r-field legend{padding:0;margin-bottom:4px}
+.r-field input[type=number],.r-field input[list],.r-field select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;width:100%}
+.r-sec label{display:flex;align-items:center;gap:6px;color:var(--ink);cursor:pointer}
+.r-note{margin:0 0 4px 22px;font-size:.8rem;line-height:1.35;color:var(--muted);max-width:42ch}
+.r-seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;width:max-content}
+.r-seg button{font:inherit;color:var(--muted);background:var(--bg);border:0;padding:6px 12px;cursor:pointer}
+.r-seg button+button{border-left:1px solid var(--line)}
+.r-seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
+.r-go{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.r-msg{color:var(--muted);font-size:.9rem}
+.r-summary{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:3px;padding:8px 12px;margin:4px 0 10px}
+.r-summary b{color:var(--ink)}
+.r-list{width:100%;border-collapse:collapse;font-size:.92rem}
+.r-list th,.r-list td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.r-list th{color:var(--muted);font-weight:500}
+.r-list td.num,.r-list th.num{text-align:right;font-variant-numeric:tabular-nums}
+.r-list td.k{color:#d33a2c;font-weight:700}
+.r-list .r-step{color:var(--muted)}
+.r-list .sys-link{font-weight:600}
+.r-again{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:0 4px;vertical-align:1px}
+.r-wrap{overflow-x:auto}
+.r-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.r-actions a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center}
+.r-saved h3{font-size:1rem;margin:18px 0 6px}
+.r-saved ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.r-saved li{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 10px;font-size:.9rem}
+.r-saved li span{color:var(--muted)}
+.r-saved li .r-li-btns{display:flex;gap:6px}
 .d-head{padding:20px 22px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
 .d-head h2{margin:0;font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.05;font-weight:600;word-break:break-word}
 .d-sub{font-family:var(--cond);color:var(--muted);margin-top:6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -358,6 +392,7 @@ footer p{margin:0 0 10px}
       <button class="btn" id="detailHero" disabled>View system details</button>
       <button class="btn" id="mapHero" disabled>Region map</button>
       <button class="btn" id="nearHero" disabled>Nearby map</button>
+      <button class="btn route-btn" id="routeHero" type="button">Plan a quiet route</button>
       <button class="btn" id="copyHero" disabled>Copy name</button>
       <button class="btn" id="refreshBtn">Refresh ESI data</button>
     </div>
@@ -466,6 +501,60 @@ footer p{margin:0 0 10px}
         <button class="btn" id="dClose" type="button">Close</button>
       </div>
       <div class="d-body" id="dBody"></div>
+    </div>
+  </dialog>
+
+  <dialog class="sysd routed" id="routeDialog" aria-labelledby="rTitle">
+    <div>
+      <div class="d-head">
+        <div>
+          <h2 id="rTitle">Plan a quiet route</h2>
+          <div class="d-sub">Find a route through the quietest systems, one way or as a loop back to where you started.</div>
+        </div>
+        <button class="btn" id="rClose" type="button">Close</button>
+      </div>
+      <div class="d-body">
+        <form class="r-form" id="rForm" onsubmit="return false">
+          <label class="r-field">Start system
+            <input id="rStart" list="rSystems" autocomplete="off" spellcheck="false" placeholder="Type a system name">
+            <datalist id="rSystems"></datalist>
+          </label>
+          <div class="r-field">Route
+            <div class="r-seg" role="group" aria-label="Route type">
+              <button type="button" data-v="oneway" aria-pressed="true">One way</button>
+              <button type="button" data-v="loop" aria-pressed="false">Loop back to start</button>
+            </div>
+          </div>
+          <label class="r-field">Jumps
+            <input id="rJumps" type="number" min="2" max="30" value="10">
+          </label>
+          <label class="r-field">Quiet means
+            <select id="rMetric">
+              <option value="hour">Fewest jumps in the last hour</option>
+              <option value="avg">Lowest 30-day average</option>
+            </select>
+          </label>
+          <fieldset class="r-field r-sec">
+            <legend>Security allowed</legend>
+            <label><input type="checkbox" id="rHigh" checked> High sec</label>
+            <label><input type="checkbox" id="rLow" checked> Low sec</label>
+            <label><input type="checkbox" id="rNull"> Null sec</label>
+          </fieldset>
+          <fieldset class="r-field r-sec">
+            <legend>Avoid</legend>
+            <label><input type="checkbox" id="rAvoidKills" checked> Systems with kills in the last hour</label>
+            <p class="r-note">Kills are common in low and null sec, so this can rule out a lot of systems and make routes shorter or harder to find. If a route comes up short, try unticking it.</p>
+            <label id="rAvoidInsLabel"><input type="checkbox" id="rAvoidIns" checked> Pirate insurgency systems</label>
+          </fieldset>
+          <fieldset class="r-field r-sec">
+            <legend>Doubling back</legend>
+            <label><input type="checkbox" id="rBack" checked> Allow doubling back when there’s no other way</label>
+          </fieldset>
+          <div class="r-go"><button class="btn primary" id="rFind" type="button">Find a quiet route</button><span class="r-msg" id="rMsg" role="status"></span></div>
+        </form>
+        <div id="rResult"></div>
+        <div class="r-saved" id="rSaved"></div>
+      </div>
     </div>
   </dialog>
 
@@ -2560,6 +2649,242 @@ footer p{margin:0 0 10px}
     applyHostedColumns();
     onFilterChange();
   }
+
+  // ---------- Quiet route planner ----------
+  // Searches the stargate map for the quietest route of a set length, one way or as a loop.
+  // Runs entirely in the browser using the map, traffic and kill data the page already has.
+  const routeState = { loop: false, last: null };
+  const ROUTES_KEY = "quietspace.routes";
+  const routeKills = id => { const k = kills[id]; return k ? k.ship + k.pod : 0; };
+  const routeAvg = id => (prebuilt.activity && prebuilt.activity.systems[id]) ? prebuilt.activity.systems[id][0] : null;
+  function findSystemByName(name) {
+    const n = (name || "").trim().toLowerCase();
+    if (!n) return null;
+    for (const [id, sys] of Object.entries(catalog.systems)) if (sys.n.toLowerCase() === n) return +id;
+    return null;
+  }
+  function planRoute(o) {
+    const links = getMapData().links;
+    const ins = o.avoidIns && prebuilt.insurgency ? prebuilt.insurgency.systems : null;
+    const ok = id => {
+      const sys = catalog.systems[id]; if (!sys) return false;
+      const reg = regionOf(sys);
+      if (reg === undefined || UNREACHABLE.has(reg) || reg === POCHVEN) return false;
+      if (!o.sec.has(secClass(sys))) return false;
+      if (o.avoidKills && routeKills(id) > 0) return false;
+      if (ins && ins[id]) return false;
+      return true;
+    };
+    // How quiet a system is: lower is better. Kills count heavily if they aren't ruled out.
+    const cost = id => (o.metric === "avg" ? (routeAvg(id) ?? (jumps[id] || 0)) : (jumps[id] || 0)) + (o.avoidKills ? 0 : routeKills(id) * 10);
+    const REVISIT = 100000; // far more than any route's traffic, so fresh systems always win
+    const search = (N) => {
+      // for loops: gate jumps from each allowed system back to the start
+      let home = null;
+      if (o.loop) {
+        home = new Map([[o.start, 0]]);
+        let f = [o.start];
+        while (f.length) { const nx = []; for (const x of f) for (const n of links[x] || []) if (!home.has(n) && ok(n)) { home.set(n, home.get(x) + 1); nx.push(n); } f = nx; }
+      }
+      let beam = [{ path: [o.start], seen: new Set([o.start]), cost: 0, back: 0 }], best = beam[0];
+      for (let step = 1; step <= N; step++) {
+        const left = N - step, next = [];
+        for (const st of beam) {
+          const last = st.path[st.path.length - 1];
+          for (const n of links[last] || []) {
+            if (o.loop && step === N) { if (n === o.start) next.push({ path: [...st.path, n], seen: st.seen, cost: st.cost, back: st.back }); continue; }
+            if (!ok(n) && n !== o.start) continue;
+            const again = st.seen.has(n);
+            // Doubling back is allowed only as a last resort: a revisit costs far more than any fresh system.
+            if (again && !o.allowBack) continue;
+            if (o.loop && !(home.has(n) && home.get(n) <= left)) continue;
+            const seen = again ? st.seen : new Set(st.seen); if (!again) seen.add(n);
+            next.push({ path: [...st.path, n], seen, cost: st.cost + (again ? REVISIT : cost(n)), back: st.back + (again ? 1 : 0) });
+          }
+        }
+        if (!next.length) break;
+        next.sort((a, b) => a.cost - b.cost);
+        // keep the best few routes ending at each system, so the search doesn't collapse onto one corridor
+        const per = new Map(); beam = [];
+        for (const st of next) {
+          const l = st.path[st.path.length - 1], c = per.get(l) || 0;
+          if (c >= 6) continue;
+          per.set(l, c + 1); beam.push(st);
+          if (beam.length >= 3000) break;
+        }
+        best = beam[0];
+      }
+      return best;
+    };
+    let best = search(o.jumps), used = o.jumps;
+    const complete = b => b && b.path.length === used + 1 && (!o.loop || b.path[b.path.length - 1] === o.start);
+    if (o.loop && !complete(best)) {
+      for (const d of [-1, 1, -2, 2]) {
+        const n = o.jumps + d; if (n < 3 || n > 30) continue;
+        const b = search(n); used = n;
+        if (complete(b)) { best = b; break; }
+      }
+    }
+    return { path: best ? best.path : [o.start], complete: complete(best), jumpsUsed: used, back: best ? best.back || 0 : 0 };
+  }
+  function readRouteForm() {
+    const sec = new Set();
+    if ($("rHigh").checked) sec.add("high");
+    if ($("rLow").checked) sec.add("low");
+    if ($("rNull").checked) sec.add("null");
+    return { start: findSystemByName($("rStart").value), startName: $("rStart").value.trim(), loop: routeState.loop,
+      jumps: Math.max(2, Math.min(30, parseInt($("rJumps").value, 10) || 10)), metric: $("rMetric").value,
+      sec, avoidKills: $("rAvoidKills").checked, avoidIns: $("rAvoidIns").checked && !!prebuilt.insurgency, allowBack: $("rBack").checked };
+  }
+  function routeTitle(r) { return `${r.loop ? "Loop from" : "One way from"} ${catalog.systems[r.path[0]].n}, ${r.path.length - 1} jumps`; }
+  function routeSettingsText(o) {
+    const sec = [...o.sec].map(x => ({ high: "high", low: "low", null: "null" })[x]).join(", ") || "none";
+    const avoid = [o.avoidKills ? "systems with kills in the last hour" : null, o.avoidIns ? "pirate insurgency systems" : null].filter(Boolean).join(" and ");
+    return `Quiet by ${o.metric === "avg" ? "30-day average" : "last hour"} · security: ${sec}${avoid ? ` · avoiding ${avoid}` : ""}${o.allowBack ? " · doubling back allowed when needed" : ""}`;
+  }
+  function runRoute() {
+    const o = readRouteForm(), msg = $("rMsg");
+    if (location.protocol === "file:") { msg.innerHTML = `Route planning needs the full stargate map, which is only available on <a href="https://lcahst.github.io/quiet-space/" target="_blank" rel="noopener">the live site</a>.`; return; }
+    if (!Object.keys(getMapData().links || {}).length) { msg.textContent = "The stargate map is still loading. Try again in a moment."; return; }
+    // Route planning needs every gate connection, which only the hosted site's prebuilt map has.
+    const links = getMapData().links, reachable = Object.keys(catalog.systems).filter(id => { const r = regionOf(catalog.systems[id]); return r !== undefined && !UNREACHABLE.has(r) && r !== POCHVEN; });
+    if (reachable.filter(id => links[id]).length < reachable.length * 0.95) {
+      msg.innerHTML = location.protocol === "file:" ? `Route planning needs the full stargate map, which is only available on <a href="https://lcahst.github.io/quiet-space/" target="_blank" rel="noopener">the live site</a>.` : "The full stargate map is still loading. Try again in a moment.";
+      return;
+    }
+    if (!o.start) { msg.textContent = o.startName ? `No system called “${o.startName}”. Pick one from the list.` : "Choose a start system first."; return; }
+    if (!o.sec.size) { msg.textContent = "Allow at least one kind of security."; return; }
+    if (o.loop && o.jumps < 3) { msg.textContent = "A loop needs at least 3 jumps."; return; }
+    msg.textContent = "Searching…";
+    setTimeout(() => {
+      const t0 = performance.now(), res = planRoute(o);
+      const r = { ...res, loop: o.loop, settings: o, planned: new Date().toISOString() };
+      routeState.last = r;
+      msg.textContent = `Searched in ${Math.round(performance.now() - t0)} ms.`;
+      renderRoute(r);
+    }, 20);
+  }
+  // Step indexes that revisit a system already on the route (the loop's final return to the start doesn't count).
+  function revisitSteps(r) {
+    const seen = new Set(), out = new Set(), n = r.path.length - 1;
+    r.path.forEach((id, i) => { if (seen.has(id) && !(r.loop && i === n)) out.add(i); seen.add(id); });
+    return out;
+  }
+  function renderRoute(r) {
+    const box = $("rResult"); box.replaceChildren();
+    const n = r.path.length - 1;
+    const sum = el("div", "r-summary");
+    if (n === 0) {
+      sum.textContent = "No route found: there are no allowed systems next to your start. Try allowing more security levels or fewer things to avoid.";
+      box.append(sum); return;
+    }
+    const inside = [...new Set(r.loop ? r.path.slice(1, -1) : r.path.slice(1))].filter(id => id !== r.path[0]);
+    const again = revisitSteps(r);
+    const tj = inside.reduce((t, id) => t + (jumps[id] || 0), 0);
+    const tk = inside.reduce((t, id) => t + routeKills(id), 0);
+    const avgs = inside.map(routeAvg).filter(v => v != null);
+    if (r.loop && !r.complete) {
+      // no loop at all: explain instead of showing a route that doesn't come back
+      sum.innerHTML = `<b>No loop found from ${catalog.systems[r.path[0]].n}</b><br>There’s no route of about ${r.settings.jumps} jumps that returns to the start with these settings. Try a different number of jumps, allow more security levels, turn off one of the “avoid” options, or switch to a one-way route.`;
+      box.append(sum); return;
+    }
+    let note = "";
+    if (!r.complete && !r.loop) note = ` Only ${n} jumps were possible before running out of allowed systems.${r.settings.avoidKills ? " Unticking “Systems with kills in the last hour” may open up a longer route." : ""}`;
+    if (again.size) note += ` The route doubles back ${again.size} time${again.size === 1 ? "" : "s"} (marked “again”), because there was no other way with these settings.`;
+    if (r.loop && r.complete && r.jumpsUsed !== r.settings.jumps) note = ` No ${r.settings.jumps}-jump loop exists here, so this is the closest: ${r.jumpsUsed} jumps.`;
+    sum.innerHTML = `<b>${routeTitle(r)}</b><br>${tj.toLocaleString()} gate jumps and ${tk} ship and pod kills across the route in the last hour${avgs.length ? `, ${(avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)} jumps an hour on average over 30 days` : ""}.${note}`;
+    box.append(sum);
+    const wrap = el("div", "r-wrap"), t = el("table", "r-list");
+    t.innerHTML = `<thead><tr><th>#</th><th>System</th><th>Region</th><th class="num">Jumps, last hour</th><th class="num">Kills, last hour</th><th class="num">30-day avg</th></tr></thead>`;
+    const tb = document.createElement("tbody");
+    r.path.forEach((id, i) => {
+      const sys = catalog.systems[id], tr = document.createElement("tr");
+      const step = el("td", "r-step", i === 0 ? "Start" : (r.loop && i === n ? "Back" : String(i)));
+      const name = el("td"); const b = el("button", "sys-link", sys.n); b.type = "button";
+      b.addEventListener("click", () => openSystem(id));
+      name.append(secChip(sys), " ", b);
+      if (again.has(i)) { const tag = el("span", "r-again", "again"); tag.title = "The route passes through this system a second time"; name.append(" ", tag); }
+      const k = routeKills(id), a = routeAvg(id);
+      tr.append(step, name, el("td", null, catalog.regions[regionOf(sys)] || ""), el("td", "num", String(jumps[id] || 0)), el("td", "num" + (k ? " k" : ""), String(k)), el("td", "num", a == null ? "–" : a.toFixed(1)));
+      tb.append(tr);
+    });
+    t.append(tb); wrap.append(t); box.append(wrap);
+    const acts = el("div", "r-actions");
+    const btn = (label, fn, primary) => { const x = el("button", "btn" + (primary ? " primary" : ""), label); x.type = "button"; x.addEventListener("click", fn); acts.append(x); return x; };
+    btn("Download as text file", () => downloadRoute(r), true);
+    const copyB = btn("Copy list", async () => { try { await navigator.clipboard.writeText(routeText(r)); copyB.textContent = "Copied"; } catch (e) { copyB.textContent = "Couldn’t copy"; } setTimeout(() => copyB.textContent = "Copy list", 1500); });
+    const dl = el("a", "btn", "Open on Dotlan"); dl.href = dotlanRoute(r.path); dl.target = "_blank"; dl.rel = "noopener"; acts.append(dl);
+    const saveB = btn("Save in this browser", () => { saveRoute(r); saveB.textContent = "Saved"; saveB.disabled = true; });
+    box.append(acts);
+  }
+  const dotlanRoute = path => "https://evemaps.dotlan.net/route/" + path.map(id => encodeURIComponent(catalog.systems[id].n.replace(/ /g, "_"))).join(":");
+  function routeText(r) {
+    const now = new Date(r.planned);
+    const eve = now.toISOString().slice(0, 16).replace("T", " ");
+    const lines = [`Quiet Space route: ${routeTitle(r)}`, `Planned ${eve} EVE time · ${routeSettingsText(r.settings)}`, ""];
+    const n = r.path.length - 1, again = revisitSteps(r);
+    r.path.forEach((id, i) => {
+      const sys = catalog.systems[id], d = displaySec(sys.s);
+      const label = i === 0 ? "Start" : (r.loop && i === n ? "Back" : `${i}.`);
+      lines.push(`${label.padEnd(6)} ${sys.n} (${d === null ? "?" : d.toFixed(1)}), ${catalog.regions[regionOf(sys)] || ""}: ${jumps[id] || 0} jumps, ${routeKills(id)} kills in the last hour${again.has(i) ? " (again)" : ""}`);
+    });
+    lines.push("", `Route map on Dotlan: ${dotlanRoute(r.path)}`, "Planned with Quiet Space: https://lcahst.github.io/quiet-space/");
+    return lines.join("\n");
+  }
+  function downloadRoute(r) {
+    const blob = new Blob([routeText(r)], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `quiet-route-${catalog.systems[r.path[0]].n.replace(/[^\w-]+/g, "_")}-${r.path.length - 1}-jumps.txt`;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+  // Saved routes live in this browser only (localStorage), never on the server.
+  function savedRoutes() { try { return JSON.parse(localStorage.getItem(ROUTES_KEY)) || []; } catch (e) { return []; } }
+  function storeRoutes(list) { try { localStorage.setItem(ROUTES_KEY, JSON.stringify(list.slice(0, 20))); } catch (e) {} renderSaved(); }
+  function saveRoute(r) {
+    const settings = { ...r.settings, sec: [...r.settings.sec] };
+    storeRoutes([{ id: Date.now(), title: routeTitle(r), planned: r.planned, loop: r.loop, path: r.path, complete: r.complete, jumpsUsed: r.jumpsUsed, settings }, ...savedRoutes()]);
+  }
+  function renderSaved() {
+    const box = $("rSaved"); box.replaceChildren();
+    const list = savedRoutes().filter(x => x.path.every(id => catalog.systems[id]));
+    if (!list.length) return;
+    box.append(el("h3", null, "Saved in this browser"));
+    const ul = document.createElement("ul");
+    list.forEach(x => {
+      const li = document.createElement("li");
+      const txt = el("div"); txt.append(el("b", null, x.title), " ", el("span", null, new Date(x.planned).toLocaleDateString()));
+      const btns = el("div", "r-li-btns");
+      const show = el("button", "btn", "Show"); show.type = "button";
+      show.addEventListener("click", () => { const r = { ...x, settings: { ...x.settings, sec: new Set(x.settings.sec) } }; routeState.last = r; renderRoute(r); $("rResult").scrollIntoView({ block: "nearest" }); });
+      const del = el("button", "btn", "Delete"); del.type = "button";
+      del.addEventListener("click", () => storeRoutes(savedRoutes().filter(y => y.id !== x.id)));
+      btns.append(show, del); li.append(txt, btns); ul.append(li);
+    });
+    box.append(ul);
+  }
+  function openRoutePlanner() {
+    const dl = $("rSystems");
+    if (!dl.childElementCount) {
+      const names = Object.values(catalog.systems).filter(sys => { const r = regionOf(sys); return r !== undefined && !UNREACHABLE.has(r) && r !== POCHVEN; }).map(sys => sys.n).sort();
+      dl.replaceChildren(...names.map(n => Object.assign(document.createElement("option"), { value: n })));
+    }
+    if (!$("rStart").value && heroId && catalog.systems[heroId]) $("rStart").value = catalog.systems[heroId].n;
+    $("rAvoidInsLabel").hidden = !prebuilt.insurgency;
+    $("rMetric").querySelector('option[value="avg"]').disabled = !prebuilt.activity;
+    renderSaved();
+    $("routeDialog").showModal();
+  }
+  $("routeHero").addEventListener("click", openRoutePlanner);
+  $("rClose").addEventListener("click", () => $("routeDialog").close());
+  $("rFind").addEventListener("click", runRoute);
+  $("rStart").addEventListener("keydown", e => { if (e.key === "Enter") runRoute(); });
+  $("rForm").querySelectorAll(".r-seg button").forEach(b => b.addEventListener("click", () => {
+    routeState.loop = b.dataset.v === "loop";
+    $("rForm").querySelectorAll(".r-seg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  }));
+  $("routeDialog").addEventListener("click", e => { if (e.target === $("routeDialog")) $("routeDialog").close(); });
 
   async function copyName(name, btn) {
     const isIcon = btn.classList.contains("icon-btn");
