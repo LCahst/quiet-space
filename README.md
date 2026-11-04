@@ -8,10 +8,15 @@ The site shows each system's last-hour traffic, a 30-day average with weekly pat
 
 - `index.html` is the main website (Quiet Space and Loud Space). You can also open it straight from your computer; it then fetches what it needs from ESI itself, and the features that rely on collected data stay hidden.
 - `killmap.html` is the live kill map, in 2D and 3D, with a scrolling kill feed from zKillboard.
+- `fw.html` is the faction warfare map: zones of control for both warzones, contested progress and advantage, traffic and kill overlays, and a pirate insurgency view.
+- `ships.html` (Ship Stats) shows which ships are getting kills and dying in the warzones, by faction, class and system.
+- `fw-guide.html` is a guide for new faction warfare pilots: which ships can enter which complexes, and what each site pays.
 - `scripts/` holds the jobs the Action runs:
   - `collect-activity.mjs` records traffic hourly and builds the averages and weekly patterns.
   - `collect-isk.mjs` reads zKillboard's live kill feed hourly and builds the 7- and 30-day ISK destroyed rankings.
   - `collect-insurgency.mjs` records pirate insurgencies hourly from CCP's Frontlines data.
+  - `collect-warzone.mjs` saves the Frontlines warzone feed hourly (who holds each system, contested progress, advantage).
+  - `lib/fwships.mjs` builds the faction warfare ship statistics from the kills the ISK collector reads.
   - `collect-structures.mjs` updates the list of public player structures daily from EVE Ref.
   - `build-map.mjs` prepares map, station, system size and 3D position data daily.
   - `save-samples.mjs` saves samples of outside data feeds, for checking their format.
@@ -63,7 +68,8 @@ Edit `index.html` on GitHub (open it and click the pencil icon) or upload a new 
 - Traffic, systems, stations, sovereignty and faction warfare: [EVE ESI](https://developers.eveonline.com/docs/services/esi/overview/), the official EVE Online API.
 - Kills and their ISK values: [zKillboard](https://zkillboard.com/)'s R2Z2 live feed.
 - Public player structures: [EVE Ref](https://docs.everef.net/datasets/structures).
-- Pirate insurgencies: CCP's Frontlines data on eveonline.com.
+- Pirate insurgencies and the warzone: CCP's Frontlines data on eveonline.com.
+- Faction warfare guide: complex rules summarised from the [EVE Faction Warfare Yearbook 2026](https://www.patreon.com/EVEFrigates/posts/eve-online-2026-171374966) by EVE Frigates; reward figures from the [EVE University Wiki](https://wiki.eveuniversity.org/Faction_warfare) (CC BY-SA 4.0), cross-checked with [eve-fw.net](https://eve-fw.net/) and CCP's patch notes.
 - System sizes: CCP's static data export.
 - Ice belt systems: the [EVE University wiki](https://wiki.eveuniversity.org/Ice_harvesting).
 
