@@ -1,0 +1,1240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Faction warfare: the frontlines</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%23596b86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EFW%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080d15; --panel:#101826; --panel2:#162132; --ink:#dfe6ee; --muted:#8392a6; --line:#223146; --accent:#9fb4d4;
+  --sans:"Saira","Segoe UI",system-ui,sans-serif; --cond:"Saira Semi Condensed","Arial Narrow","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none !important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+a{color:#8fbaf0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.mark{width:40px;height:40px;display:grid;place-items:center;background:#596b86;color:#fff;font-weight:700;font-size:1.05rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.brand b{display:block;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
+.brand small{color:var(--muted);font-size:.85rem}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--cond);font-size:.92rem;color:var(--muted)}
+.tabs{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.tabs button{font:inherit;font-weight:600;color:var(--muted);background:var(--panel2);border:0;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.tabs button+button{border-left:1px solid var(--line)}
+.tabs button[aria-selected="true"]{color:var(--ink);background:#1e2c42;box-shadow:inset 0 -2px 0 var(--accent)}
+.tabs i{display:inline-block;width:10px;height:10px;border-radius:2px}
+.tools select{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:3px;padding:5px 8px}
+.tools label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.pbtn{font:inherit;font-weight:600;color:var(--pc,#e6c84a);background:transparent;border:1.5px solid var(--pc,#e6c84a);border-radius:3px;padding:5px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.pbtn[aria-pressed="true"]{background:var(--pc,#e6c84a);color:#0b0f16}
+.pbtn:disabled{opacity:.4;cursor:default}
+.tools select:disabled{opacity:.45}
+.seglvl{display:inline-flex;gap:2px;vertical-align:middle;margin-left:6px}
+.seglvl i{display:inline-block;width:9px;height:6px;border-radius:1px;background:var(--line)}
+.back{color:#8fbaf0;text-decoration:none;border:1px solid #2b4a6e;border-radius:3px;padding:5px 10px}
+.status{font-size:.82rem}
+
+main{display:grid;grid-template-columns:1fr 360px;min-height:0}
+.stage{position:relative;min-width:0;min-height:0;overflow:hidden}
+#map{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#map.drag{cursor:grabbing}
+.tip{position:absolute;pointer-events:none;background:rgba(14,21,33,.94);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-family:var(--cond);font-size:.85rem;min-width:200px;max-width:280px;transform:translate(14px,-50%);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.tip b{font-family:var(--sans);font-size:.98rem}
+.tip .row{display:flex;justify-content:space-between;gap:12px}
+.tip .row span:first-child{color:var(--muted)}
+.notice{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);text-align:center;color:var(--muted);font-family:var(--cond);max-width:460px;padding:0 16px}
+.legend{position:absolute;left:12px;bottom:12px;pointer-events:none;background:rgba(8,13,21,.82);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-family:var(--cond);font-size:.8rem;color:var(--muted);display:grid;gap:4px;max-width:calc(100% - 24px)}
+.legend .lrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend svg{width:14px;height:14px}
+.heatbar{display:inline-block;width:110px;height:8px;border-radius:4px}
+.layers{position:absolute;left:12px;top:10px;margin:0;background:rgba(8,13,21,.82);border:1px solid var(--line);border-radius:4px;padding:4px 10px 6px;font-family:var(--cond);font-size:.85rem;color:var(--muted);display:grid;gap:2px}
+.layers legend{padding:0 4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}
+.layers label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.hint{position:absolute;right:12px;top:10px;pointer-events:none;font-family:var(--cond);font-size:.8rem;color:var(--muted);background:rgba(8,13,21,.7);padding:2px 8px;border-radius:3px}
+
+aside{border-left:1px solid var(--line);background:var(--panel);overflow-y:auto;padding:14px 16px 20px;font-family:var(--cond)}
+aside h2{font-family:var(--sans);font-size:1rem;font-weight:600;margin:16px 0 8px;letter-spacing:.02em}
+aside h2:first-child{margin-top:0}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.side{background:var(--panel2);border-radius:4px;padding:8px 10px;border-top:3px solid}
+.side .nm{font-family:var(--sans);font-weight:600}
+.side .big{font-size:1.5rem;font-weight:600;line-height:1.1}
+.side .sub{color:var(--muted);font-size:.82rem}
+.share{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:10px 0 2px}
+.facts{display:grid;grid-template-columns:auto auto;gap:3px 14px;margin:6px 0 0}
+.facts dt{color:var(--muted)} .facts dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+ol.rank{list-style:none;margin:0;padding:0}
+ol.rank li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:6px 0;border-top:1px solid var(--line);cursor:pointer}
+ol.rank li:first-child{border-top:0}
+ol.rank li:hover{background:rgba(255,255,255,.03)}
+.r-name{font-weight:500;color:var(--ink)}
+.r-sub{grid-column:1/-1;color:var(--muted);font-size:.8rem}
+.r-val{text-align:right;font-variant-numeric:tabular-nums}
+.pbar{grid-column:1/-1;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.pbar i{display:block;height:100%}
+.card{background:var(--panel2);border-radius:4px;padding:10px 12px;margin-top:4px}
+.card h3{margin:0;font-family:var(--sans);font-size:1.15rem}
+.card .where{color:var(--muted);font-size:.85rem;margin-bottom:8px}
+.sharebar{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:4px 0 6px;background:var(--line)}
+.sharebar i{display:block;height:100%}
+.advrow{display:flex;align-items:baseline;gap:8px;padding:1px 0}
+.advrow .sw{width:9px;height:9px;border-radius:2px;flex:none;align-self:center}
+.advrow .pc{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
+.advrow .pts{color:var(--muted);font-size:.8rem;min-width:7.5em;text-align:right}
+.net{margin:6px 0 8px;font-weight:700}
+.advbars{display:grid;grid-template-columns:5.2em 1fr 3em;gap:2px 8px;align-items:center;margin:6px 0 2px}
+.advbars .an{font-weight:500}
+.advbars .atrack{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.advbars .atrack i{display:block;height:100%;border-radius:5px}
+.advbars .ap{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.advbars .apts{grid-column:2/-1;color:var(--muted);font-size:.75rem;margin:-1px 0 5px}
+.adv-h{margin-top:10px}
+.backbar{position:sticky;top:-14px;z-index:2;display:flex;justify-content:space-between;align-items:center;margin:-14px -16px 8px;padding:8px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.backbtn{font:inherit;font-weight:600;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:3px;padding:4px 10px;cursor:pointer}
+.backbtn:hover{border-color:var(--accent)}
+.backbar small{color:var(--muted)}
+.prompt{background:var(--panel2);border:1px dashed var(--line);border-radius:4px;padding:8px 10px;color:var(--muted);margin-bottom:6px}
+.updated{margin-top:18px;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem;line-height:1.5}
+.updated b{font-weight:600;color:var(--ink)}
+.adv{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center;margin:4px 0 8px}
+.adv .bar{height:7px;border-radius:4px;background:var(--line);overflow:hidden;display:flex}
+.adv .bar i{display:block;height:100%}
+.chip{display:inline-block;padding:0 6px;border-radius:2px;font-weight:600;font-size:.8rem;color:#0b1018}
+.muted{color:var(--muted)}
+.kills-hot{color:#ff5a4a;font-weight:700}
+.sortby{display:flex;gap:6px;align-items:center;margin:-4px 0 6px;font-size:.8rem;color:var(--muted)}
+.sortby button{font:inherit;color:var(--muted);background:none;border:0;padding:0 2px;cursor:pointer;text-decoration:underline;text-underline-offset:2px;text-decoration-color:transparent}
+.sortby button:hover{color:var(--ink)}
+.sortby button[aria-pressed="true"]{color:var(--ink);font-weight:600;text-decoration-color:var(--accent)}
+.empty{color:var(--muted)}
+
+@media (max-width:900px){
+  main{grid-template-columns:1fr;grid-template-rows:60vh auto}
+  aside{border-left:0;border-top:1px solid var(--line)}
+  body{overflow:auto}
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html" title="Back to Quiet Space">
+    <span class="mark" aria-hidden="true">FW</span>
+    <span><b>Faction warfare</b><small>The frontlines, who holds what, and where the fighting is</small></span>
+  </a>
+  <div class="tools">
+    <div class="tabs" role="tablist" aria-label="Warzone">
+      <button role="tab" id="tab-cg" aria-selected="true"><i style="background:#3f7fd6"></i><i style="background:#2f9e6a"></i>Caldari vs Gallente</button>
+      <button role="tab" id="tab-am" aria-selected="false"><i style="background:#d8a22a"></i><i style="background:#b5482f"></i>Amarr vs Minmatar</button>
+    </div>
+    <label for="overlay">Overlay
+      <select id="overlay">
+        <option value="">Zones of control only</option>
+        <option value="kills1:most">Most kills, last hour</option>
+        <option value="kills1:least">Least kills, last hour</option>
+        <option value="kills24:most">Most kills, last 24 hours</option>
+        <option value="kills24:least">Least kills, last 24 hours</option>
+        <option value="jumps:most">Most gate jumps, last hour</option>
+        <option value="jumps:least">Least gate jumps, last hour</option>
+        <option value="avg:most">Busiest, 30-day average</option>
+        <option value="avg:least">Quietest, 30-day average</option>
+      </select>
+    </label>
+    <button type="button" class="pbtn" id="pirateBtn" aria-pressed="false" title="Focus on the pirate insurgency">&#9760; Pirate focus</button>
+    <span class="status" id="status" hidden>Loading…</span>
+    <a class="back" href="fw-guide.html">FW Guide</a>
+    <a class="back" href="ships.html">Ship Stats</a>
+    <a class="back" href="index.html">Back to the site</a>
+  </div>
+</header>
+<main>
+  <div class="stage" id="stage">
+    <canvas id="map" aria-label="Map of the warzone"></canvas>
+    <fieldset class="layers">
+      <legend>Layers</legend>
+      <label><input type="checkbox" id="liveKills" checked> Live kills</label>
+      <label><input type="checkbox" id="insurg" checked> Insurgencies</label>
+      <label><input type="checkbox" id="routes" checked> Gate routes</label>
+      <label><input type="checkbox" id="labels" checked> Names</label>
+    </fieldset>
+    <div class="tip" id="tip" hidden></div>
+    <div class="notice" id="notice">Loading the warzone…</div>
+    <div class="legend" id="legend" aria-hidden="true"></div>
+    <div class="hint">Drag to move, scroll to zoom, click a system for details</div>
+  </div>
+  <aside id="panel" aria-label="Warzone details"></aside>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  // Development copy: opened as a local file, read the live site's data files.
+  const DATA_BASE = location.protocol === "file:" ? "https://lcahst.github.io/quiet-space/data/" : "data/";
+  const ESI = "https://esi.evetech.net";
+  const R2Z2 = "https://r2z2.zkillboard.com/ephemeral";
+  const FACTIONS = {
+    500001: { name: "Caldari State", short: "Caldari", color: "#3f7fd6" },
+    500004: { name: "Gallente Federation", short: "Gallente", color: "#2f9e6a" },
+    500003: { name: "Amarr Empire", short: "Amarr", color: "#d8a22a" },
+    500002: { name: "Minmatar Republic", short: "Minmatar", color: "#b5482f" },
+    500010: { name: "Guristas Pirates", short: "Guristas", color: "#e6c84a" },
+    500011: { name: "Angel Cartel", short: "Angels", color: "#c2306b" }
+  };
+  const ZONES = {
+    cg: { title: "Caldari vs Gallente", sides: [500001, 500004], pirate: 500010 },
+    am: { title: "Amarr vs Minmatar", sides: [500003, 500002], pirate: 500011 }
+  };
+  const SEC_COLORS = {"1.0":"#2c75e1","0.9":"#399aeb","0.8":"#4ecef8","0.7":"#60dba3","0.6":"#71e554","0.5":"#f3fd82","0.4":"#dc6d07","0.3":"#ce440f","0.2":"#bb1116","0.1":"#731f1f","0.0":"#8d3264"};
+  const ROLE_NAMES = { front: "Frontline", command: "Command operations", rear: "Rearguard" };
+
+  // ---------- Data ----------
+  let catalog = null, galaxy = {}, links = {}, feed = [], feedAt = null;
+  let activity = null, kills24 = null, insurgency = null;
+  let jumps1 = {}, kills1 = {}, liveAt = null;
+  let prevAmounts = null, prevOccupiers = null, prevAt = null, esiAt = null; // comparison point for "change since the last update"
+  const REFRESH_MS = 5 * 60 * 1000;
+  const fw = new Map(); // systemId -> { owner, occupier, contested, amount, adv: [{f, terrain, dynamic, total}] }
+  async function getJSON(url, opts) {
+    const r = await fetch(url, opts);
+    if (!r.ok) throw new Error(`${r.status} for ${url.split("/").pop()}`);
+    return r.json();
+  }
+  const optional = url => getJSON(url, { cache: "no-cache" }).catch(() => null);
+  const hexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+  // Territory shading by role, in the faction's own colour: frontline brightest (and a touch lighter),
+  // command in the middle, rearguard dimmer. Gentler when a heat overlay is on so the overlay stays readable.
+  const ROLE_FILL = { front: { a: 0.42, heat: 0.17, lighten: 0.18 }, command: { a: 0.27, heat: 0.12, lighten: 0 }, rear: { a: 0.15, heat: 0.07, lighten: 0 } };
+  function territoryFill(hex, role, heatOn, boost) {
+    const r = ROLE_FILL[role] || ROLE_FILL.command;
+    const n = parseInt(hex.slice(1), 16), mix = c => Math.round(c + (255 - c) * r.lighten);
+    return `rgba(${mix(n >> 16)},${mix((n >> 8) & 255)},${mix(n & 255)},${(heatOn ? r.heat : r.a) + boost})`;
+  }
+  function displaySec(s) { if (s === undefined || s === null) return null; if (s > 0 && s < 0.05) return 0.1; return Math.round(s * 10) / 10; }
+  const secColor = s => { const d = displaySec(s); return d === null ? "#5f6f82" : SEC_COLORS[d <= 0 ? "0.0" : d.toFixed(1)]; };
+  const sysName = id => (catalog.systems[id] ? catalog.systems[id].n : `System ${id}`);
+  const regionOf = id => { const s = catalog.systems[id]; return s ? catalog.regions[catalog.consToRegion[s.c]] : ""; };
+
+  // Feed entries: { solarsystemID, ownerFaction, occupierFaction, contestedStatus, contestedAmount, advantage: [{factionID, terrainAmount, dynamicAmount, totalAmount}] }
+  function readFeed(list) {
+    fw.clear();
+    for (const s of list || []) {
+      const id = s.solarsystemID ?? s.solarSystemID ?? s.systemId;
+      if (typeof id !== "number") continue;
+      fw.set(id, {
+        owner: s.ownerFaction, occupier: s.occupierFaction,
+        contested: String(s.contestedStatus || "").toLowerCase() !== "uncontested",
+        status: s.contestedStatus || "",
+        amount: Math.max(0, Math.min(1, +s.contestedAmount || 0)),
+        adv: (s.advantage || []).map(a => ({ f: a.factionID, terrain: +a.terrainAmount || 0, dynamic: +a.dynamicAmount || 0, total: +a.totalAmount || 0 }))
+      });
+    }
+  }
+
+  // Contested progress straight from ESI (refreshed by ESI every 30 minutes): victory points against the
+  // threshold give the same percentage as the Frontlines feed, just more often. Advantage stays hourly.
+  async function loadEsiFw() {
+    try {
+      const r = await fetch(`${ESI}/fw/systems/`, { cache: "no-cache" });
+      if (!r.ok) return false;
+      const list = await r.json();
+      for (const e of list) {
+        const s = fw.get(e.solar_system_id);
+        if (!s) continue;
+        s.owner = e.owner_faction_id; s.occupier = e.occupier_faction_id;
+        s.status = e.contested ? e.contested.charAt(0).toUpperCase() + e.contested.slice(1) : s.status;
+        s.contested = e.contested !== "uncontested";
+        if (e.victory_points_threshold) s.amount = Math.max(0, Math.min(1, e.victory_points / e.victory_points_threshold));
+      }
+      const lm = r.headers.get("last-modified");
+      esiAt = lm ? new Date(lm) : new Date();
+      return true;
+    } catch (e) { return false; }
+  }
+  // A system that changed hands since the last update has "flipped" rather than lost progress.
+  const flippedSince = id => !!(prevOccupiers && prevOccupiers[id] !== undefined && fw.has(id) && prevOccupiers[id] !== fw.get(id).occupier);
+  const deltaOf = id => (prevAmounts && prevAmounts[id] !== undefined && fw.has(id) && !flippedSince(id)) ? fw.get(id).amount - prevAmounts[id] : null;
+  const changeText = id => flippedSince(id) ? `Flipped to ${FACTIONS[fw.get(id).occupier] ? FACTIONS[fw.get(id).occupier].short : "?"}` : fmtDelta(deltaOf(id));
+  const changeColor = id => flippedSince(id) ? (FACTIONS[fw.get(id).occupier] ? FACTIONS[fw.get(id).occupier].color : "var(--muted)") : deltaColor(id, deltaOf(id));
+  function fmtDelta(d) {
+    if (d === null) return "";
+    const v = Math.round(d * 1000) / 10;
+    return v === 0 ? "no change" : `${v > 0 ? "+" : "\u2212"}${Math.abs(v).toFixed(1)}%`;
+  }
+  // Gains show in the attacker's colour, losses (the defender pushing back) in the defender's.
+  function deltaColor(id, d) {
+    if (!d) return "var(--muted)";
+    const occ = fw.get(id).occupier;
+    const f = d > 0 ? enemyOf(zone, occ) : occ;
+    return FACTIONS[f] ? FACTIONS[f].color : "var(--muted)";
+  }
+  const timeOf = d => d ? d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) : "";
+  // Advantage as shares: each faction's total as a share of everyone's combined. Net advantage is the
+  // leader's share minus the next strongest faction's share.
+  function advantageOf(s) {
+    const list = (s.adv || []).filter(a => a.total > 0).sort((a, b) => b.total - a.total);
+    const sum = list.reduce((t, a) => t + a.total, 0);
+    if (!sum) return null;
+    const shares = list.map(a => ({ ...a, share: a.total / sum }));
+    const net = shares[0].share - (shares[1] ? shares[1].share : 0);
+    return { shares, leader: shares[0].f, net, even: Math.round(net * 100) === 0 };
+  }
+  const pct0 = v => `${Math.round(v * 100)}%`;
+
+  // ---------- Warzone geometry ----------
+  let zoneKey = "cg", zone = null;
+  // zone = { ids, set, enemyOf, roles, cells, bounds, neighbours }
+  function enemyOf(z, f) { return f === z.sides[0] ? z.sides[1] : z.sides[0]; }
+  function buildZone(key) {
+    const z = ZONES[key];
+    const ids = [...fw.keys()].filter(id => galaxy[id] && (z.sides.includes(fw.get(id).occupier) || z.sides.includes(fw.get(id).owner)));
+    const set = new Set(ids);
+    // Roles: frontline borders enemy territory; command borders a friendly frontline; the rest are rearguard.
+    const roles = new Map();
+    ids.forEach(id => {
+      const occ = fw.get(id).occupier;
+      roles.set(id, (links[id] || []).some(n => set.has(n) && fw.get(n).occupier === enemyOf(z, occ)) ? "front" : null);
+    });
+    ids.forEach(id => {
+      if (roles.get(id)) return;
+      const occ = fw.get(id).occupier;
+      roles.set(id, (links[id] || []).some(n => set.has(n) && roles.get(n) === "front" && fw.get(n).occupier === occ) ? "command" : "rear");
+    });
+    // Systems just outside the warzone that connect to it, drawn faintly for context.
+    const neighbours = [...new Set(ids.flatMap(id => (links[id] || []).filter(n => !set.has(n) && galaxy[n])))];
+    const pts = ids.map(id => galaxy[id]);
+    const bounds = { minX: Math.min(...pts.map(p => p[0])), maxX: Math.max(...pts.map(p => p[0])), minZ: Math.min(...pts.map(p => p[2])), maxZ: Math.max(...pts.map(p => p[2])) };
+    zone = { key, ...z, ids, set, roles, neighbours, bounds, cells: buildCells(ids, neighbours) };
+  }
+  // Zones of control: a Voronoi cell per system (the area closer to it than to any other system),
+  // capped to a rough circle so the outer edge of the warzone looks organic rather than boxy.
+  function buildCells(ids, neighbours) {
+    const P = id => [galaxy[id][0], -galaxy[id][2]]; // top-down, north up
+    const all = ids.concat(neighbours);
+    const pts = new Map(all.map(id => [id, P(id)]));
+    // typical spacing: median distance to the nearest other system
+    const nn = ids.map(id => { const p = pts.get(id); let best = Infinity; for (const o of all) { if (o === id) continue; const q = pts.get(o); best = Math.min(best, Math.hypot(p[0] - q[0], p[1] - q[1])); } return best; }).sort((a, b) => a - b);
+    const typical = nn[Math.floor(nn.length / 2)] || 0.3;
+    const R = typical * 1.9;
+    const cells = new Map();
+    for (const id of ids) {
+      const p = pts.get(id);
+      // start with a 28-sided "circle", each edge labelled "cap"
+      let poly = [];
+      for (let k = 0; k < 28; k++) { const a = k / 28 * Math.PI * 2; poly.push({ x: p[0] + Math.cos(a) * R, y: p[1] + Math.sin(a) * R, e: "cap" }); }
+      for (const o of all) {
+        if (o === id) continue;
+        const q = pts.get(o);
+        if (Math.hypot(q[0] - p[0], q[1] - p[1]) > R * 2) continue;
+        poly = clipHalf(poly, p, q, o);
+        if (poly.length < 3) break;
+      }
+      if (poly.length >= 3) cells.set(id, poly);
+    }
+    return cells;
+  }
+  // Keep the part of the polygon closer to p than to q. Each vertex's "e" labels the edge that starts there.
+  function clipHalf(poly, p, q, label) {
+    const mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2, nx = q[0] - p[0], ny = q[1] - p[1];
+    const side = v => (v.x - mx) * nx + (v.y - my) * ny; // <= 0 means on p's side
+    const out = [];
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[i], b = poly[(i + 1) % poly.length];
+      const sa = side(a), sb = side(b);
+      if (sa <= 0) out.push(a);
+      if ((sa <= 0) !== (sb <= 0)) {
+        const t = sa / (sa - sb);
+        const v = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+        // entering the cut: the new edge runs along the bisector with q; leaving: keep a's edge label
+        v.e = sa <= 0 ? label : a.e;
+        out.push(v);
+      }
+    }
+    return out;
+  }
+
+  // ---------- Overlays ----------
+  function metricValue(id, metric) {
+    if (metric === "kills1") return kills1[id] || 0;
+    if (metric === "jumps") return jumps1[id] || 0;
+    if (metric === "kills24") return kills24 ? (kills24.systems[id] || 0) : null;
+    if (metric === "avg") { const v = activity && activity.systems[id]; return activity ? (v ? v[0] : 0) : null; }
+    return null;
+  }
+  const METRIC_TEXT = { kills1: "ship and pod kills in the last hour", kills24: "kills in the last 24 hours", jumps: "gate jumps in the last hour", avg: "average gate jumps per hour, 30 days" };
+  function heatColor(t, mode, a) {
+    // most: amber to red; least: quiet systems glow teal (t is already inverted for "least")
+    if (mode === "least") return `rgba(${Math.round(40 + 30 * (1 - t))},${Math.round(190 + 40 * t)},${Math.round(200 + 30 * t)},${a})`;
+    const c0 = [255, 196, 64], c1 = [230, 45, 35];
+    const c = c0.map((v, i) => Math.round(v + (c1[i] - v) * t));
+    return `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  }
+
+  // ---------- Map drawing ----------
+  const cv = $("map"), g = cv.getContext("2d");
+  const view = { x: 0, y: 0, scale: 40 };
+  let fitScale = 40; // the scale the warzone was fitted at; zooming past ~1.6x of it shows every percentage
+  let dpr = window.devicePixelRatio || 1;
+  let hoverId = null, selectedId = null;
+  const quietSort = { front: "jumps", rear: "jumps" }; // each quiet list's sort, kept while the page is open
+  const pulses = [];
+  const stars = Array.from({ length: 260 }, () => [Math.random(), Math.random(), Math.random() * 1.2 + 0.2, Math.random() * 0.5 + 0.15]);
+  const S = (x, y) => [(x - view.x) * view.scale + cv.width / 2, (y - view.y) * view.scale + cv.height / 2];
+  const P = id => [galaxy[id][0], -galaxy[id][2]];
+  function resize() {
+    const r = cv.getBoundingClientRect(); dpr = window.devicePixelRatio || 1;
+    cv.width = Math.max(1, Math.round(r.width * dpr)); cv.height = Math.max(1, Math.round(r.height * dpr));
+  }
+  function fit() {
+    const b = (pirateMode && pv) ? pv.bounds : zone.bounds, w = Math.max(1, b.maxX - b.minX), h = Math.max(1, b.maxZ - b.minZ);
+    view.scale = Math.min(cv.width / (w * 1.18), cv.height / (h * 1.18));
+    fitScale = view.scale;
+    view.x = (b.minX + b.maxX) / 2; view.y = -(b.minZ + b.maxZ) / 2;
+  }
+  let stripeCache = {};
+  function stripes(color) {
+    // diagonal hatching in the attacker's colour, drawn over contested systems
+    if (stripeCache[color]) return stripeCache[color];
+    const c = document.createElement("canvas"); c.width = c.height = 10 * dpr;
+    const x = c.getContext("2d"); x.strokeStyle = color; x.lineWidth = 2.2 * dpr;
+    x.beginPath(); x.moveTo(-2, 10 * dpr + 2); x.lineTo(10 * dpr + 2, -2); x.moveTo(-2, 2); x.lineTo(2, -2); x.moveTo(10 * dpr - 2, 10 * dpr + 2); x.lineTo(10 * dpr + 2, 10 * dpr - 2); x.stroke();
+    return (stripeCache[color] = g.createPattern(c, "repeat"));
+  }
+  function draw(now) {
+    if (!zone) return;
+    const W = cv.width, H = cv.height;
+    // background
+    const bg = g.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, Math.max(W, H) * 0.75);
+    bg.addColorStop(0, "#0f1828"); bg.addColorStop(1, "#05080e");
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    for (const [sx, sy, r, a] of stars) { g.fillStyle = `rgba(200,215,240,${a})`; g.fillRect(sx * W, sy * H, r * dpr, r * dpr); }
+    if (pirateMode && pv) { drawPirate(now); return; }
+
+    const [metric, mode] = ($("overlay").value || ":").split(":");
+    const heatOn = !!metric;
+    let maxV = 0;
+    if (heatOn) zone.ids.forEach(id => { const v = metricValue(id, metric); if (v) maxV = Math.max(maxV, v); });
+
+    // zone fills
+    for (const [id, poly] of zone.cells) {
+      const s = fw.get(id), col = FACTIONS[s.occupier] ? FACTIONS[s.occupier].color : "#666";
+      g.beginPath();
+      poly.forEach((v, i) => { const [x, y] = S(v.x, v.y); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+      g.closePath();
+      const sel = id === selectedId, hov = id === hoverId;
+      g.fillStyle = territoryFill(col, zone.roles.get(id), heatOn, sel ? 0.14 : hov ? 0.08 : 0); g.fill();
+      if (s.contested && s.amount > 0.05) {
+        const att = FACTIONS[enemyOf(zone, s.occupier)];
+        g.save(); g.globalAlpha = Math.min(0.85, Math.pow(s.amount, 1.6) * 0.9); g.fillStyle = stripes(hexA(att.color, heatOn ? 0.5 : 0.9)); g.fill(); g.restore();
+      }
+      if (heatOn) {
+        const v = metricValue(id, metric);
+        if (v !== null) {
+          let t = maxV ? Math.sqrt(v / maxV) : 0;
+          if (mode === "least") t = 1 - t;
+          const a = mode === "least" ? (v === 0 ? 0.55 : Math.max(0, t - 0.35) * 0.6) : (v === 0 ? 0 : 0.1 + t * 0.5);
+          if (a > 0) { g.fillStyle = heatColor(t, mode, a); g.fill(); }
+        }
+      }
+    }
+    // Territory edges. Borders between a faction's own systems are left out, so each territory reads as one
+    // block; its outer edge gets a rim in the faction's colour. Frontline edges are collected and drawn last.
+    const frontEdges = [];
+    g.lineWidth = 1.6 * dpr; g.lineJoin = "round";
+    for (const [id, poly] of zone.cells) {
+      const occ = fw.get(id).occupier;
+      const rim = hexA(FACTIONS[occ] ? FACTIONS[occ].color : "#888", 0.7);
+      for (let i = 0; i < poly.length; i++) {
+        const a = poly[i], b = poly[(i + 1) % poly.length];
+        const inside = zone.set.has(a.e);
+        if (inside && fw.get(a.e).occupier === occ) continue;          // same territory: no line
+        if (inside) { if (a.e > id) frontEdges.push([a, b]); continue; } // opposing territory: frontline
+        const [x1, y1] = S(a.x, a.y), [x2, y2] = S(b.x, b.y);           // edge of the warzone: faction rim
+        g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.strokeStyle = rim; g.stroke();
+      }
+    }
+    // Gate routes: a light-blue line with a thin dark casing, like a road on a map, so they never read as borders.
+    if ($("routes").checked) {
+      const segs = [];
+      for (const id of zone.ids) {
+        for (const n of links[id] || []) {
+          if (!galaxy[n]) continue;
+          const inside = zone.set.has(n);
+          if (inside && n < id) continue;
+          segs.push([S(...P(id)), S(...P(n)), inside]);
+        }
+      }
+      g.lineCap = "round";
+      for (const [[x1, y1], [x2, y2], inside] of segs) {   // casing
+        g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2);
+        g.setLineDash(inside ? [] : [4 * dpr, 4 * dpr]);
+        g.strokeStyle = "rgba(4,7,12,0.7)"; g.lineWidth = 3.4 * dpr; g.stroke();
+      }
+      for (const [[x1, y1], [x2, y2], inside] of segs) {   // core
+        g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2);
+        g.setLineDash(inside ? [] : [4 * dpr, 4 * dpr]);
+        g.strokeStyle = inside ? "rgba(150,205,255,0.75)" : "rgba(150,205,255,0.4)"; g.lineWidth = 1.3 * dpr; g.stroke();
+      }
+      g.setLineDash([]); g.lineCap = "butt";
+    }
+    // Frontline: a warm, wide glow where opposing territories meet, drawn above everything else.
+    if (frontEdges.length) {
+      g.save();
+      g.beginPath();
+      for (const [a, b] of frontEdges) { const [x1, y1] = S(a.x, a.y), [x2, y2] = S(b.x, b.y); g.moveTo(x1, y1); g.lineTo(x2, y2); }
+      g.lineCap = "round";
+      g.shadowColor = "rgba(255,190,110,0.95)"; g.shadowBlur = 16 * dpr;
+      g.strokeStyle = "rgba(255,200,130,0.55)"; g.lineWidth = 5 * dpr; g.stroke();
+      g.shadowBlur = 0; g.strokeStyle = "rgba(255,246,232,0.95)"; g.lineWidth = 1.8 * dpr; g.stroke();
+      g.restore();
+    }
+    // neighbouring systems outside the warzone
+    for (const id of zone.neighbours) {
+      const [x, y] = S(...P(id));
+      g.beginPath(); g.arc(x, y, 2.2 * dpr, 0, Math.PI * 2); g.fillStyle = "rgba(160,175,200,0.45)"; g.fill();
+    }
+    // insurgencies
+    const insOn = $("insurg").checked && insurgency;
+    // system markers
+    const labelOn = $("labels").checked;
+    const taken = [];
+    const pctLabels = []; // contested percentages, drawn after the names so names take priority
+    for (const id of zone.ids) {
+      const s = fw.get(id), role = zone.roles.get(id);
+      const col = FACTIONS[s.occupier] ? FACTIONS[s.occupier].color : "#888";
+      const [x, y] = S(...P(id));
+      const r = (role === "front" ? 5.5 : role === "command" ? 4.5 : 3.6) * dpr;
+      // Contested ring: a dark-cased track with the attacker's progress drawn over it, a bright end point,
+      // and a glow once a system is past 60%.
+      if (s.contested) {
+        const rr = r + (role === "front" ? 7 : 6) * dpr;
+        g.beginPath(); g.arc(x, y, rr, 0, Math.PI * 2);
+        // the outline strengthens as progress builds, so barely-started rings stay light
+        const weight = Math.min(1, s.amount / 0.3);
+        g.strokeStyle = `rgba(4,7,12,${0.35 + 0.45 * weight})`; g.lineWidth = (4.5 + 1.5 * weight) * dpr; g.stroke();
+        g.strokeStyle = `rgba(255,255,255,${0.1 + 0.07 * weight})`; g.lineWidth = 3.4 * dpr; g.stroke();
+        if (s.amount > 0) {
+          const att = FACTIONS[enemyOf(zone, s.occupier)];
+          const end = -Math.PI / 2 + Math.PI * 2 * s.amount;
+          g.save();
+          if (s.amount >= 0.6) { g.shadowColor = att.color; g.shadowBlur = 10 * dpr; }
+          g.beginPath(); g.arc(x, y, rr, -Math.PI / 2, end);
+          g.strokeStyle = att.color; g.lineWidth = 3.4 * dpr; g.lineCap = "round"; g.stroke();
+          g.restore();
+          g.beginPath(); g.arc(x + Math.cos(end) * rr, y + Math.sin(end) * rr, 1.7 * dpr, 0, Math.PI * 2);
+          g.fillStyle = "#ffffff"; g.fill();
+          if (s.amount >= 0.5 || view.scale > fitScale * 1.6) pctLabels.push([id, x, y + rr + 11 * dpr, s.amount, att.color]);
+        }
+      }
+      // marker: frontline diamond, command circle with core, rearguard small circle
+      g.fillStyle = col; g.strokeStyle = id === selectedId ? "#ffffff" : "rgba(255,255,255,0.85)"; g.lineWidth = (id === selectedId ? 2.2 : 1.2) * dpr;
+      g.beginPath();
+      if (role === "front") { g.moveTo(x, y - r * 1.25); g.lineTo(x + r * 1.25, y); g.lineTo(x, y + r * 1.25); g.lineTo(x - r * 1.25, y); g.closePath(); }
+      else if (role === "command") { const h = r * 0.95; g.rect(x - h, y - h, h * 2, h * 2); }
+      else g.arc(x, y, r, 0, Math.PI * 2);
+      g.fill(); g.stroke();
+      // pirate insurgency marker
+      if (insOn && insurgency.systems[id]) {
+        const pc = FACTIONS[zone.pirate].color;
+        g.beginPath(); g.moveTo(x + r + 6 * dpr, y - r - 8 * dpr); g.lineTo(x + r + 11 * dpr, y - r); g.lineTo(x + r + 1 * dpr, y - r); g.closePath();
+        g.fillStyle = pc; g.fill(); g.strokeStyle = "rgba(0,0,0,0.6)"; g.lineWidth = 1 * dpr; g.stroke();
+      }
+      // names, skipping any that would overlap
+      if (labelOn) {
+        g.font = `${(role === "front" ? 12 : 11) * dpr}px "Saira Semi Condensed", sans-serif`;
+        const name = sysName(id), w = g.measureText(name).width, bx = x + r + 5 * dpr, by = y - 7 * dpr, h = 13 * dpr;
+        if (!taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) {
+          taken.push([bx, by, w + 4 * dpr]);
+          g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(name, bx, y + 4 * dpr);
+          g.fillStyle = role === "front" ? "rgba(240,244,250,0.95)" : "rgba(210,220,235,0.78)"; g.fillText(name, bx, y + 4 * dpr);
+        }
+      }
+    }
+    // Contested percentages under their rings, skipped if they would overlap a name
+    g.font = `600 ${10.5 * dpr}px "Saira Semi Condensed", sans-serif`; g.textAlign = "center";
+    for (const [id, x, y, amount, color] of pctLabels) {
+      const label = `${Math.round(amount * 100)}%`, w = g.measureText(label).width, h = 12 * dpr, bx = x - w / 2, by = y - 9 * dpr;
+      if (taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) continue;
+      taken.push([bx, by, w + 2 * dpr]);
+      g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.9)"; g.lineJoin = "round"; g.strokeText(label, x, y);
+      g.fillStyle = color; g.fillText(label, x, y);
+    }
+    g.textAlign = "left";
+    // Names of the systems just outside the warzone (where the dashed routes lead), in grey italics with
+    // their security status. Warzone names were placed first, so these give way if they would overlap.
+    if (labelOn) {
+      g.font = `italic ${10.5 * dpr}px "Saira Semi Condensed", sans-serif`;
+      const h = 12 * dpr;
+      for (const id of zone.neighbours) {
+        const sysd = catalog.systems[id]; if (!sysd) continue;
+        const d = displaySec(sysd.s);
+        const label = `${sysd.n} ${d === null ? "" : d.toFixed(1)}`.trim();
+        const [x, y] = S(...P(id));
+        const w = g.measureText(label).width, bx = x + 5 * dpr, by = y - 6 * dpr;
+        if (bx > cv.width || by > cv.height || bx + w < 0 || by + h < 0) continue;
+        if (taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) continue;
+        taken.push([bx, by, w + 4 * dpr]);
+        g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(label, bx, y + 3.5 * dpr);
+        g.fillStyle = "rgba(168,182,202,0.78)"; g.fillText(label, bx, y + 3.5 * dpr);
+      }
+    }
+    // live kill flashes
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i], t = (now - p.start) / 4000;
+      if (t >= 1 || !zone.set.has(p.system)) { pulses.splice(i, 1); continue; }
+      const [x, y] = S(...P(p.system));
+      const base = (8 + Math.max(0, Math.log10(Math.max(p.value, 1e6)) - 6) * 6) * dpr;
+      g.beginPath(); g.arc(x, y, base * (0.4 + t * 1.5), 0, Math.PI * 2);
+      g.strokeStyle = `rgba(255,${p.value >= 1e9 ? 205 : 120},70,${(1 - t) * 0.95})`; g.lineWidth = 2 * dpr; g.stroke();
+    }
+  }
+  function frame(now) { draw(now); requestAnimationFrame(frame); }
+
+  // ---------- Interaction ----------
+  let drag = null;
+  cv.addEventListener("pointerdown", e => { drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false }; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointermove", e => {
+    if (drag) {
+      const dx = (e.clientX - drag.x) * dpr, dy = (e.clientY - drag.y) * dpr;
+      if (Math.hypot(dx, dy) > 4) { drag.moved = true; cv.classList.add("drag"); }
+      view.x = drag.vx - dx / view.scale; view.y = drag.vy - dy / view.scale;
+      $("tip").hidden = true; hoverId = null;
+      return;
+    }
+    hoverId = systemAt(e.offsetX * dpr, e.offsetY * dpr);
+    showTip(hoverId, e.offsetX, e.offsetY);
+  });
+  cv.addEventListener("pointerup", () => { if (drag && !drag.moved) { const id = hoverId; if (id && ((pirateMode && pv) ? pv.set : zone.set).has(id)) select(id); else if (!id) clearSelection(); } drag = null; cv.classList.remove("drag"); });
+  cv.addEventListener("pointercancel", () => { drag = null; cv.classList.remove("drag"); });
+  cv.addEventListener("pointerleave", () => { $("tip").hidden = true; hoverId = null; });
+  cv.addEventListener("wheel", e => {
+    e.preventDefault();
+    const mx = e.offsetX * dpr, my = e.offsetY * dpr;
+    const wx = (mx - cv.width / 2) / view.scale + view.x, wy = (my - cv.height / 2) / view.scale + view.y;
+    view.scale = Math.min(2000, Math.max(5, view.scale * Math.exp(-e.deltaY * 0.0015)));
+    view.x = wx - (mx - cv.width / 2) / view.scale; view.y = wy - (my - cv.height / 2) / view.scale;
+  }, { passive: false });
+  // A system is "under" the pointer if the pointer is inside its zone of control.
+  function systemAt(sx, sy) {
+    if (!zone) return null;
+    const V = (pirateMode && pv) ? pv : zone;
+    for (const id of V.neighbours) {
+      const [x, y] = S(...P(id));
+      if (Math.hypot(x - sx, y - sy) < 8 * dpr) return id;
+    }
+    const wx = (sx - cv.width / 2) / view.scale + view.x, wy = (sy - cv.height / 2) / view.scale + view.y;
+    for (const [id, poly] of V.cells) {
+      let inside = false;
+      for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        const a = poly[i], b = poly[j];
+        if ((a.y > wy) !== (b.y > wy) && wx < (b.x - a.x) * (wy - a.y) / (b.y - a.y) + a.x) inside = !inside;
+      }
+      if (inside) return id;
+    }
+    return null;
+  }
+  const pct = v => `${Math.round(v * 1000) / 10}%`;
+  function showTip(id, px, py) {
+    const tip = $("tip");
+    if (!id) { tip.hidden = true; return; }
+    if (pirateMode && pv) { pirateTip(id, px, py); return; }
+    if (!zone.set.has(id)) {
+      const sysd = catalog.systems[id], dd = displaySec(sysd ? sysd.s : null);
+      const rw = (a, b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
+      tip.innerHTML = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(sysd && sysd.s)}">${dd === null ? "?" : dd.toFixed(1)}</span><div class="muted">${regionOf(id)}, outside the warzone</div>`
+        + rw("Jumps, last hour", (jumps1[id] || 0).toLocaleString()) + rw("Kills, last hour", (kills1[id] || 0).toLocaleString())
+        + (kills24 ? rw("Kills, 24 hours", (kills24.systems[id] || 0).toLocaleString()) : "");
+      tip.hidden = false;
+      const w = $("stage").clientWidth;
+      tip.style.left = Math.min(px, w - 300) + "px"; tip.style.top = Math.max(60, py) + "px";
+      return;
+    }
+    const s = fw.get(id), occ = FACTIONS[s.occupier], role = zone.roles.get(id);
+    const d = displaySec(catalog.systems[id] ? catalog.systems[id].s : null);
+    const row = (a, b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
+    let html = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(catalog.systems[id] && catalog.systems[id].s)}">${d === null ? "?" : d.toFixed(1)}</span><div class="muted">${regionOf(id)}, ${ROLE_NAMES[role]}</div>`;
+    html += row("Occupied by", occ ? occ.short : "?");
+    html += row(s.contested ? "Contested" : "Status", s.contested ? pct(s.amount) : "Uncontested");
+    if (deltaOf(id) !== null || flippedSince(id)) html += row(`Change since ${timeOf(prevAt)}`, `<span style="color:${changeColor(id)}">${changeText(id)}</span>`);
+    const A = advantageOf(s);
+    if (A) html += row("Net advantage", A.even ? "Even" : `<span style="color:${FACTIONS[A.leader] ? FACTIONS[A.leader].color : "inherit"}">${FACTIONS[A.leader] ? FACTIONS[A.leader].short : A.leader} +${pct0(A.net)}</span>`);
+    html += row("Jumps, last hour", (jumps1[id] || 0).toLocaleString());
+    html += row("Kills, last hour", (kills1[id] || 0).toLocaleString());
+    if (kills24) html += row("Kills, 24 hours", (kills24.systems[id] || 0).toLocaleString());
+    if (activity) { const v = activity.systems[id]; html += row("30-day avg jumps", (v ? v[0] : 0).toFixed(1)); }
+    tip.innerHTML = html; tip.hidden = false;
+    const w = $("stage").clientWidth;
+    tip.style.left = Math.min(px, w - 300) + "px"; tip.style.top = Math.max(60, py) + "px";
+  }
+  let flight = null;
+  function select(id) {
+    selectedId = id;
+    renderPanel();
+    $("panel").scrollTop = 0;
+    const [x, y] = P(id);
+    flight = { start: performance.now(), from: { x: view.x, y: view.y }, to: { x, y } };
+  }
+  function stepFlight(now) {
+    if (!flight) return;
+    const t = Math.min(1, (now - flight.start) / 700), e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    view.x = flight.from.x + (flight.to.x - flight.from.x) * e; view.y = flight.from.y + (flight.to.y - flight.from.y) * e;
+    if (t >= 1) flight = null;
+  }
+  const loop = now => { stepFlight(now); draw(now); requestAnimationFrame(loop); };
+
+  // ---------- Side panel ----------
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function renderPanel() {
+    const panel = $("panel"); panel.replaceChildren();
+    if (!zone) return;
+    if (pirateMode && pv) { renderPiratePanel(panel); return; }
+    const [a, b] = zone.sides.map(f => FACTIONS[f]);
+    const held = f => zone.ids.filter(id => fw.get(id).occupier === f).length;
+    const front = f => zone.ids.filter(id => fw.get(id).occupier === f && zone.roles.get(id) === "front").length;
+    const contestedBy = f => zone.ids.filter(id => fw.get(id).occupier !== f && fw.get(id).contested && fw.get(id).amount > 0).length;
+    // Selected system first, if any
+    if (selectedId && zone.set.has(selectedId)) panel.append(backBar(), systemCard(selectedId));
+    else panel.append(el("div", "prompt", "Click a system on the map or in a list to see its advantage and contested details."));
+    panel.append(el("h2", null, zone.title));
+    const sides = el("div", "sides");
+    zone.sides.forEach(f => {
+      const F = FACTIONS[f], box = el("div", "side"); box.style.borderTopColor = F.color;
+      box.append(el("div", "nm", F.short), el("div", "big", String(held(f))), el("div", "sub", `systems held, ${front(f)} on the frontline`), el("div", "sub", `pushing in ${contestedBy(f)} enemy system${contestedBy(f) === 1 ? "" : "s"}`));
+      sides.append(box);
+    });
+    panel.append(sides);
+    const share = el("div", "share");
+    zone.sides.forEach(f => { const i = document.createElement("i"); i.style.cssText = `flex:${held(f)};background:${FACTIONS[f].color}`; share.append(i); });
+    panel.append(share);
+    const contested = zone.ids.filter(id => fw.get(id).contested).length;
+    const facts = el("dl", "facts");
+    const fact = (k, v) => facts.append(el("dt", null, k), el("dd", null, v));
+    fact("Systems in the warzone", zone.ids.length); fact("Contested", contested); fact("Frontline systems", zone.ids.filter(id => zone.roles.get(id) === "front").length);
+
+    if (insurgency) fact(`${FACTIONS[zone.pirate].short} insurgency systems`, zone.ids.filter(id => insurgency.systems[id]).length);
+
+    panel.append(facts);
+
+    // Advantage across the warzone: each faction's share of all advantage in the warzone's systems,
+    // as bars with percentages, the number of systems it leads, and the warzone-wide net advantage.
+    const totals = {}, leads = {};
+    zone.ids.forEach(id => {
+      const s = fw.get(id);
+      (s.adv || []).forEach(a => { totals[a.f] = (totals[a.f] || 0) + a.total; });
+      const A = advantageOf(s); if (A && !A.even) leads[A.leader] = (leads[A.leader] || 0) + 1;
+    });
+    const sum = Object.values(totals).reduce((t, v) => t + v, 0);
+    if (sum > 0) {
+      panel.append(el("h2", null, "Advantage across the warzone"));
+      const shares = zone.sides.concat(zone.pirate).map(f => ({ f, share: (totals[f] || 0) / sum })).sort((a, b) => b.share - a.share);
+      const bars = el("div", "advbars");
+      shares.forEach(({ f, share }) => {
+        const F = FACTIONS[f];
+        const track = el("div", "atrack"), fill = document.createElement("i");
+        fill.style.cssText = `width:${share * 100}%;background:${F.color}`; track.append(fill);
+        const pc = el("span", "ap", pct0(share)); pc.style.color = F.color;
+        const n = leads[f] || 0;
+        bars.append(el("span", "an", F.short), track, pc, el("span", "apts", `leads in ${n} system${n === 1 ? "" : "s"}`));
+      });
+      panel.append(bars);
+      const net = shares[0].share - (shares[1] ? shares[1].share : 0), even = Math.round(net * 100) === 0;
+      const netEl = el("div", "net", even ? "Net advantage: even" : `Net advantage: ${FACTIONS[shares[0].f].short} +${pct0(net)}`);
+      if (!even) netEl.style.color = FACTIONS[shares[0].f].color;
+      panel.append(netEl);
+    }
+
+    // Closest to flipping
+    panel.append(el("h2", null, "Closest to flipping"));
+    const flip = zone.ids.filter(id => fw.get(id).contested && fw.get(id).amount > 0).sort((x, y) => fw.get(y).amount - fw.get(x).amount).slice(0, 8);
+    panel.append(rankList(flip, id => {
+      const s = fw.get(id), att = FACTIONS[enemyOf(zone, s.occupier)];
+      const d = deltaOf(id);
+      return { val: pct(s.amount), sub: `${FACTIONS[s.occupier].short} held, ${att.short} pushing, ${ROLE_NAMES[zone.roles.get(id)].toLowerCase()}`, bar: [s.amount, att.color], delta: d, deltaColor: deltaColor(id, d) };
+    }, "No systems are being pushed right now."));
+
+    // Biggest swings since the previous update
+    if (prevAmounts) {
+      panel.append(el("h2", null, `Biggest swings since ${timeOf(prevAt)}`));
+      const flips = zone.ids.filter(flippedSince);
+      const swings = zone.ids.map(id => [id, deltaOf(id)]).filter(x => x[1] !== null && Math.abs(x[1]) >= 0.001).sort((x, y) => Math.abs(y[1]) - Math.abs(x[1])).slice(0, Math.max(0, 6 - flips.length));
+      const maxD = swings.length ? Math.abs(swings[0][1]) : 1;
+      panel.append(rankList(flips.concat(swings.map(x => x[0])), id => {
+        if (flippedSince(id)) return { val: "Flipped", sub: `Now held by ${FACTIONS[fw.get(id).occupier].short}`, bar: [1, changeColor(id)] };
+        const d = deltaOf(id), s = fw.get(id), att = FACTIONS[enemyOf(zone, s.occupier)];
+        const who = d > 0 ? `${att.short} gaining` : `${FACTIONS[s.occupier].short} pushing back`;
+        return { val: fmtDelta(d), sub: `${who}, now ${pct(s.amount)}`, bar: [Math.abs(d) / maxD, deltaColor(id, d)] };
+      }, "No changes since the previous update."));
+    }
+
+    // Most fought over
+    const k24 = !!kills24;
+    panel.append(el("h2", null, k24 ? "Most kills, last 24 hours" : "Most kills, last hour"));
+    const fought = zone.ids.map(id => [id, k24 ? (kills24.systems[id] || 0) : (kills1[id] || 0)]).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]).slice(0, 6);
+    const maxK = fought.length ? fought[0][1] : 1;
+    panel.append(rankList(fought.map(x => x[0]), id => { const v = k24 ? (kills24.systems[id] || 0) : (kills1[id] || 0); return { val: v.toLocaleString(), sub: `${FACTIONS[fw.get(id).occupier].short} held, ${regionOf(id)}`, bar: [v / maxK, "#e0522d"] }; }, "No kills recorded yet."));
+
+    // Quietest systems by gate jumps alone; any kills are shown in bold red rather than mixed into the ranking.
+    const killsNote = id => {
+      const k = kills1[id] || 0;
+      return el("span", k > 0 ? "kills-hot" : null, `${k} kill${k === 1 ? "" : "s"} last hour`);
+    };
+    const J = id => jumps1[id] || 0, K = id => kills1[id] || 0;
+    const quietest = role => zone.ids.filter(id => zone.roles.get(id) === role)
+      .sort(quietSort[role] === "kills"
+        ? (x, y) => K(x) - K(y) || J(x) - J(y) || sysName(x).localeCompare(sysName(y))
+        : (x, y) => J(x) - J(y) || sysName(x).localeCompare(sysName(y))).slice(0, 6);
+    const jumpsText = id => `${J(id)} jump${J(id) === 1 ? "" : "s"}`;
+    const quietInfo = role => id => quietSort[role] === "kills"
+      ? (() => { const k = K(id); const v = { val: `${k} kill${k === 1 ? "" : "s"}`, sub: `${FACTIONS[fw.get(id).occupier].short} held, ${jumpsText(id)} last hour` }; if (k > 0) v.valClass = "kills-hot"; return v; })()
+      : { val: jumpsText(id), sub: `${FACTIONS[fw.get(id).occupier].short} held`, subExtra: killsNote(id) };
+    // small "Sort by: Jumps · Kills" switch under a heading
+    const sortSwitch = role => {
+      const box = el("div", "sortby"); box.append("Sort by:");
+      [["jumps", "Jumps"], ["kills", "Kills"]].forEach(([key, label], i) => {
+        if (i) box.append("\u00b7");
+        const b = el("button", null, label); b.type = "button";
+        b.setAttribute("aria-pressed", String(quietSort[role] === key));
+        b.addEventListener("click", () => { quietSort[role] = key; renderPanel(); });
+        box.append(b);
+      });
+      return box;
+    };
+
+    // Quietest frontline systems: useful for plexing without a crowd
+    panel.append(el("h2", null, "Quietest frontline systems"), sortSwitch("front"));
+    panel.append(rankList(quietest("front"), quietInfo("front"), "No frontline systems."));
+
+    // Quietest rearguard systems: furthest from the fighting, often the calmest
+    panel.append(el("h2", null, "Quietest rearguard systems"), sortSwitch("rear"));
+    panel.append(rankList(quietest("rear"), quietInfo("rear"), "No rearguard systems."));
+    panel.append(updatedNote());
+  }
+  // "Back to overview": closes the system card and returns the panel to the warzone overview.
+  function backBar() {
+    const bar = el("div", "backbar");
+    const b = el("button", "backbtn", "\u2190 Back to overview"); b.type = "button";
+    b.addEventListener("click", clearSelection);
+    bar.append(b, el("small", null, "or press Esc"));
+    return bar;
+  }
+  function clearSelection() {
+    if (!selectedId) return;
+    selectedId = null; renderPanel();
+  }
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && selectedId) clearSelection(); });
+
+  // When each kind of data was last updated, as a plain note at the bottom of the panel.
+  function updatedNote() {
+    const box = el("div", "updated");
+    const line = (label, value) => { const d = el("div"); d.append(el("b", null, label + ": "), value); box.append(d); };
+    box.append(el("div", null, "Data updated"));
+    if (esiAt) line("Contested progress", `${timeOf(esiAt)} (ESI, every 30 minutes)`);
+    if (feedAt) line("Advantage", `${timeOf(feedAt)} (Frontlines, hourly)`);
+    if (liveAt) line("Jumps and kills", `${timeOf(liveAt)} (ESI, hourly)`);
+    line("This page", "refreshes every 5 minutes");
+    return box;
+  }
+  function rankList(ids, info, empty) {
+    const ol = el("ol", "rank");
+    if (!ids.length) { ol.append(el("li", "empty", empty)); return ol; }
+    ids.forEach(id => {
+      const x = info(id), li = el("li");
+      li.append(el("span", "r-name", sysName(id)), el("span", "r-val" + (x.valClass ? " " + x.valClass : ""), x.val));
+      const sub = el("span", "r-sub", x.sub);
+      if (x.delta !== null && x.delta !== undefined) { const c = el("span", null, `, ${fmtDelta(x.delta)}`); c.style.color = x.deltaColor; sub.append(c); }
+      if (x.subExtra) sub.append(", ", x.subExtra);
+      li.append(sub);
+      if (x.bar) { const b = el("span", "pbar"), i = document.createElement("i"); i.style.cssText = `width:${Math.max(2, x.bar[0] * 100)}%;background:${x.bar[1]}`; b.append(i); li.append(b); }
+      li.tabIndex = 0;
+      li.addEventListener("click", () => select(id));
+      li.addEventListener("keydown", e => { if (e.key === "Enter") select(id); });
+      ol.append(li);
+    });
+    return ol;
+  }
+  function systemCard(id) {
+    const s = fw.get(id), sysd = catalog.systems[id], d = displaySec(sysd ? sysd.s : null);
+    const card = el("div", "card");
+    const h = el("h3", null, sysName(id) + " ");
+    const chip = el("span", "chip", d === null ? "?" : d.toFixed(1)); chip.style.background = secColor(sysd && sysd.s); h.append(chip);
+    const consName = sysd && catalog.constellations ? catalog.constellations[sysd.c] : "";
+    card.append(h, el("div", "where", [regionOf(id), consName].filter(Boolean).join(", ")));
+    const facts = el("dl", "facts");
+    const fact = (k, v) => facts.append(el("dt", null, k), el("dd", null, v));
+    fact("Occupied by", FACTIONS[s.occupier] ? FACTIONS[s.occupier].name : s.occupier);
+    if (s.owner !== s.occupier) fact("Owned by", FACTIONS[s.owner] ? FACTIONS[s.owner].name : s.owner);
+    fact("Role", ROLE_NAMES[zone.roles.get(id)]);
+    fact("Status", s.contested ? `Contested, ${pct(s.amount)}` : "Uncontested");
+    if (deltaOf(id) !== null || flippedSince(id)) {
+      const dd = el("dd", null, changeText(id)); dd.style.color = changeColor(id);
+      facts.append(el("dt", null, `Change since ${timeOf(prevAt)}`), dd);
+    }
+    card.append(facts);
+    const A = advantageOf(s);
+    card.append(el("div", "muted adv-h", "Advantage"));
+    if (!A) card.append(el("div", "empty", "No faction has any advantage here."));
+    else {
+      // One progress bar per faction, filled to its share of the advantage, with the percentage at the end.
+      const bars = el("div", "advbars");
+      A.shares.forEach(a => {
+        const F = FACTIONS[a.f] || { short: String(a.f), color: "#888" };
+        const name = el("span", "an", F.short);
+        const track = el("div", "atrack"), fill = document.createElement("i");
+        fill.style.cssText = `width:${a.share * 100}%;background:${F.color}`;
+        track.append(fill);
+        track.title = `${a.terrain} terrain + ${a.dynamic} dynamic = ${a.total}`;
+        const pc = el("span", "ap", pct0(a.share)); pc.style.color = F.color;
+        bars.append(name, track, pc, el("span", "apts", `${a.terrain} terrain + ${a.dynamic} dynamic`));
+      });
+      card.append(bars);
+      const L = FACTIONS[A.leader] || { short: "?", color: "#ccc" };
+      const net = el("div", "net", A.even ? "Net advantage: even" : `Net advantage: ${L.short} +${pct0(A.net)}`);
+      if (!A.even) net.style.color = L.color;
+      card.append(net);
+    }
+    const t = el("dl", "facts");
+    const tf = (k, v) => t.append(el("dt", null, k), el("dd", null, v));
+    tf("Gate jumps, last hour", (jumps1[id] || 0).toLocaleString());
+    tf("Kills, last hour", (kills1[id] || 0).toLocaleString());
+    if (kills24) tf("Kills, last 24 hours", (kills24.systems[id] || 0).toLocaleString());
+    if (activity) { const v = activity.systems[id]; tf("30-day average jumps", (v ? v[0] : 0).toFixed(1) + " per hour"); }
+    if (insurgency && insurgency.systems[id]) { const e = insurgency.systems[id]; tf("Pirate insurgency", `corruption ${e.cs ?? "?"}/5, suppression ${e.ss ?? "?"}/5`); }
+    card.append(t);
+    const links = el("div", "muted");
+    links.innerHTML = `<a href="https://evemaps.dotlan.net/system/${encodeURIComponent(sysName(id).replace(/ /g, "_"))}" target="_blank" rel="noopener">Dotlan</a> &nbsp; <a href="https://zkillboard.com/system/${id}/" target="_blank" rel="noopener">zKillboard</a>`;
+    card.append(links);
+    return card;
+  }
+
+  // ---------- Legend ----------
+  function renderLegend() {
+    const lg = $("legend"); lg.replaceChildren();
+    if (pirateMode && pv) { pirateLegend(lg); return; }
+    const r0 = el("div", "lrow");
+    const c0 = FACTIONS[zone.sides[0]].color;
+    r0.innerHTML = `<span>Territory:</span>` + ["front", "command", "rear"].map(role => `<span><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="2" fill="${territoryFill(c0, role, false, 0.25)}" stroke="${hexA(c0, 0.8)}"/></svg>${ROLE_NAMES[role].replace(" operations", "")}</span>`).join("");
+    lg.append(r0);
+    const r1 = el("div", "lrow");
+    zone.sides.concat(zone.pirate).forEach(f => { const s = el("span"); s.innerHTML = `<svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="2" fill="${FACTIONS[f].color}"/></svg>${FACTIONS[f].short}`; r1.append(s); });
+    const r2 = el("div", "lrow");
+    r2.innerHTML = `<span>Systems:</span><span><svg viewBox="0 0 14 14"><path d="M7 1l6 6-6 6-6-6z" fill="#9fb4d4" stroke="#fff"/></svg>Frontline</span><span><svg viewBox="0 0 14 14"><rect x="2.5" y="2.5" width="9" height="9" fill="#9fb4d4" stroke="#fff"/></svg>Command</span><span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="4" fill="#9fb4d4" stroke="#fff"/></svg>Rearguard</span><span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="none" stroke="#ffffff55" stroke-width="2"/><path d="M7 1.5a5.5 5.5 0 0 1 5.5 5.5" fill="none" stroke="#fff" stroke-width="2"/></svg>Contested (ring and stripes show progress)</span><span><svg viewBox="0 0 14 14"><path d="M1 7h12" stroke="#ffc882" stroke-width="4" opacity=".55"/><path d="M1 7h12" stroke="#fff6e8" stroke-width="1.6"/></svg>Frontline border</span><span><svg viewBox="0 0 14 14"><path d="M1 7h12" stroke="#04070c" stroke-width="3.4"/><path d="M1 7h12" stroke="#96cdff" stroke-width="1.3"/></svg>Gate route</span>`;
+    lg.append(r1, r2);
+    const [metric, mode] = ($("overlay").value || ":").split(":");
+    if (metric) {
+      const r3 = el("div", "lrow");
+      const grad = mode === "least" ? `linear-gradient(90deg,${heatColor(1, "least", .9)},${heatColor(0, "least", .3)})` : `linear-gradient(90deg,${heatColor(0, "most", .5)},${heatColor(1, "most", .95)})`;
+      r3.innerHTML = `<span>${mode === "least" ? "Quietest" : "Least"}</span><span class="heatbar" style="background:${grad}"></span><span>${mode === "least" ? "Busiest" : "Most"} ${METRIC_TEXT[metric]}</span>`;
+      if ((metric === "kills24" && !kills24) || (metric === "avg" && !activity)) r3.innerHTML = `<span>This overlay's data isn't available yet.</span>`;
+      lg.append(r3);
+    }
+  }
+
+  // ---------- Live kills (zKillboard R2Z2) ----------
+  let seq = null;
+  async function followKills() {
+    try {
+      const head = await getJSON(`${R2Z2}/sequence.json`, { cache: "no-store" });
+      seq = head.sequence + 1;
+      for (;;) {
+        if (!$("liveKills").checked) { await new Promise(r => setTimeout(r, 1000)); continue; }
+        const r = await fetch(`${R2Z2}/${seq}.json`, { cache: "no-store" });
+        if (r.status === 404) { await new Promise(res => setTimeout(res, 6000)); continue; }
+        if (r.status === 429) { await new Promise(res => setTimeout(res, 10000)); continue; }
+        if (!r.ok) throw new Error(r.status);
+        const d = await r.json(); seq++;
+        const km = d.esi || d.killmail || d;
+        const zkb = d.zkb || km.zkb || {};
+        if (km && km.solar_system_id && zone && ((pirateMode && pv) ? pv.set : zone.set).has(km.solar_system_id)) {
+          pulses.push({ system: km.solar_system_id, value: +zkb.totalValue || 0, start: performance.now() });
+          kills1[km.solar_system_id] = (kills1[km.solar_system_id] || 0) + 1;
+        }
+        await new Promise(res => setTimeout(res, 200));
+      }
+    } catch (e) { /* live kills are optional */ }
+  }
+
+  // ---------- Pirate focus ----------
+  // Strips the map back to the insurgency: corruption, suppression, the origin and how far it has spread.
+  let pirateMode = false, pv = null;
+  const SUPPRESS = "#8fd3ff";
+  const campaignsFor = key => (insurgency ? (insurgency.campaigns || []).filter(c => c.faction === ZONES[key].pirate) : []);
+  function buildPirateView() {
+    const camps = campaignsFor(zoneKey), campIds = new Set(camps.map(c => c.id));
+    const infected = insurgency ? Object.keys(insurgency.systems).map(Number).filter(id => campIds.has(insurgency.systems[id].c) && galaxy[id]) : [];
+    const set = new Set([...zone.ids, ...infected]), ids = [...set], iset = new Set(infected);
+    const neighbours = [...new Set(ids.flatMap(id => (links[id] || []).filter(n => !set.has(n) && galaxy[n])))];
+    const origins = camps.map(c => c.origin && c.origin.id).filter(id => id && galaxy[id]);
+    // gate jumps from the nearest campaign origin, through any systems
+    const dist = new Map(origins.map(o => [o, 0]));
+    let frontier = origins.slice();
+    for (let d = 1; d <= 30 && frontier.length; d++) {
+      const next = [];
+      for (const x of frontier) for (const n of links[x] || []) if (!dist.has(n)) { dist.set(n, d); next.push(n); }
+      frontier = next;
+    }
+    const focus = infected.length ? infected : zone.ids;
+    const pts = focus.map(id => galaxy[id]);
+    const pad = 0.35 * Math.max(1, Math.max(...pts.map(p => p[0])) - Math.min(...pts.map(p => p[0])));
+    const bounds = { minX: Math.min(...pts.map(p => p[0])) - pad, maxX: Math.max(...pts.map(p => p[0])) + pad, minZ: Math.min(...pts.map(p => p[2])) - pad, maxZ: Math.max(...pts.map(p => p[2])) + pad };
+    pv = { camps, ids, set, iset, neighbours, origins, dist, bounds, cells: buildCells(ids, neighbours) };
+  }
+  const insOf = id => (pv && pv.iset.has(id)) ? insurgency.systems[id] : null;
+  function segRing(x, y, radius, filled, color, width) {
+    // five segments, one per level, with small gaps
+    for (let k = 0; k < 5; k++) {
+      const a0 = -Math.PI / 2 + k * (Math.PI * 2 / 5) + 0.12, a1 = a0 + Math.PI * 2 / 5 - 0.24;
+      g.beginPath(); g.arc(x, y, radius, a0, a1);
+      g.strokeStyle = k < filled ? color : "rgba(255,255,255,0.14)"; g.lineWidth = width; g.stroke();
+    }
+  }
+  function drawPirate(now) {
+    const pc = FACTIONS[zone.pirate].color;
+    const borderEdges = [];
+    // territory: infected systems shaded by corruption in the pirate colour; everything else neutral grey
+    for (const [id, poly] of pv.cells) {
+      const e = insOf(id), sel = id === selectedId, hov = id === hoverId;
+      g.beginPath(); poly.forEach((v, i) => { const [x, y] = S(v.x, v.y); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.closePath();
+      g.fillStyle = e ? hexA(pc, 0.1 + ((e.cs || 0) / 5) * 0.5 + (sel ? 0.12 : hov ? 0.06 : 0)) : `rgba(120,135,160,${0.06 + (sel ? 0.1 : hov ? 0.05 : 0)})`;
+      g.fill();
+      for (let i = 0; i < poly.length; i++) {
+        const a = poly[i], b = poly[(i + 1) % poly.length];
+        const otherInfected = pv.iset.has(a.e);
+        if (e && !otherInfected) { borderEdges.push([a, b]); continue; }   // edge of the infected area
+        if (!e && a.e === "cap") { const [x1, y1] = S(a.x, a.y), [x2, y2] = S(b.x, b.y); g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.strokeStyle = "rgba(150,165,190,0.25)"; g.lineWidth = 1 * dpr; g.stroke(); }
+      }
+    }
+    // gate routes: faint everywhere, bright in the pirate colour between infected systems (the spread network)
+    if ($("routes").checked) {
+      g.lineCap = "round";
+      for (const id of pv.ids) {
+        const [x1, y1] = S(...P(id));
+        for (const n of links[id] || []) {
+          if (!galaxy[n] || (pv.set.has(n) && n < id)) continue;
+          const [x2, y2] = S(...P(n));
+          const hot = pv.iset.has(id) && pv.iset.has(n);
+          g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2);
+          g.setLineDash(pv.set.has(n) ? [] : [4 * dpr, 4 * dpr]);
+          g.strokeStyle = "rgba(4,7,12,0.7)"; g.lineWidth = (hot ? 4.2 : 3) * dpr; g.stroke();
+          g.strokeStyle = hot ? hexA(pc, 0.95) : "rgba(150,165,190,0.3)"; g.lineWidth = (hot ? 2 : 1) * dpr; g.stroke();
+        }
+      }
+      g.setLineDash([]); g.lineCap = "butt";
+    }
+    // the spread: a glowing border around the infected area
+    if (borderEdges.length) {
+      g.save(); g.beginPath();
+      for (const [a, b] of borderEdges) { const [x1, y1] = S(a.x, a.y), [x2, y2] = S(b.x, b.y); g.moveTo(x1, y1); g.lineTo(x2, y2); }
+      g.lineCap = "round"; g.shadowColor = pc; g.shadowBlur = 14 * dpr; g.strokeStyle = hexA(pc, 0.6); g.lineWidth = 4 * dpr; g.stroke();
+      g.shadowBlur = 0; g.strokeStyle = hexA(pc, 0.95); g.lineWidth = 1.4 * dpr; g.stroke();
+      g.restore();
+    }
+    for (const id of pv.neighbours) { const [x, y] = S(...P(id)); g.beginPath(); g.arc(x, y, 2 * dpr, 0, Math.PI * 2); g.fillStyle = "rgba(160,175,200,0.35)"; g.fill(); }
+    // markers
+    const taken = [], labelOn = $("labels").checked;
+    const ordered = pv.ids.slice().sort((a, b) => (pv.iset.has(b) ? 1 : 0) - (pv.iset.has(a) ? 1 : 0)); // infected names get priority
+    for (const id of ordered) {
+      const e = insOf(id), [x, y] = S(...P(id)), origin = pv.origins.includes(id);
+      if (origin) {
+        g.save(); g.shadowColor = pc; g.shadowBlur = 18 * dpr;
+        g.beginPath(); for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3; g.lineTo(x + Math.cos(a) * 9 * dpr, y + Math.sin(a) * 9 * dpr); } g.closePath();
+        g.fillStyle = pc; g.fill(); g.restore();
+        g.strokeStyle = "#fff"; g.lineWidth = 1.5 * dpr; g.stroke();
+      }
+      if (e) {
+        if (!origin) { g.beginPath(); g.arc(x, y, 4.5 * dpr, 0, Math.PI * 2); g.fillStyle = pc; g.fill(); g.strokeStyle = id === selectedId ? "#fff" : "rgba(255,255,255,0.85)"; g.lineWidth = (id === selectedId ? 2.2 : 1.2) * dpr; g.stroke(); }
+        segRing(x, y, (origin ? 13 : 9) * dpr, e.cs || 0, pc, 2.6 * dpr);
+        segRing(x, y, (origin ? 17 : 13) * dpr, e.ss || 0, SUPPRESS, 2.2 * dpr);
+      } else if (!origin) {
+        g.beginPath(); g.arc(x, y, 2.6 * dpr, 0, Math.PI * 2); g.fillStyle = "rgba(170,182,200,0.55)"; g.fill();
+      }
+      if (labelOn) {
+        const label = e ? `${sysName(id)}  C${e.cs ?? "?"} S${e.ss ?? "?"}` : sysName(id);
+        g.font = `${e ? 12 : 10.5}px "Saira Semi Condensed", sans-serif`.replace(/^(\d+(\.\d+)?)px/, m => (parseFloat(m) * dpr) + "px");
+        const off = (e ? (origin ? 20 : 16) : 5) * dpr, w = g.measureText(label).width, bx = x + off, by = y - 7 * dpr, h = 13 * dpr;
+        if (!taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) {
+          taken.push([bx, by, w + 4 * dpr]);
+          g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(label, bx, y + 4 * dpr);
+          g.fillStyle = e ? "rgba(245,240,225,0.95)" : "rgba(170,182,200,0.6)"; g.fillText(label, bx, y + 4 * dpr);
+        }
+      }
+    }
+    // live kills
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i], t = (now - p.start) / 4000;
+      if (t >= 1 || !pv.set.has(p.system)) { pulses.splice(i, 1); continue; }
+      const [x, y] = S(...P(p.system));
+      g.beginPath(); g.arc(x, y, (8 + t * 14) * dpr, 0, Math.PI * 2); g.strokeStyle = `rgba(255,140,70,${(1 - t) * 0.9})`; g.lineWidth = 2 * dpr; g.stroke();
+    }
+  }
+  const lvl = (n, color) => `<span class="seglvl">${[0, 1, 2, 3, 4].map(k => `<i style="background:${k < (n || 0) ? color : ""}"></i>`).join("")}</span>`;
+  function pirateTip(id, px, py) {
+    const tip = $("tip"), e = insOf(id), sysd = catalog.systems[id], d = displaySec(sysd ? sysd.s : null);
+    const pc = FACTIONS[zone.pirate].color, row = (a, b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
+    let html = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(sysd && sysd.s)}">${d === null ? "?" : d.toFixed(1)}</span><div class="muted">${regionOf(id)}${pv.origins.includes(id) ? ", campaign origin" : ""}</div>`;
+    if (e) {
+      html += row("Corruption", `Level ${e.cs ?? "?"}${e.cp != null ? `, ${Math.round(e.cp * 10) / 10}%` : ""}${lvl(e.cs, pc)}`);
+      html += row("Suppression", `Level ${e.ss ?? "?"}${e.sp != null ? `, ${Math.round(e.sp * 10) / 10}%` : ""}${lvl(e.ss, SUPPRESS)}`);
+    } else html += `<div class="muted">Not part of the insurgency</div>`;
+    if (pv.dist.has(id)) html += row("Jumps from origin", pv.dist.get(id));
+    html += row("Kills, last hour", (kills1[id] || 0).toLocaleString());
+    tip.innerHTML = html; tip.hidden = false;
+    const w = $("stage").clientWidth;
+    tip.style.left = Math.min(px, w - 300) + "px"; tip.style.top = Math.max(60, py) + "px";
+  }
+  function renderPiratePanel(panel) {
+    const P_ = FACTIONS[zone.pirate], pc = P_.color;
+    if (selectedId && pv.set.has(selectedId)) {
+      panel.append(backBar());
+      const id = selectedId, e = insOf(id), sysd = catalog.systems[id], d = displaySec(sysd ? sysd.s : null);
+      const card = el("div", "card");
+      const h = el("h3", null, sysName(id) + " "); const chip = el("span", "chip", d === null ? "?" : d.toFixed(1)); chip.style.background = secColor(sysd && sysd.s); h.append(chip);
+      card.append(h, el("div", "where", [regionOf(id), pv.origins.includes(id) ? "campaign origin" : ""].filter(Boolean).join(", ")));
+      const facts = el("dl", "facts"), fact = (k, v) => { const dd = el("dd"); dd.innerHTML = v; facts.append(el("dt", null, k), dd); };
+      if (e) {
+        fact("Corruption", `Level ${e.cs ?? "?"} of 5${e.cp != null ? `, ${Math.round(e.cp * 10) / 10}%` : ""}${lvl(e.cs, pc)}`);
+        fact("Suppression", `Level ${e.ss ?? "?"} of 5${e.sp != null ? `, ${Math.round(e.sp * 10) / 10}%` : ""}${lvl(e.ss, SUPPRESS)}`);
+      } else fact("Insurgency", "Not affected");
+      if (pv.dist.has(id)) fact("Jumps from origin", String(pv.dist.get(id)));
+      if (fw.has(id)) fact("FW occupier", FACTIONS[fw.get(id).occupier] ? FACTIONS[fw.get(id).occupier].short : "?");
+      fact("Kills, last hour", (kills1[id] || 0).toLocaleString());
+      card.append(facts);
+      panel.append(card);
+    }
+    if (!(selectedId && pv.set.has(selectedId))) panel.append(el("div", "prompt", "Click a system on the map or in a list to see its corruption and suppression details."));
+    panel.append(el("h2", null, `${P_.name} insurgency`));
+    if (!pv.camps.length) { panel.append(el("p", "empty", `No active ${P_.short} campaign in this warzone right now.`)); return; }
+    for (const c of pv.camps) {
+      const facts = el("dl", "facts"), fact = (k, v) => facts.append(el("dt", null, k), el("dd", null, v));
+      const mine = [...pv.iset].filter(id => insurgency.systems[id].c === c.id);
+      const avg = key => mine.length ? (mine.reduce((t, id) => t + (insurgency.systems[id][key] || 0), 0) / mine.length).toFixed(1) : "?";
+      fact("Origin", c.origin ? (catalog.systems[c.origin.id] ? catalog.systems[c.origin.id].n : c.origin.name || "?") : "?");
+      if (c.state) fact("State", c.state.charAt(0) + c.state.slice(1).toLowerCase());
+      if (c.start) fact("Started", new Date(c.start).toLocaleDateString(undefined, { day: "numeric", month: "short" }));
+      fact("Systems affected", String(mine.length));
+      fact("Average corruption", `level ${avg("cs")}`);
+      fact("Average suppression", `level ${avg("ss")}`);
+      fact("Fully corrupted (level 5)", String(mine.filter(id => insurgency.systems[id].cs === 5).length));
+      fact("Fully suppressed (level 5)", String(mine.filter(id => insurgency.systems[id].ss === 5).length));
+      panel.append(facts);
+    }
+    const inf = [...pv.iset];
+    panel.append(el("h2", null, "Most corrupted"));
+    panel.append(rankList(inf.slice().sort((a, b) => (insOf(b).cs - insOf(a).cs) || ((insOf(b).cp || 0) - (insOf(a).cp || 0))).slice(0, 6),
+      id => { const e = insOf(id); return { val: `Level ${e.cs}`, sub: `Suppression level ${e.ss ?? "?"}${pv.dist.has(id) ? `, ${pv.dist.get(id)} jump${pv.dist.get(id) === 1 ? "" : "s"} from origin` : ""}`, bar: [(e.cs || 0) / 5, pc] }; }, "No systems affected."));
+    panel.append(el("h2", null, "Most suppressed"));
+    panel.append(rankList(inf.slice().sort((a, b) => (insOf(b).ss - insOf(a).ss) || ((insOf(b).sp || 0) - (insOf(a).sp || 0))).slice(0, 6),
+      id => { const e = insOf(id); return { val: `Level ${e.ss}`, sub: `Corruption level ${e.cs ?? "?"}`, bar: [(e.ss || 0) / 5, SUPPRESS] }; }, "No systems affected."));
+    panel.append(el("h2", null, "Furthest spread"));
+    const far = inf.filter(id => pv.dist.has(id)).sort((a, b) => pv.dist.get(b) - pv.dist.get(a)).slice(0, 6);
+    const maxJ = far.length ? pv.dist.get(far[0]) || 1 : 1;
+    panel.append(rankList(far, id => ({ val: `${pv.dist.get(id)} jump${pv.dist.get(id) === 1 ? "" : "s"}`, sub: `Corruption level ${insOf(id).cs ?? "?"}, ${regionOf(id)}`, bar: [pv.dist.get(id) / maxJ, pc] }), "No systems affected."));
+    if (insurgency.updated) { const f = el("dl", "facts"); f.append(el("dt", null, "Insurgency data from"), el("dd", null, timeOf(new Date(insurgency.updated)))); panel.append(f); }
+  }
+  function pirateLegend(lg) {
+    const pc = FACTIONS[zone.pirate].color;
+    const r = el("div", "lrow");
+    r.innerHTML = `<span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="none" stroke="${pc}" stroke-width="2.2" stroke-dasharray="5 2"/></svg>Corruption (segments = level)</span><span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="none" stroke="${SUPPRESS}" stroke-width="2.2" stroke-dasharray="5 2"/></svg>Suppression</span><span><svg viewBox="0 0 14 14"><path d="M7 1l5.2 3v6L7 13l-5.2-3V4z" fill="${pc}" stroke="#fff"/></svg>Origin</span><span><svg viewBox="0 0 14 14"><path d="M1 7h12" stroke="${pc}" stroke-width="2.5"/></svg>Spread border and routes</span><span><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="2" fill="${hexA(pc, 0.55)}"/></svg>Stronger shade = more corrupted</span>`;
+    lg.append(r);
+  }
+  function updatePirateButton() {
+    const btn = $("pirateBtn"), F = FACTIONS[ZONES[zoneKey].pirate];
+    btn.style.setProperty("--pc", F.color);
+    btn.innerHTML = `&#9760; ${F.short} focus`;
+    btn.setAttribute("aria-pressed", String(pirateMode));
+    btn.disabled = !insurgency;
+    btn.title = insurgency ? `Focus on the ${F.name} insurgency` : "Pirate insurgency data isn't available right now";
+    $("overlay").disabled = pirateMode;
+  }
+  function togglePirate() {
+    pirateMode = !pirateMode && !!insurgency;
+    selectedId = null; hoverId = null; $("tip").hidden = true;
+    if (pirateMode) buildPirateView(); else pv = null;
+    updatePirateButton(); fit(); renderPanel(); renderLegend();
+  }
+  $("pirateBtn").addEventListener("click", togglePirate);
+
+  // ---------- Refresh ----------
+  function refreshZone() {
+    const keep = { x: view.x, y: view.y, scale: view.scale };
+    buildZone(zoneKey);
+    if (pirateMode) buildPirateView();
+    Object.assign(view, keep);
+    if (selectedId && !((pirateMode && pv) ? pv.set : zone.set).has(selectedId)) selectedId = null;
+    renderPanel(); renderLegend();
+  }
+  async function refreshAll() {
+    try {
+      const wz = await getJSON(DATA_BASE + "warzone.json", { cache: "no-cache" });
+      if (wz.updated !== (feedAt && feedAt.toISOString())) {
+        feed = wz.feed; feedAt = wz.updated ? new Date(wz.updated) : null;
+        prevAmounts = wz.previous ? wz.previous.amounts : null; prevOccupiers = wz.previous ? (wz.previous.occupiers || null) : null; prevAt = wz.previous && wz.previous.updated ? new Date(wz.previous.updated) : null;
+        readFeed(feed);
+      }
+    } catch (e) { /* keep what we have */ }
+    await loadEsiFw();
+    const k24 = await optional(DATA_BASE + "kills24.json"); if (k24) kills24 = k24;
+    refreshZone();
+  }
+
+  // ---------- Controls ----------
+  function setZone(key) {
+    zoneKey = key; selectedId = null; hoverId = null; $("tip").hidden = true;
+    $("tab-cg").setAttribute("aria-selected", String(key === "cg"));
+    $("tab-am").setAttribute("aria-selected", String(key === "am"));
+    buildZone(key);
+    if (pirateMode) buildPirateView();
+    updatePirateButton();
+    fit(); renderPanel(); renderLegend();
+  }
+  $("tab-cg").addEventListener("click", () => setZone("cg"));
+  $("tab-am").addEventListener("click", () => setZone("am"));
+  $("overlay").addEventListener("change", renderLegend);
+  window.addEventListener("resize", () => { resize(); if (zone) fit(); });
+
+  async function loadLive() {
+    try {
+      const [j, k] = await Promise.all([getJSON(`${ESI}/universe/system_jumps/`, { cache: "no-cache" }), getJSON(`${ESI}/universe/system_kills/`, { cache: "no-cache" })]);
+      jumps1 = {}; kills1 = {};
+      j.forEach(r => { jumps1[r.system_id] = r.ship_jumps; });
+      k.forEach(r => { kills1[r.system_id] = (r.ship_kills || 0) + (r.pod_kills || 0); });
+      liveAt = new Date();
+      if (zone) renderPanel();
+    } catch (e) { /* overlays that need it just show zeros */ }
+  }
+
+  // ---------- Start ----------
+  (async () => {
+    try {
+      const [cat, gal, md, wz] = await Promise.all(["catalog.json", "galaxy.json", "mapdata.json", "warzone.json"].map(n => getJSON(DATA_BASE + n, { cache: "no-cache" })));
+      catalog = cat; galaxy = gal.pos; links = md.links;
+      feed = wz.feed; feedAt = wz.updated ? new Date(wz.updated) : null;
+      prevAmounts = wz.previous ? wz.previous.amounts : null; prevOccupiers = wz.previous ? (wz.previous.occupiers || null) : null; prevAt = wz.previous && wz.previous.updated ? new Date(wz.previous.updated) : null;
+      readFeed(feed);
+      await loadEsiFw();
+      [activity, kills24, insurgency] = await Promise.all([optional(DATA_BASE + "activity.json"), optional(DATA_BASE + "kills24.json"), optional(DATA_BASE + "insurgency.json")]);
+      if (insurgency && !(insurgency.updated && Date.now() - Date.parse(insurgency.updated) < 12 * 3600e3)) insurgency = null;
+      $("notice").hidden = true;
+      $("status").textContent = feedAt ? `Frontlines data from ${feedAt.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}` : "";
+      resize(); setZone("cg");
+      requestAnimationFrame(loop);
+      loadLive(); setInterval(loadLive, 10 * 60 * 1000);
+      setInterval(refreshAll, REFRESH_MS);
+      followKills();
+    } catch (e) {
+      $("notice").textContent = `Couldn’t load the warzone (${e.message}).`;
+      $("status").textContent = "Data unavailable";
+    }
+  })();
+})();
+</script>
+</body>
+</html>
