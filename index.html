@@ -273,8 +273,9 @@ table.hide-avg .c-avg, table.hide-size .c-size{display:none}
 
 /* Go Loud! mode */
 .head-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:flex-end}
-.loud-btn{font:inherit;font-weight:700;font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;border:2px solid #d9480f;color:#d9480f;background:transparent;padding:7px 16px;border-radius:3px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.loud-btn:hover{background:#d9480f;color:#fff}
+.loud-btn{font:inherit;font-weight:800;font-size:1.12rem;letter-spacing:.1em;text-transform:uppercase;border:2.5px solid #d9480f;color:#d9480f;background:rgba(217,72,15,.1);padding:9px 22px;border-radius:3px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background-color .15s,color .15s,transform .15s}
+.loud-btn:hover{background:#d9480f;color:#fff;transform:translateY(-1px)}
+@media (prefers-reduced-motion: reduce){ .loud-btn,.loud-btn:hover{transition:none;transform:none} }
 .map-link{font:inherit;font-weight:600;font-size:.9rem;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--panel);padding:7px 14px;border-radius:3px;display:inline-flex;align-items:center;gap:7px}
 .map-link:hover{border-color:var(--accent)}
 .map-link .pip{width:8px;height:8px;border-radius:50%;background:#ff4d2e;box-shadow:0 0 6px #ff4d2e}
