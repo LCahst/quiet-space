@@ -2120,6 +2120,15 @@ footer p{margin:0 0 10px}
     const c = a.map((v, i) => Math.round(v + (b[i] - v) * t));
     return `rgb(${c[0]},${c[1]},${c[2]})`;
   }
+  // Weekly pattern colours: green when quiet, through yellow and orange, to dark red at the busiest hours.
+  const WEEK_STOPS = [[0, [46, 160, 87]], [0.35, [168, 201, 72]], [0.6, [242, 196, 66]], [0.8, [232, 120, 40]], [1, [170, 32, 28]]];
+  function weeklyColor(j, max) {
+    const t = !j || max <= 0 ? 0 : (max > 1 ? Math.log1p(j) / Math.log1p(max) : 1);
+    let i = 1; while (i < WEEK_STOPS.length - 1 && t > WEEK_STOPS[i][0]) i++;
+    const [t0, a] = WEEK_STOPS[i - 1], [t1, b] = WEEK_STOPS[i], f = t1 > t0 ? (t - t0) / (t1 - t0) : 0;
+    const c = a.map((v, k) => Math.round(v + (b[k] - v) * Math.min(1, Math.max(0, f))));
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+  }
   function nodeFill(id, maxJumps) {
     const sys = catalog.systems[id];
     if (!sys) return "#5f6f82";
@@ -2506,13 +2515,15 @@ footer p{margin:0 0 10px}
             const val = values[d * 24 + h];
             const c = el("span");
             if (val === null) { c.className = "hm-x"; c.title = `${WEEKDAYS[d]} ${String(h).padStart(2, "0")}:00 EVE: no data yet`; }
-            else { c.style.background = activityColor(val, max); c.title = `${WEEKDAYS[d]} ${String(h).padStart(2, "0")}:00 EVE: ${val} jumps`; }
+            else { c.style.background = weeklyColor(val, max); c.title = `${WEEKDAYS[d]} ${String(h).padStart(2, "0")}:00 EVE: ${val} jumps`; }
             grid.append(c);
           }
         }
         const key = el("div", "hm-key");
         const sw = color => { const i = document.createElement("i"); i.style.background = color; return i; };
-        key.append(sw(activityColor(0, 1)), "No jumps", sw(activityColor(1, 100)), "Some", sw(activityColor(max, max)), "Busiest");
+        // five steps from quiet to busiest, matching the pattern above
+        const steps = [0, 0.35, 0.6, 0.8, 1].map(t => weeklyColor(t === 0 ? 0 : Math.round(Math.expm1(t * Math.log1p(Math.max(max, 1)))), Math.max(max, 1)));
+        key.append("Quiet", ...steps.map(sw), "Busiest");
         const win = el("dl");
         if (values.every(x => x === null || x === 0)) {
           win.append(kv("Pattern", `No gate jumps recorded in ${span}`));
