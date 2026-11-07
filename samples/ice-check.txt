@@ -1,0 +1,14 @@
+Ice check, 2026-10-31T08:55:50.745Z
+Source: https://developers.eveonline.com/static-data/eve-online-static-data-latest-jsonl.zip
+Wiki list: 192 names, 191 matched to systems
+
+mapAsteroidBelts.jsonl: 40928 belts
+First record: {"_key": 40000003, "celestialIndex": 1, "orbitID": 40000002, "orbitIndex": 1, "position": {"x": 161967513600.0, "y": 21288837120.0, "z": -73505464320.0}, "radius": 27043.400391, "solarSystemID": 30000001, "statistics": {"density": 277.882996, "eccentricity": 0.0, "escapeVelocity": 10.6728, "locked": true, "massDust": 2.3083200800620544e+16, "massGas": 7.16671, "orbitPeriod": 468161.0, "orbitRadius": 80831296.0, "rotationRate": 468161.0, "spectralClass": "0.0", "surfaceGravity": 0.0021, "temperature": 90.7537}, "typeID": 15}
+Belt types: {"15":40928}
+First ice belt record: none found
+
+Systems with ice belts in CCP's data: 0 (0 in known space)
+Wiki ice systems also in CCP's data: 0 of 191 (0%)
+Wiki systems not in CCP's data: Avada, Gamis, Gelhan, Ihal, Moh, Orva, Serad, Arveyil, Dihra, Esescama, Riavayed, Afivad, Arera, Arshat, Azizora, Bashakru, Clarelam, Esteban, Fabum, Gosalav, Isamm, Jerma, Knophtikoo, Luromooh, Martha, Nalu, Pedel, Raren, Warouh, Agal, Avyuh, Hadji, Iderion, Manatirid, Sigga, Ervekam, Geztic, Gidali, Keberz, Molea and 151 more
+
+Result: Not verified. Keeping the wiki list.
