@@ -207,6 +207,14 @@ dialog.routed .d-body{display:block;columns:auto;column-count:auto}
 .f-btn.f-str:hover{color:#e8a53c}
 .svc span.mkt{border-color:#c98a2b;color:#c98a2b}
 .f-btn.f-isl{color:#2f9e8f}
+.status-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.status-sub{font-size:.78rem;color:var(--muted)}
+table.hide-recent .c-recent{display:none}
+td.c-recent{cursor:help;color:var(--muted)}
+td.c-recent.recent-hot{color:#d33a2c;font-weight:700}
+td.c-recent.fresh{animation:recentpulse 1.6s ease-out 2}
+@keyframes recentpulse{0%{background:rgba(211,58,44,.28)}100%{background:transparent}}
+@media (prefers-reduced-motion: reduce){ td.c-recent.fresh{animation:none} }
 .f-btn.f-isl:hover{color:#3fc2b0}
 .f-btn.f-ins{color:#d33a2c}
 .f-btn.f-ins:hover{color:#ff5a45}
@@ -369,7 +377,10 @@ footer p{margin:0 0 10px}
       <a class="map-link" href="fw.html"><span class="pip fw" aria-hidden="true"></span>Faction warfare</a>
       <a class="map-link" href="killmap.html"><span class="pip" aria-hidden="true"></span>Live kill map</a>
       <button class="loud-btn" id="loudBtn" type="button" aria-pressed="false">Go Loud!</button>
-      <div class="status" id="status">Connecting to ESI…</div>
+      <div class="status-wrap">
+        <div class="status" id="status">Connecting to ESI…</div>
+        <div class="status-sub" id="recentStatus" hidden></div>
+      </div>
     </div>
   </header>
 
@@ -461,17 +472,19 @@ footer p{margin:0 0 10px}
       <label class="checkline" id="onlyInsLabel" hidden><input type="checkbox" id="onlyIns"> Pirate insurgency</label>
       <label class="checkline" id="onlyStructLabel" hidden><input type="checkbox" id="onlyStruct"> Public player structures</label>
       <label class="checkline" id="onlyIslandLabel" hidden><input type="checkbox" id="onlyIsland"> High-sec island status</label>
+      <label class="checkline" id="onlyRecentLabel" hidden><input type="checkbox" id="onlyRecent"> Kills in the last 15 minutes</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
   </form>
 
   <div class="legend" id="legend"></div>
   <div class="table-wrap">
-    <table id="sysTable" class="hide-avg hide-size">
+    <table id="sysTable" class="hide-avg hide-size hide-recent">
       <thead>
         <tr>
           <th scope="col" rowspan="2">System</th><th scope="col" rowspan="2">Sec</th><th scope="col" rowspan="2">Region</th><th scope="col" rowspan="2">Constellation</th>
-          <th scope="colgroup" colspan="4" class="grp">Last hour</th>
+          <th scope="colgroup" colspan="4" class="grp" id="esiGroup" title="CCP’s official figures from ESI, which cover the most recently completed hour">Last hour</th>
+          <th scope="colgroup" class="grp c-recent" title="Kills reported to zKillboard, updated about every 15 minutes and live while this page is open">Live</th>
           <th scope="col" rowspan="2" class="num two c-avg" title="Average gate jumps per hour over the last 30 days">30-day<br>avg</th>
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 7 days">ISK<br>7d</th>
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 30 days">ISK<br>30d</th>
@@ -483,6 +496,7 @@ footer p{margin:0 0 10px}
           <th scope="col" class="num" title="Ships destroyed in the last hour">Ships</th>
           <th scope="col" class="num" title="Capsules destroyed in the last hour">Pods</th>
           <th scope="col" class="num" title="NPCs killed in the last hour">NPCs</th>
+          <th scope="col" class="num two c-recent" title="Ship and pod kills in the last 15 minutes, from zKillboard">Kills<br>15 min</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>
@@ -850,6 +864,7 @@ footer p{margin:0 0 10px}
       let text = modified ? `ESI data from ${fmt(new Date(modified))} EVE time` : `Fetched ${fmt(new Date())} EVE time`;
       if (expires) text += `, next update ${fmt(new Date(expires))}`;
       $("status").textContent = text;
+      if (modified) $("esiGroup").textContent = `ESI, hour to ${fmt(new Date(modified))}`;
       clearTimeout(refreshTimer);
       const ms = expires ? new Date(expires) - Date.now() + 30000 : 15 * 60000;
       refreshTimer = setTimeout(fetchLive, Math.min(Math.max(ms, 60000), 3600000));
@@ -918,6 +933,7 @@ footer p{margin:0 0 10px}
     const onlyIns = $("onlyIns").checked;
     const onlyStruct = $("onlyStruct").checked;
     const onlyIsland = $("onlyIsland").checked;
+    const onlyRecent = $("onlyRecent").checked;
 
     const rows = [];
     for (const idStr in catalog.systems) {
@@ -937,6 +953,7 @@ footer p{margin:0 0 10px}
       if (onlyIns && !(prebuilt.insurgency && prebuilt.insurgency.systems[id])) continue;
       if (onlyStruct && !(prebuilt.structCounts && prebuilt.structCounts[id])) continue;
       if (onlyIsland && !(islands && islands.has(id))) continue;
+      if (onlyRecent && !recentKills(id, 15)) continue;
       rows.push({ id, sys, reg, a: activity(id) });
     }
     const pvp = r => r.a.ship + r.a.pod;
@@ -947,6 +964,7 @@ footer p{margin:0 0 10px}
       isk30: (x, y) => iskOf(x.id, "30") - iskOf(y.id, "30") || x.a.jumps - y.a.jumps,
       jumps: (x, y) => x.a.jumps - y.a.jumps || pvp(x) - pvp(y),
       kills: (x, y) => pvp(x) - pvp(y) || x.a.jumps - y.a.jumps,
+      recent: (x, y) => recentKills(x.id, 15) - recentKills(y.id, 15) || x.a.jumps - y.a.jumps,
       name: () => 0
     }[sort];
     const dir = loud && sort !== "name" ? -1 : 1;
@@ -1048,7 +1066,7 @@ footer p{margin:0 0 10px}
   }
 
   function withFilterText() {
-    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"], ["onlyStruct", "public player structures"], ["onlyIsland", "high-sec island status"]]
+    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"], ["onlyStruct", "public player structures"], ["onlyIsland", "high-sec island status"], ["onlyRecent", "kills in the last 15 minutes"]]
       .filter(([id]) => $(id).checked).map(([, label]) => label);
     if (!parts.length) return "";
     const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
@@ -1112,6 +1130,13 @@ footer p{margin:0 0 10px}
     tr.appendChild(numCell(r.a.ship));
     tr.appendChild(numCell(r.a.pod));
     tr.appendChild(numCell(r.a.npc));
+    {
+      const rk = recentKills(r.id, 15), td = document.createElement("td");
+      td.className = "num c-recent" + (rk ? " recent-hot" : "") + (recentFresh.has(r.id) ? " fresh" : "");
+      td.textContent = rk;
+      td.title = `${rk} ship and pod kill${rk === 1 ? "" : "s"} in the last 15 minutes, ${recentKills(r.id, 60)} in the last hour (zKillboard${recentLiveOn ? ", live" : ""})`;
+      tr.appendChild(td);
+    }
     const avgTd = document.createElement("td"); avgTd.className = "num c-avg";
     if (prebuilt.activity) {
       const v = avgOf(r.id);
@@ -1702,6 +1727,7 @@ footer p{margin:0 0 10px}
     const sc = prebuilt.structCounts && prebuilt.structCounts[id];
     if (sc) wrap.append(structureButton(id, sc));
     if (islands && islands.has(id)) wrap.append(islandButton(id));
+
     if (sys.jc) wrap.append(featIcon("clone", "Jump clone service available"));
     const ins = prebuilt.insurgency && prebuilt.insurgency.systems[id];
     if (ins) wrap.append(insurgencyButton(id));
@@ -2386,7 +2412,8 @@ footer p{margin:0 0 10px}
     } catch (e) { return null; }
   }
   async function loadPrebuilt() {
-    const [cat, md, act, ins, sc, ice, isk] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json"), fetchData("structures-count.json"), fetchData("ice.json"), fetchData("isk.json")]);
+    const [cat, md, act, ins, sc, ice, isk, rec] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json"), fetchData("structures-count.json"), fetchData("ice.json"), fetchData("isk.json"), fetchData("kills-recent.json")]);
+    if (rec && rec.slices) startRecentKills(rec);
     if (isk && isk.windows && isk.windows["7"]) prebuilt.isk = isk;
     if (ice && Array.isArray(ice.systems) && ice.systems.length) officialIce = new Set(ice.systems.map(Number));
     // Structure lists change slowly; accept data up to 7 days old.
@@ -2626,14 +2653,14 @@ footer p{margin:0 0 10px}
       btn: "Go Loud!", mark: "QS", name: "Quiet Space", tag: "Where nobody else is flying in New Eden right now",
       another: "Show another quiet system", reg: "Quietest regions", cons: "Quietest constellations",
       note: "Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.",
-      sort: { overall: "Least activity overall", jumps: "Fewest gate jumps", kills: "Fewest ship and pod kills", avg: "Lowest 30-day average", isk7: "Least ISK destroyed, 7 days", isk30: "Least ISK destroyed, 30 days" },
+      sort: { overall: "Least activity overall", jumps: "Fewest gate jumps", kills: "Fewest ship and pod kills", recent: "Fewest kills, last 15 minutes", avg: "Lowest 30-day average", isk7: "Least ISK destroyed, 7 days", isk30: "Least ISK destroyed, 30 days" },
       title: "Quiet Space: EVE Online’s emptiest systems"
     },
     loud: {
       btn: "Go Quiet", mark: "LS", name: "Loud Space", tag: "Where everyone else is flying, and dying, right now",
       another: "Show another busy system", reg: "Most dangerous regions", cons: "Most dangerous constellations",
       note: "Ranked by ship and pod kills: the 30-day rate where available, otherwise the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.",
-      sort: { overall: "Most activity overall", jumps: "Most gate jumps", kills: "Most ship and pod kills", avg: "Highest 30-day average", isk7: "Most ISK destroyed, 7 days", isk30: "Most ISK destroyed, 30 days" },
+      sort: { overall: "Most activity overall", jumps: "Most gate jumps", kills: "Most ship and pod kills", recent: "Most kills, last 15 minutes", avg: "Highest 30-day average", isk7: "Most ISK destroyed, 7 days", isk30: "Most ISK destroyed, 30 days" },
       title: "Loud Space: EVE Online’s busiest systems"
     }
   };
@@ -2661,12 +2688,79 @@ footer p{margin:0 0 10px}
     onFilterChange();
   }
 
+  // ---------- Recent kills ----------
+  // A snapshot of kills in 1-minute slices (saved by the Action about every 15 minutes), topped up live from
+  // zKillboard's feed while the page is open. The snapshot records where it ended in the feed (nextSeq), so the
+  // live part carries on from exactly there: nothing is missed and nothing is counted twice.
+  let recentSnap = null, recentLiveOn = false, recentRefresh = null;
+  const recentLive = new Map();     // killmail id -> { sys, t (epoch seconds) }
+  const recentFresh = new Set();    // systems with a kill in the last minute or so, for a brief pulse
+  function recentKills(id, minutes) {
+    if (!recentSnap) return 0;
+    const from = Date.now() / 1000 - minutes * 60;
+    let n = 0;
+    for (const [start, sys] of Object.entries(recentSnap.slices)) if (+start + 60 > from && sys[id]) n += sys[id];
+    for (const k of recentLive.values()) if (k.sys === +id && k.t >= from) n++;
+    return n;
+  }
+  function recentStatus() {
+    const el = $("recentStatus"); if (!el || !recentSnap) return;
+    const at = new Date(recentSnap.updated).toISOString().slice(11, 16);
+    el.textContent = recentLiveOn ? "+ live kills from zKillboard" : `+ zKillboard kills to ${at} EVE`;
+    el.title = `Recent kills come from zKillboard: a snapshot saved at ${at} EVE time${recentLiveOn ? ", topped up live while this page is open" : ""}.`;
+  }
+  // Re-draw at most every 20 seconds while kills arrive, and once a minute so old kills age out.
+  function recentRerender() { if (recentRefresh) return; recentRefresh = setTimeout(() => { recentRefresh = null; render(); }, 20000); }
+  function addRecentSort() {
+    const sel = $("sort");
+    if (sel.querySelector('option[value="recent"]')) return;
+    const killsOpt = sel.querySelector('option[value="kills"]');
+    sel.insertBefore(new Option(loud ? "Most kills, last 15 minutes" : "Fewest kills, last 15 minutes", "recent"), killsOpt ? killsOpt.nextSibling : null);
+  }
+  async function startRecentKills(snap) {
+    recentSnap = snap;
+    $("onlyRecentLabel").hidden = false;
+    $("sysTable").classList.remove("hide-recent");
+    addRecentSort();
+    $("recentStatus").hidden = false;
+    recentStatus();
+    setInterval(() => { recentFresh.clear(); render(); }, 60000);
+    const R2Z2 = "https://r2z2.zkillboard.com/ephemeral";
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    try {
+      const head = await (await fetch(`${R2Z2}/sequence.json`, { cache: "no-store" })).json();
+      // carry on from the snapshot; if it's very old, skip ahead rather than make hundreds of requests
+      let seq = Math.max(snap.nextSeq || head.sequence, head.sequence - 300);
+      recentLiveOn = true; recentStatus();
+      for (;;) {
+        const r = await fetch(`${R2Z2}/${seq}.json`, { cache: "no-store" });
+        if (r.status === 404) { await sleep(6000); continue; }
+        if (r.status === 429) { await sleep(10000); continue; }
+        if (!r.ok) throw new Error(r.status);
+        const d = await r.json(); seq++;
+        const km = d.esi || d.killmail || d;
+        if (km && km.solar_system_id && km.killmail_id && !recentLive.has(km.killmail_id)) {
+          const t = Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000);
+          if (t >= Date.now() / 1000 - 3600) {
+            recentLive.set(km.killmail_id, { sys: km.solar_system_id, t });
+            if (t >= Date.now() / 1000 - 120) recentFresh.add(km.solar_system_id);
+            recentRerender();
+          }
+        }
+        // forget kills older than an hour
+        if (recentLive.size > 2000) for (const [kid, k] of recentLive) if (k.t < Date.now() / 1000 - 3600) recentLive.delete(kid);
+        await sleep(150);
+      }
+    } catch (e) { recentLiveOn = false; recentStatus(); }
+  }
+
   // ---------- Quiet route planner ----------
   // Searches the stargate map for the quietest route of a set length, one way or as a loop.
   // Runs entirely in the browser using the map, traffic and kill data the page already has.
   const routeState = { loop: false, last: null };
   const ROUTES_KEY = "quietspace.routes";
-  const routeKills = id => { const k = kills[id]; return k ? k.ship + k.pod : 0; };
+  // ESI's hourly count, or zKillboard's count for the last hour if that's higher (it's fresher).
+  const routeKills = id => { const k = kills[id]; return Math.max(k ? k.ship + k.pod : 0, recentKills(id, 60)); };
   const routeAvg = id => (prebuilt.activity && prebuilt.activity.systems[id]) ? prebuilt.activity.systems[id][0] : null;
   function findSystemByName(name) {
     const n = (name || "").trim().toLowerCase();
@@ -3028,6 +3122,7 @@ footer p{margin:0 0 10px}
   $("onlyIns").addEventListener("change", onFilterChange);
   $("onlyStruct").addEventListener("change", onFilterChange);
   $("onlyIsland").addEventListener("change", onFilterChange);
+  $("onlyRecent").addEventListener("change", onFilterChange);
   $("moreBtn").addEventListener("click", () => { shown += PAGE; render(); });
   $("anotherBtn").addEventListener("click", pickAnother);
   $("copyHero").addEventListener("click", () => {
