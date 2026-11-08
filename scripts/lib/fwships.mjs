@@ -1,7 +1,8 @@
 // Faction warfare ship statistics, built from the zKillboard kills the hourly ISK collector already reads
 // (no extra requests to zKillboard). Only kills inside warzone systems count, so the figures show what's
 // flown in the warzones themselves. Kept for 7 days; writes data/public/fw-ships.json with 24-hour and 7-day
-// totals per warzone, for kills involving militia pilots (empire or pirate) and for all kills in the warzones.
+// totals per warzone for three kinds of kill: kills zKillboard itself tags as faction warfare ("fw:" labels),
+// kills involving militia pilots (empire or pirate), and all kills in the warzones.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { esi, pool, names } from "./esi.mjs";
 
@@ -45,10 +46,12 @@ function compact(d, zoneOf) {
   const inZone = true;
   const zone = zoneOf.get(sys);
   const mods = [...new Set((v.items || []).filter(i => isFitted(i.flag)).map(i => i.item_type_id))];
+  // zKillboard tags faction warfare kills with labels like "fw:amamin" (the warzone) and "fw:minmatar" (the side)
+  const fwTag = (zkb.labels || []).some(l => typeof l === "string" && l.startsWith("fw:")) ? 1 : 0;
   return {
     id: d.killmail_id || km.killmail_id,
     t: Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000),
-    s: sys, z: zone, w: inZone ? 1 : 0, m: militia ? 1 : 0,
+    s: sys, z: zone, w: inZone ? 1 : 0, m: militia ? 1 : 0, f: fwTag,
     v: v.ship_type_id, vf, val: Math.round(+zkb.totalValue || 0), solo: zkb.solo ? 1 : 0,
     a: att, mods
   };
@@ -145,11 +148,11 @@ export async function updateFwShips(entries, log = console.log) {
   const windows = {}, sysWindows = {};
   for (const [name, span] of [["24h", 86400], ["7d", KEEP_S]]) {
     const inWindow = kept.filter(r => now - r.t < span);
-    sysWindows[name] = { militia: bySystem(inWindow.filter(r => r.m)), all: bySystem(inWindow) };
+    sysWindows[name] = { fw: bySystem(inWindow.filter(r => r.f === 1)), militia: bySystem(inWindow.filter(r => r.m)), all: bySystem(inWindow) };
     windows[name] = {};
     for (const zone of ["all", "cg", "am"]) {
       const inZone = inWindow.filter(r => zone === "all" || r.z === zone);
-      windows[name][zone] = { militia: aggregate(inZone.filter(r => r.m)), all: aggregate(inZone) };
+      windows[name][zone] = { fw: aggregate(inZone.filter(r => r.f === 1)), militia: aggregate(inZone.filter(r => r.m)), all: aggregate(inZone) };
     }
   }
   const shipIds = new Set(), modIds = new Set();
@@ -164,7 +167,9 @@ export async function updateFwShips(entries, log = console.log) {
   let types = { ships: {}, mods: {} };
   try { types = await resolveTypes([...shipIds], [...modIds]); } catch (e) { log(`  couldn't resolve some ship names (${e.message})`); }
   const oldest = kept.length ? Math.min(...kept.map(r => r.t)) : now;
-  await writeJSON(OUT, { updated: new Date().toISOString(), since: new Date(oldest * 1000).toISOString(), types, windows });
+  const tagged = kept.filter(r => r.f !== undefined);
+  const fwSince = tagged.length ? new Date(Math.min(...tagged.map(r => r.t)) * 1000).toISOString() : new Date().toISOString();
+  await writeJSON(OUT, { updated: new Date().toISOString(), since: new Date(oldest * 1000).toISOString(), fwSince, types, windows });
   await writeJSON(OUT_SYS, { updated: new Date().toISOString(), windows: sysWindows });
-  log(`FW ship stats: ${added} new FW kills, ${kept.length} kept for 7 days (${kept.filter(r => r.m).length} involving militia)`);
+  log(`FW ship stats: ${added} new kills in the warzones, ${kept.length} kept for 7 days (${kept.filter(r => r.f === 1).length} tagged FW by zKillboard, ${kept.filter(r => r.m).length} involving militia)`);
 }
