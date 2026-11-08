@@ -1,8 +1,10 @@
-// Hourly job: reads every new kill from zKillboard's R2Z2 feed (https://github.com/zKillboard/zKillboard/wiki/API-(R2Z2))
-// since the last run, keeps 30 days of ISK destroyed per system (with each system's biggest kills), and writes
-// data/public/isk.json for the "Most lucrative systems" card and the ISK columns. It also keeps a rolling
-// 24-hour kill count per system (data/public/kills24.json) for the faction warfare page. R2Z2 keeps each kill for at
-// least 24 hours, so a skipped run is caught up next time. If the feed is unavailable, the last file is kept.
+// Runs about every 15 minutes: reads every new kill from zKillboard's R2Z2 feed
+// (https://github.com/zKillboard/zKillboard/wiki/API-(R2Z2)) since the last run, and keeps:
+//   - 30 days of ISK destroyed per system, with each system's biggest kills (data/public/isk.json)
+//   - a rolling 24-hour kill count per system, for the faction warfare page (data/public/kills24.json)
+//   - the last 90 minutes of kills in 1-minute slices, for recent kills on the main page (data/public/kills-recent.json)
+// R2Z2 keeps each kill for at least 24 hours, so a skipped run is caught up next time.
+// If the feed is unavailable, the last files are kept.
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { names } from "./lib/esi.mjs";
 import { updateFwShips } from "./lib/fwships.mjs";
@@ -64,6 +66,7 @@ function parse(d) {
     id: d.killmail_id || km.killmail_id,
     day: (km.killmail_time || new Date().toISOString()).slice(0, 10),
     hour: (km.killmail_time || new Date().toISOString()).slice(0, 13), // "2026-11-02T15"
+    t: Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000),
     system: km.solar_system_id,
     ship: km.victim.ship_type_id || 0,
     value: +zkb.totalValue || 0
@@ -113,6 +116,8 @@ try {
     (byDay[k.day] ||= []).push(k);
   }
   const hourly = await readJSON(`${DATA}/cache/kills-hourly.json`, {}); // { "2026-11-02T15": { systemId: kills } }
+  const recent = await readJSON(`${DATA}/cache/kills-recent.json`, {}); // { slice start (epoch seconds): { systemId: kills } }
+  const SLICE = 60; // 1-minute slices, so "last 15 minutes" is accurate to within a minute
   for (const [day, list] of Object.entries(byDay)) {
     const file = `${HIST}/${day}.json`;
     const h = await readJSON(file, { day, ids: [], systems: {} });
@@ -122,6 +127,8 @@ try {
       seen.add(k.id); h.ids.push(k.id);
       const bucket = (hourly[k.hour] ||= {});
       bucket[k.system] = (bucket[k.system] || 0) + 1;
+      const slice = (recent[Math.floor(k.t / SLICE) * SLICE] ||= {});
+      slice[k.system] = (slice[k.system] || 0) + 1;
       const e = (h.systems[k.system] ||= [0, 0, []]);
       e[0] += k.value; e[1]++;
       e[2].push([k.id, Math.round(k.value), k.ship]);
@@ -141,6 +148,15 @@ try {
   await writeJSON(`${DATA}/cache/kills-hourly.json`, hourly);
   await writeJSON(`${DATA}/public/kills24.json`, { updated: new Date().toISOString(), hours: Object.keys(hourly).length, systems: kills24 });
   log(`24-hour kill counts: ${Object.values(kills24).reduce((a, b) => a + b, 0)} kills across ${Object.keys(kills24).length} systems`);
+
+  // Recent kills: keep 90 minutes of 1-minute slices. nextSeq tells the page where this snapshot ends in
+  // zKillboard's feed, so it can carry on from there live without counting anything twice.
+  const recentCutoff = Math.floor(Date.now() / 1000) - 90 * 60;
+  for (const key of Object.keys(recent)) if (+key < recentCutoff) delete recent[key];
+  await writeJSON(`${DATA}/cache/kills-recent.json`, recent);
+  await writeJSON(`${DATA}/public/kills-recent.json`, { updated: new Date().toISOString(), nextSeq: Math.min(last + 1, firstFailed), sliceSeconds: SLICE, slices: recent });
+  const in15 = Object.entries(recent).filter(([t]) => +t >= Math.floor(Date.now() / 1000) - 15 * 60).reduce((n, [, s]) => n + Object.values(s).reduce((a, b) => a + b, 0), 0);
+  log(`Recent kills: ${in15} in the last 15 minutes`);
 
   // Drop days older than 30 days, then build the 7- and 30-day windows.
   await mkdir(HIST, { recursive: true });
