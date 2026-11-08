@@ -3,6 +3,7 @@ name: Update data and publish site
 on:
   schedule:
     - cron: "17 * * * *"     # every hour: record traffic, refresh averages and patterns
+    - cron: "2,32,47 * * * *" # quick runs in between: recent kills only, so the site is about 15 minutes fresh
     - cron: "45 11 * * *"    # daily after EVE downtime: rebuild map, station and size data
   push:
     branches: [main]          # republish when you change the site
@@ -55,18 +56,21 @@ jobs:
         run: node scripts/build-map.mjs
 
       - name: Record traffic and update averages and weekly patterns
+        if: github.event.schedule != '2,32,47 * * * *'
         continue-on-error: true
         run: node scripts/collect-activity.mjs
 
-      - name: Record kills and ISK destroyed (zKillboard live feed)
+      - name: Record kills and ISK destroyed (zKillboard live feed, every run)
         continue-on-error: true
         run: node scripts/collect-isk.mjs
 
       - name: Record pirate insurgencies
+        if: github.event.schedule != '2,32,47 * * * *'
         continue-on-error: true
         run: node scripts/collect-insurgency.mjs
 
-      - name: Save the faction warfare feed (for the FW page in development)
+      - name: Save the faction warfare feed
+        if: github.event.schedule != '2,32,47 * * * *'
         continue-on-error: true
         run: node scripts/collect-warzone.mjs
 
