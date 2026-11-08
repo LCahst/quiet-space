@@ -112,6 +112,7 @@ aside h4{margin:16px 0 6px;font-family:var(--sans);font-size:.95rem}
   </div>
   <label for="scope">Kills
     <select id="scope">
+      <option value="fw" title="Kills zKillboard tags as faction warfare, in warzone systems only">zKillboard FW kills</option>
       <option value="militia" title="Kills in warzone systems where a militia pilot was the victim or an attacker">Militia pilots involved</option>
       <option value="all" title="Every kill in warzone systems, including pilots not in militia">All kills in the warzones</option>
     </select>
@@ -162,7 +163,7 @@ aside h4{margin:16px 0 6px;font-family:var(--sans);font-size:.95rem}
   const SEC_COLORS = {"1.0":"#2c75e1","0.9":"#399aeb","0.8":"#4ecef8","0.7":"#60dba3","0.6":"#71e554","0.5":"#f3fd82","0.4":"#dc6d07","0.3":"#ce440f","0.2":"#bb1116","0.1":"#731f1f","0.0":"#8d3264"};
   let data = null, catalog = null, sysData = null;
   const ownerOf = {}; // warzone system -> original owner faction, from the Frontlines feed
-  const state = { zone: "all", win: "24h", scope: "militia", cls: "", hidePods: true, faction: null, ship: null, system: "" };
+  const state = { zone: "all", win: "24h", scope: "fw", cls: "", hidePods: true, faction: null, ship: null, system: "" };
   // The selected system's figures, or null when looking at the whole warzone.
   const SYS = () => (state.system && sysData && sysData.windows[state.win][state.scope][state.system]) || null;
 
@@ -275,11 +276,15 @@ aside h4{margin:16px 0 6px;font-family:var(--sans);font-size:.95rem}
       $("lossSub").textContent = `Ships destroyed${state.faction === null ? "" : `, flown by ${FACTIONS[state.faction].short}`}`;
     }
     // note about coverage
-    const days = Math.max(1, Math.round((Date.parse(data.updated) - Date.parse(data.since)) / 86400e3));
-    const win = state.win === "7d" && days < 7 ? `7 days (about ${days} day${days === 1 ? "" : "s"} collected so far)` : state.win === "7d" ? "7 days" : "24 hours";
+    // How much of the window this view covers: zKillboard FW tags have only been collected since fwSince.
+    const from = state.scope === "fw" && data.fwSince ? data.fwSince : data.since;
+    const hours = (Date.parse(data.updated) - Date.parse(from)) / 3600e3;
+    const span = hours < 36 ? `${Math.max(1, Math.round(hours))} hour${Math.round(hours) === 1 ? "" : "s"}` : `${Math.round(hours / 24)} days`;
+    const need = state.win === "7d" ? 168 : 24;
+    const win = hours < need - 1 ? `${state.win === "7d" ? "7 days" : "24 hours"} (about ${span} collected so far${state.scope === "fw" ? " with zKillboard’s FW tags" : ""})` : state.win === "7d" ? "7 days" : "24 hours";
     $("note").textContent = state.system
-      ? `${(sys ? sys.kills : 0).toLocaleString()} kills worth ${fmtIsk(sys ? sys.isk : 0)} ISK in ${sysLabel(state.system).name} in the last ${win}. Choose “All warzone systems” to see the whole warzone again.`
-      : `${s.kills.toLocaleString()} kills in warzone systems worth ${fmtIsk(s.isk)} ISK in the last ${win}. Updated ${new Date(data.updated).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}. Select a faction card to filter by faction.`;
+      ? `${(sys ? sys.kills : 0).toLocaleString()} ${state.scope === "fw" ? "zKillboard FW kills" : "kills"} worth ${fmtIsk(sys ? sys.isk : 0)} ISK in ${sysLabel(state.system).name} in the last ${win}. Choose “All warzone systems” to see the whole warzone again.`
+      : `${s.kills.toLocaleString()} ${state.scope === "fw" ? "zKillboard FW kills" : "kills"} in warzone systems worth ${fmtIsk(s.isk)} ISK in the last ${win}. Updated ${new Date(data.updated).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}. Select a faction card to filter by faction.`;
     renderDetail();
   }
   function fillList(ol, rows, mode) {
@@ -406,6 +411,7 @@ aside h4{margin:16px 0 6px;font-family:var(--sans);font-size:.95rem}
       }).catch(() => {});
       const [d, cat, sd] = await Promise.all([fetch(DATA_BASE + "fw-ships.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }), fetch(DATA_BASE + "catalog.json").then(r => r.ok ? r.json() : null).catch(() => null), fetch(DATA_BASE + "fw-systems.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null).catch(() => null)]);
       data = d; catalog = cat; sysData = sd;
+      if (!data.windows["24h"].all.fw) { state.scope = "militia"; $("scope").value = "militia"; $("scope").querySelector('option[value="fw"]').disabled = true; }
       render();
       setInterval(async () => {
         try {
