@@ -39,11 +39,14 @@ h4{font-size:.95rem;margin:16px 0 6px;color:var(--accent)}
 table.ambition td:nth-child(3),table.ambition td:nth-child(4){text-align:center;font-weight:600}
 p{margin:0 0 12px;max-width:75ch}
 .lead{color:var(--muted);font-size:1.05rem;max-width:75ch}
-nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 16px;margin:18px 0 6px;font-family:var(--cond)}
-nav.toc b{font-family:var(--sans)}
-nav.toc ol{margin:6px 0 0;padding-left:1.3em;columns:2 240px;column-gap:28px}
-nav.toc li{margin:2px 0;break-inside:avoid}
-.factions{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:12px 0}
+nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 18px 14px;margin:18px 0 6px;font-family:var(--cond)}
+nav.toc > b{display:block;font-family:var(--sans);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc;display:grid;gap:6px 32px}
+@media (min-width:640px){nav.toc ol{grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,auto);grid-auto-flow:column}}
+nav.toc li{counter-increment:toc;display:grid;grid-template-columns:1.6em 1fr;align-items:baseline;line-height:1.4}
+nav.toc li::before{content:counter(toc);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;padding-right:.6em}
+nav.toc li > a{text-decoration:none}
+nav.toc li > a:hover{text-decoration:underline}.factions{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:12px 0}
 .fcard{background:var(--panel);border:1px solid var(--line);border-top:4px solid;border-radius:6px;padding:12px 16px;font-family:var(--cond)}
 .fcard h3{margin:0 0 6px;font-family:var(--sans);font-size:1.1rem}
 .fcard dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0}
@@ -107,9 +110,9 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
       <li><a href="#standing">The standing you need</a></li>
       <li><a href="#enlist">How to enlist</a></li>
       <li><a href="#consequences">What enlisting means for you</a></li>
-      <li><a href="#insurgencies">How insurgencies work</a> (including the <a href="#ambition">ambition modifier</a> and <a href="#activities">activities and pay</a>)</li>
+      <li><a href="#insurgencies">How insurgencies work</a></li>
       <li><a href="#stages">Corruption and suppression</a></li>
-      <li><a href="#zarzakh">Zarzakh, the pirate hub</a> (including <a href="#turnur">Turnur</a>)</li>
+      <li><a href="#zarzakh">Zarzakh, the pirate hub</a></li>
       <li><a href="#fix-standings">Fixing your standings</a></li>
     </ol>
   </nav>
