@@ -501,10 +501,28 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
     }
   }
   // 2D interaction
-  let drag2 = null;
-  c2.addEventListener("pointerdown", e => { drag2 = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false }; c2.setPointerCapture(e.pointerId); });
+  // One finger (or the mouse) drags; two fingers pinch to zoom around the point between them, and pan.
+  let drag2 = null, pinch2 = null;
+  const pts2 = new Map();
+  const c2XY = (x, y) => { const r = c2.getBoundingClientRect(), dpr = window.devicePixelRatio || 1; return [(x - r.left) * dpr, (y - r.top) * dpr]; };
+  c2.addEventListener("pointerdown", e => {
+    pts2.set(e.pointerId, { x: e.clientX, y: e.clientY }); c2.setPointerCapture(e.pointerId);
+    if (pts2.size === 2) {
+      const [a, b] = [...pts2.values()], [mx, my] = c2XY((a.x + b.x) / 2, (a.y + b.y) / 2);
+      pinch2 = { d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), scale: view.scale,
+        wx: (mx - c2.width / 2) / view.scale + view.x, wy: -(my - c2.height / 2) / view.scale + view.y };
+      drag2 = null; c2.classList.add("drag"); $("tip").hidden = true;
+    } else if (pts2.size === 1) drag2 = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false };
+  });
   c2.addEventListener("pointermove", e => {
     const dpr = window.devicePixelRatio || 1;
+    if (pts2.has(e.pointerId)) pts2.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch2 && pts2.size >= 2) {
+      const [a, b] = [...pts2.values()], [mx, my] = c2XY((a.x + b.x) / 2, (a.y + b.y) / 2);
+      view.scale = Math.min(800, Math.max(2, pinch2.scale * Math.hypot(a.x - b.x, a.y - b.y) / pinch2.d));
+      view.x = pinch2.wx - (mx - c2.width / 2) / view.scale; view.y = pinch2.wy + (my - c2.height / 2) / view.scale;
+      return;
+    }
     if (drag2) {
       const dx = (e.clientX - drag2.x) * dpr, dy = (e.clientY - drag2.y) * dpr;
       if (Math.hypot(dx, dy) > 3) { drag2.moved = true; c2.classList.add("drag"); }
@@ -512,7 +530,12 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
       $("tip").hidden = true;
       return;
     }
-    const id = nearestSystem2d(e.offsetX * dpr, e.offsetY * dpr, 8 * dpr);
+    show2dTip(e.offsetX, e.offsetY, 8);
+  });
+  // The details tooltip for the system nearest a point (hover with a mouse, or a tap on a touch screen).
+  function show2dTip(px, py, reach) {
+    const dpr = window.devicePixelRatio || 1;
+    const id = nearestSystem2d(px * dpr, py * dpr, reach * dpr);
     const tip = $("tip");
     if (id && systems[id]) {
       tip.hidden = false;
@@ -521,13 +544,31 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
         const lk = liveKills[id] || { s: 0, n: 0 }, j = liveJumps[id] || 0;
         txt += `: ${j} jump${j === 1 ? "" : "s"}, ${lk.s} ship and pod kill${lk.s === 1 ? "" : "s"} last hour`;
       }
-      tip.textContent = txt; tip.style.left = e.offsetX + "px"; tip.style.top = e.offsetY + "px";
+      tip.textContent = txt; tip.style.left = px + "px"; tip.style.top = py + "px";
     }
     else tip.hidden = true;
-  });
-  const endDrag2 = () => { drag2 = null; c2.classList.remove("drag"); };
-  c2.addEventListener("pointerup", endDrag2); c2.addEventListener("pointercancel", endDrag2);
-  c2.addEventListener("pointerleave", () => { $("tip").hidden = true; });
+  }
+  function endDrag2(e, tapped) {
+    pts2.delete(e.pointerId);
+    if (pinch2) {
+      if (pts2.size < 2) {
+        pinch2 = null;
+        const [rest] = [...pts2.values()];
+        drag2 = rest ? { x: rest.x, y: rest.y, vx: view.x, vy: view.y, moved: true } : null;
+        if (!rest) c2.classList.remove("drag");
+      }
+      return;
+    }
+    if (pts2.size) return;
+    // a tap on a touch screen shows that system's details, with a little extra reach for fingers
+    if (tapped && e.pointerType !== "mouse" && drag2 && !drag2.moved) {
+      const r = c2.getBoundingClientRect(); show2dTip(e.clientX - r.left, e.clientY - r.top, 18);
+    }
+    drag2 = null; c2.classList.remove("drag");
+  }
+  c2.addEventListener("pointerup", e => endDrag2(e, true)); c2.addEventListener("pointercancel", e => endDrag2(e, false));
+  // A mouse leaving the map hides the tooltip; a lifted finger also "leaves", so keep a tapped system's details up.
+  c2.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") $("tip").hidden = true; });
   c2.addEventListener("wheel", e => {
     e.preventDefault();
     const dpr = window.devicePixelRatio || 1;
@@ -613,11 +654,31 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
     const cx = (bounds.minX + bounds.maxX) / 2, cz = -(bounds.minZ + bounds.maxZ) / 2, cy = (bounds.minY + bounds.maxY) / 2;
     three = { renderer, scene, camera, glow, sprites: [], orbit: { theta: 0, phi: 0.75, radius: Math.max(bounds.maxX - bounds.minX, bounds.maxZ - bounds.minZ) * 0.9, target: new THREE.Vector3(cx, cy, cz) } };
     // Orbit controls: drag to rotate, right-drag or shift-drag to pan, scroll to zoom
-    let d3 = null;
+    // On touch screens: one finger rotates, two fingers pinch to zoom and move together to pan.
+    let d3 = null, pinch3 = null;
+    const pts3 = new Map();
     const el = renderer.domElement;
     el.addEventListener("contextmenu", e => e.preventDefault());
-    el.addEventListener("pointerdown", e => { d3 = { x: e.clientX, y: e.clientY, pan: e.button === 2 || e.shiftKey }; el.setPointerCapture(e.pointerId); });
+    el.addEventListener("pointerdown", e => {
+      pts3.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
+      if (pts3.size === 2) {
+        const [a, b] = [...pts3.values()];
+        pinch3 = { d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), radius: three.orbit.radius, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+        d3 = null;
+      } else if (pts3.size === 1) d3 = { x: e.clientX, y: e.clientY, pan: e.button === 2 || e.shiftKey };
+    });
     el.addEventListener("pointermove", e => {
+      if (pts3.has(e.pointerId)) pts3.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch3 && pts3.size >= 2) {
+        const [a, b] = [...pts3.values()], o = three.orbit;
+        o.radius = Math.min(400, Math.max(0.5, pinch3.radius * pinch3.d / Math.max(1, Math.hypot(a.x - b.x, a.y - b.y))));
+        const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = mx - pinch3.mx, dy = my - pinch3.my;
+        pinch3.mx = mx; pinch3.my = my;
+        const s = o.radius * 0.0015;
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+        o.target.addScaledVector(right, -dx * s).addScaledVector(up, dy * s);
+        return;
+      }
       if (!d3) return;
       const dx = e.clientX - d3.x, dy = e.clientY - d3.y; d3.x = e.clientX; d3.y = e.clientY;
       const o = three.orbit;
@@ -629,7 +690,14 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
         o.theta -= dx * 0.005; o.phi = Math.min(Math.PI - 0.05, Math.max(0.05, o.phi - dy * 0.005));
       }
     });
-    const end3 = () => { d3 = null; };
+    const end3 = e => {
+      pts3.delete(e.pointerId);
+      if (pinch3) {
+        if (pts3.size < 2) { pinch3 = null; const [rest] = [...pts3.values()]; d3 = rest ? { x: rest.x, y: rest.y, pan: false } : null; }
+        return;
+      }
+      if (!pts3.size) d3 = null;
+    };
     el.addEventListener("pointerup", end3); el.addEventListener("pointercancel", end3);
     el.addEventListener("wheel", e => { e.preventDefault(); three.orbit.radius = Math.min(400, Math.max(0.5, three.orbit.radius * Math.exp(e.deltaY * 0.0012))); }, { passive: false });
     resize3d();
@@ -756,13 +824,21 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
   }
 
   // ---------- Controls ----------
+  // The map hint, in touch wording on phones and tablets.
+  function setHint() {
+    const touchy = window.matchMedia && matchMedia("(pointer: coarse)").matches;
+    $("hint").textContent = touchy
+      ? (mode === "3d" ? "Drag to rotate, pinch to zoom, two fingers to pan" : "Drag to move, pinch to zoom, tap a system for details")
+      : (mode === "3d" ? "Drag to rotate, right-drag to pan, scroll to zoom" : "Drag to move, scroll to zoom");
+  }
+  setHint();
   function setMode(m) {
     if (m === "3d" && !init3d()) { setStatus("3D isn’t available in this browser", "err"); m = "2d"; }
     mode = m;
     $("v2d").setAttribute("aria-pressed", String(m === "2d"));
     $("v3d").setAttribute("aria-pressed", String(m === "3d"));
     c2.hidden = m !== "2d"; $("c3d").hidden = m !== "3d";
-    $("hint").textContent = m === "2d" ? "Drag to move, scroll to zoom" : "Drag to rotate, right-drag to pan, scroll to zoom";
+    setHint();
     $("tip").hidden = true;
     if (m === "3d") resize3d(); else { resize2d(); if (regionFilter) fit2d(); }
   }

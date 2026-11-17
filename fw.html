@@ -119,6 +119,18 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
 .sortby button[aria-pressed="true"]{color:var(--ink);font-weight:600;text-decoration-color:var(--accent)}
 .empty{color:var(--muted)}
 
+/* Small screens: the layers box and the key start tucked away behind two buttons, so the map stays visible. */
+.maptoggles{display:none}
+@media (max-width:700px){
+  .maptoggles{display:flex;gap:6px;position:absolute;left:10px;top:10px;z-index:3}
+  .maptoggles button{font:inherit;font-family:var(--cond);font-size:.85rem;color:var(--ink);background:rgba(8,13,21,.88);border:1px solid var(--line);border-radius:4px;padding:6px 12px;min-height:36px;cursor:pointer}
+  .maptoggles button[aria-expanded="true"]{background:#1e3350;border-color:var(--accent)}
+  .layers,.legend{display:none}
+  .stage.show-layers .layers{display:grid;top:54px;z-index:3}
+  .stage.show-key .legend{display:grid;z-index:3;pointer-events:auto;max-height:calc(100% - 70px);overflow-y:auto}
+  .hint{top:auto;bottom:10px;max-width:calc(100% - 24px);white-space:normal;text-align:center}
+  .stage.show-key .hint{display:none}
+}
 @media (max-width:900px){
   main{grid-template-columns:1fr;grid-template-rows:60vh auto}
   aside{border-left:0;border-top:1px solid var(--line)}
@@ -160,7 +172,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
 <main>
   <div class="stage" id="stage">
     <canvas id="map" aria-label="Map of the warzone"></canvas>
-    <fieldset class="layers">
+    <div class="maptoggles" role="group" aria-label="Map panels">
+      <button type="button" id="toggleLayers" aria-expanded="false" aria-controls="layersBox">Layers</button>
+      <button type="button" id="toggleKey" aria-expanded="false" aria-controls="legend">Key</button>
+    </div>
+    <fieldset class="layers" id="layersBox">
       <legend>Layers</legend>
       <label><input type="checkbox" id="liveKills" checked> Live kills</label>
       <label><input type="checkbox" id="insurg" checked> Insurgencies</label>
@@ -600,6 +616,14 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   function frame(now) { draw(now); requestAnimationFrame(frame); }
 
   // ---------- Interaction ----------
+  // Small screens: Layers and Key buttons open or close those panels over the map.
+  for (const [btnId, cls] of [["toggleLayers", "show-layers"], ["toggleKey", "show-key"]]) {
+    $(btnId).addEventListener("click", () => {
+      const open = !$("stage").classList.contains(cls);
+      $("stage").classList.toggle(cls, open);
+      $(btnId).setAttribute("aria-expanded", String(open));
+    });
+  }
   // On touch screens, describe the touch gestures instead of the mouse ones.
   if (window.matchMedia && matchMedia("(pointer: coarse)").matches) $("mapHint").textContent = "Drag to move, pinch to zoom, tap a system for details";
   // One finger (or the mouse) drags the map; two fingers pinch to zoom around the point between them, and pan.
