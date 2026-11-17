@@ -63,6 +63,7 @@ table.stages{border-collapse:collapse;width:100%;min-width:640px;font-family:var
 .stages tr:last-child td,.stages tr:last-child th{border-bottom:0}
 .legend{font-family:var(--cond);font-size:.85rem;color:var(--muted);margin-top:4px}
 .options{display:grid;gap:12px;margin:10px 0}
+.options > *,.factions > *{min-width:0} /* let wide tables scroll inside their card instead of stretching it */
 .option{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
 .option h3{margin:0 0 6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .tag{font-family:var(--cond);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;border:1px solid;border-radius:3px;padding:0 6px}
