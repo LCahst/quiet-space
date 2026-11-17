@@ -35,6 +35,8 @@ main{max-width:1100px;margin:0 auto;padding:20px 20px 40px}
 h1{font-size:1.7rem;margin:0 0 6px;line-height:1.2}
 h2{font-size:1.25rem;margin:38px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);scroll-margin-top:12px}
 h3{font-size:1rem;margin:20px 0 6px}
+h4{font-size:.95rem;margin:16px 0 6px;color:var(--accent)}
+table.ambition td:nth-child(3),table.ambition td:nth-child(4){text-align:center;font-weight:600}
 p{margin:0 0 12px;max-width:75ch}
 .lead{color:var(--muted);font-size:1.05rem;max-width:75ch}
 nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 16px;margin:18px 0 6px;font-family:var(--cond)}
@@ -104,7 +106,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
       <li><a href="#standing">The standing you need</a></li>
       <li><a href="#enlist">How to enlist</a></li>
       <li><a href="#consequences">What enlisting means for you</a></li>
-      <li><a href="#insurgencies">How insurgencies work</a></li>
+      <li><a href="#insurgencies">How insurgencies work</a> (including the <a href="#ambition">ambition modifier</a> and <a href="#activities">activities and pay</a>)</li>
       <li><a href="#stages">Corruption and suppression</a></li>
       <li><a href="#zarzakh">Zarzakh, the pirate hub</a></li>
       <li><a href="#fix-standings">Fixing your standings</a></li>
@@ -166,33 +168,80 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
   </ul>
 
   <h2 id="insurgencies">How insurgencies work</h2>
-  <p>An insurgency is a pirate campaign against one warzone. It’s a tug-of-war: <b>pirates corrupt</b> systems by doing pirate activities, and <b>the empires suppress</b> them by doing anti-pirate activities.</p>
-  <h3>How one runs</h3>
-  <ul class="points">
-    <li><b>It starts from a Forward Operating Base (FOB),</b> a pirate structure placed in a low-sec faction warfare system near the frontline. Pirate militia can dock, fit and tether there.</li>
-    <li><b>Forecasting (about 48 hours):</b> the FOB’s location and the first four systems are revealed, but no sites spawn yet and the FOB can’t be attacked.</li>
-    <li><b>Active phase:</b> insurgency sites start spawning. The whole insurgency lasts up to <b>7 days</b>.</li>
-    <li><b>It spreads:</b> when a system reaches corruption stage 3, the insurgency spreads to a neighbouring system.</li>
-  </ul>
+  <p>An insurgency is a pirate campaign against one warzone. It’s a tug-of-war: <b>pirates corrupt</b> systems by doing pirate activities, and <b>the empires suppress</b> them by doing anti-pirate activities. Whichever side pushes enough systems all the way wins, and everyone who helped on that side gets paid.</p>
+
+  <h3>The life of an insurgency</h3>
+  <ol class="steps">
+    <li><b>A Forward Operating Base (FOB) appears.</b> This pirate structure is placed in a low-sec faction warfare system near the frontline, and it’s the pirates’ base for the campaign: pirate militia can dock, fit and tether there, and the Zarzakh Shipcaster sends them straight to it.</li>
+    <li><b>Forecasting, for 48 hours.</b> The FOB’s location and the first four target systems are revealed, so both sides can prepare, but no sites spawn yet and the FOB can’t be attacked.</li>
+    <li><b>The active phase, up to 7 days in all.</b> Insurgency sites start spawning, and both sides race to push systems to the top stage.</li>
+    <li><b>It spreads.</b> When a system reaches corruption stage 3, a neighbouring system (security 0.0 to 0.8) joins the insurgency and starts spawning sites too.</li>
+    <li><b>It ends</b> in a pirate win, an empire win or a tie, and the payouts go out.</li>
+  </ol>
+  <p class="legend">CCP shortened insurgencies from 14 days to 7, and doubled the forecasting period from 24 hours to 48, in September 2026.</p>
+
   <h3>How each side wins</h3>
   <ul class="points">
-    <li><b>Pirates win</b> by pushing enough systems to <b>corruption stage 5</b>. They then hold the FOB’s system for a while, and after the insurgency it becomes easier for either empire to flip.</li>
-    <li><b>Empires win</b> by pushing enough systems to <b>suppression stage 5</b>, which makes the FOB vulnerable, and then <b>destroying the FOB</b>. Its armor reinforcement timer is 3 hours, give or take an hour.</li>
-    <li><b>How many systems is “enough”</b> starts at 5 and is adjusted by the <b>ambition modifier</b>: each win raises the winning side’s target by one (up to 10 systems), so a side on a winning streak has to work harder.</li>
-    <li><b>Neither side reaching its goal</b> ends in a tie, with no bonus payout.</li>
-    <li><b>The winning side’s contributors share big rewards,</b> including <b>1,500,000 LP</b> each.</li>
+    <li><b>Pirates win</b> by pushing their target number of systems to <b>corruption stage 5</b>. They then take temporary control of the FOB’s system. When the insurgency ends, they hand it back to its old owner, but its infrastructure hub becomes vulnerable about 24 hours (and one downtime) later, giving either empire militia a quick chance to flip it.</li>
+    <li><b>Empires win</b> by pushing their target number of systems to <b>suppression stage 5</b>. That makes the FOB vulnerable, and they then have to <b>destroy it</b>, after a single armor reinforcement timer of 3 hours (give or take an hour). Destroying it raises suppression by one stage in every insurgency system, and the insurgency winds down over 48 hours.</li>
+    <li><b>Neither side reaching its target</b> ends in a tie, with no bonus payout for anyone.</li>
   </ul>
-  <h3>What you’ll actually be doing</h3>
+
+  <h3 id="ambition">The ambition modifier</h3>
+  <p>The ambition modifier stops one side from winning insurgency after insurgency. Each side’s target starts at <b>5 systems</b>, and winning makes your next target harder.</p>
   <ul class="points">
-    <li><b>Capturing insurgency complexes:</b> Small, Medium, Moderate and Large sites that work like faction warfare complexes, with 10 to 15 minute capture timers and ship-size and pilot limits. They add 0.25% (Small) to 1.5% (Moderate) corruption or suppression each.</li>
-    <li><b>Corporate Outpost Raids</b> (from stage 0), <b>Mining Op Ambushes</b> (from stage 1), where an ORE Rorqual is under attack, and <b>Ice Refinery Heists</b> (stages 3 and 4), where you escort fuel tankers; ten tankers wins it.</li>
-    <li><b>Turning in loot</b> from named NPCs for reward crates: at the FOB’s system for pirates, or at your faction’s headquarters for the empires.</li>
-    <li>Missions in <b>EVE Vanguard</b> also feed into corruption and suppression.</li>
+    <li><b>Winning adds +1 ambition</b> to the winning side, so it needs one more system at stage 5 next time. A side on a streak can climb to <b>+5</b>, meaning <b>10 systems</b>.</li>
+    <li><b>Only one side can have ambition at a time.</b> If the underdog wins, it doesn’t gain ambition straight away: instead, the favourite’s ambition drops by 1. Only once the favourite is back to the neutral 5 systems do further wins start building the other side’s ambition.</li>
+    <li><b>Losing with ambition costs 1,</b> down to the minimum of 5 systems.</li>
+    <li><b>Where to see it:</b> each side’s current target is shown in the Insurgency window, and the in-game pirate insurgency guide in the Agency explains it too.</li>
+  </ul>
+  <div class="tablewrap">
+    <table class="stages ambition">
+      <thead><tr><th scope="col">Example run of insurgencies</th><th scope="col">Result</th><th scope="col" class="cor">Pirates need</th><th scope="col" class="sup">Empires need</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Starting point</th><td>No one has ambition</td><td>5 systems</td><td>5 systems</td></tr>
+        <tr><th scope="row">Insurgency 1</th><td>Pirates win: pirates +1</td><td>6</td><td>5</td></tr>
+        <tr><th scope="row">Insurgency 2</th><td>Pirates win again: pirates +2</td><td>7</td><td>5</td></tr>
+        <tr><th scope="row">Insurgency 3</th><td>Empires win: pirate ambition drops to +1</td><td>6</td><td>5</td></tr>
+        <tr><th scope="row">Insurgency 4</th><td>Empires win: pirates back to neutral</td><td>5</td><td>5</td></tr>
+        <tr><th scope="row">Insurgency 5</th><td>Empires win: now empires +1</td><td>5</td><td>6</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">The cap used to be much higher (+15, or 20 systems); CCP cut it to +5 in September 2026.</p>
+
+  <h3 id="activities">Activities and how they pay</h3>
+  <p>Every completed activity adds to the system’s corruption (for pirates) or suppression (for the empires) and, for most of them, pays LP to the pilots who did it. On top of that, if your side wins the insurgency, <b>every pilot who contributed gets 1,500,000 LP</b> plus an ISK payout at the end.</p>
+  <h4>Insurgency complexes (Corporate Outpost Raids)</h4>
+  <p>These work like faction warfare’s advanced complexes: clear the defending NPCs, then hold the capture point until the timer runs out. Pirates fight Mordu’s Legion guards; empire pilots fight the pirate NPCs. They can spawn at any corruption level, and allow Tech 1, navy, pirate and Tech 2 ships of the right size.</p>
+  <div class="tablewrap">
+    <table class="stages">
+      <thead><tr><th scope="col">Size</th><th scope="col">Pilots</th><th scope="col">Capture</th><th scope="col">Ships allowed</th><th scope="col">Base LP (pirates)</th><th scope="col">Adds</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Small</th><td>1–2</td><td>10 min</td><td>Destroyers and smaller</td><td>29,000</td><td>0.25%</td></tr>
+        <tr><th scope="row">Medium</th><td>1–5</td><td>15 min</td><td>Cruisers and smaller, plus Tech 3 destroyers</td><td>41,500</td><td>0.5%</td></tr>
+        <tr><th scope="row">Moderate</th><td>1–3</td><td>15 min</td><td>Battlecruisers and smaller, plus Tech 3 destroyers; battlecruiser skill bonuses are 20% stronger inside</td><td>52,500</td><td>1.5%</td></tr>
+        <tr><th scope="row">Large</th><td>1–5</td><td>15 min</td><td>Battleships and smaller</td><td>52,500</td><td>1%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">“Adds” is how much one capture moves the system’s corruption or suppression. The Moderate site is the best value for moving a system, the Medium and Large for sharing LP with a bigger group.</p>
+  <h4>Other insurgency activities</h4>
+  <ul class="points">
+    <li><b>Mining Op Ambush</b> (from corruption stage 1, 1–5 pilots, any ship, built with cruisers in mind): an ORE Rorqual has been tackled by pirates. <b>Pirates</b> hold off the Mordu’s Legion mercenaries sent to save it until it pays its ransom, which earns LP and corruption; destroying the Rorqual instead lets you loot it and still adds corruption, but pays no LP. <b>Empire pilots</b> kill the pirate ransomers until the Rorqual can warp away, for LP and suppression. The LP is shared fully by up to 5 pilots.</li>
+    <li><b>Ice Refinery Heist</b> (corruption stages 3 and 4, 5–30 pilots): the big fleet activity. Both sides escort automated fuel tankers from an ORE refinery back to their own scoring zone while trying to steal the other side’s; the first to deliver <b>10 tankers</b> wins <b>150,000 LP</b> (base). It respawns every 4 hours. NPCs deal full damage and keep coming in waves, and pirates who fly too close to the Upwell Thunderchild guards get destroyed.</li>
+    <li><b>Reward crates from named NPCs:</b> once a system’s corruption or suppression is high enough, roaming NPCs start warping around it, including rare named ones (Zohar’s Chosen for the Angels, Hakuzosu’s Steelscale for the Guristas, and Upwell ‘Kingbird’ fortifications for the empires). Their loot can be turned in for reward crates: pirates at the <b>Pirate Laundering Facilities</b> in the FOB system, empire pilots at the <b>Counter-Insurgency Outposts</b> in their faction’s War HQ system (Onnamon for the Caldari, Intaki for the Gallente, Mehatoor for the Amarr, Amo for the Minmatar).</li>
+    <li><b>EVE Vanguard:</b> insurgency missions in CCP’s shooter, EVE Vanguard, also feed into corruption and suppression.</li>
   </ul>
   <p>Follow live insurgencies, with each system’s corruption and suppression, on our <a href="fw.html">faction warfare map</a> using the pirate focus button.</p>
 
   <h2 id="stages">Corruption and suppression</h2>
-  <p>Every insurgency system has a corruption level (the pirates’ side) and a suppression level (the empires’ side), from 1 to 5. When you jump into an affected system, a message tells you what’s in effect, and systems at the top corruption stage show a <b>▼ LAWLESS</b> marker in your route.</p>
+  <p>Every insurgency system has a corruption level (the pirates’ side) and a suppression level (the empires’ side), from 1 to 5. Each completed activity adds a percentage toward the next level (see the table above), and every level brings new effects for the side that earned it.</p>
+  <ul class="points">
+    <li><b>Seeing the levels:</b> the Insurgency window shows each system’s levels, a message pops up when you jump into an affected system, and systems at the top corruption stage show a <b>▼ LAWLESS</b> marker in your route.</li>
+    <li><b>The two sides push against each other:</b> from suppression stage 3, corruption builds 30% slower in that system, and a fully suppressed system can’t be corrupted past stage 4.</li>
+    <li><b>Stage 5 is what wins insurgencies,</b> and it also brings the biggest changes, especially the loss of CONCORD protection in highly corrupted high-sec.</li>
+  </ul>
   <div class="tablewrap">
     <table class="stages">
       <thead><tr><th scope="col">Stage</th><th scope="col" class="cor">Corruption (pirates)</th><th scope="col" class="sup">Suppression (empires)</th></tr></thead>
@@ -205,7 +254,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
       </tbody>
     </table>
   </div>
-  <p class="legend">Stage effects add up as a system climbs. Figures from the EVE University Wiki.</p>
+  <p class="legend">Loot, bounty, security and LP percentages are each stage’s total, not extra on top of the stage below; other effects, like navies no longer spawning, carry on into the stages above. Figures from the EVE University Wiki.</p>
 
   <h2 id="zarzakh">Zarzakh, the pirate hub</h2>
   <div class="lore">
