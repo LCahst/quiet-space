@@ -77,3 +77,4 @@ Edit `index.html` on GitHub (open it and click the pencil icon) or upload a new 
 EVE Online and all related names are trademarks of CCP hf. This is a fan-made tool and isn't affiliated with or endorsed by CCP.
 
 <!-- Test commit, 2026-11-17 -->
+<!-- Test commit 2, 2026-11-17 -->
