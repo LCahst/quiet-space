@@ -170,7 +170,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     <div class="tip" id="tip" hidden></div>
     <div class="notice" id="notice">Loading the warzone…</div>
     <div class="legend" id="legend" aria-hidden="true"></div>
-    <div class="hint">Drag to move, scroll to zoom, click a system for details</div>
+    <div class="hint" id="mapHint">Drag to move, scroll to zoom, click a system for details</div>
   </div>
   <aside id="panel" aria-label="Warzone details"></aside>
 </main>
@@ -600,9 +600,35 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   function frame(now) { draw(now); requestAnimationFrame(frame); }
 
   // ---------- Interaction ----------
-  let drag = null;
-  cv.addEventListener("pointerdown", e => { drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false }; cv.setPointerCapture(e.pointerId); });
+  // On touch screens, describe the touch gestures instead of the mouse ones.
+  if (window.matchMedia && matchMedia("(pointer: coarse)").matches) $("mapHint").textContent = "Drag to move, pinch to zoom, tap a system for details";
+  // One finger (or the mouse) drags the map; two fingers pinch to zoom around the point between them, and pan.
+  let drag = null, pinch = null;
+  const pointers = new Map();          // active pointers: id -> { x, y } in page pixels
+  const canvasXY = (x, y) => { const r = cv.getBoundingClientRect(); return [(x - r.left) * dpr, (y - r.top) * dpr]; };
+  function startPinch() {
+    const [a, b] = [...pointers.values()];
+    const [mx, my] = canvasXY((a.x + b.x) / 2, (a.y + b.y) / 2);
+    pinch = { d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), scale: view.scale,
+      wx: (mx - cv.width / 2) / view.scale + view.x, wy: (my - cv.height / 2) / view.scale + view.y };
+    drag = null; cv.classList.add("drag"); $("tip").hidden = true; hoverId = null;
+  }
+  cv.addEventListener("pointerdown", e => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    cv.setPointerCapture(e.pointerId);
+    if (pointers.size === 2) startPinch();
+    else if (pointers.size === 1) drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false };
+  });
   cv.addEventListener("pointermove", e => {
+    if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && pointers.size >= 2) {
+      const [a, b] = [...pointers.values()];
+      const [mx, my] = canvasXY((a.x + b.x) / 2, (a.y + b.y) / 2);
+      view.scale = Math.min(2000, Math.max(5, pinch.scale * Math.hypot(a.x - b.x, a.y - b.y) / pinch.d));
+      // keep the map point that started under the fingers under them as they spread and move
+      view.x = pinch.wx - (mx - cv.width / 2) / view.scale; view.y = pinch.wy - (my - cv.height / 2) / view.scale;
+      return;
+    }
     if (drag) {
       const dx = (e.clientX - drag.x) * dpr, dy = (e.clientY - drag.y) * dpr;
       if (Math.hypot(dx, dy) > 4) { drag.moved = true; cv.classList.add("drag"); }
@@ -613,8 +639,28 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     hoverId = systemAt(e.offsetX * dpr, e.offsetY * dpr);
     showTip(hoverId, e.offsetX, e.offsetY);
   });
-  cv.addEventListener("pointerup", () => { if (drag && !drag.moved) { const id = hoverId; if (id && ((pirateMode && pv) ? pv.set : zone.set).has(id)) select(id); else if (!id) clearSelection(); } drag = null; cv.classList.remove("drag"); });
-  cv.addEventListener("pointercancel", () => { drag = null; cv.classList.remove("drag"); });
+  function endPointer(e, tapped) {
+    pointers.delete(e.pointerId);
+    if (pinch) {
+      if (pointers.size < 2) {
+        pinch = null;
+        // carry on dragging with the finger that's left; lifting it later won't count as a tap
+        const [rest] = [...pointers.values()];
+        drag = rest ? { x: rest.x, y: rest.y, vx: view.x, vy: view.y, moved: true } : null;
+        if (!rest) cv.classList.remove("drag");
+      }
+      return;
+    }
+    if (pointers.size) return;
+    if (tapped && drag && !drag.moved) {
+      // a tap or click: pick the system at that spot (touch screens have no hover to rely on)
+      const [x, y] = canvasXY(e.clientX, e.clientY), id = systemAt(x, y);
+      if (id && ((pirateMode && pv) ? pv.set : zone.set).has(id)) select(id); else if (!id) clearSelection();
+    }
+    drag = null; cv.classList.remove("drag");
+  }
+  cv.addEventListener("pointerup", e => endPointer(e, true));
+  cv.addEventListener("pointercancel", e => endPointer(e, false));
   cv.addEventListener("pointerleave", () => { $("tip").hidden = true; hoverId = null; });
   cv.addEventListener("wheel", e => {
     e.preventDefault();
