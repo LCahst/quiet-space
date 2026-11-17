@@ -63,6 +63,9 @@ table.stages{border-collapse:collapse;width:100%;min-width:640px;font-family:var
 .stages tr:last-child td,.stages tr:last-child th{border-bottom:0}
 .legend{font-family:var(--cond);font-size:.85rem;color:var(--muted);margin-top:4px}
 .options{display:grid;gap:12px;margin:10px 0}
+.lore{background:linear-gradient(135deg,rgba(163,58,92,.14),rgba(16,24,38,.6));border:1px solid #4a2a3a;border-radius:6px;padding:12px 16px 4px;margin:10px 0 6px;max-width:85ch}
+.lore p{font-style:italic;color:#d9cdd4}
+.lore p b{font-style:normal;color:var(--ink)}
 .options > *,.factions > *{min-width:0} /* let wide tables scroll inside their card instead of stretching it */
 .option{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
 .option h3{margin:0 0 6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
@@ -205,27 +208,41 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
   <p class="legend">Stage effects add up as a system climbs. Figures from the EVE University Wiki.</p>
 
   <h2 id="zarzakh">Zarzakh, the pirate hub</h2>
-  <p>Zarzakh is a special system near the centre of New Eden, built as a base for pirate-aligned pilots. Its station, <b>the Fulcrum</b>, is run by the Deathless Circle.</p>
+  <div class="lore">
+    <p><b>The story so far.</b> Zarzakh is a hidden Jovian system at almost the exact centre of New Eden, deep in the void of Divinity’s Edge (Yasna Zakh, as the Amarr call it). Dust and gas swirl through it on their way into a black hole known as the Point of No Return, or Duzna Kah to the Amarr, so visibility is poor and much of the system is still unexplored.</p>
+    <p>In 2023, during the Operation Epiphany event, capsuleers tracked down four ancient Jovian stargates that led there, and the gates opened that September at Fanfest. Someone had beaten them to it: the <b>Deathless Circle</b>, a coalition of criminals and renegades drawn mostly from Caldari and Minmatar organised crime, with Thukker smugglers in the mix, led by a mysterious figure called the Deathless. They had learned to work the Jovian gates and made the Jovian megastructure <b>the Fulcrum</b> their base. The Deathless then offered the Guristas and the Angel Cartel a sanctuary hidden from the empires, and when the Havoc expansion brought insurgencies in November 2023, Zarzakh became the home of pirate faction warfare.</p>
+  </div>
+
   <h3>Getting in and out</h3>
   <ul class="points">
-    <li><b>Four gates lead in:</b> from Alsavoinon (Placid), Turnur (Metropolis), H-PA29 (Venal) and G-0Q86 (Curse).</li>
-    <li><b>Non-pirates pay a toll</b> on the way in, based on ship mass. <b>Pirate militia pilots don’t pay.</b></li>
-    <li><b>The Emanation Lock:</b> once you enter through a gate, you can only leave through that same gate for <b>6 hours</b>. You can always leave by the Shipcaster, by clone jumping, or by losing your pod.</li>
-    <li><b>Capital ships can’t gate in</b> (the Orca is the exception).</li>
+    <li><b>Four ancient gates lead in,</b> one from each direction: Alsavoinon (0.3, Placid) to the west, Turnur (0.4, Metropolis) to the east, H-PA29 (-0.2, Venal) to the north and G-0Q86 (0.0, Curse) to the south. The two low-sec gates are the safer way in.</li>
+    <li><b>Non-pirates pay a toll</b> on the way in: the gate asks you to confirm a fee that rises with your ship’s mass, starting around 10,000 ISK for small ships. <b>Pirate militia pilots don’t pay.</b></li>
+    <li><b>The Emanation Lock:</b> once you enter through a gate, you can only leave through that same gate for <b>6 hours</b>. Coming back in through a different gate resets the timer and locks you to that one instead. The Shipcaster, clone jumping and losing your pod all get you out regardless.</li>
+    <li><b>Capital ships can’t gate in,</b> freighters included. The Orca is the one exception.</li>
   </ul>
-  <h3>What’s there for pirates</h3>
+
+  <h3>The Fulcrum</h3>
   <ul class="points">
-    <li><b>You can enlist here</b> with either pirate faction, without going into pirate null-sec.</li>
-    <li><b>The Deathless Shipcaster</b> sends pirate militia pilots straight to their faction’s FOB in the current insurgency.</li>
-    <li><b>Pirate LP stores</b> for the Guristas and the Angel Cartel, and <b>jump clones</b> for pirate militia pilots.</li>
-    <li><b>Market, fitting, repairs and industry,</b> with bonuses for building Guristas and Angel ships and a 90% lower SCC surcharge for pirate militia.</li>
+    <li><b>Who can dock:</b> anyone who isn’t enlisted with an empire militia, as long as they don’t have a weapons or retribution timer.</li>
+    <li><b>Services for everyone who can dock:</b> repairs, fitting, market, insurance and industry.</li>
+    <li><b>For joining:</b> you can <b>enlist</b> here with either pirate faction.</li>
+    <li><b>For pirate militia:</b> <b>jump clones</b>, the <b>Guristas and Angel Cartel LP stores</b>, offices for pirate-enlisted corporations, and a <b>90% lower SCC surcharge</b>.</li>
+    <li><b>For builders:</b> a 6% material and 70% time bonus when manufacturing sub-capital Guristas and Angel Cartel ships.</li>
   </ul>
-  <h3>Watch out for</h3>
+
+  <h3>The Deathless Shipcaster</h3>
   <ul class="points">
-    <li><b>Bookmarks and directional scan don’t work</b> in Zarzakh.</li>
-    <li><b>Gravity damages your hull</b> once you leave the safe areas around the gates, the Fulcrum and the Shipcaster.</li>
-    <li><b>Gate guns and roaming NPC fleets</b> attack anyone with a retribution timer, and the NPC fleets also attack non-pirates.</li>
-    <li><b>Empire militia pilots often camp the system,</b> so it’s not as safe as it was meant to be.</li>
+    <li><b>Pirate militia pilots can launch straight to their faction’s Forward Operating Base</b> in the current insurgency, skipping the trip across New Eden.</li>
+    <li><b>Each launch has to charge first,</b> and there’s a cooldown between uses, so check its status before you plan around it.</li>
+  </ul>
+
+  <h3>Hazards and dangers</h3>
+  <ul class="points">
+    <li><b>Stay near the safe zones.</b> The gates, the Fulcrum and the Shipcaster sit in protected zones. Leave them and the environment starts eating your hull, faster the longer you stay out.</li>
+    <li><b>Bookmarks and directional scan don’t work</b> in Zarzakh, so you can’t make safe spots or scout ahead the usual way.</li>
+    <li><b>Gate guns fire missiles</b> at anyone with a retribution timer, and they also paint and jam their targets.</li>
+    <li><b>Deathless NPC fleets</b> (“Zarzakh” and “Outer Zarzakh”) patrol the gates and stations, here and in the neighbouring systems. They attack anyone not aligned with the pirates, and anyone with a retribution timer.</li>
+    <li><b>Empire militia pilots often camp the system</b> despite all that, so it isn’t the safe haven it was meant to be. Watch local before you undock.</li>
   </ul>
 
   <h2 id="fix-standings">Fixing your standings</h2>
@@ -284,7 +301,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
   </div>
 
   <section class="sources">
-    <p><b>Sources and further reading.</b> Written by LCahst for Quiet Space. Details were checked against the EVE University Wiki’s pages on <a href="https://wiki.eveuniversity.org/Insurgency" target="_blank" rel="noopener">insurgencies</a>, <a href="https://wiki.eveuniversity.org/Corruption_and_Suppression" target="_blank" rel="noopener">corruption and suppression</a>, the <a href="https://wiki.eveuniversity.org/Forward_Operating_Base" target="_blank" rel="noopener">Forward Operating Base</a>, the <a href="https://wiki.eveuniversity.org/Ambition_modifier" target="_blank" rel="noopener">ambition modifier</a>, <a href="https://wiki.eveuniversity.org/Zarzakh" target="_blank" rel="noopener">Zarzakh</a>, the <a href="https://wiki.eveuniversity.org/Smash_and_Grab" target="_blank" rel="noopener">Smash and Grab</a> and <a href="https://wiki.eveuniversity.org/Angel_Sound" target="_blank" rel="noopener">Angel Sound</a> epic arcs, <a href="https://wiki.eveuniversity.org/COSMOS" target="_blank" rel="noopener">COSMOS</a> and <a href="https://wiki.eveuniversity.org/Social" target="_blank" rel="noopener">social skills</a>, available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-ShareAlike 4.0</a>, and against CCP’s <a href="https://www.eveonline.com/news/view/havoc-expansion-notes" target="_blank" rel="noopener">Havoc expansion notes</a>. The 0.0 standing requirement comes from CCP’s version 23.01 patch notes (September 2025), as recorded on the wiki. Insurgency rules change from time to time, so if something here doesn’t match what you see in game, trust the game, and <a href="https://discord.gg/DjvDtTMSy4" target="_blank" rel="noopener">let us know on our Discord</a>.</p>
+    <p><b>Sources and further reading.</b> Written by LCahst for Quiet Space. Details were checked against the EVE University Wiki’s pages on <a href="https://wiki.eveuniversity.org/Insurgency" target="_blank" rel="noopener">insurgencies</a>, <a href="https://wiki.eveuniversity.org/Corruption_and_Suppression" target="_blank" rel="noopener">corruption and suppression</a>, the <a href="https://wiki.eveuniversity.org/Forward_Operating_Base" target="_blank" rel="noopener">Forward Operating Base</a>, the <a href="https://wiki.eveuniversity.org/Ambition_modifier" target="_blank" rel="noopener">ambition modifier</a>, <a href="https://wiki.eveuniversity.org/Zarzakh" target="_blank" rel="noopener">Zarzakh</a>, the <a href="https://wiki.eveuniversity.org/Smash_and_Grab" target="_blank" rel="noopener">Smash and Grab</a> and <a href="https://wiki.eveuniversity.org/Angel_Sound" target="_blank" rel="noopener">Angel Sound</a> epic arcs, <a href="https://wiki.eveuniversity.org/COSMOS" target="_blank" rel="noopener">COSMOS</a> and <a href="https://wiki.eveuniversity.org/Social" target="_blank" rel="noopener">social skills</a>, available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-ShareAlike 4.0</a>, and against CCP’s <a href="https://www.eveonline.com/news/view/havoc-expansion-notes" target="_blank" rel="noopener">Havoc expansion notes</a>. Zarzakh’s story comes from CCP’s <a href="https://www.eveonline.com/news/view/zarzakh-and-the-deathless" target="_blank" rel="noopener">Zarzakh and the Deathless</a> and the Deathless Circle lore, as covered by <a href="https://nosygamer.blogspot.com/2023/09/the-deathless-circle-eve-onlines-newest.html" target="_blank" rel="noopener">The Nosy Gamer</a>. The 0.0 standing requirement comes from CCP’s version 23.01 patch notes (September 2025), as recorded on the wiki. Insurgency rules change from time to time, so if something here doesn’t match what you see in game, trust the game, and <a href="https://discord.gg/DjvDtTMSy4" target="_blank" rel="noopener">let us know on our Discord</a>.</p>
   </section>
 </main>
 </body>
