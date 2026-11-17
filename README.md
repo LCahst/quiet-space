@@ -11,7 +11,6 @@ The site shows each system's last-hour traffic, a 30-day average with weekly pat
 - `fw.html` is the faction warfare map: zones of control for both warzones, contested progress and advantage, traffic and kill overlays, and a pirate insurgency view.
 - `ships.html` (Ship Stats) shows which ships are getting kills and dying in the warzones, by faction, class and system.
 - `fw-guide.html` is a guide for new faction warfare pilots: which ships can enter which complexes, and what each site pays.
-- `pirate-guide.html` is a guide to pirate faction warfare: joining the Guristas or the Angel Cartel, insurgencies, Zarzakh, and fixing the standings needed to enlist.
 - `scripts/` holds the jobs the Action runs:
   - `collect-activity.mjs` records traffic hourly and builds the averages and weekly patterns.
   - `collect-isk.mjs` reads zKillboard's live kill feed hourly and builds the 7- and 30-day ISK destroyed rankings.
