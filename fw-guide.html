@@ -90,6 +90,7 @@ ul.points li{margin:4px 0}
 .rewards tbody tr.groupstart td{border-top:2px solid #33465f}
 .rewards td.na{color:#5b6a7e}
 .rewards td.vp{color:#f0be46;font-weight:600}
+.rewards td.cap{white-space:nowrap}
 .src{font-size:.62rem;font-weight:600;color:#7f9cc4;margin-left:3px;letter-spacing:.03em;cursor:help}
 .caveat{background:rgba(240,190,70,.08);border:1px solid rgba(240,190,70,.35);border-radius:4px;padding:8px 12px;font-family:var(--cond);color:#e8d4a0;margin:8px 0 12px;max-width:85ch}
 .rw{display:block;color:#b8c4d4;font-size:.85rem;margin-top:2px}
@@ -167,7 +168,7 @@ ul.points li{margin:4px 0}
   <p>Every site you capture does two things. It moves the system toward changing hands, measured in <b>victory points (VP)</b>: it takes 75,000 VP to make an enemy system vulnerable, and capturing sites in your own system takes VP away from the attacker. And it pays you <b>loyalty points (LP)</b>, the militia currency you spend in its LP store.</p>
   <div class="caveat"><b>How reliable are these numbers?</b> Faction warfare has changed many times, and no single source has everything. We cross-checked CCP’s own patch notes, the EVE University Wiki and eve-fw.net. Victory point values marked C come straight from CCP. The LP figures agree between the wiki and eve-fw.net, but the wiki notes its LP table may be out of date, so treat exact payouts as a guide and check in game.</div>
   <div class="gridwrap"><table class="rewards" id="rewards"></table></div>
-  <p class="legend">Source tags: <b>C</b> = CCP patch notes, <b>W</b> = EVE University Wiki, <b>F</b> = eve-fw.net; several letters mean those sources agree (hover a tag for details). “–” means no source publishes that figure, and “frontlines only” marks sites that never spawn in command operations systems (hover for their base reward). Site names end in the number of pilots the LP reward scales to, so “-1” and “-2” are separate rows.</p>
+  <p class="legend">Source tags: <b>C</b> = CCP patch notes, <b>W</b> = EVE University Wiki, <b>F</b> = eve-fw.net, <b>Y</b> = FW Yearbook 2026; several letters mean those sources agree (hover a tag for details). “–” means no source publishes that figure, and “frontlines only” marks sites that never spawn in command operations systems (hover for their base reward). Site names end in the number of pilots the LP reward scales to, so “-1” and “-2” are separate rows.</p>
   <h3>How the LP works</h3>
   <ul class="points">
     <li><b>Where you plex matters most.</b> Frontline systems pay 50% more than command operations systems, and rearguard systems pay almost nothing (a 99% cut).</li>
@@ -243,7 +244,9 @@ ul.points li{margin:4px 0}
     "large-adv": { vp: [300, "cwf"], lp: [["Large ADV-1", 25000, 37500, "wf"], ["Large ADV-4", 30000, 45000, "wf"]] },
     "open": { vp: [350, "cwf"], lp: [["Open", 30000, 45000, "wf"]] }
   };
-  const SRC = { c: "CCP patch notes", w: "EVE University Wiki", f: "eve-fw.net" };
+  const SRC = { c: "CCP patch notes", w: "EVE University Wiki", f: "eve-fw.net", y: "FW Yearbook 2026" };
+  // Capture-time sources: the Yearbook's table, with CCP confirming the timers its notes mention.
+  const CAPTURE_SRC = { "scout-bsc": "yc", "field": "yc", "moderate-nvy": "yc", "medium-nvy": "yc", "medium-adv": "yc" };
   const srcTag = src => src ? `<sup class="src" title="Source: ${[...src].map(x => SRC[x]).join(", ")}">${[...src].map(x => x.toUpperCase()).join("")}</sup>` : "";
   const fmtN = n => n.toLocaleString("en-US");
   const range = arr => { const v = arr.filter(x => x != null); if (!v.length) return null; const lo = Math.min(...v), hi = Math.max(...v); return lo === hi ? fmtN(lo) : `${fmtN(lo)}–${fmtN(hi)}`; };
@@ -359,7 +362,7 @@ ul.points li{margin:4px 0}
   // ---------- Rewards table ----------
   function renderRewards() {
     const t = $("rewards");
-    t.innerHTML = `<thead><tr><th scope="col">Site</th><th scope="col">Victory points<small>per capture</small></th><th scope="col">LP, command operations<small>base reward</small></th><th scope="col">LP, frontline<small>+50%</small></th></tr></thead>`;
+    t.innerHTML = `<thead><tr><th scope="col">Site</th><th scope="col">Capture time<small>timer to win it</small></th><th scope="col">Victory points<small>per capture</small></th><th scope="col">LP, command operations<small>base reward</small></th><th scope="col">LP, frontline<small>+50%</small></th></tr></thead>`;
     const body = document.createElement("tbody");
     let lastGroup = null;
     COMPLEXES.forEach(c => {
@@ -380,12 +383,13 @@ ul.points li{margin:4px 0}
         const cmdCell = r.frontOnly
           ? `<td class="na" title="Only spawns in frontline systems${cmd ? ` (base reward ${fmtN(cmd)} LP before the frontline bonus)` : ""}">frontlines only${srcTag(srcCmd)}</td>`
           : lpCell(cmd, srcCmd);
-        tr.innerHTML = `<td>${name}</td>${vpCell}${cmdCell}${lpCell(front, srcFront)}`;
+        const capCell = i === 0 ? `<td class="cap">${c.mins} min${srcTag(CAPTURE_SRC[c.id] || "y")}</td>` : "<td></td>";
+        tr.innerHTML = `<td>${name}</td>${capCell}${vpCell}${cmdCell}${lpCell(front, srcFront)}`;
         body.append(tr);
       });
     });
     const bf = document.createElement("tr"); bf.className = "groupstart";
-    bf.innerHTML = `<td>Battlefield</td><td class="vp">2,000${srcTag("cwf")}</td><td colspan="2">150,000 LP to the winning side, shared by up to 30 pilots${srcTag("cw")}</td>`;
+    bf.innerHTML = `<td>Battlefield</td><td class="na" title="Battlefields are won by holding control points, not by a single capture timer">–</td><td class="vp">2,000${srcTag("cwf")}</td><td colspan="2">150,000 LP to the winning side, shared by up to 30 pilots${srcTag("cw")}</td>`;
     body.append(bf);
     t.append(body);
   }
