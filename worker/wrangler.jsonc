@@ -1,0 +1,16 @@
+{
+  // Cloudflare Worker that keeps Quiet Space's recent kills up to the minute (free Workers plan).
+  // Deploy from this folder with: npx wrangler deploy
+  "name": "quietspace-kills",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-01",
+  "triggers": { "crons": ["* * * * *"] },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "quietspace-kills",
+      "database_id": "94da8d1f-90ae-401a-a0a9-b53261ed552c"
+    }
+  ],
+  "observability": { "enabled": true }
+}

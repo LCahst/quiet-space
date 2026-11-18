@@ -2421,8 +2421,23 @@ footer .contact p{margin:0 0 10px}
       return r.ok ? await r.json() : null;
     } catch (e) { return null; }
   }
+  // Recent kills: a Cloudflare Worker (worker/) keeps them up to the minute; the Action's snapshot is the fallback.
+  // Whichever reaches further into zKillboard's feed wins, so a stalled Worker never makes things worse.
+  const KILLS_WORKER = "https://quietspace-kills.lcahst-quietspace.workers.dev/kills-recent.json";
+  async function fetchRecentKills() {
+    const fromWorker = (async () => {
+      try {
+        const r = await fetch(KILLS_WORKER, { cache: "no-cache", signal: AbortSignal.timeout(5000) });
+        return r.ok ? await r.json() : null;
+      } catch (e) { return null; }
+    })();
+    const [w, g] = await Promise.all([fromWorker, fetchData("kills-recent.json")]);
+    const ok = s => s && s.slices && typeof s.nextSeq === "number";
+    if (ok(w) && ok(g)) return w.nextSeq >= g.nextSeq ? w : g;
+    return ok(w) ? w : g;
+  }
   async function loadPrebuilt() {
-    const [cat, md, act, ins, sc, ice, isk, rec] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json"), fetchData("structures-count.json"), fetchData("ice.json"), fetchData("isk.json"), fetchData("kills-recent.json")]);
+    const [cat, md, act, ins, sc, ice, isk, rec] = await Promise.all([fetchData("catalog.json"), fetchData("mapdata.json"), fetchData("activity.json"), fetchData("insurgency.json"), fetchData("structures-count.json"), fetchData("ice.json"), fetchData("isk.json"), fetchRecentKills()]);
     if (rec && rec.slices) startRecentKills(rec);
     if (isk && isk.windows && isk.windows["7"]) prebuilt.isk = isk;
     if (ice && Array.isArray(ice.systems) && ice.systems.length) officialIce = new Set(ice.systems.map(Number));
