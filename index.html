@@ -477,7 +477,7 @@ footer .contact p{margin:0 0 10px}
       <label class="checkline" id="onlyInsLabel" hidden><input type="checkbox" id="onlyIns"> Pirate insurgency</label>
       <label class="checkline" id="onlyStructLabel" hidden><input type="checkbox" id="onlyStruct"> Public player structures</label>
       <label class="checkline" id="onlyIslandLabel" hidden><input type="checkbox" id="onlyIsland"> High-sec island status</label>
-      <label class="checkline" id="onlyRecentLabel" hidden><input type="checkbox" id="onlyRecent"> Kills in the last 15 minutes</label>
+      <label class="checkline" id="onlyRecentLabel" title="Ship and pod kills from zKillboard, updated about every minute, then live while this page is open" hidden><input type="checkbox" id="onlyRecent"> Kills in the last 15 minutes</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
   </form>
@@ -489,7 +489,7 @@ footer .contact p{margin:0 0 10px}
         <tr>
           <th scope="col" rowspan="2">System</th><th scope="col" rowspan="2">Sec</th><th scope="col" rowspan="2">Region</th><th scope="col" rowspan="2">Constellation</th>
           <th scope="colgroup" colspan="4" class="grp" id="esiGroup" title="CCP’s official figures from ESI, which cover the most recently completed hour">Last hour</th>
-          <th scope="colgroup" class="grp c-recent" title="Kills reported to zKillboard, updated about every 15 minutes and live while this page is open">Live</th>
+          <th scope="colgroup" class="grp c-recent" title="Kills reported to zKillboard, updated about every minute and live while this page is open">Live</th>
           <th scope="col" rowspan="2" class="num two c-avg" title="Average gate jumps per hour over the last 30 days">30-day<br>avg</th>
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 7 days">ISK<br>7d</th>
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 30 days">ISK<br>30d</th>
@@ -501,7 +501,7 @@ footer .contact p{margin:0 0 10px}
           <th scope="col" class="num" title="Ships destroyed in the last hour">Ships</th>
           <th scope="col" class="num" title="Capsules destroyed in the last hour">Pods</th>
           <th scope="col" class="num" title="NPCs killed in the last hour">NPCs</th>
-          <th scope="col" class="num two c-recent" title="Ship and pod kills in the last 15 minutes, from zKillboard">Kills<br>15 min</th>
+          <th scope="col" class="num two c-recent" title="Ship and pod kills in the last 15 minutes, from zKillboard. Updated about every minute, then live while this page is open">Kills<br>15 min</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>
@@ -2714,7 +2714,7 @@ footer .contact p{margin:0 0 10px}
   }
 
   // ---------- Recent kills ----------
-  // A snapshot of kills in 1-minute slices (saved by the Action about every 15 minutes), topped up live from
+  // A snapshot of kills in 1-minute slices (from the Worker about every minute, or the Action's fallback), topped up live from
   // zKillboard's feed while the page is open. The snapshot records where it ended in the feed (nextSeq), so the
   // live part carries on from exactly there: nothing is missed and nothing is counted twice.
   let recentSnap = null, recentLiveOn = false, recentRefresh = null;
