@@ -147,16 +147,16 @@ dialog.sysd::backdrop{background:rgba(8,12,18,.6)}
 dialog.routed{width:min(900px,calc(100% - 24px))}
 dialog.routed .d-body{display:block;columns:auto;column-count:auto}
 .route-btn{border-color:var(--accent);color:var(--accent);font-weight:600}
-.r-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px;align-items:start;margin-bottom:14px}
-.r-field{display:grid;gap:4px;font-size:.92rem;color:var(--muted);border:0;margin:0;padding:0;min-width:0}
+.r-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:12px 18px;align-items:start;margin-bottom:14px}
+.r-field{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;font-size:.92rem;color:var(--muted);border:0;margin:0;padding:0;min-width:0}
 .r-field[hidden]{display:none}
 .r-field legend{padding:0;margin-bottom:4px}
 .r-field input[type=number],.r-field input[list],.r-field select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;width:100%}
 .r-sec label{display:flex;align-items:center;gap:6px;color:var(--ink);cursor:pointer}
 .r-note{margin:0 0 4px 22px;font-size:.8rem;line-height:1.35;color:var(--muted);max-width:42ch}
-.r-seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:3px;overflow:hidden;width:max-content;max-width:100%}
-.r-seg button{font:inherit;color:var(--muted);background:var(--bg);border:0;padding:6px 12px;cursor:pointer}
-.r-seg button+button{border-left:1px solid var(--line)}
+.r-route{grid-column:1/-1}
+.r-seg{display:inline-flex;flex-wrap:wrap;gap:1px;justify-self:start;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden;max-width:100%}
+.r-seg button{flex:1 1 auto;font:inherit;color:var(--muted);background:var(--bg);border:0;padding:6px 12px;cursor:pointer}
 .r-seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
 .r-go{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .r-msg{color:var(--muted);font-size:.9rem}
@@ -539,7 +539,7 @@ footer .contact p{margin:0 0 10px}
             <input id="rStart" list="rSystems" autocomplete="off" spellcheck="false" placeholder="Type a system name">
             <datalist id="rSystems"></datalist>
           </label>
-          <div class="r-field">Route
+          <div class="r-field r-route">Route
             <div class="r-seg" role="group" aria-label="Route type">
               <button type="button" data-v="oneway" aria-pressed="true">One way</button>
               <button type="button" data-v="loop" aria-pressed="false">Loop back to start</button>
