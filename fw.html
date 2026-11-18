@@ -523,6 +523,8 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     const insOn = $("insurg").checked && insurgency;
     // system markers
     const labelOn = $("labels").checked;
+    // Text grows a little as you zoom in past the fitted view (about 30% per doubling, up to 1.6x) so it stays readable.
+    const tx = dpr * Math.min(1.6, Math.max(1, 1 + 0.3 * Math.log2(view.scale / fitScale)));
     const taken = [];
     const pctLabels = []; // contested percentages, drawn after the names so names take priority
     for (const id of zone.ids) {
@@ -549,7 +551,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
           g.restore();
           g.beginPath(); g.arc(x + Math.cos(end) * rr, y + Math.sin(end) * rr, 1.7 * dpr, 0, Math.PI * 2);
           g.fillStyle = "#ffffff"; g.fill();
-          if (s.amount >= 0.5 || view.scale > fitScale * 1.6) pctLabels.push([id, x, y + rr + 11 * dpr, s.amount, att.color]);
+          if (s.amount >= 0.5 || view.scale > fitScale * 1.6) pctLabels.push([id, x, y + rr + 11 * tx, s.amount, att.color]);
         }
       }
       // marker: frontline diamond, command circle with core, rearguard small circle
@@ -567,41 +569,41 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       }
       // names, skipping any that would overlap
       if (labelOn) {
-        g.font = `${(role === "front" ? 12 : 11) * dpr}px "Saira Semi Condensed", sans-serif`;
-        const name = sysName(id), w = g.measureText(name).width, bx = x + r + 5 * dpr, by = y - 7 * dpr, h = 13 * dpr;
+        g.font = `${(role === "front" ? 12 : 11) * tx}px "Saira Semi Condensed", sans-serif`;
+        const name = sysName(id), w = g.measureText(name).width, bx = x + r + 5 * dpr, by = y - 7 * tx, h = 13 * tx;
         if (!taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) {
           taken.push([bx, by, w + 4 * dpr]);
-          g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(name, bx, y + 4 * dpr);
-          g.fillStyle = role === "front" ? "rgba(240,244,250,0.95)" : "rgba(210,220,235,0.78)"; g.fillText(name, bx, y + 4 * dpr);
+          g.lineWidth = 3 * tx; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(name, bx, y + 4 * tx);
+          g.fillStyle = role === "front" ? "rgba(240,244,250,0.95)" : "rgba(210,220,235,0.78)"; g.fillText(name, bx, y + 4 * tx);
         }
       }
     }
     // Contested percentages under their rings, skipped if they would overlap a name
-    g.font = `600 ${10.5 * dpr}px "Saira Semi Condensed", sans-serif`; g.textAlign = "center";
+    g.font = `600 ${10.5 * tx}px "Saira Semi Condensed", sans-serif`; g.textAlign = "center";
     for (const [id, x, y, amount, color] of pctLabels) {
-      const label = `${Math.round(amount * 100)}%`, w = g.measureText(label).width, h = 12 * dpr, bx = x - w / 2, by = y - 9 * dpr;
+      const label = `${Math.round(amount * 100)}%`, w = g.measureText(label).width, h = 12 * tx, bx = x - w / 2, by = y - 9 * tx;
       if (taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) continue;
       taken.push([bx, by, w + 2 * dpr]);
-      g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.9)"; g.lineJoin = "round"; g.strokeText(label, x, y);
+      g.lineWidth = 3 * tx; g.strokeStyle = "rgba(5,8,14,0.9)"; g.lineJoin = "round"; g.strokeText(label, x, y);
       g.fillStyle = color; g.fillText(label, x, y);
     }
     g.textAlign = "left";
     // Names of the systems just outside the warzone (where the dashed routes lead), in grey italics with
     // their security status. Warzone names were placed first, so these give way if they would overlap.
     if (labelOn) {
-      g.font = `italic ${10.5 * dpr}px "Saira Semi Condensed", sans-serif`;
-      const h = 12 * dpr;
+      g.font = `italic ${10.5 * tx}px "Saira Semi Condensed", sans-serif`;
+      const h = 12 * tx;
       for (const id of zone.neighbours) {
         const sysd = catalog.systems[id]; if (!sysd) continue;
         const d = displaySec(sysd.s);
         const label = `${sysd.n} ${d === null ? "" : d.toFixed(1)}`.trim();
         const [x, y] = S(...P(id));
-        const w = g.measureText(label).width, bx = x + 5 * dpr, by = y - 6 * dpr;
+        const w = g.measureText(label).width, bx = x + 5 * dpr, by = y - 6 * tx;
         if (bx > cv.width || by > cv.height || bx + w < 0 || by + h < 0) continue;
         if (taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) continue;
         taken.push([bx, by, w + 4 * dpr]);
-        g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(label, bx, y + 3.5 * dpr);
-        g.fillStyle = "rgba(168,182,202,0.78)"; g.fillText(label, bx, y + 3.5 * dpr);
+        g.lineWidth = 3 * tx; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(label, bx, y + 3.5 * tx);
+        g.fillStyle = "rgba(168,182,202,0.78)"; g.fillText(label, bx, y + 3.5 * tx);
       }
     }
     // live kill flashes
