@@ -3,7 +3,7 @@ name: Update data and publish site
 on:
   schedule:
     - cron: "17 * * * *"     # every hour: record traffic, refresh averages and patterns
-    - cron: "2,32,47 * * * *" # quick runs in between: recent kills only, so the site is about 15 minutes fresh
+    - cron: "2,32,47 * * * *" # quick runs in between: recent kills, plus traffic if the hourly run missed it
     - cron: "45 11 * * *"    # daily after EVE downtime: rebuild map, station and size data
   push:
     branches: [main]          # republish when you change the site
@@ -55,8 +55,10 @@ jobs:
           FULL_REBUILD: ${{ inputs.full_rebuild }}
         run: node scripts/build-map.mjs
 
+      # Every run, not just the hourly one: GitHub often starts scheduled runs 30-45 minutes late,
+      # and ESI's jump data is only served for one hour (it refreshes at about :50), so a late
+      # hourly run would miss that hour. The script skips hours it has already recorded.
       - name: Record traffic and update averages and weekly patterns
-        if: github.event.schedule != '2,32,47 * * * *'
         continue-on-error: true
         run: node scripts/collect-activity.mjs
 
