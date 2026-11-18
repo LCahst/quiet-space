@@ -70,8 +70,22 @@ function parse(d) {
     system: km.solar_system_id,
     ship: km.victim.ship_type_id || 0,
     value: +zkb.totalValue || 0,
-    pos: km.victim.position || null
+    pos: km.victim.position || null,
+    pvp: isPvp(km),
+    pvpShip: isPvpShip(km)
   };
+}
+// PvP between ships: a piloted ship or capsule lost, with a player pilot or CONCORD among the attackers.
+// Leaves out structure and deployable losses (no pilot) and kills made only by a player's structure.
+function isPvpShip(km) {
+  return !!(km.victim && km.victim.character_id) && (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP);
+}
+// PvP: at least one attacker is a player pilot, a player corporation (for example its structure), or CONCORD
+// (whose kills follow a player attacking someone in high sec). NPC corporations have IDs 1,000,000 to 1,999,999.
+const CONCORD_CORP = 1000125;
+function isPvp(km) {
+  return (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP ||
+    (a.corporation_id && !(a.corporation_id >= 1000000 && a.corporation_id < 2000000)));
 }
 // A kill is "on a gate" if the victim died within 100 km of one of the system's stargates.
 // gates: { systemId: [x, y, z, ...] in km } from build-map.mjs.
@@ -132,6 +146,10 @@ try {
   const hourly = await readJSON(`${DATA}/cache/kills-hourly.json`, {}); // { "2026-11-02T15": { systemId: kills } }
   const recent = await readJSON(`${DATA}/cache/kills-recent.json`, {}); // { slice start (epoch seconds): { systemId: kills } }
   const recentGate = await readJSON(`${DATA}/cache/kills-recent-gate.json`, {}); // the same, for kills within 100 km of a stargate
+  const recentPvp = await readJSON(`${DATA}/cache/kills-recent-pvp.json`, {}); // the same, PvP kills only (see isPvp)
+  const recentGatePvp = await readJSON(`${DATA}/cache/kills-recent-gate-pvp.json`, {}); // PvP kills on a gate
+  const recentPvpShip = await readJSON(`${DATA}/cache/kills-recent-pvpship.json`, {}); // PvP ship and pod kills, no structures (see isPvpShip)
+  const recentGatePvpShip = await readJSON(`${DATA}/cache/kills-recent-gate-pvpship.json`, {}); // the same, on a gate
   const gates = await readJSON(`${DATA}/public/gates.json`, null); // written by build-map.mjs
   if (!gates) log("No stargate positions yet (data/public/gates.json), so gate kills aren't counted this run");
   const SLICE = 60; // 1-minute slices, so "last 15 minutes" is accurate to within a minute
@@ -146,10 +164,11 @@ try {
       bucket[k.system] = (bucket[k.system] || 0) + 1;
       const slice = (recent[Math.floor(k.t / SLICE) * SLICE] ||= {});
       slice[k.system] = (slice[k.system] || 0) + 1;
-      if (gates && onGate(gates, k)) {
-        const gs = (recentGate[Math.floor(k.t / SLICE) * SLICE] ||= {});
-        gs[k.system] = (gs[k.system] || 0) + 1;
-      }
+      const add = slices => { const x = (slices[Math.floor(k.t / SLICE) * SLICE] ||= {}); x[k.system] = (x[k.system] || 0) + 1; };
+      const gate = gates && onGate(gates, k);
+      if (gate) add(recentGate);
+      if (k.pvp) { add(recentPvp); if (gate) add(recentGatePvp); }
+      if (k.pvpShip) { add(recentPvpShip); if (gate) add(recentGatePvpShip); }
       const e = (h.systems[k.system] ||= [0, 0, []]);
       e[0] += k.value; e[1]++;
       e[2].push([k.id, Math.round(k.value), k.ship]);
@@ -174,12 +193,16 @@ try {
   // zKillboard's feed, so it can carry on from there live without counting anything twice.
   const recentCutoff = Math.floor(Date.now() / 1000) - 90 * 60;
   for (const key of Object.keys(recent)) if (+key < recentCutoff) delete recent[key];
-  for (const key of Object.keys(recentGate)) if (+key < recentCutoff) delete recentGate[key];
+  for (const sl of [recentGate, recentPvp, recentGatePvp, recentPvpShip, recentGatePvpShip]) for (const key of Object.keys(sl)) if (+key < recentCutoff) delete sl[key];
   await writeJSON(`${DATA}/cache/kills-recent.json`, recent);
   await writeJSON(`${DATA}/cache/kills-recent-gate.json`, recentGate);
+  await writeJSON(`${DATA}/cache/kills-recent-pvp.json`, recentPvp);
+  await writeJSON(`${DATA}/cache/kills-recent-gate-pvp.json`, recentGatePvp);
+  await writeJSON(`${DATA}/cache/kills-recent-pvpship.json`, recentPvpShip);
+  await writeJSON(`${DATA}/cache/kills-recent-gate-pvpship.json`, recentGatePvpShip);
   // gateSlices: kills within 100 km of a stargate, same shape as slices. Left out when gate positions
   // weren't available, so the page hides its gate columns rather than showing undercounts.
-  await writeJSON(`${DATA}/public/kills-recent.json`, { updated: new Date().toISOString(), nextSeq: Math.min(last + 1, firstFailed), sliceSeconds: SLICE, slices: recent, ...(gates ? { gateSlices: recentGate } : {}) });
+  await writeJSON(`${DATA}/public/kills-recent.json`, { updated: new Date().toISOString(), nextSeq: Math.min(last + 1, firstFailed), sliceSeconds: SLICE, slices: recent, pvpSlices: recentPvp, pvpShipSlices: recentPvpShip, ...(gates ? { gateSlices: recentGate, gatePvpSlices: recentGatePvp, gatePvpShipSlices: recentGatePvpShip } : {}) });
   const in15 = Object.entries(recent).filter(([t]) => +t >= Math.floor(Date.now() / 1000) - 15 * 60).reduce((n, [, s]) => n + Object.values(s).reduce((a, b) => a + b, 0), 0);
   log(`Recent kills: ${in15} in the last 15 minutes`);
 

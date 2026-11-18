@@ -47,6 +47,18 @@ async function loadGates() {
   if (!r.ok) throw new Error(`gates.json answered ${r.status}`);
   return (gatesCache = await r.json());
 }
+// PvP: at least one attacker is a player pilot, a player corporation (for example its structure), or CONCORD
+// (whose kills follow a player attacking someone in high sec). NPC corporations have IDs 1,000,000 to 1,999,999.
+const CONCORD_CORP = 1000125;
+function isPvp(km) {
+  return (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP ||
+    (a.corporation_id && !(a.corporation_id >= 1000000 && a.corporation_id < 2000000)));
+}
+// PvP between ships: a piloted ship or capsule lost, with a player pilot or CONCORD among the attackers.
+// Leaves out structure and deployable losses (no pilot) and kills made only by a player's structure.
+function isPvpShip(km) {
+  return !!(km.victim && km.victim.character_id) && (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP);
+}
 function onGate(gates, sys, p) {
   const g = gates[sys];
   if (!g || !p) return false;
@@ -70,10 +82,15 @@ async function update(env) {
     s = { next: head.sequence, slices: {}, ids: {}, runs: 0 };
     try {
       const seed = await (await get(SEED_URL)).json();
-      if (seed && seed.slices && typeof seed.nextSeq === "number") { s.slices = seed.slices; s.gateSlices = seed.gateSlices || {}; s.next = seed.nextSeq; }
+      if (seed && seed.slices && typeof seed.nextSeq === "number") {
+        s.slices = seed.slices; s.gateSlices = seed.gateSlices || {};
+        s.pvpSlices = seed.pvpSlices || {}; s.gatePvpSlices = seed.gatePvpSlices || {};
+        s.pvpShipSlices = seed.pvpShipSlices || {}; s.gatePvpShipSlices = seed.gatePvpShipSlices || {}; s.next = seed.nextSeq;
+      }
     } catch { /* start empty from the current head */ }
   }
   s.gateSlices ||= {}; // state saved before gate kills were counted
+  s.pvpSlices ||= {}; s.gatePvpSlices ||= {}; s.pvpShipSlices ||= {}; s.gatePvpShipSlices ||= {}; // or before PvP kills were
   if (head.sequence - s.next > MAX_BEHIND) s.next = head.sequence - MAX_BEHIND;
 
   // Read forward one kill at a time until the feed has nothing newer (404) or this run's budget is spent.
@@ -94,12 +111,12 @@ async function update(env) {
     if (km && id && typeof km.solar_system_id === "number" && km.solar_system_id < 32000000 && !s.ids[id]) {
       const t = Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000);
       s.ids[id] = t; // reprocessed kills can reappear under a new sequence number; count each kill once
-      const slice = (s.slices[Math.floor(t / SLICE) * SLICE] ||= {});
-      slice[km.solar_system_id] = (slice[km.solar_system_id] || 0) + 1;
-      if (onGate(gates, km.solar_system_id, km.victim && km.victim.position)) {
-        const gs = (s.gateSlices[Math.floor(t / SLICE) * SLICE] ||= {});
-        gs[km.solar_system_id] = (gs[km.solar_system_id] || 0) + 1;
-      }
+      const add = slices => { const x = (slices[Math.floor(t / SLICE) * SLICE] ||= {}); x[km.solar_system_id] = (x[km.solar_system_id] || 0) + 1; };
+      const gate = onGate(gates, km.solar_system_id, km.victim && km.victim.position);
+      add(s.slices);
+      if (gate) add(s.gateSlices);
+      if (isPvp(km)) { add(s.pvpSlices); if (gate) add(s.gatePvpSlices); }
+      if (isPvpShip(km)) { add(s.pvpShipSlices); if (gate) add(s.gatePvpShipSlices); }
       added++;
     }
     await sleep(GAP_MS);
@@ -109,7 +126,7 @@ async function update(env) {
   // Drop anything older than 90 minutes.
   const cutoff = now() - KEEP_SECONDS;
   for (const k of Object.keys(s.slices)) if (+k < cutoff) delete s.slices[k];
-  for (const k of Object.keys(s.gateSlices)) if (+k < cutoff) delete s.gateSlices[k];
+  for (const sl of [s.gateSlices, s.pvpSlices, s.gatePvpSlices, s.pvpShipSlices, s.gatePvpShipSlices]) for (const k of Object.keys(sl)) if (+k < cutoff) delete sl[k];
   for (const [id, t] of Object.entries(s.ids)) if (t < cutoff) delete s.ids[id];
 
   s.updated = new Date().toISOString();
@@ -137,8 +154,10 @@ export default {
       const s = await loadState(env);
       if (!s) return json({ error: "not ready yet" }, 503);
       // Same shape as the GitHub snapshot, plus how fresh and how far behind the feed it is.
-      // gateSlices: kills within 100 km of a stargate, in the same 1-minute slices.
-      return json({ updated: s.updated, nextSeq: s.next, sliceSeconds: SLICE, slices: s.slices, gateSlices: s.gateSlices || {}, behind: s.behind, source: "worker" },
+      // gateSlices: kills within 100 km of a stargate; pvpSlices and gatePvpSlices: the same, PvP only (see isPvp).
+      return json({ updated: s.updated, nextSeq: s.next, sliceSeconds: SLICE, slices: s.slices, gateSlices: s.gateSlices || {},
+        pvpSlices: s.pvpSlices || {}, gatePvpSlices: s.gatePvpSlices || {},
+        pvpShipSlices: s.pvpShipSlices || {}, gatePvpShipSlices: s.gatePvpShipSlices || {}, behind: s.behind, source: "worker" },
         200, { "Cache-Control": "public, max-age=15" });
     }
     if (pathname === "/status") {

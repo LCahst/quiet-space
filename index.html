@@ -88,6 +88,11 @@ button,select,input[type=search]{font:inherit;color:var(--ink)}
 .control label,.control legend{display:block;font-size:.85rem;color:var(--muted);margin-bottom:4px;padding:0}
 .control select,.control input[type=search]{width:100%;background:var(--bg);border:1px solid var(--line);padding:7px 9px;border-radius:3px}
 fieldset.control{border:0;margin:0;padding:0}
+.control-col{min-width:0}
+fieldset.control.kill-counts{margin-top:14px}
+fieldset.control.kill-counts legend{width:100%;border-top:1px solid var(--line);padding-top:12px;margin-bottom:6px}
+fieldset.control[hidden]{display:none}
+#sysTable th,#sysTable td{padding-left:7px;padding-right:7px}
 .hint{margin:8px 0 0;font-size:.85rem;color:var(--muted);line-height:1.35}
 .checkline[hidden]{display:none}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -155,6 +160,50 @@ dialog.routed .d-body{display:block;columns:auto;column-count:auto}
 .r-sec label{display:flex;align-items:center;gap:6px;color:var(--ink);cursor:pointer}
 .r-note{margin:0 0 4px 22px;font-size:.8rem;line-height:1.35;color:var(--muted);max-width:42ch}
 .r-route{grid-column:1/-1}
+/* Kill breakdown. Slice colours were checked with the data-viz palette validator for both themes,
+   in the order they sit around the circle (including the last slice next to the first). */
+dialog.statsd{width:min(860px,calc(100% - 24px))}
+dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
+.statsd{--k1:#2a78d6;--k2:#eb6834;--k3:#1baf7a;--k4:#eda100;--k5:#e87ba4;--k6:#008300;--k7:#6250d6;--k8:#e34948;--k-other:#9aa5b1;
+  --k-amarr:#eda100;--k-caldari:#2a78d6;--k-gallente:#008300;--k-minmatar:#e34948;--k-otheremp:#1baf7a;--k-null:#6250d6;--k-pochven:#e87ba4}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .statsd{--k1:#3987e5;--k2:#d95926;--k3:#199e70;--k4:#c98500;--k5:#d55181;--k6:#0ca30c;--k7:#9085e9;--k8:#e66767;--k-other:#6b7888;
+    --k-amarr:#c98500;--k-caldari:#3987e5;--k-gallente:#0ca30c;--k-minmatar:#e66767;--k-otheremp:#199e70;--k-null:#9085e9;--k-pochven:#d55181}
+}
+:root[data-theme="dark"] .statsd{--k1:#3987e5;--k2:#d95926;--k3:#199e70;--k4:#c98500;--k5:#d55181;--k6:#0ca30c;--k7:#9085e9;--k8:#e66767;--k-other:#6b7888;
+  --k-amarr:#c98500;--k-caldari:#3987e5;--k-gallente:#0ca30c;--k-minmatar:#e66767;--k-otheremp:#199e70;--k-null:#9085e9;--k-pochven:#d55181}
+.k-controls{display:flex;flex-wrap:wrap;gap:12px 18px;margin-bottom:14px}
+.k-controls .r-field{min-width:min(240px,100%);flex:1 1 240px;max-width:360px}
+.k-controls .k-secs{flex:0 1 auto;min-width:0;display:flex;flex-wrap:wrap;gap:4px 16px;align-content:start}
+.k-controls .k-secs legend{width:100%}
+.k-controls .k-secs[hidden]{display:none}
+.r-sec label[hidden]{display:none}
+.checkline.k-indent{padding-left:22px}
+.k-wrap{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:20px 28px;align-items:start}
+@media (max-width:640px){ .k-wrap{grid-template-columns:minmax(0,1fr)} .k-chart{max-width:300px;margin:0 auto;width:100%} }
+.k-chart{position:relative}
+.k-chart svg{display:block;width:100%;height:auto;overflow:visible}
+.k-chart path{stroke:var(--panel);stroke-width:2;stroke-linejoin:round;transition:opacity .15s}
+.k-chart.dim path:not(.on){opacity:.3}
+.k-total{fill:var(--ink);font-size:26px;font-weight:700;text-anchor:middle}
+.k-total-sub{fill:var(--muted);font-size:11px;text-anchor:middle}
+.k-tip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 9px;font-size:.85rem;box-shadow:0 6px 18px rgba(0,0,0,.25);white-space:nowrap;transform:translate(-50%,calc(-100% - 10px));z-index:2}
+.k-tip b{display:block}
+.k-tip span{color:var(--muted)}
+.k-list{width:100%;border-collapse:collapse;font-size:.92rem}
+.k-list th{font-weight:600;color:var(--muted);text-align:left;padding:4px 6px;border-bottom:1px solid var(--line);font-size:.82rem}
+.k-list td{padding:6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.k-list .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.k-list .share{color:var(--muted)}
+.k-list tr.on td{background:var(--row-hover)}
+.k-sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px;flex:none}
+.k-name{display:inline-flex;align-items:center}
+.k-list .reg-link{font:inherit}
+.k-list tr.k-sub td{font-size:.86rem;padding-top:4px;padding-bottom:4px}
+.k-list tr.k-sub td:first-child{padding-left:26px}
+@media (min-width:641px){ .k-side{max-height:min(62vh,560px);overflow-y:auto} }
+.k-note{color:var(--muted);font-size:.82rem;line-height:1.5;margin:10px 0 0}
+.k-empty{color:var(--muted);padding:40px 0;text-align:center}
 .r-seg{display:inline-flex;flex-wrap:wrap;gap:1px;justify-self:start;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden;max-width:100%}
 .r-seg button{flex:1 1 auto;font:inherit;color:var(--muted);background:var(--bg);border:0;padding:6px 12px;cursor:pointer}
 .r-seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
@@ -413,6 +462,7 @@ footer .contact p{margin:0 0 10px}
       <button class="btn" id="mapHero" disabled>Region map</button>
       <button class="btn" id="nearHero" disabled>Nearby map</button>
       <button class="btn route-btn" id="routeHero" type="button">Plan a quiet route</button>
+      <button class="btn route-btn" id="statsHero" type="button" hidden>Kill breakdown</button>
       <button class="btn" id="copyHero" disabled>Copy name</button>
       <button class="btn" id="refreshBtn">Refresh ESI data</button>
     </div>
@@ -462,16 +512,24 @@ footer .contact p{margin:0 0 10px}
         <option value="name">System name</option>
       </select>
     </div>
-    <fieldset class="control">
-      <legend>Security</legend>
-      <div class="chips">
-        <label><input type="checkbox" name="sec" value="high" checked> High</label>
-        <label><input type="checkbox" name="sec" value="low" checked> Low</label>
-        <label><input type="checkbox" name="sec" value="null" checked> Null</label>
-        <label><input type="checkbox" name="sec" value="pochven" checked> Pochven</label>
-      </div>
-      <label class="checkline"><input type="checkbox" id="hideExordium" checked> Hide Exordium (new-player region)</label>
-    </fieldset>
+    <div class="control-col">
+      <fieldset class="control">
+        <legend>Security</legend>
+        <div class="chips">
+          <label><input type="checkbox" name="sec" value="high" checked> High</label>
+          <label><input type="checkbox" name="sec" value="low" checked> Low</label>
+          <label><input type="checkbox" name="sec" value="null" checked> Null</label>
+          <label><input type="checkbox" name="sec" value="pochven" checked> Pochven</label>
+        </div>
+        <label class="checkline"><input type="checkbox" id="hideExordium" checked> Hide Exordium (new-player region)</label>
+      </fieldset>
+      <!-- Kill counts: its own group, so it doesn't read as a security option -->
+      <fieldset class="control kill-counts" id="pvpGroup" hidden>
+        <legend>Kill counts</legend>
+        <label class="checkline" title="Count only zKillboard kills where a player pilot, a player corporation’s structure or CONCORD was among the attackers. Leaves out deaths to rats and other NPCs. ESI’s hourly figures can’t be split this way."><input type="checkbox" id="pvpOnly"> PvP kills only (zKillboard counts)</label>
+        <label class="checkline k-indent" id="pvpShipsLabel" hidden title="Leave out structures: losses of citadels, other structures and deployables (nothing with a pilot), and kills made only by a player’s structure."><input type="checkbox" id="pvpShips"> Ships and pods only (leave out structures)</label>
+      </fieldset>
+    </div>
     <fieldset class="control">
       <legend>Show systems with</legend>
       <label class="checkline"><input type="checkbox" id="onlyStations"> NPC stations</label>
@@ -526,6 +584,49 @@ footer .contact p{margin:0 0 10px}
         <button class="btn" id="dClose" type="button">Close</button>
       </div>
       <div class="d-body" id="dBody"></div>
+    </div>
+  </dialog>
+
+  <dialog class="sysd statsd" id="statsDialog" aria-labelledby="kTitle">
+    <div>
+      <div class="d-head">
+        <div>
+          <h2 id="kTitle">Kill breakdown</h2>
+          <div class="d-sub">Where in New Eden ships are dying, split by whose space it is, by region or by security level.</div>
+        </div>
+        <button class="btn" id="kClose" type="button">Close</button>
+      </div>
+      <div class="d-body">
+        <div class="k-controls">
+          <label class="r-field">Group by
+            <select id="kGroup">
+              <option value="empire">Empire space</option>
+              <option value="region">Region</option>
+              <option value="sec">Security level</option>
+            </select>
+          </label>
+          <label class="r-field">Count
+            <select id="kMeasure"></select>
+          </label>
+          <fieldset class="r-field r-sec k-secs" id="kPvpField" hidden>
+            <legend>zKillboard counts</legend>
+            <label><input type="checkbox" id="kPvp"> PvP kills only</label>
+            <label id="kPvpShipsLabel" hidden><input type="checkbox" id="kPvpShips"> Ships and pods only</label>
+          </fieldset>
+          <fieldset class="r-field r-sec k-secs" id="kSecs">
+            <legend>Include</legend>
+            <label><input type="checkbox" id="kHigh" checked> High sec</label>
+            <label><input type="checkbox" id="kLow" checked> Low sec</label>
+          </fieldset>
+        </div>
+        <div class="k-wrap">
+          <div class="k-chart" id="kChart"></div>
+          <div class="k-side">
+            <table class="k-list" id="kList"></table>
+            <p class="k-note" id="kNote"></p>
+          </div>
+        </div>
+      </div>
     </div>
   </dialog>
 
@@ -1157,7 +1258,7 @@ footer .contact p{margin:0 0 10px}
     tr.appendChild(numCell(r.a.npc));
     const gateCell = minutes => {
       const g = recentKills(r.id, minutes, true), td = cell(g, "num c-gate" + (minutes === 15 ? " c-recent" : "") + (g ? " gate-hot" : " zero"));
-      td.title = `${g} kill${g === 1 ? "" : "s"} within ${GATE_KM} km of a stargate in the last ${minutes === 60 ? "hour" : "15 minutes"} (zKillboard${recentLiveOn ? ", live" : ""})`;
+      td.title = `${g} ${killMode() === "all" ? "" : "PvP "}kill${g === 1 ? "" : "s"} within ${GATE_KM} km of a stargate in the last ${minutes === 60 ? "hour" : "15 minutes"} (zKillboard${recentLiveOn ? ", live" : ""})`;
       return td;
     };
     if (gateOn) tr.appendChild(gateCell(60));
@@ -1165,7 +1266,7 @@ footer .contact p{margin:0 0 10px}
       const rk = recentKills(r.id, 15), td = document.createElement("td");
       td.className = "num c-recent" + (rk ? " recent-hot" : "") + (recentFresh.has(r.id) ? " fresh" : "");
       td.textContent = rk;
-      td.title = `${rk} ship and pod kill${rk === 1 ? "" : "s"} in the last 15 minutes, ${recentKills(r.id, 60)} in the last hour (zKillboard${recentLiveOn ? ", live" : ""})`;
+      td.title = `${rk} ${killMode() === "all" ? "" : "PvP "}ship and pod kill${rk === 1 ? "" : "s"} in the last 15 minutes, ${recentKills(r.id, 60)} in the last hour (zKillboard${recentLiveOn ? ", live" : ""})`;
       tr.appendChild(td);
     }
     if (gateOn) tr.appendChild(gateCell(15));
@@ -2727,6 +2828,8 @@ footer .contact p{margin:0 0 10px}
   function setLoud(on) {
     loud = on;
     document.documentElement.classList.toggle("loud", on);
+    $("statsHero").hidden = !on;
+    if (!on && $("statsDialog").open) $("statsDialog").close();
     applyLoudText();
     $("mapColour").value = on ? "act" : "sec";
     if ($("mapDialog").open) recolourMap();
@@ -2755,14 +2858,29 @@ footer .contact p{margin:0 0 10px}
     }
     return false;
   }
+  // PvP only: kills where a player pilot, a player corporation (its structure) or CONCORD was among the attackers.
+  // Ships and pods only: a piloted ship or capsule lost, with a player pilot or CONCORD among the attackers
+  // (no structure or deployable losses, and no kills made only by a player's structure).
+  let pvpOn = false, pvpShipsOn = false;
+  const CONCORD_CORP = 1000125;
+  const isPvpKill = km => (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP ||
+    (a.corporation_id && !(a.corporation_id >= 1000000 && a.corporation_id < 2000000)));
+  const isPvpShipKill = km => !!(km.victim && km.victim.character_id) && (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP);
+  // which kills are being counted: "all", "pvp" or "ship" (PvP ships and pods only)
+  function killMode() {
+    if (!pvpOn || !recentSnap || !recentSnap.pvpSlices) return "all";
+    return pvpShipsOn && recentSnap.pvpShipSlices ? "ship" : "pvp";
+  }
   function recentKills(id, minutes, gateOnly) {
     if (!recentSnap) return 0;
-    const slices = gateOnly ? recentSnap.gateSlices : recentSnap.slices;
+    const mode = killMode();
+    const name = { all: "slices", pvp: "pvpSlices", ship: "pvpShipSlices" }[mode];
+    const slices = recentSnap[gateOnly ? "gate" + name[0].toUpperCase() + name.slice(1) : name];
     if (!slices) return 0;
     const from = Date.now() / 1000 - minutes * 60;
     let n = 0;
     for (const [start, sys] of Object.entries(slices)) if (+start + 60 > from && sys[id]) n += sys[id];
-    for (const k of recentLive.values()) if (k.sys === +id && k.t >= from && (!gateOnly || k.gate)) n++;
+    for (const k of recentLive.values()) if (k.sys === +id && k.t >= from && (!gateOnly || k.gate) && (mode === "all" || (mode === "pvp" ? k.pvp : k.pvpShip))) n++;
     return n;
   }
   // Show the two gate columns only when both the snapshot's gate counts and the gate positions arrived.
@@ -2795,6 +2913,12 @@ footer .contact p{margin:0 0 10px}
   async function startRecentKills(snap) {
     recentSnap = snap;
     $("onlyRecentLabel").hidden = false;
+    if (snap.pvpSlices) {
+      $("pvpGroup").hidden = false;
+      try { pvpOn = localStorage.getItem("quietspace.pvpOnly") === "1"; pvpShipsOn = localStorage.getItem("quietspace.pvpShips") === "1"; } catch (e) {}
+      $("pvpOnly").checked = pvpOn; $("pvpShips").checked = pvpShipsOn;
+      $("pvpShipsLabel").hidden = !(pvpOn && snap.pvpShipSlices);
+    }
     $("sysTable").classList.remove("hide-recent");
     addRecentSort();
     $("recentStatus").hidden = false;
@@ -2822,7 +2946,7 @@ footer .contact p{margin:0 0 10px}
         if (km && km.solar_system_id && km.killmail_id && !recentLive.has(km.killmail_id)) {
           const t = Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000);
           if (t >= Date.now() / 1000 - 3600) {
-            recentLive.set(km.killmail_id, { sys: km.solar_system_id, t, gate: gateOn && onGate(km.solar_system_id, km.victim && km.victim.position) });
+            recentLive.set(km.killmail_id, { sys: km.solar_system_id, t, gate: gateOn && onGate(km.solar_system_id, km.victim && km.victim.position), pvp: isPvpKill(km), pvpShip: isPvpShipKill(km) });
             if (t >= Date.now() / 1000 - 120) recentFresh.add(km.solar_system_id);
             recentRerender();
           }
@@ -3131,6 +3255,219 @@ footer .contact p{margin:0 0 10px}
   $("rDest").addEventListener("keydown", e => { if (e.key === "Enter") runRoute(); });
   $("routeDialog").addEventListener("click", e => { if (e.target === $("routeDialog")) $("routeDialog").close(); });
 
+  // ---------- Kill breakdown (loud mode) ----------
+  // A pie of where kills happen, grouped by whose space it is, by region or by security level, with a
+  // ranked list beside it that names every slice and gives its figure. Leaves out Jove space and
+  // wormholes (the page's catalog has no wormhole systems). Uses only data the page has already loaded.
+  const K_MEASURES = [
+    { v: "esi", label: "Ship and pod kills, last hour (ESI)", ok: () => liveLoaded, get: id => { const k = kills[id]; return k ? k.ship + k.pod : 0; } },
+    { v: "z15", label: "Kills, last 15 minutes (zKillboard)", ok: () => !!recentSnap, get: id => recentKills(id, 15), z: true },
+    { v: "z60", label: "Kills, last hour (zKillboard)", ok: () => !!recentSnap, get: id => recentKills(id, 60), z: true },
+    { v: "g60", label: "Gate kills, last hour (within 100 km of a stargate)", ok: () => gateOn, get: id => recentKills(id, 60, true), z: true },
+    { v: "k30", label: "Kills per day, 30-day average", ok: () => !!prebuilt.activity, get: id => { const v = prebuilt.activity.systems[id]; return v ? v[1] * 24 : 0; }, dec: 1 },
+    { v: "isk7", label: "ISK destroyed, 7 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "7"), isk: true },
+    { v: "isk30", label: "ISK destroyed, 30 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "30"), isk: true },
+    { v: "npc", label: "NPC kills, last hour (ratting)", ok: () => liveLoaded, get: id => { const k = kills[id]; return k ? k.npc : 0; } }
+  ];
+  // Empire space keeps a fixed order (and fixed colours) so slices never swap colours between counts.
+  const K_EMPIRE = [
+    ["amarr", "Amarr Empire"], ["caldari", "Caldari State"], ["gallente", "Gallente Federation"], ["minmatar", "Minmatar Republic"],
+    ["otheremp", "Other empire space"]
+  ];
+  const K_FACTION = { 500003: "amarr", 500001: "caldari", 500004: "gallente", 500002: "minmatar" };
+  const K_JOVE = 500005, K_CONCORD = 500006;
+  // CONCORD-held systems (Jita, Yulai's constellation, Exordium) count for the empire they sit in: the one
+  // holding most of their constellation, or failing that their region. (Exordium, also CONCORD's, is left
+  // out of the breakdown entirely.)
+  let kConcordMemo = null;
+  function kConcordEmpire(id) {
+    if (!kSov) return null;
+    if (!kConcordMemo || kConcordMemo.sov !== kSov) {
+      const byCons = {}, byReg = {};
+      for (const idStr in catalog.systems) {
+        const s = kSov.get(+idStr), f = s && s.faction_id;
+        if (!K_FACTION[f]) continue;
+        const sys = catalog.systems[idStr], reg = regionOf(sys);
+        (byCons[sys.c] ||= {})[f] = (byCons[sys.c][f] || 0) + 1;
+        (byReg[reg] ||= {})[f] = (byReg[reg][f] || 0) + 1;
+      }
+      kConcordMemo = { sov: kSov, byCons, byReg, cache: new Map() };
+    }
+    const memo = kConcordMemo;
+    if (memo.cache.has(id)) return memo.cache.get(id);
+    const clear = t => { const e = Object.entries(t || {}).sort((a, b) => b[1] - a[1]); return e.length && (e.length === 1 || e[0][1] > e[1][1]) ? +e[0][0] : null; };
+    const sys = catalog.systems[id];
+    const f = clear(memo.byCons[sys.c]) || clear(memo.byReg[regionOf(sys)]);
+    memo.cache.set(id, f);
+    return f;
+  }
+  const K_SEC = [["high", "High sec", "--k1"], ["low", "Low sec", "--k2"], ["null", "Null sec", "--k7"], ["pochven", "Pochven", "--k5"]];
+  let kSov = null;
+  let kOtherOpen = false; // whether the list shows the regions inside "Other"
+  // A region name in the list filters the main table to that region.
+  function kRegionLink(reg, name) {
+    const b = el("button", "reg-link", name); b.type = "button"; b.title = `Show ${name} in the table`;
+    b.addEventListener("click", () => { $("region").value = String(reg); populateConstellations(); onFilterChange(); $("statsDialog").close(); $("controls").scrollIntoView({ block: "start" }); });
+    return b;
+  }
+  function kFmt(m, v) { return m.isk ? fmtIsk(v) : m.dec ? v.toFixed(m.dec) : Math.round(v).toLocaleString(); }
+  function kGroups(group, m) {
+    const tally = new Map(), secs = { high: $("kHigh").checked, low: $("kLow").checked };
+    for (const idStr in catalog.systems) {
+      const sys = catalog.systems[idStr], reg = regionOf(sys);
+      if (reg === undefined || UNREACHABLE.has(reg) || isExordium(reg)) continue; // Exordium: new-player region, no PvP
+      const v = m.get(+idStr); if (!v) continue;
+      const cls = secClass(sys); if (cls === "unknown") continue;
+      // whose space: the system's owner from ESI sovereignty, or its region's main faction
+      const s = kSov && kSov.get(+idStr), fid = (s && s.faction_id) || (catalog.regionFaction && catalog.regionFaction[reg]);
+      if (fid === K_JOVE) continue; // Jove space is left out (its regions are also unreachable)
+      let key;
+      if (group === "sec") key = cls;
+      else if (group === "region") key = reg;
+      else {
+        // Empire space is high and low sec only, each of which can be ticked off
+        if (cls === "high" ? !secs.high : cls === "low" ? !secs.low : true) continue;
+        key = K_FACTION[fid === K_CONCORD ? (kConcordEmpire(+idStr) || fid) : fid] || "otheremp";
+      }
+      tally.set(key, (tally.get(key) || 0) + v);
+    }
+    if (group === "empire") return K_EMPIRE.map(([k, name]) => ({ key: k, name, v: tally.get(k) || 0, color: `var(--k-${k})` })).filter(x => x.v > 0);
+    if (group === "sec") return K_SEC.map(([k, name, c]) => ({ key: k, name, v: tally.get(k) || 0, color: `var(${c})` })).filter(x => x.v > 0);
+    // Regions: the eight biggest (the palette's eight checked colours), largest first, then the rest as
+    // "Other", which the list can expand to show every region inside it.
+    const all = [...tally].map(([reg, v]) => ({ key: reg, name: catalog.regions[reg] || "Unknown", v, reg })).sort((a, b) => b.v - a.v);
+    const top = all.slice(0, 8).map((x, i) => ({ ...x, color: `var(--k${i + 1})` }));
+    const rest = all.slice(8);
+    if (rest.length) top.push({ key: "other", name: `Other (${rest.length} regions)`, v: rest.reduce((a, x) => a + x.v, 0), color: "var(--k-other)", rest });
+    return top;
+  }
+  function kArc(cx, cy, r0, r1, a0, a1) {
+    const p = (r, a) => `${(cx + r * Math.sin(a)).toFixed(2)} ${(cy - r * Math.cos(a)).toFixed(2)}`;
+    const big = a1 - a0 > Math.PI ? 1 : 0;
+    return `M${p(r1, a0)}A${r1} ${r1} 0 ${big} 1 ${p(r1, a1)}L${p(r0, a1)}A${r0} ${r0} 0 ${big} 0 ${p(r0, a0)}Z`;
+  }
+  function drawStats() {
+    const sel = $("kMeasure");
+    const avail = K_MEASURES.filter(m => m.ok());
+    const prev = sel.value;
+    if (sel.options.length !== avail.length) {
+      sel.replaceChildren(...avail.map(m => new Option(m.label, m.v)));
+      if (avail.some(m => m.v === prev)) sel.value = prev;
+    }
+    const m = avail.find(x => x.v === sel.value) || avail[0];
+    const chart = $("kChart"), list = $("kList"), note = $("kNote");
+    chart.replaceChildren(); list.replaceChildren(); chart.classList.remove("dim");
+    if (!m) { chart.append(el("div", "k-empty", "Still loading kill data…")); note.textContent = ""; return; }
+    const group = $("kGroup").value;
+    $("kSecs").hidden = group !== "empire";
+    // The PvP tick box mirrors the page's own, and only applies to zKillboard counts.
+    $("kPvpField").hidden = !(m.z && recentSnap && recentSnap.pvpSlices);
+    $("kPvp").checked = pvpOn; $("kPvpShips").checked = pvpShipsOn;
+    $("kPvpShipsLabel").hidden = !(pvpOn && recentSnap && recentSnap.pvpShipSlices);
+    if (group === "empire" && !$("kHigh").checked && !$("kLow").checked) {
+      chart.append(el("div", "k-empty", "Tick high sec, low sec or both."));
+      note.textContent = ""; return;
+    }
+    const parts = kGroups(group, m), total = parts.reduce((a, x) => a + x.v, 0);
+    const notes = [];
+    if (m.v === "esi" || m.v === "npc") notes.push("ESI’s figures cover the most recently completed hour.");
+    if (m.v === "g60") notes.push("A gate kill is one within 100 km of a stargate.");
+    if (m.z && killMode() === "pvp") notes.push("PvP kills only: a player, a player-owned structure or CONCORD was among the attackers.");
+    if (m.z && killMode() === "ship") notes.push("PvP ship and pod kills only: a piloted ship or capsule lost to a player pilot or CONCORD. Structure and deployable losses, and kills made only by a structure, are left out.");
+    if (!m.z && pvpOn && m.v !== "npc") notes.push("PvP kills only applies to zKillboard counts; this one includes deaths to NPCs too.");
+    if (group === "empire") {
+      const which = $("kHigh").checked && $("kLow").checked ? "High and low sec" : $("kHigh").checked ? "High sec only" : "Low sec only";
+      notes.push(`${which}, split by the faction that holds each system; null sec and Pochven aren’t empire space. CONCORD systems such as Jita and Yulai count for the empire around them. Other empire space covers Ammatar and Khanid systems.`);
+    }
+    notes.push("Exordium (the new-player region), Jove space and wormholes aren’t included.");
+    note.textContent = notes.join(" ");
+    if (!total) { chart.append(el("div", "k-empty", "No kills in this window.")); return; }
+
+    // Pie (with the total in the middle). Slices start at 12 o'clock and run clockwise.
+    const NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 200 200"); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", `Pie chart of ${m.label.toLowerCase()} by ${group === "sec" ? "security level" : group === "region" ? "region" : "empire space"}. The table beside it lists every slice.`);
+    const tip = el("div", "k-tip"); tip.hidden = true;
+    const rows = new Map();
+    const highlight = key => {
+      chart.classList.toggle("dim", key != null);
+      svg.querySelectorAll("path").forEach(p => p.classList.toggle("on", p.dataset.key === String(key)));
+      rows.forEach((tr, k) => tr.classList.toggle("on", k === String(key)));
+    };
+    let a = 0;
+    for (const part of parts) {
+      const share = part.v / total, a1 = a + share * Math.PI * 2;
+      const path = document.createElementNS(NS, "path");
+      // a lone slice is a full ring: draw it as two halves
+      path.setAttribute("d", parts.length === 1 ? kArc(100, 100, 52, 96, 0, Math.PI) + kArc(100, 100, 52, 96, Math.PI, Math.PI * 2) : kArc(100, 100, 52, 96, a, a1));
+      path.style.fill = part.color; path.dataset.key = String(part.key);
+      const mid = (a + a1) / 2;
+      path.addEventListener("pointerenter", () => {
+        highlight(part.key);
+        const box = chart.getBoundingClientRect(), k = box.width / 200;
+        tip.style.left = `${(100 + 74 * Math.sin(mid)) * k}px`; tip.style.top = `${(100 - 74 * Math.cos(mid)) * k}px`;
+        tip.replaceChildren(el("b", null, part.name), el("span", null, `${kFmt(m, part.v)} · ${(share * 100).toFixed(1)}%`));
+        tip.hidden = false;
+      });
+      path.addEventListener("pointerleave", () => { highlight(null); tip.hidden = true; });
+      svg.append(path);
+      a = a1;
+    }
+    const t1 = document.createElementNS(NS, "text"); t1.setAttribute("x", 100); t1.setAttribute("y", 104); t1.setAttribute("class", "k-total"); t1.textContent = kFmt(m, total);
+    const t2 = document.createElementNS(NS, "text"); t2.setAttribute("x", 100); t2.setAttribute("y", 121); t2.setAttribute("class", "k-total-sub"); t2.textContent = m.isk ? "ISK in total" : "in total";
+    svg.append(t1, t2);
+    chart.append(svg, tip);
+
+    // Ranked list: names every slice, so nothing depends on colour alone.
+    list.innerHTML = `<thead><tr><th>${group === "sec" ? "Security" : group === "region" ? "Region" : "Space"}</th><th class="num">${m.isk ? "ISK" : "Kills"}</th><th class="num">Share</th></tr></thead>`;
+    const tb = document.createElement("tbody");
+    const order = group === "region" ? parts : [...parts].sort((x, y) => y.v - x.v);
+    for (const part of order) {
+      const tr = document.createElement("tr"), nameTd = document.createElement("td"), wrap = el("span", "k-name");
+      const sw = el("span", "k-sw"); sw.style.background = part.color; wrap.append(sw);
+      if (part.reg !== undefined) wrap.append(kRegionLink(part.reg, part.name));
+      else if (part.rest) {
+        // "Other (N regions)" opens to list every region inside it
+        const b = el("button", "reg-link k-more", `${part.name} ${kOtherOpen ? "▴" : "▾"}`); b.type = "button";
+        b.setAttribute("aria-expanded", String(kOtherOpen));
+        b.addEventListener("click", () => { kOtherOpen = !kOtherOpen; drawStats(); });
+        wrap.append(b);
+      } else wrap.append(part.name);
+      nameTd.append(wrap);
+      tr.append(nameTd, el("td", "num", kFmt(m, part.v)), el("td", "num share", `${(part.v / total * 100).toFixed(1)}%`));
+      tr.addEventListener("pointerenter", () => highlight(part.key));
+      tr.addEventListener("pointerleave", () => highlight(null));
+      rows.set(String(part.key), tr);
+      tb.append(tr);
+      if (part.rest && kOtherOpen) for (const r of part.rest) {
+        const sub = document.createElement("tr"); sub.className = "k-sub";
+        const td = document.createElement("td"); td.append(kRegionLink(r.reg, r.name));
+        sub.append(td, el("td", "num", kFmt(m, r.v)), el("td", "num share", `${(r.v / total * 100).toFixed(1)}%`));
+        sub.addEventListener("pointerenter", () => highlight(part.key));
+        sub.addEventListener("pointerleave", () => highlight(null));
+        tb.append(sub);
+      }
+    }
+    list.append(tb);
+  }
+  let kTimer = null;
+  async function openStats() {
+    $("statsDialog").showModal();
+    drawStats();
+    if (!kSov) { try { kSov = await loadSov(); drawStats(); } catch (e) { /* fall back to each region's main faction */ } }
+    clearInterval(kTimer);
+    kTimer = setInterval(() => { if ($("statsDialog").open) drawStats(); else clearInterval(kTimer); }, 30000);
+  }
+  $("statsHero").addEventListener("click", openStats);
+  $("kClose").addEventListener("click", () => $("statsDialog").close());
+  $("kGroup").addEventListener("change", drawStats);
+  $("kMeasure").addEventListener("change", drawStats);
+  $("kHigh").addEventListener("change", drawStats);
+  $("kPvp").addEventListener("change", () => { $("pvpOnly").checked = $("kPvp").checked; onPvpChange(); });
+  $("kPvpShips").addEventListener("change", () => { $("pvpShips").checked = $("kPvpShips").checked; onPvpChange(); });
+  $("kLow").addEventListener("change", drawStats);
+  $("statsDialog").addEventListener("click", e => { if (e.target === $("statsDialog")) $("statsDialog").close(); });
+
   async function copyName(name, btn) {
     const isIcon = btn.classList.contains("icon-btn");
     const before = isIcon ? btn.innerHTML : btn.textContent, tip = btn.title;
@@ -3262,6 +3599,15 @@ footer .contact p{margin:0 0 10px}
   $("onlyIns").addEventListener("change", onFilterChange);
   $("onlyStruct").addEventListener("change", onFilterChange);
   $("onlyIsland").addEventListener("change", onFilterChange);
+  function onPvpChange() {
+    pvpOn = $("pvpOnly").checked; pvpShipsOn = $("pvpShips").checked;
+    $("pvpShipsLabel").hidden = !(pvpOn && recentSnap && recentSnap.pvpShipSlices);
+    try { localStorage.setItem("quietspace.pvpOnly", pvpOn ? "1" : "0"); localStorage.setItem("quietspace.pvpShips", pvpShipsOn ? "1" : "0"); } catch (e) {}
+    onFilterChange();
+    if ($("statsDialog").open) drawStats();
+  }
+  $("pvpOnly").addEventListener("change", onPvpChange);
+  $("pvpShips").addEventListener("change", onPvpChange);
   $("onlyRecent").addEventListener("change", onFilterChange);
   $("moreBtn").addEventListener("click", () => { shown += PAGE; render(); });
   $("anotherBtn").addEventListener("click", pickAnother);
@@ -3334,7 +3680,7 @@ footer .contact p{margin:0 0 10px}
   window.addEventListener("resize", positionPop);
 
   $("loudBtn").addEventListener("click", () => setLoud(!loud));
-  try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); applyLoudText(); $("mapColour").value = "act"; } } catch (e) {}
+  try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); $("statsHero").hidden = false; applyLoudText(); $("mapColour").value = "act"; } } catch (e) {}
 
   buildScale();
   buildLegend();
