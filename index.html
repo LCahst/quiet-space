@@ -149,11 +149,12 @@ dialog.routed .d-body{display:block;columns:auto;column-count:auto}
 .route-btn{border-color:var(--accent);color:var(--accent);font-weight:600}
 .r-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px;align-items:start;margin-bottom:14px}
 .r-field{display:grid;gap:4px;font-size:.92rem;color:var(--muted);border:0;margin:0;padding:0;min-width:0}
+.r-field[hidden]{display:none}
 .r-field legend{padding:0;margin-bottom:4px}
 .r-field input[type=number],.r-field input[list],.r-field select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;width:100%}
 .r-sec label{display:flex;align-items:center;gap:6px;color:var(--ink);cursor:pointer}
 .r-note{margin:0 0 4px 22px;font-size:.8rem;line-height:1.35;color:var(--muted);max-width:42ch}
-.r-seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;width:max-content}
+.r-seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:3px;overflow:hidden;width:max-content;max-width:100%}
 .r-seg button{font:inherit;color:var(--muted);background:var(--bg);border:0;padding:6px 12px;cursor:pointer}
 .r-seg button+button{border-left:1px solid var(--line)}
 .r-seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
@@ -528,7 +529,7 @@ footer .contact p{margin:0 0 10px}
       <div class="d-head">
         <div>
           <h2 id="rTitle">Plan a quiet route</h2>
-          <div class="d-sub">Find a route through the quietest systems, one way or as a loop back to where you started.</div>
+          <div class="d-sub">Find a route through the quietest systems: one way, as a loop back to where you started, or to a destination.</div>
         </div>
         <button class="btn" id="rClose" type="button">Close</button>
       </div>
@@ -542,10 +543,17 @@ footer .contact p{margin:0 0 10px}
             <div class="r-seg" role="group" aria-label="Route type">
               <button type="button" data-v="oneway" aria-pressed="true">One way</button>
               <button type="button" data-v="loop" aria-pressed="false">Loop back to start</button>
+              <button type="button" data-v="dest" aria-pressed="false">To a destination</button>
             </div>
           </div>
-          <label class="r-field">Jumps
+          <label class="r-field" id="rDestField" hidden>Destination
+            <input id="rDest" list="rSystems" autocomplete="off" spellcheck="false" placeholder="Type a system name">
+          </label>
+          <label class="r-field" id="rJumpsField">Jumps
             <input id="rJumps" type="number" min="2" max="30" value="10">
+          </label>
+          <label class="r-field" id="rExtraField" hidden title="How many more jumps than the shortest route the planner may take to go round busy systems">Extra jumps allowed
+            <input id="rExtra" type="number" min="0" max="20" value="5">
           </label>
           <label class="r-field">Quiet means
             <select id="rMetric">
@@ -565,7 +573,7 @@ footer .contact p{margin:0 0 10px}
             <p class="r-note">Kills are common in low and null sec, so this can rule out a lot of systems and make routes shorter or harder to find. If a route comes up short, try unticking it.</p>
             <label id="rAvoidInsLabel"><input type="checkbox" id="rAvoidIns" checked> Pirate insurgency systems</label>
           </fieldset>
-          <fieldset class="r-field r-sec">
+          <fieldset class="r-field r-sec" id="rBackField">
             <legend>Doubling back</legend>
             <label><input type="checkbox" id="rBack" checked> Allow doubling back when there’s no other way</label>
           </fieldset>
@@ -2782,7 +2790,7 @@ footer .contact p{margin:0 0 10px}
   // ---------- Quiet route planner ----------
   // Searches the stargate map for the quietest route of a set length, one way or as a loop.
   // Runs entirely in the browser using the map, traffic and kill data the page already has.
-  const routeState = { loop: false, last: null };
+  const routeState = { mode: "oneway", last: null };
   const ROUTES_KEY = "quietspace.routes";
   // ESI's hourly count, or zKillboard's count for the last hour if that's higher (it's fresher).
   const routeKills = id => { const k = kills[id]; return Math.max(k ? k.ship + k.pod : 0, recentKills(id, 60)); };
@@ -2807,6 +2815,7 @@ footer .contact p{margin:0 0 10px}
     };
     // How quiet a system is: lower is better. Kills count heavily if they aren't ruled out.
     const cost = id => (o.metric === "avg" ? (routeAvg(id) ?? (jumps[id] || 0)) : (jumps[id] || 0)) + (o.avoidKills ? 0 : routeKills(id) * 10);
+    if (o.dest) return planToDest(o, links, ok, cost);
     const REVISIT = 100000; // far more than any route's traffic, so fresh systems always win
     const search = (N) => {
       // for loops: gate jumps from each allowed system back to the start
@@ -2857,20 +2866,62 @@ footer .contact p{margin:0 0 10px}
     }
     return { path: best ? best.path : [o.start], complete: complete(best), jumpsUsed: used, back: best ? best.back || 0 : 0 };
   }
+  // Start to destination: the quietest route that is at most `extra` jumps longer than the shortest allowed one.
+  // Exact, step by step: the lowest-traffic way to reach each system in exactly k jumps, for k up to the limit.
+  // Each jump also costs a little (JUMP), so the route won't wander through empty systems for no reason.
+  function planToDest(o, links, ok, cost) {
+    const JUMP = 0.5;
+    const allowed = id => id === o.dest || id === o.start || ok(id);
+    // gate jumps from every allowed system to the destination (gates work both ways)
+    const toDest = new Map([[o.dest, 0]]);
+    let f = [o.dest];
+    while (f.length) { const nx = []; for (const x of f) for (const n of links[x] || []) if (!toDest.has(n) && allowed(n)) { toDest.set(n, toDest.get(x) + 1); nx.push(n); } f = nx; }
+    if (!toDest.has(o.start)) return { path: [o.start], complete: false, jumpsUsed: 0, back: 0, shortest: null };
+    const shortest = toDest.get(o.start), limit = shortest + o.extra;
+    const layers = [new Map([[o.start, { c: 0, prev: null }]])];
+    let best = null; // { k, c }
+    for (let k = 1; k <= limit; k++) {
+      const next = new Map();
+      for (const [x, st] of layers[k - 1]) {
+        if (x === o.dest) continue;
+        for (const n of links[x] || []) {
+          const d = toDest.get(n);
+          if (d === undefined || d > limit - k) continue; // can't reach the destination in time from here
+          const c = st.c + cost(n) + JUMP, cur = next.get(n);
+          if (!cur || c < cur.c) next.set(n, { c, prev: x });
+        }
+      }
+      layers.push(next);
+      const at = next.get(o.dest);
+      if (at && (!best || at.c < best.c)) best = { k, c: at.c };
+    }
+    const path = [o.dest];
+    for (let k = best.k, x = o.dest; k > 0; k--) { x = layers[k].get(x).prev; path.push(x); }
+    path.reverse();
+    return { path, complete: true, jumpsUsed: path.length - 1, back: 0, shortest };
+  }
   function readRouteForm() {
     const sec = new Set();
     if ($("rHigh").checked) sec.add("high");
     if ($("rLow").checked) sec.add("low");
     if ($("rNull").checked) sec.add("null");
-    return { start: findSystemByName($("rStart").value), startName: $("rStart").value.trim(), loop: routeState.loop,
+    const toDest = routeState.mode === "dest";
+    return { start: findSystemByName($("rStart").value), startName: $("rStart").value.trim(), loop: routeState.mode === "loop",
+      dest: toDest ? findSystemByName($("rDest").value) : null, destName: toDest ? $("rDest").value.trim() : "", toDest,
+      extra: Math.max(0, Math.min(20, parseInt($("rExtra").value, 10) || 0)),
       jumps: Math.max(2, Math.min(30, parseInt($("rJumps").value, 10) || 10)), metric: $("rMetric").value,
       sec, avoidKills: $("rAvoidKills").checked, avoidIns: $("rAvoidIns").checked && !!prebuilt.insurgency, allowBack: $("rBack").checked };
   }
-  function routeTitle(r) { return `${r.loop ? "Loop from" : "One way from"} ${catalog.systems[r.path[0]].n}, ${r.path.length - 1} jumps`; }
+  function routeTitle(r) {
+    const dest = r.settings && r.settings.dest;
+    if (dest && catalog.systems[dest]) return `${catalog.systems[r.path[0]].n} to ${catalog.systems[dest].n}, ${r.path.length - 1} jumps`;
+    return `${r.loop ? "Loop from" : "One way from"} ${catalog.systems[r.path[0]].n}, ${r.path.length - 1} jumps`;
+  }
   function routeSettingsText(o) {
     const sec = [...o.sec].map(x => ({ high: "high", low: "low", null: "null" })[x]).join(", ") || "none";
     const avoid = [o.avoidKills ? "systems with kills in the last hour" : null, o.avoidIns ? "pirate insurgency systems" : null].filter(Boolean).join(" and ");
-    return `Quiet by ${o.metric === "avg" ? "30-day average" : "last hour"} · security: ${sec}${avoid ? ` · avoiding ${avoid}` : ""}${o.allowBack ? " · doubling back allowed when needed" : ""}`;
+    const shape = o.dest ? ` · up to ${o.extra} extra jump${o.extra === 1 ? "" : "s"}` : (o.allowBack ? " · doubling back allowed when needed" : "");
+    return `Quiet by ${o.metric === "avg" ? "30-day average" : "last hour"} · security: ${sec}${avoid ? ` · avoiding ${avoid}` : ""}${shape}`;
   }
   function runRoute() {
     const o = readRouteForm(), msg = $("rMsg");
@@ -2885,6 +2936,9 @@ footer .contact p{margin:0 0 10px}
     if (!o.start) { msg.textContent = o.startName ? `No system called “${o.startName}”. Pick one from the list.` : "Choose a start system first."; return; }
     if (!o.sec.size) { msg.textContent = "Allow at least one kind of security."; return; }
     if (o.loop && o.jumps < 3) { msg.textContent = "A loop needs at least 3 jumps."; return; }
+    if (o.toDest && !o.dest) { msg.textContent = o.destName ? `No system called “${o.destName}”. Pick one from the list.` : "Choose a destination first."; return; }
+    if (o.toDest && o.dest === o.start) { msg.textContent = "The destination is the same as the start."; return; }
+    if (o.toDest) { const r = regionOf(catalog.systems[o.dest]); if (r === undefined || UNREACHABLE.has(r) || r === POCHVEN) { msg.textContent = "That destination can’t be reached through stargates."; return; } }
     msg.textContent = "Searching…";
     setTimeout(() => {
       const t0 = performance.now(), res = planRoute(o);
@@ -2904,6 +2958,11 @@ footer .contact p{margin:0 0 10px}
     const box = $("rResult"); box.replaceChildren();
     const n = r.path.length - 1;
     const sum = el("div", "r-summary");
+    const dest = r.settings && r.settings.dest;
+    if (dest && !r.complete) {
+      sum.innerHTML = `<b>No route found from ${catalog.systems[r.path[0]].n} to ${catalog.systems[dest].n}</b><br>With these settings there’s no way through. Try allowing more security levels or turning off one of the “avoid” options.`;
+      box.append(sum); return;
+    }
     if (n === 0) {
       sum.textContent = "No route found: there are no allowed systems next to your start. Try allowing more security levels or fewer things to avoid.";
       box.append(sum); return;
@@ -2922,6 +2981,10 @@ footer .contact p{margin:0 0 10px}
     if (!r.complete && !r.loop) note = ` Only ${n} jumps were possible before running out of allowed systems.${r.settings.avoidKills ? " Unticking “Systems with kills in the last hour” may open up a longer route." : ""}`;
     if (again.size) note += ` The route doubles back ${again.size} time${again.size === 1 ? "" : "s"} (marked “again”), because there was no other way with these settings.`;
     if (r.loop && r.complete && r.jumpsUsed !== r.settings.jumps) note = ` No ${r.settings.jumps}-jump loop exists here, so this is the closest: ${r.jumpsUsed} jumps.`;
+    if (dest && r.shortest != null) {
+      const ex = n - r.shortest;
+      note = ex > 0 ? ` The shortest route with these settings is ${r.shortest} jumps; this one takes ${ex} more to go round busier systems.` : ` This is also the shortest route with these settings.`;
+    }
     sum.innerHTML = `<b>${routeTitle(r)}</b><br>${tj.toLocaleString()} gate jumps and ${tk} ship and pod kills across the route in the last hour${avgs.length ? `, ${(avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)} jumps an hour on average over 30 days` : ""}.${note}`;
     box.append(sum);
     const wrap = el("div", "r-wrap"), t = el("table", "r-list");
@@ -2974,7 +3037,7 @@ footer .contact p{margin:0 0 10px}
   function storeRoutes(list) { try { localStorage.setItem(ROUTES_KEY, JSON.stringify(list.slice(0, 20))); } catch (e) {} renderSaved(); }
   function saveRoute(r) {
     const settings = { ...r.settings, sec: [...r.settings.sec] };
-    storeRoutes([{ id: Date.now(), title: routeTitle(r), planned: r.planned, loop: r.loop, path: r.path, complete: r.complete, jumpsUsed: r.jumpsUsed, settings }, ...savedRoutes()]);
+    storeRoutes([{ id: Date.now(), title: routeTitle(r), planned: r.planned, loop: r.loop, path: r.path, complete: r.complete, jumpsUsed: r.jumpsUsed, shortest: r.shortest, settings }, ...savedRoutes()]);
   }
   function renderSaved() {
     const box = $("rSaved"); box.replaceChildren();
@@ -3011,9 +3074,14 @@ footer .contact p{margin:0 0 10px}
   $("rFind").addEventListener("click", runRoute);
   $("rStart").addEventListener("keydown", e => { if (e.key === "Enter") runRoute(); });
   $("rForm").querySelectorAll(".r-seg button").forEach(b => b.addEventListener("click", () => {
-    routeState.loop = b.dataset.v === "loop";
+    routeState.mode = b.dataset.v;
+    const toDest = routeState.mode === "dest";
+    $("rDestField").hidden = !toDest; $("rExtraField").hidden = !toDest;
+    $("rJumpsField").hidden = toDest; $("rBackField").hidden = toDest;
     $("rForm").querySelectorAll(".r-seg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    if (toDest) $("rDest").focus();
   }));
+  $("rDest").addEventListener("keydown", e => { if (e.key === "Enter") runRoute(); });
   $("routeDialog").addEventListener("click", e => { if (e.target === $("routeDialog")) $("routeDialog").close(); });
 
   async function copyName(name, btn) {
