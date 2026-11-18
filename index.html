@@ -988,6 +988,8 @@ footer .contact p{margin:0 0 10px}
       jumps: (x, y) => x.a.jumps - y.a.jumps || pvp(x) - pvp(y),
       kills: (x, y) => pvp(x) - pvp(y) || x.a.jumps - y.a.jumps,
       recent: (x, y) => recentKills(x.id, 15) - recentKills(y.id, 15) || x.a.jumps - y.a.jumps,
+      gate60: (x, y) => recentKills(x.id, 60, true) - recentKills(y.id, 60, true) || recentKills(x.id, 15, true) - recentKills(y.id, 15, true) || x.a.jumps - y.a.jumps,
+      gate15: (x, y) => recentKills(x.id, 15, true) - recentKills(y.id, 15, true) || recentKills(x.id, 60, true) - recentKills(y.id, 60, true) || x.a.jumps - y.a.jumps,
       name: () => 0
     }[sort];
     const dir = loud && sort !== "name" ? -1 : 1;
@@ -2698,14 +2700,14 @@ footer .contact p{margin:0 0 10px}
       btn: "Go Loud!", mark: "QS", name: "Quiet Space", tag: "Where nobody else is flying in New Eden right now",
       another: "Show another quiet system", reg: "Quietest regions", cons: "Quietest constellations",
       note: "Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.",
-      sort: { overall: "Least activity overall", jumps: "Fewest gate jumps", kills: "Fewest ship and pod kills", recent: "Fewest kills, last 15 minutes", avg: "Lowest 30-day average", isk7: "Least ISK destroyed, 7 days", isk30: "Least ISK destroyed, 30 days" },
+      sort: { overall: "Least activity overall", jumps: "Fewest gate jumps", kills: "Fewest ship and pod kills", recent: "Fewest kills, last 15 minutes", gate60: "Fewest gate kills, last hour", gate15: "Fewest gate kills, last 15 minutes", avg: "Lowest 30-day average", isk7: "Least ISK destroyed, 7 days", isk30: "Least ISK destroyed, 30 days" },
       title: "Quiet Space: EVE Online’s emptiest systems"
     },
     loud: {
       btn: "Go Quiet", mark: "LS", name: "Loud Space", tag: "Where everyone else is flying, and dying, right now",
       another: "Show another busy system", reg: "Most dangerous regions", cons: "Most dangerous constellations",
       note: "Ranked by ship and pod kills: the 30-day rate where available, otherwise the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.",
-      sort: { overall: "Most activity overall", jumps: "Most gate jumps", kills: "Most ship and pod kills", recent: "Most kills, last 15 minutes", avg: "Highest 30-day average", isk7: "Most ISK destroyed, 7 days", isk30: "Most ISK destroyed, 30 days" },
+      sort: { overall: "Most activity overall", jumps: "Most gate jumps", kills: "Most ship and pod kills", recent: "Most kills, last 15 minutes", gate60: "Most gate kills, last hour", gate15: "Most gate kills, last 15 minutes", avg: "Highest 30-day average", isk7: "Most ISK destroyed, 7 days", isk30: "Most ISK destroyed, 30 days" },
       title: "Loud Space: EVE Online’s busiest systems"
     }
   };
@@ -2768,6 +2770,12 @@ footer .contact p{margin:0 0 10px}
     gateOn = true;
     $("sysTable").classList.remove("hide-gate");
     $("esiGroup").colSpan = 5; $("liveGroup").colSpan = 2;
+    // Rank-by options for gate kills, placed after "kills, last 15 minutes"
+    const sel = $("sort"), t = loud ? LOUD_TEXT.loud.sort : LOUD_TEXT.quiet.sort;
+    if (!sel.querySelector('option[value="gate60"]')) {
+      let after = sel.querySelector('option[value="recent"]') || sel.querySelector('option[value="kills"]');
+      for (const v of ["gate60", "gate15"]) { const o = new Option(t[v], v); sel.insertBefore(o, after ? after.nextSibling : null); after = o; }
+    }
     render();
   }
   function recentStatus() {
