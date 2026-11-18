@@ -22,13 +22,54 @@ const [jumps, kills] = await Promise.all([esi("/universe/system_jumps/"), esi("/
 const lm = jumps.headers.get("last-modified");
 const end = lm ? new Date(lm) : new Date();
 const start = new Date(end.getTime() - 3600e3);
-const day = start.toISOString().slice(0, 10);
-const hour = start.getUTCHours();
-log(`ESI data covers ${start.toISOString().slice(0, 13)}:00 UTC`);
+// Label the sample by the middle of the hour it covers. ESI refreshes at about :50, so the
+// 06:50-07:50 sample is mostly the 07:00 hour and is recorded as hour 7.
+const mid = new Date(end.getTime() - 1800e3);
+const day = mid.toISOString().slice(0, 10);
+const hour = mid.getUTCHours();
+log(`ESI data covers ${start.toISOString().slice(11, 16)}-${end.toISOString().slice(11, 16)} UTC, recorded as ${day} hour ${hour}`);
+
+// 1b. One-time fix for older history. Before label version 2, samples were labelled by the hour
+//     they started in (06:50-07:50 was hour 6), so move those hours forward by one. Kill counts
+//     are daily totals, so they stay on their day. Files are marked "v": 2 once done.
+const LABEL_VERSION = 2;
+await mkdir(HIST, { recursive: true });
+{
+  const loaded = {};
+  for (const f of (await readdir(HIST)).filter(f => /^\d{4}-\d\d-\d\d\.json$/.test(f))) {
+    const d = await readJSON(`${HIST}/${f}`, null);
+    if (d) loaded[f.slice(0, 10)] = Object.assign(d, { day: f.slice(0, 10) });
+  }
+  const old = Object.values(loaded).filter(d => d.v !== LABEL_VERSION).sort((a, b) => a.day.localeCompare(b.day));
+  if (old.length) {
+    const nextDay = d => new Date(Date.parse(d + "T00:00:00Z") + 86400e3).toISOString().slice(0, 10);
+    const out = {};
+    const target = d => (out[d] ||= loaded[d] && loaded[d].v === LABEL_VERSION
+      ? loaded[d]
+      : { day: d, hours: [], j: {}, k: {}, n: {}, v: LABEL_VERSION });
+    for (const o of old) {
+      const t0 = target(o.day);
+      for (const [id, v] of Object.entries(o.k)) t0.k[id] = (t0.k[id] || 0) + v;
+      for (const [id, v] of Object.entries(o.n)) t0.n[id] = (t0.n[id] || 0) + v;
+      for (const hr of o.hours) {
+        const [d, nh] = hr === 23 ? [nextDay(o.day), 0] : [o.day, hr + 1];
+        const t = target(d);
+        if (t.hours.includes(nh)) continue;
+        t.hours.push(nh);
+        for (const [id, arr] of Object.entries(o.j)) if (arr[hr]) (t.j[id] ||= Array(24).fill(0))[nh] = arr[hr];
+      }
+    }
+    for (const t of Object.values(out)) {
+      t.hours.sort((a, b) => a - b);
+      await writeJSON(`${HIST}/${t.day}.json`, t);
+    }
+    log(`Relabelled ${old.length} days of history to label version ${LABEL_VERSION}`);
+  }
+}
 
 // 2. Add it to that day's history file (once per hour, even if the job runs twice).
 const file = `${HIST}/${day}.json`;
-const h = await readJSON(file, { day, hours: [], j: {}, k: {}, n: {} });
+const h = await readJSON(file, { day, hours: [], j: {}, k: {}, n: {}, v: LABEL_VERSION });
 if (h.hours.includes(hour)) {
   log("This hour is already recorded; refreshing outputs only.");
 } else {
