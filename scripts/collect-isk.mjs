@@ -8,10 +8,12 @@
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { names } from "./lib/esi.mjs";
 import { updateFwShips } from "./lib/fwships.mjs";
+import { appendKills, loadLog, buildSplits, F_PVP, F_SHIP, F_NPC } from "./lib/killlog.mjs";
 
 const DATA = process.env.DATA_DIR || "data";
 const R2Z2 = process.env.R2Z2_BASE || "https://r2z2.zkillboard.com/ephemeral";
 const HIST = `${DATA}/history-isk`;
+const KLOG = `${DATA}/kills`; // 30-day log of stripped-down kills (scripts/lib/killlog.mjs)
 const STATE = `${DATA}/cache/r2z2.json`;
 const KEEP_DAYS = 30;
 const FIRST_RUN_BACKFILL = +(process.env.ISK_BACKFILL || 6000); // about half a day of kills on the very first run
@@ -72,7 +74,8 @@ function parse(d) {
     value: +zkb.totalValue || 0,
     pos: km.victim.position || null,
     pvp: isPvp(km),
-    pvpShip: isPvpShip(km)
+    pvpShip: isPvpShip(km),
+    npcOnly: !!zkb.npc
   };
 }
 // PvP between ships: a piloted ship or capsule lost, with a player pilot or CONCORD among the attackers.
@@ -90,6 +93,15 @@ function isPvp(km) {
 // A kill is "on a gate" if the victim died within 100 km of one of the system's stargates.
 // gates: { systemId: [x, y, z, ...] in km } from build-map.mjs.
 const GATE_KM = 100;
+// Distance from the nearest stargate in whole km, or null when the position or the gates are unknown.
+function nearestGateKm(gates, k) {
+  const g = gates[k.system], p = k.pos;
+  if (!g || !p) return null;
+  const x = p.x / 1000, y = p.y / 1000, z = p.z / 1000;
+  let best = Infinity;
+  for (let i = 0; i < g.length; i += 3) best = Math.min(best, Math.hypot(x - g[i], y - g[i + 1], z - g[i + 2]));
+  return Number.isFinite(best) ? Math.round(best) : null;
+}
 function onGate(gates, k) {
   const g = gates[k.system], p = k.pos;
   if (!g || !p) return false;
@@ -206,6 +218,30 @@ try {
   const in15 = Object.entries(recent).filter(([t]) => +t >= Math.floor(Date.now() / 1000) - 15 * 60).reduce((n, [, s]) => n + Object.values(s).reduce((a, b) => a + b, 0), 0);
   log(`Recent kills: ${in15} in the last 15 minutes`);
 
+  // 30-day kill log, and PvP / ships-only figures built from it. Kept apart so a problem here can't
+  // affect the existing rankings. The log starts empty, so these cover "N days so far" at first.
+  let split = null;
+  try {
+    const rows = Object.values(byDay).flat().map(k => [k.id, k.t, k.system, k.ship, Math.round(k.value),
+      (k.pvp ? F_PVP : 0) | (k.pvpShip ? F_SHIP : 0) | (k.npcOnly ? F_NPC : 0), gates ? nearestGateKm(gates, k) : null]);
+    const added = await appendKills(KLOG, rows);
+    const kl = await loadLog(KLOG);
+    // "since" is the day logging began (late-reported kills can land in older day files, so the
+    // oldest file isn't a reliable start date).
+    const klState = await readJSON(`${DATA}/cache/killlog.json`, null) || { since: new Date().toISOString().slice(0, 10) };
+    await writeJSON(`${DATA}/cache/killlog.json`, klState);
+    if (kl.rows.length) {
+      const todayN = Math.floor(Date.now() / 86400e3), firstN = Math.floor(Date.parse(klState.since + "T00:00:00Z") / 86400e3);
+      split = { ...buildSplits(kl.rows), since: klState.since, days: Math.min(KEEP_DAYS, todayN - firstN + 1) };
+    }
+    log(`Kill log: ${added} new kills, ${kl.rows.length} kept over ${kl.days.length} day file(s)`);
+  } catch (e) { log(`Kill log skipped (${e.message})`); }
+  if (split) {
+    // 24-hour counts for the faction warfare page, now also split into PvP and ships only
+    await writeJSON(`${DATA}/public/kills24.json`, { updated: new Date().toISOString(), hours: Object.keys(hourly).length, systems: kills24,
+      pvp: split.kills24.pvp, ship: split.kills24.ship, splitSince: split.since });
+  }
+
   // Drop days older than 30 days, then build the 7- and 30-day windows.
   await mkdir(HIST, { recursive: true });
   const today = Math.floor(Date.now() / 86400e3);
@@ -234,14 +270,18 @@ try {
     return { systems, top: list.slice(0, 10) };
   };
   const windows = { "7": build(7), "30": build(30) };
-  const typeIds = [...new Set(Object.values(windows).flatMap(w => w.top.flatMap(t => t[3].map(k => k[2]))).filter(Boolean))];
+  // every "top" list, including the PvP and ships-only ones, so their ship and system names come along too
+  const allTops = [...Object.values(windows), ...(split ? Object.values(split.windows).flatMap(w => Object.values(w)) : [])].map(w => w.top);
+  const typeIds = [...new Set(allTops.flatMap(top => top.flatMap(t => t[3].map(k => k[2]))).filter(Boolean))];
   // Wormhole systems (31xxxxxx, named J123456) aren't on the site's map, so send their names along.
-  const extraSystems = [...new Set(Object.values(windows).flatMap(w => w.top.map(t => t[0])).filter(id => id >= 31000000))];
+  const extraSystems = [...new Set(allTops.flatMap(top => top.map(t => t[0])).filter(id => id >= 31000000))];
   let types = {}, systemNames = {};
   try { types = await names(typeIds); } catch (e) { log(`Couldn't resolve ship names (${e.message})`); }
   try { if (extraSystems.length) systemNames = await names(extraSystems); } catch (e) { log(`Couldn't resolve system names (${e.message})`); }
   const collected = Math.min(KEEP_DAYS, today - dayNum(since) + 1);
-  await writeJSON(`${DATA}/public/isk.json`, { updated: new Date().toISOString(), days: collected, types, systemNames, windows });
+  // split: the same windows for PvP kills and PvP ship-and-pod kills, from the kill log (see killlog.mjs)
+  await writeJSON(`${DATA}/public/isk.json`, { updated: new Date().toISOString(), days: collected, types, systemNames, windows,
+    ...(split ? { split: { since: split.since, days: split.days, windows: split.windows } } : {}) });
   log(`ISK windows built after ${collected} day(s) of collecting: ${Object.keys(windows["30"].systems).length} systems with kills in 30 days`);
   // Faction warfare ship statistics from the same kills (kept separate so a problem there can't affect the rankings).
   try { await updateFwShips([...got.values()], log); } catch (e) { log(`FW ship stats skipped (${e.message})`); }
