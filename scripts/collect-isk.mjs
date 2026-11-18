@@ -69,8 +69,22 @@ function parse(d) {
     t: Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000),
     system: km.solar_system_id,
     ship: km.victim.ship_type_id || 0,
-    value: +zkb.totalValue || 0
+    value: +zkb.totalValue || 0,
+    pos: km.victim.position || null
   };
+}
+// A kill is "on a gate" if the victim died within 100 km of one of the system's stargates.
+// gates: { systemId: [x, y, z, ...] in km } from build-map.mjs.
+const GATE_KM = 100;
+function onGate(gates, k) {
+  const g = gates[k.system], p = k.pos;
+  if (!g || !p) return false;
+  const x = p.x / 1000, y = p.y / 1000, z = p.z / 1000;
+  for (let i = 0; i < g.length; i += 3) {
+    const dx = x - g[i], dy = y - g[i + 1], dz = z - g[i + 2];
+    if (dx * dx + dy * dy + dz * dz <= GATE_KM * GATE_KM) return true;
+  }
+  return false;
 }
 
 try {
@@ -117,6 +131,9 @@ try {
   }
   const hourly = await readJSON(`${DATA}/cache/kills-hourly.json`, {}); // { "2026-11-02T15": { systemId: kills } }
   const recent = await readJSON(`${DATA}/cache/kills-recent.json`, {}); // { slice start (epoch seconds): { systemId: kills } }
+  const recentGate = await readJSON(`${DATA}/cache/kills-recent-gate.json`, {}); // the same, for kills within 100 km of a stargate
+  const gates = await readJSON(`${DATA}/public/gates.json`, null); // written by build-map.mjs
+  if (!gates) log("No stargate positions yet (data/public/gates.json), so gate kills aren't counted this run");
   const SLICE = 60; // 1-minute slices, so "last 15 minutes" is accurate to within a minute
   for (const [day, list] of Object.entries(byDay)) {
     const file = `${HIST}/${day}.json`;
@@ -129,6 +146,10 @@ try {
       bucket[k.system] = (bucket[k.system] || 0) + 1;
       const slice = (recent[Math.floor(k.t / SLICE) * SLICE] ||= {});
       slice[k.system] = (slice[k.system] || 0) + 1;
+      if (gates && onGate(gates, k)) {
+        const gs = (recentGate[Math.floor(k.t / SLICE) * SLICE] ||= {});
+        gs[k.system] = (gs[k.system] || 0) + 1;
+      }
       const e = (h.systems[k.system] ||= [0, 0, []]);
       e[0] += k.value; e[1]++;
       e[2].push([k.id, Math.round(k.value), k.ship]);
@@ -153,8 +174,12 @@ try {
   // zKillboard's feed, so it can carry on from there live without counting anything twice.
   const recentCutoff = Math.floor(Date.now() / 1000) - 90 * 60;
   for (const key of Object.keys(recent)) if (+key < recentCutoff) delete recent[key];
+  for (const key of Object.keys(recentGate)) if (+key < recentCutoff) delete recentGate[key];
   await writeJSON(`${DATA}/cache/kills-recent.json`, recent);
-  await writeJSON(`${DATA}/public/kills-recent.json`, { updated: new Date().toISOString(), nextSeq: Math.min(last + 1, firstFailed), sliceSeconds: SLICE, slices: recent });
+  await writeJSON(`${DATA}/cache/kills-recent-gate.json`, recentGate);
+  // gateSlices: kills within 100 km of a stargate, same shape as slices. Left out when gate positions
+  // weren't available, so the page hides its gate columns rather than showing undercounts.
+  await writeJSON(`${DATA}/public/kills-recent.json`, { updated: new Date().toISOString(), nextSeq: Math.min(last + 1, firstFailed), sliceSeconds: SLICE, slices: recent, ...(gates ? { gateSlices: recentGate } : {}) });
   const in15 = Object.entries(recent).filter(([t]) => +t >= Math.floor(Date.now() / 1000) - 15 * 60).reduce((n, [, s]) => n + Object.values(s).reduce((a, b) => a + b, 0), 0);
   log(`Recent kills: ${in15} in the last 15 minutes`);
 

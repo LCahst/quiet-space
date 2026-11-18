@@ -185,5 +185,13 @@ await writeJSON(`${PUB}/catalog.json`, catalog);
 await writeJSON(`${PUB}/mapdata.json`, mapdata);
 await writeJSON(`${PUB}/stations.json`, stations);
 await writeJSON(`${PUB}/galaxy.json`, galaxy);
+// Stargate positions per system, in whole kilometres as flat [x, y, z, x, y, z, ...] lists, so the kill
+// collectors (the Action, the Cloudflare Worker and the page) can tell which kills happened on a gate.
+const gatePos = {};
+for (const [id, s] of Object.entries(c.systems)) {
+  const g = s.g.map(x => c.gates[x]).filter(Boolean);
+  if (g.length) gatePos[id] = g.flatMap(x => x.p.map(v => Math.round(v / 1000)));
+}
+await writeJSON(`${PUB}/gates.json`, gatePos);
 log(`Wrote public files. Systems with a size so far: ${sized} of ${Object.keys(c.systems).length}`);
 log(`ESI requests: ${stats.requests}, retries: ${stats.retries}, failures: ${stats.failures}`);

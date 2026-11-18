@@ -211,6 +211,9 @@ dialog.routed .d-body{display:block;columns:auto;column-count:auto}
 .status-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
 .status-sub{font-size:.78rem;color:var(--muted)}
 table.hide-recent .c-recent{display:none}
+table.hide-gate .c-gate{display:none}
+td.c-gate{cursor:help}
+td.c-gate.gate-hot{color:#d33a2c;font-weight:700}
 td.c-recent{cursor:help;color:var(--muted)}
 td.c-recent.recent-hot{color:#d33a2c;font-weight:700}
 td.c-recent.fresh{animation:recentpulse 1.6s ease-out 2}
@@ -485,12 +488,12 @@ footer .contact p{margin:0 0 10px}
 
   <div class="legend" id="legend"></div>
   <div class="table-wrap">
-    <table id="sysTable" class="hide-avg hide-size hide-recent">
+    <table id="sysTable" class="hide-avg hide-size hide-recent hide-gate">
       <thead>
         <tr>
           <th scope="col" rowspan="2">System</th><th scope="col" rowspan="2">Sec</th><th scope="col" rowspan="2">Region</th><th scope="col" rowspan="2">Constellation</th>
           <th scope="colgroup" colspan="4" class="grp" id="esiGroup" title="CCP’s official figures from ESI, which cover the most recently completed hour">Last hour</th>
-          <th scope="colgroup" class="grp c-recent" title="Kills reported to zKillboard, updated about every minute and live while this page is open">Live</th>
+          <th scope="colgroup" class="grp c-recent" id="liveGroup" title="Kills reported to zKillboard, updated about every minute and live while this page is open">Live</th>
           <th scope="col" rowspan="2" class="num two c-avg" title="Average gate jumps per hour over the last 30 days">30-day<br>avg</th>
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 7 days">ISK<br>7d</th>
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 30 days">ISK<br>30d</th>
@@ -502,7 +505,9 @@ footer .contact p{margin:0 0 10px}
           <th scope="col" class="num" title="Ships destroyed in the last hour">Ships</th>
           <th scope="col" class="num" title="Capsules destroyed in the last hour">Pods</th>
           <th scope="col" class="num" title="NPCs killed in the last hour">NPCs</th>
+          <th scope="col" class="num two c-gate" title="Ship and pod kills within 100 km of a stargate in the last hour, from zKillboard (ESI doesn’t say where kills happen)">Gate<br>kills</th>
           <th scope="col" class="num two c-recent" title="Ship and pod kills in the last 15 minutes, from zKillboard. Updated about every minute, then live while this page is open">Kills<br>15 min</th>
+          <th scope="col" class="num two c-recent c-gate" title="Ship and pod kills within 100 km of a stargate in the last 15 minutes, from zKillboard. Updated about every minute, then live while this page is open">Gate<br>15 min</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>
@@ -1148,6 +1153,12 @@ footer .contact p{margin:0 0 10px}
     tr.appendChild(numCell(r.a.ship));
     tr.appendChild(numCell(r.a.pod));
     tr.appendChild(numCell(r.a.npc));
+    const gateCell = minutes => {
+      const g = recentKills(r.id, minutes, true), td = cell(g, "num c-gate" + (minutes === 15 ? " c-recent" : "") + (g ? " gate-hot" : " zero"));
+      td.title = `${g} kill${g === 1 ? "" : "s"} within ${GATE_KM} km of a stargate in the last ${minutes === 60 ? "hour" : "15 minutes"} (zKillboard${recentLiveOn ? ", live" : ""})`;
+      return td;
+    };
+    if (gateOn) tr.appendChild(gateCell(60));
     {
       const rk = recentKills(r.id, 15), td = document.createElement("td");
       td.className = "num c-recent" + (rk ? " recent-hot" : "") + (recentFresh.has(r.id) ? " fresh" : "");
@@ -1155,6 +1166,7 @@ footer .contact p{margin:0 0 10px}
       td.title = `${rk} ship and pod kill${rk === 1 ? "" : "s"} in the last 15 minutes, ${recentKills(r.id, 60)} in the last hour (zKillboard${recentLiveOn ? ", live" : ""})`;
       tr.appendChild(td);
     }
+    if (gateOn) tr.appendChild(gateCell(15));
     const avgTd = document.createElement("td"); avgTd.className = "num c-avg";
     if (prebuilt.activity) {
       const v = avgOf(r.id);
@@ -2726,15 +2738,37 @@ footer .contact p{margin:0 0 10px}
   // zKillboard's feed while the page is open. The snapshot records where it ended in the feed (nextSeq), so the
   // live part carries on from exactly there: nothing is missed and nothing is counted twice.
   let recentSnap = null, recentLiveOn = false, recentRefresh = null;
-  const recentLive = new Map();     // killmail id -> { sys, t (epoch seconds) }
+  const recentLive = new Map();     // killmail id -> { sys, t (epoch seconds), gate (within 100 km of a stargate) }
   const recentFresh = new Set();    // systems with a kill in the last minute or so, for a brief pulse
-  function recentKills(id, minutes) {
+  // Gate kills: kills within 100 km of a stargate, using stargate positions from data/gates.json.
+  let gatePos = null, gateOn = false;
+  const GATE_KM = 100;
+  function onGate(sys, p) {
+    const g = gatePos && gatePos[sys];
+    if (!g || !p) return false;
+    const x = p.x / 1000, y = p.y / 1000, z = p.z / 1000;
+    for (let i = 0; i < g.length; i += 3) {
+      const dx = x - g[i], dy = y - g[i + 1], dz = z - g[i + 2];
+      if (dx * dx + dy * dy + dz * dz <= GATE_KM * GATE_KM) return true;
+    }
+    return false;
+  }
+  function recentKills(id, minutes, gateOnly) {
     if (!recentSnap) return 0;
+    const slices = gateOnly ? recentSnap.gateSlices : recentSnap.slices;
+    if (!slices) return 0;
     const from = Date.now() / 1000 - minutes * 60;
     let n = 0;
-    for (const [start, sys] of Object.entries(recentSnap.slices)) if (+start + 60 > from && sys[id]) n += sys[id];
-    for (const k of recentLive.values()) if (k.sys === +id && k.t >= from) n++;
+    for (const [start, sys] of Object.entries(slices)) if (+start + 60 > from && sys[id]) n += sys[id];
+    for (const k of recentLive.values()) if (k.sys === +id && k.t >= from && (!gateOnly || k.gate)) n++;
     return n;
+  }
+  // Show the two gate columns only when both the snapshot's gate counts and the gate positions arrived.
+  function showGateColumns() {
+    gateOn = true;
+    $("sysTable").classList.remove("hide-gate");
+    $("esiGroup").colSpan = 5; $("liveGroup").colSpan = 2;
+    render();
   }
   function recentStatus() {
     const el = $("recentStatus"); if (!el || !recentSnap) return;
@@ -2760,6 +2794,11 @@ footer .contact p{margin:0 0 10px}
     setInterval(() => { recentFresh.clear(); render(); }, 60000);
     const R2Z2 = "https://r2z2.zkillboard.com/ephemeral";
     const sleep = ms => new Promise(r => setTimeout(r, ms));
+    // Gate positions are needed before live kills arrive, so they can be sorted into gate kills too.
+    if (snap.gateSlices) {
+      gatePos = await fetchData("gates.json");
+      if (gatePos) showGateColumns();
+    }
     try {
       const head = await (await fetch(`${R2Z2}/sequence.json`, { cache: "no-store" })).json();
       // carry on from the snapshot; if it's very old, skip ahead rather than make hundreds of requests
@@ -2775,7 +2814,7 @@ footer .contact p{margin:0 0 10px}
         if (km && km.solar_system_id && km.killmail_id && !recentLive.has(km.killmail_id)) {
           const t = Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000);
           if (t >= Date.now() / 1000 - 3600) {
-            recentLive.set(km.killmail_id, { sys: km.solar_system_id, t });
+            recentLive.set(km.killmail_id, { sys: km.solar_system_id, t, gate: gateOn && onGate(km.solar_system_id, km.victim && km.victim.position) });
             if (t >= Date.now() / 1000 - 120) recentFresh.add(km.solar_system_id);
             recentRerender();
           }
