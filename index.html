@@ -308,6 +308,9 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .rl-big:hover{border-color:#72aef0}
 .rl-big:focus-visible{outline:2px solid #72aef0;outline-offset:2px}
 .rl-narrow .rl-top{justify-content:flex-end}
+.rl-right{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.rm-when button{padding:6px 10px}
+.rs-val small{display:block;color:#8593a5;font-size:.7rem}
 .rl-scroll{overflow-x:auto;overflow-y:hidden}
 .rl-svg{display:block}
 .rl-band{stroke:#243245;stroke-width:1}
@@ -3645,12 +3648,20 @@ footer .contact p{margin:0 0 10px}
         const p = Math.round((v - cur.avg) / cur.avg * 100);
         return p === 0 ? "about average for this route" : p < 0 ? `${-p}% below this route’s average` : `${p}% above this route’s average`;
       }
-      function select(d) { st.sel = ((d % 168) + 168) % 168; drawChart(); drawBest(); drawAlong(); }
+      // hand the picked departure to the maps; picking a time switches them to it
+      function sharePlan(picked) {
+        if (cur.none) return;
+        routeState.plan = { r, ev: ((st.sel - cur.shift) % 168 + 168) % 168, trip: st.trip, label: `${taSlotText(st.sel)} ${st.tz === "eve" ? "EVE" : "your time"}`, jumps: w ? w.byId : null, kills: kw ? kw.byKind.pvp : null };
+        if (picked) routeState.mapWhen = "plan";
+        if (routeState.map) routeState.map.redraw();
+        if (routeState.bigMap) routeState.bigMap.redraw();
+      }
+      function select(d) { st.sel = ((d % 168) + 168) % 168; drawChart(); drawBest(); drawAlong(); sharePlan(true); }
 
       function draw() {
         cur = compute();
         if (st.sel === null) st.sel = Math.floor(nowDisp()) % 168;
-        drawChart(); drawBest(); drawAlong();
+        drawChart(); drawBest(); drawAlong(); sharePlan(false);
         // what the data covers
         const bits = [];
         if (w) bits.push(`Jumps from ${w.weeks >= 12 ? "the last 12 weeks" : `${w.weeks} week${w.weeks === 1 ? "" : "s"} of data so far`}.`);
@@ -4064,7 +4075,9 @@ footer .contact p{margin:0 0 10px}
     }
     const bigB = el("button", "rm-big", "Close map"); bigB.type = "button";
     bigB.addEventListener("click", () => { if (opts.onClose) opts.onClose(); });
-    hudTop.append(bigB, modes);
+    const when = rmWhenSeg(r);
+    const right = el("div", "rl-right"); right.append(when, modes);
+    hudTop.append(bigB, right);
     const legend = el("div", "rm-legend");
     const zoom = el("div", "rm-zoom");
     const zb = (label, txt, fn) => { const b = el("button", null, txt); b.type = "button"; b.setAttribute("aria-label", label); b.title = label; b.addEventListener("click", fn); zoom.append(b); return b; };
@@ -4112,8 +4125,9 @@ footer .contact p{margin:0 0 10px}
       // region tints and names, in map units, so they grow and shrink with the map
       for (const g of L.regions.values()) if (g.big) { const rg = S("g", {}), t = S("text", { y: 4, class: "rm-region" }, rg); t.textContent = g.name; place(rg, g.cx, g.cy); }
       const warn = routeWarnings(r), tagsBy = new Map([...warn].map(([i, list]) => [L.path[i], list]));
-      const val = id => st.mode === "traffic" ? (jumps[id] || 0) : st.mode === "kills" ? routeKills(id) : 0;
-      const max = Math.max(1, ...L.ids.map(val));
+      const pv = rmPlanValues(r, st.mode); when.sync(st.mode);
+      const val = id => pv ? (pv.has(String(id)) ? pv.get(String(id)) : null) : st.mode === "traffic" ? (jumps[id] || 0) : st.mode === "kills" ? routeKills(id) : 0;
+      const max = Math.max(pv && st.mode === "kills" ? 0.1 : 1, ...L.ids.map(val).filter(v => v !== null));
       const heat = st.mode !== "security";
       // gates
       for (const l of L.links) {
@@ -4159,7 +4173,7 @@ footer .contact p{margin:0 0 10px}
           S("circle", { r: 2.6, fill: heat && v ? rmHeat(v, max, st.mode) : col, class: "rm-dot" }, g);
           const full = S("g", { class: "rm-lod-near" }, g);
           S("circle", { r: 9, fill, stroke: heat ? "#2a3442" : col, "stroke-width": 1.2, opacity: 0.85 }, full);
-          const t = S("text", { y: 3.5, class: "rm-val" }, full); t.textContent = heat ? String(v) : (ds === null ? "?" : ds.toFixed(1)); t.setAttribute("fill", heat ? "#8a95a5" : col);
+          const t = S("text", { y: 3.5, class: "rm-val" }, full); t.textContent = heat ? rmFmtV(v, st.mode) : (ds === null ? "?" : ds.toFixed(1)); t.setAttribute("fill", heat ? "#8a95a5" : col);
           const nm = S("text", { y: 21, class: "rm-nb rm-lod-names" }, full); nm.textContent = sys.n;
         } else {
           const rr = kind === "on" ? 15 : 11;
@@ -4168,7 +4182,7 @@ footer .contact p{margin:0 0 10px}
           if (heat && kind === "on") S("circle", { r: rr + 3.5, class: "rm-ring-" + st.mode }, full);
           S("circle", { r: rr, fill, stroke: heat ? (kind === "on" ? "#0a0e14" : "#2a3442") : col, "stroke-width": kind === "on" ? 2.6 : 1.5, opacity: kind === "on" ? 1 : 0.85 }, full);
           const t = S("text", { y: 4, class: "rm-val" + (kind === "on" ? " on" : "") }, full);
-          if (heat) { t.textContent = String(v); t.setAttribute("fill", v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : kind === "on" ? "#e8dcc4" : "#6b7787"); }
+          if (heat) { t.textContent = rmFmtV(v, st.mode); t.setAttribute("fill", v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : kind === "on" ? "#e8dcc4" : "#6b7787"); }
           else { t.textContent = ds === null ? "?" : ds.toFixed(1); t.setAttribute("fill", col); }
         }
         // labels on the top layer
@@ -4204,7 +4218,7 @@ footer .contact p{margin:0 0 10px}
       } else {
         const row = el("div", "rm-keys");
         for (const t of [0, 0.2, 0.4, 0.6, 0.8, 1]) { const i = document.createElement("i"); i.style.background = rmHeat(Math.round(Math.expm1(t * Math.log1p(max))), max, st.mode); row.append(i); }
-        legend.append(el("span", null, st.mode === "traffic" ? "Gate jumps, last hour" : "Ship and pod kills, last hour"), row, el("small", null, `0 to ${max.toLocaleString()}`));
+        legend.append(el("span", null, pv ? `Usual ${st.mode === "traffic" ? "gate jumps" : "PvP kills"} an hour on arrival, leaving ${routeState.plan.label} (route systems)` : st.mode === "traffic" ? "Gate jumps, last hour" : "Ship and pod kills, last hour"), row, el("small", null, `0 to ${rmFmtV(max, st.mode)}`));
       }
       applyVb();
     }
@@ -4252,7 +4266,7 @@ footer .contact p{margin:0 0 10px}
     svg.addEventListener("wheel", e => { e.preventDefault(); const [cx, cy] = toMap(e.clientX, e.clientY); zoomBy(e.deltaY > 0 ? 1.15 : 1 / 1.15, cx, cy); }, { passive: false });
     if (window.ResizeObserver) new ResizeObserver(() => layout(false)).observe(wrap);
     requestAnimationFrame(() => layout(true));
-    return { refresh: () => { if (st.L) { const vb = st.vb; st.L = rmLayout(r, st.W, st.H); draw(); st.vb = vb; applyVb(); } } };
+    return { refresh: () => { if (st.L) { const vb = st.vb; st.L = rmLayout(r, st.W, st.H); draw(); st.vb = vb; applyVb(); } }, redraw: () => { if (st.L) draw(); } };
   }
   // ---------- Route overview: the route as a straight line, and the large map ----------
   // Inline, the route is drawn as a schematic: jumps evenly spaced left to right, with a gentle wave that
@@ -4280,9 +4294,21 @@ footer .contact p{margin:0 0 10px}
         if (!(reduce && reduce.matches)) {
           const pts = points();
           if (pts.length > 1) {
-            ctx.setLineDash([3, 25]); ctx.lineDashOffset = -((t / 1800) * 28 % 28);
+            ctx.setLineDash([3, 25]);
             ctx.lineWidth = 2.2; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "rgba(255,255,255,.8)";
-            ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+            // each jump on its own, stopping short of the system circles so their numbers stay clear;
+            // the dash pattern carries on from one jump to the next
+            const gap = 19, base = -((t / 1800) * 28 % 28);
+            let run = 0;
+            for (let i = 0; i < pts.length - 1; i++) {
+              const [x1, y1] = pts[i], [x2, y2] = pts[i + 1], len = Math.hypot(x2 - x1, y2 - y1);
+              if (len > gap * 2) {
+                const ux = (x2 - x1) / len, uy = (y2 - y1) / len;
+                ctx.lineDashOffset = base - (run + gap);
+                ctx.beginPath(); ctx.moveTo(x1 + ux * gap, y1 + uy * gap); ctx.lineTo(x2 - ux * gap, y2 - uy * gap); ctx.stroke();
+              }
+              run += len;
+            }
           }
         }
       }
@@ -4292,6 +4318,44 @@ footer .contact p{margin:0 0 10px}
     if (window.IntersectionObserver) new IntersectionObserver(es => { visible = es[0].isIntersecting; start(); }).observe(host);
     document.addEventListener("visibilitychange", start);
     start();
+  }
+  // Traffic and Kills on the maps show the last hour, or, once a departure time is picked in Analyze traffic,
+  // the usual numbers at the hour you'd reach each route system on that trip (route systems only).
+  // routeState.plan is set by Analyze traffic; routeState.mapWhen ("now" or "plan") is shared by both maps.
+  function rmPlanValues(r, mode) {
+    const pl = routeState.plan;
+    if (mode === "security" || routeState.mapWhen !== "plan" || !pl || pl.r !== r) return null;
+    const src = mode === "traffic" ? pl.jumps : pl.kills, out = new Map();
+    if (!src) return out;
+    const n = r.path.length - 1;
+    r.path.forEach((id, i) => {
+      const k = String(id); if (out.has(k)) return;
+      const arr = src.get(id) || src.get(k) || src.get(+id); if (!arr) return;
+      const v = taAt(arr, pl.ev + (n ? i / n : 0) * pl.trip / 60);
+      if (v !== null) out.set(k, v);
+    });
+    return out;
+  }
+  // whole numbers (live counts) stay whole; usual kills an hour get one decimal
+  const rmFmtV = (v, mode) => v === null || v === undefined ? "–" : Number.isInteger(v) ? String(v) : mode === "kills" ? (v >= 10 ? String(Math.round(v)) : v.toFixed(1)) : String(Math.round(v));
+  // the "Last hour | Leave Tue 04:00" switch, shown in Traffic and Kills once a time is picked
+  function rmWhenSeg(r) {
+    const g = el("div", "rm-seg rm-when"); g.setAttribute("role", "group"); g.setAttribute("aria-label", "Traffic and kills for");
+    const now = el("button", null, "Last hour"), plan = el("button"); now.type = plan.type = "button";
+    now.addEventListener("click", () => rmSetWhen("now")); plan.addEventListener("click", () => rmSetWhen("plan"));
+    g.append(now, plan);
+    g.sync = mode => {
+      const pl = routeState.plan, ok = mode !== "security" && pl && pl.r === r;
+      g.hidden = !ok; if (!ok) return;
+      plan.textContent = "Leave " + pl.label; plan.title = "Usual numbers at the hour you'd reach each route system, from Analyze traffic";
+      now.setAttribute("aria-pressed", String(routeState.mapWhen !== "plan")); plan.setAttribute("aria-pressed", String(routeState.mapWhen === "plan"));
+    };
+    return g;
+  }
+  function rmSetWhen(w) {
+    routeState.mapWhen = w;
+    if (routeState.map) routeState.map.redraw();
+    if (routeState.bigMap) routeState.bigMap.redraw();
   }
   function renderRouteOverview(r, host) {
     const st = { mode: ["security", "traffic", "kills"].includes(rmPrefs().mode) ? rmPrefs().mode : "security", width: 0 };
@@ -4307,7 +4371,9 @@ footer .contact p{margin:0 0 10px}
       b.addEventListener("click", () => { st.mode = v; rmSave({ mode: v }); modes.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); draw(); });
       modes.append(b);
     }
-    top.append(bigB, modes);
+    const when = rmWhenSeg(r);
+    const right = el("div", "rl-right"); right.append(when, modes);
+    top.append(bigB, right);
     const body = el("div", "rl-body");
     const tip = el("div", "rm-tip"); tip.hidden = true;
     box.append(top, body, tip);
@@ -4316,11 +4382,13 @@ footer .contact p{margin:0 0 10px}
     const first = new Map(); path.forEach((id, i) => { if (!first.has(id)) first.set(id, i); });
     const onRoute = new Set(path);
     const linksOf = id => (md.links[id] || []).map(String).filter(x => catalog.systems[x]);
-    const val = id => st.mode === "traffic" ? (jumps[id] || 0) : st.mode === "kills" ? routeKills(id) : 0;
+    let pv = null; // usual values at the planned time, when that's what is shown
+    const val = id => pv ? (pv.has(String(id)) ? pv.get(String(id)) : null) : st.mode === "traffic" ? (jumps[id] || 0) : st.mode === "kills" ? routeKills(id) : 0;
     const stepName = i => i === 0 ? (r.loop ? "Start" : "Start") : r.loop && i === n - 1 ? "Back" : i === n - 1 ? "End" : String(i);
 
     function draw() {
       tip.hidden = true;
+      pv = rmPlanValues(r, st.mode); when.sync(st.mode);
       const W = Math.round(box.clientWidth) || 800; st.width = W;
       const narrow = W < RL_NARROW;
       box.classList.toggle("rl-narrow", narrow);
@@ -4332,14 +4400,14 @@ footer .contact p{margin:0 0 10px}
     function strip() {
       body.replaceChildren();
       const warn = routeWarnings(r), tagsAt = new Map([...warn].map(([i, list]) => [path[i], list]));
-      const max = Math.max(1, ...path.map(val));
+      const max = Math.max(pv && st.mode === "kills" ? 0.1 : 1, ...path.map(val).filter(v => v !== null));
       const list = el("ol", "rs");
       path.forEach((id, i) => {
         const sys = catalog.systems[id], ds = displaySec(sys.s), col = rmSecCol(sys), v = val(id);
         const li = el("li"), b = el("button", "rs-row"); b.type = "button";
         const dot = el("span", "rs-dot"); dot.textContent = ds === null ? "?" : ds.toFixed(1);
         if (st.mode === "security") { dot.style.borderColor = col; dot.style.color = col; }
-        else { dot.style.background = v ? rmHeat(v, max, st.mode) : "#161d27"; dot.style.borderColor = "#2a3442"; dot.textContent = String(v); dot.style.color = v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : "#c9d3df"; }
+        else { dot.style.background = v ? rmHeat(v, max, st.mode) : "#161d27"; dot.style.borderColor = "#2a3442"; dot.textContent = rmFmtV(v, st.mode); dot.style.color = v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : "#c9d3df"; }
         const main = el("span", "rs-main");
         const name = el("span", "rs-name"); name.append(el("span", "rs-step", stepName(i) + " · "), sys.n);
         for (const x of (first.get(id) === i ? tagsAt.get(id) : null) || []) name.append(" ", el("span", "rs-tag " + (x.lv === 2 ? "rm-tip-danger" : "rm-tip-caution"), x.tag.toUpperCase()));
@@ -4348,7 +4416,8 @@ footer .contact p{margin:0 0 10px}
         main.append(name, sub);
         const right = el("span", "rs-val");
         const j = jumps[id] || 0, k = routeKills(id);
-        right.append(el("span", null, st.mode === "kills" ? `${k} kill${k === 1 ? "" : "s"}` : `${j.toLocaleString()} jumps`));
+        if (pv) right.append(el("span", null, `${rmFmtV(v, st.mode)} ${st.mode === "kills" ? "kills" : "jumps"}/h`), el("small", null, "usual"));
+        else right.append(el("span", null, st.mode === "kills" ? `${k} kill${k === 1 ? "" : "s"}` : `${j.toLocaleString()} jumps`));
         b.append(dot, main, right);
         b.addEventListener("click", () => openSystem(id));
         li.append(b); list.append(li);
@@ -4408,7 +4477,7 @@ footer .contact p{margin:0 0 10px}
         i0 = i;
       }
       const warn = routeWarnings(r), tagsAt = new Map([...warn].map(([i, list]) => [path[i], list]));
-      const heat = st.mode !== "security", max = Math.max(1, ...[...path, ...nb.keys()].map(val));
+      const heat = st.mode !== "security", max = Math.max(pv && st.mode === "kills" ? 0.1 : 1, ...[...path, ...nb.keys()].map(val).filter(v => v !== null));
       // gates: neighbours to the route and to each other
       for (const [id, steps] of nb) { const p = NP.get(id); for (const i of steps) S("line", { x1: p.x, y1: p.y, x2: pos[i].x, y2: pos[i].y, class: "rm-gate" }); for (const x of linksOf(id)) if (NP.has(x) && x > id) { const q = NP.get(x); S("line", { x1: p.x, y1: p.y, x2: q.x, y2: q.y, class: "rm-gate" }); } }
       // route: glow, then each jump in the colours of its two systems
@@ -4428,7 +4497,7 @@ footer .contact p{margin:0 0 10px}
         if (on && heat) S("circle", { r: rr + 3.5, class: "rm-ring-" + st.mode }, g);
         S("circle", { r: rr, fill, stroke: heat ? (on ? "#0a0e14" : "#2a3442") : col, "stroke-width": on ? 2.6 : 1.4, opacity: on ? 1 : 0.85 }, g);
         const t = S("text", { y: on ? 4 : 3.5, class: "rm-val" + (on ? " on" : "") }, g);
-        if (heat) { t.textContent = String(v); t.setAttribute("fill", v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : on ? "#e8dcc4" : "#6b7787"); }
+        if (heat) { t.textContent = rmFmtV(v, st.mode); t.setAttribute("fill", v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : on ? "#e8dcc4" : "#6b7787"); }
         else { t.textContent = ds === null ? "?" : ds.toFixed(1); t.setAttribute("fill", col); }
         g.addEventListener("pointerenter", () => showTip(id, g, on ? tagsAt.get(id) : null, i));
         g.addEventListener("pointerleave", () => { tip.hidden = true; });
@@ -4473,7 +4542,7 @@ footer .contact p{margin:0 0 10px}
     }
     if (window.ResizeObserver) new ResizeObserver(() => { const w = Math.round(box.clientWidth); if (Math.abs(w - st.width) > 6) draw(); }).observe(box);
     requestAnimationFrame(draw);
-    return { refresh: draw };
+    return { refresh: draw, redraw: draw };
   }
 
   // The large map: the real-position map over the whole route dialog, with the regions around the route.
@@ -4523,6 +4592,7 @@ footer .contact p{margin:0 0 10px}
     const warn = el("div", "r-warn"); warn.id = "rWarn"; warn.setAttribute("aria-live", "polite"); box.append(warn);
     const mapHost = el("div", "rm-host"); mapHost.id = "rMap"; box.append(mapHost);
     mapHost.hidden = rmPrefs().hidden === true;
+    routeState.plan = null; routeState.mapWhen = "now";
     if (!mapHost.hidden) routeState.map = renderRouteOverview(r, mapHost); else routeState.map = null;
     const wrap = el("div", "r-wrap"), t = el("table", "r-list");
     t.innerHTML = `<thead><tr><th>#</th><th>System</th><th>Region</th><th class="num">Jumps, last hour</th><th class="num">Kills, last hour</th><th class="num">30-day avg</th></tr></thead>`;
