@@ -635,7 +635,7 @@ footer .contact p{margin:0 0 10px}
       <div class="d-head">
         <div>
           <h2 id="rTitle">Plan a quiet route</h2>
-          <div class="d-sub">Find a route through the quietest systems: one way, as a loop back to where you started, or to a destination.</div>
+          <div class="d-sub">Find a quiet route: wander out and end anywhere, circle back to your start, or head to a system you choose.</div>
         </div>
         <button class="btn" id="rClose" type="button">Close</button>
       </div>
@@ -645,11 +645,11 @@ footer .contact p{margin:0 0 10px}
             <input id="rStart" list="rSystems" autocomplete="off" spellcheck="false" placeholder="Type a system name">
             <datalist id="rSystems"></datalist>
           </label>
-          <div class="r-field r-route">Route
+          <div class="r-field r-route">Where to?
             <div class="r-seg" role="group" aria-label="Route type">
-              <button type="button" data-v="oneway" aria-pressed="true">One way</button>
-              <button type="button" data-v="loop" aria-pressed="false">Loop back to start</button>
-              <button type="button" data-v="dest" aria-pressed="false">To a destination</button>
+              <button type="button" data-v="oneway" aria-pressed="true">Wander</button>
+              <button type="button" data-v="loop" aria-pressed="false">Circle back</button>
+              <button type="button" data-v="dest" aria-pressed="false">Head to</button>
             </div>
           </div>
           <label class="r-field" id="rDestField" hidden>Destination
@@ -3086,7 +3086,7 @@ footer .contact p{margin:0 0 10px}
   function routeTitle(r) {
     const dest = r.settings && r.settings.dest;
     if (dest && catalog.systems[dest]) return `${catalog.systems[r.path[0]].n} to ${catalog.systems[dest].n}, ${r.path.length - 1} jumps`;
-    return `${r.loop ? "Loop from" : "One way from"} ${catalog.systems[r.path[0]].n}, ${r.path.length - 1} jumps`;
+    return `${r.loop ? "Circling back to" : "Wandering from"} ${catalog.systems[r.path[0]].n}, ${r.path.length - 1} jumps`;
   }
   function routeSettingsText(o) {
     const sec = [...o.sec].map(x => ({ high: "high", low: "low", null: "null" })[x]).join(", ") || "none";
