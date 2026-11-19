@@ -426,6 +426,7 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .flag-camp{background:#d6311f}
 .flag-bomb{background:#b5177a;box-shadow:0 0 0 2px rgba(181,23,122,.3),0 0 10px rgba(181,23,122,.5)}
 .legend .flag{padding:0 4px;height:17px}
+.flag-corrupt{background:#9e1b32;box-shadow:0 0 0 2px rgba(158,27,50,.32),0 0 10px rgba(214,48,36,.45);letter-spacing:.02em}
 .flag-recent{background:transparent;color:var(--danger);box-shadow:inset 0 0 0 1.5px var(--danger)}
 .flag-recent .flag-ago{font-weight:600;opacity:.85;margin-left:1px}
 .flag-new{animation:flagPop 1.4s ease-out 2}
@@ -1454,11 +1455,17 @@ footer .contact p{margin:0 0 10px}
   // 2+ PvP kills on gates in 15 minutes (matching the "Gate 15 min" column with the PvP filter on), and any PvP kill by a smartbomb or bomb in 30 minutes.
   const FLAG_ICONS = {
     camp: '<svg viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 14V8.5a4.5 4.5 0 0 1 9 0V14"/><path d="M2 14h12"/></g><circle cx="8" cy="9" r="1.6" fill="currentColor"/></svg>',
+    corrupt: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l6.4 11.6H1.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 6.2v3.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="8" cy="11.4" r="1" fill="currentColor"/></svg>',
     bomb: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.6" fill="currentColor"/><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M8 1.2v2.2M8 12.6v2.2M1.2 8h2.2M12.6 8h2.2M3.2 3.2l1.5 1.5M11.3 11.3l1.5 1.5M12.8 3.2l-1.5 1.5M4.7 11.3l-1.5 1.5"/></g></svg>'
   };
   const flagSeen = new Set(); // flags already shown once, so only new ones pulse
   function systemFlags(id) {
     const out = [];
+    const ins = prebuilt.insurgency && prebuilt.insurgency.systems[id];
+    if (ins && ins.cs >= 5) {
+      const c = insCampaign(ins), who = c && c.faction ? pirateName(c.faction) + " control" : "pirate control";
+      out.push({ kind: "corrupt", n: "C5", text: `Corruption level 5, the maximum: this system is under ${who} in a pirate insurgency${ins.cd ? `, since ${new Date(ins.cd).toLocaleDateString(undefined, { day: "numeric", month: "short" })}` : ""}` });
+    }
     if (!recentSnap) return out;
     const camp = gateOn ? routeRecent(id, CAMP_MINUTES, true) : 0;
     if (camp >= CAMP_KILLS) out.push({ kind: "camp", n: camp, text: `Possible gate camp: ${camp} PvP kills on gates in the last ${CAMP_MINUTES} minutes` });
@@ -2188,7 +2195,8 @@ footer .contact p{margin:0 0 10px}
     $("legend").append(a, g, b, c, d, h, e,
       fl("camp", "Possible gate camp: 2+ PvP kills on gates in 15 min"),
       fl("recent", "Recent gate camp: 2+ in the last hour, quiet now"),
-      fl("bomb", "Smartbomb or bomb kills in the last 30 min"));
+      fl("bomb", "Smartbomb or bomb kills in the last 30 min"),
+      fl("corrupt", "Corruption level 5 in a pirate insurgency"));
   }
 
   // ---------- System details ----------
@@ -3465,7 +3473,10 @@ footer .contact p{margin:0 0 10px}
         }
       }
       const ins = prebuilt.insurgency && prebuilt.insurgency.systems[id];
-      if (ins) { const c = insCampaign(ins); list.push({ lv: 1, tag: "insurgency", text: `Pirate insurgency${c && c.faction ? ` (${pirateName(c.faction)})` : ""}` }); }
+      if (ins) {
+        const c = insCampaign(ins), five = ins.cs >= 5;
+        list.push({ lv: five ? 2 : 1, tag: five ? "corruption 5" : "insurgency", text: `Pirate insurgency${c && c.faction ? ` (${pirateName(c.faction)})` : ""}${five ? ", corruption level 5 (the maximum)" : ins.cs ? `, corruption level ${ins.cs}` : ""}` });
+      }
       if (list.length) out.set(i, list);
     });
     return out;
