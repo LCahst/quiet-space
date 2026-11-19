@@ -162,6 +162,8 @@ dialog.routed .d-body{display:block;columns:auto;column-count:auto}
 .r-field input[type=number],.r-field input[list],.r-field select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;width:100%}
 .r-sec label{display:flex;align-items:center;gap:6px;color:var(--ink);cursor:pointer}
 .r-note{margin:0 0 4px 22px;font-size:.8rem;line-height:1.35;color:var(--muted);max-width:42ch}
+.r-note-warn{color:var(--ink);border-left:3px solid var(--caution);padding:3px 0 3px 8px;margin-left:18px;background:color-mix(in srgb,var(--caution) 10%,transparent);border-radius:0 2px 2px 0}
+.r-note-warn b{color:var(--caution)}
 .r-route{grid-column:1/-1}
 /* Kill breakdown. Slice colours were checked with the data-viz palette validator for both themes,
    in the order they sit around the circle (including the last slice next to the first). */
@@ -222,8 +224,7 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .r-list .r-step{color:var(--muted)}
 .r-list .sys-link{font-weight:600}
 .r-warn{border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:3px;padding:8px 12px;margin:0 0 10px;background:var(--panel)}
-.r-warn.lv1{border-left-color:var(--caution)}
-.r-warn.lv2{border-left-color:var(--danger)}
+.r-warn.lv1,.r-warn.lv2{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,var(--panel))}
 .r-warn b{color:var(--ink)}
 .r-warn ul{margin:6px 0 4px;padding-left:18px}
 .r-warn li{margin:2px 0}
@@ -691,7 +692,7 @@ footer .contact p{margin:0 0 10px}
           <fieldset class="r-field r-sec">
             <legend>Avoid</legend>
             <label><input type="checkbox" id="rAvoidKills" checked> Systems with kills in the last hour</label>
-            <p class="r-note">Kills are common in low and null sec, so this can rule out a lot of systems and make routes shorter or harder to find. If a route comes up short, try unticking it.</p>
+            <p class="r-note r-note-warn"><b>Often blocks routes.</b> Busy systems almost always have a kill in the last hour, in high sec too (trade hubs like Jita nearly always do). If no route is found or it comes up short, untick this first.</p>
             <label id="rAvoidInsLabel"><input type="checkbox" id="rAvoidIns" checked> Pirate insurgency systems</label>
           </fieldset>
           <fieldset class="r-field r-sec" id="rBackField">
@@ -3217,11 +3218,11 @@ footer .contact p{margin:0 0 10px}
     const sum = el("div", "r-summary");
     const dest = r.settings && r.settings.dest;
     if (dest && !r.complete) {
-      sum.innerHTML = `<b>No route found from ${catalog.systems[r.path[0]].n} to ${catalog.systems[dest].n}</b><br>With these settings there’s no way through. Try allowing more security levels or turning off one of the “avoid” options.`;
+      sum.innerHTML = `<b>No route found from ${catalog.systems[r.path[0]].n} to ${catalog.systems[dest].n}</b><br>With these settings there’s no way through. Try allowing more security levels or turning off one of the “avoid” options.${r.settings.avoidKills ? " The quickest fix is usually unticking “Systems with kills in the last hour”." : ""}`;
       box.append(sum); return;
     }
     if (n === 0) {
-      sum.textContent = "No route found: there are no allowed systems next to your start. Try allowing more security levels or fewer things to avoid.";
+      sum.textContent = `No route found: there are no allowed systems next to your start. Try allowing more security levels or fewer things to avoid.${r.settings.avoidKills ? " The quickest fix is usually unticking “Systems with kills in the last hour”." : ""}`;
       box.append(sum); return;
     }
     const inside = [...new Set(r.loop ? r.path.slice(1, -1) : r.path.slice(1))].filter(id => id !== r.path[0]);
@@ -3231,7 +3232,7 @@ footer .contact p{margin:0 0 10px}
     const avgs = inside.map(routeAvg).filter(v => v != null);
     if (r.loop && !r.complete) {
       // no loop at all: explain instead of showing a route that doesn't come back
-      sum.innerHTML = `<b>No loop found from ${catalog.systems[r.path[0]].n}</b><br>There’s no route of about ${r.settings.jumps} jumps that returns to the start with these settings. Try a different number of jumps, allow more security levels, turn off one of the “avoid” options, or switch to a one-way route.`;
+      sum.innerHTML = `<b>No loop found from ${catalog.systems[r.path[0]].n}</b><br>There’s no route of about ${r.settings.jumps} jumps that returns to the start with these settings. Try a different number of jumps, allow more security levels, turn off one of the “avoid” options, or switch to Wander.${r.settings.avoidKills ? " The quickest fix is usually unticking “Systems with kills in the last hour”." : ""}`;
       box.append(sum); return;
     }
     let note = "";
