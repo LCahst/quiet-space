@@ -8,7 +8,8 @@
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { names } from "./lib/esi.mjs";
 import { updateFwShips } from "./lib/fwships.mjs";
-import { appendKills, loadLog, buildSplits, F_PVP, F_SHIP, F_NPC } from "./lib/killlog.mjs";
+import { appendKills, loadLog, buildSplits, F_PVP, F_SHIP, F_AREA, F_NPC } from "./lib/killlog.mjs";
+import { isAreaKill } from "../worker/src/area-weapons.mjs";
 
 const DATA = process.env.DATA_DIR || "data";
 const R2Z2 = process.env.R2Z2_BASE || "https://r2z2.zkillboard.com/ephemeral";
@@ -75,6 +76,7 @@ function parse(d) {
     pos: km.victim.position || null,
     pvp: isPvp(km),
     pvpShip: isPvpShip(km),
+    area: isAreaKill(km), // a smartbomb or bomb among the attackers' weapons
     npcOnly: !!zkb.npc
   };
 }
@@ -162,6 +164,7 @@ try {
   const recentGatePvp = await readJSON(`${DATA}/cache/kills-recent-gate-pvp.json`, {}); // PvP kills on a gate
   const recentPvpShip = await readJSON(`${DATA}/cache/kills-recent-pvpship.json`, {}); // PvP ship and pod kills, no structures (see isPvpShip)
   const recentGatePvpShip = await readJSON(`${DATA}/cache/kills-recent-gate-pvpship.json`, {}); // the same, on a gate
+  const recentArea = await readJSON(`${DATA}/cache/kills-recent-area.json`, {}); // PvP kills by a smartbomb or bomb
   const gates = await readJSON(`${DATA}/public/gates.json`, null); // written by build-map.mjs
   if (!gates) log("No stargate positions yet (data/public/gates.json), so gate kills aren't counted this run");
   const SLICE = 60; // 1-minute slices, so "last 15 minutes" is accurate to within a minute
@@ -179,7 +182,7 @@ try {
       const add = slices => { const x = (slices[Math.floor(k.t / SLICE) * SLICE] ||= {}); x[k.system] = (x[k.system] || 0) + 1; };
       const gate = gates && onGate(gates, k);
       if (gate) add(recentGate);
-      if (k.pvp) { add(recentPvp); if (gate) add(recentGatePvp); }
+      if (k.pvp) { add(recentPvp); if (gate) add(recentGatePvp); if (k.area) add(recentArea); }
       if (k.pvpShip) { add(recentPvpShip); if (gate) add(recentGatePvpShip); }
       const e = (h.systems[k.system] ||= [0, 0, []]);
       e[0] += k.value; e[1]++;
@@ -205,16 +208,17 @@ try {
   // zKillboard's feed, so it can carry on from there live without counting anything twice.
   const recentCutoff = Math.floor(Date.now() / 1000) - 90 * 60;
   for (const key of Object.keys(recent)) if (+key < recentCutoff) delete recent[key];
-  for (const sl of [recentGate, recentPvp, recentGatePvp, recentPvpShip, recentGatePvpShip]) for (const key of Object.keys(sl)) if (+key < recentCutoff) delete sl[key];
+  for (const sl of [recentGate, recentPvp, recentGatePvp, recentPvpShip, recentGatePvpShip, recentArea]) for (const key of Object.keys(sl)) if (+key < recentCutoff) delete sl[key];
   await writeJSON(`${DATA}/cache/kills-recent.json`, recent);
   await writeJSON(`${DATA}/cache/kills-recent-gate.json`, recentGate);
   await writeJSON(`${DATA}/cache/kills-recent-pvp.json`, recentPvp);
   await writeJSON(`${DATA}/cache/kills-recent-gate-pvp.json`, recentGatePvp);
   await writeJSON(`${DATA}/cache/kills-recent-pvpship.json`, recentPvpShip);
   await writeJSON(`${DATA}/cache/kills-recent-gate-pvpship.json`, recentGatePvpShip);
+  await writeJSON(`${DATA}/cache/kills-recent-area.json`, recentArea);
   // gateSlices: kills within 100 km of a stargate, same shape as slices. Left out when gate positions
   // weren't available, so the page hides its gate columns rather than showing undercounts.
-  await writeJSON(`${DATA}/public/kills-recent.json`, { updated: new Date().toISOString(), nextSeq: Math.min(last + 1, firstFailed), sliceSeconds: SLICE, slices: recent, pvpSlices: recentPvp, pvpShipSlices: recentPvpShip, ...(gates ? { gateSlices: recentGate, gatePvpSlices: recentGatePvp, gatePvpShipSlices: recentGatePvpShip } : {}) });
+  await writeJSON(`${DATA}/public/kills-recent.json`, { updated: new Date().toISOString(), nextSeq: Math.min(last + 1, firstFailed), sliceSeconds: SLICE, slices: recent, pvpSlices: recentPvp, pvpShipSlices: recentPvpShip, areaSlices: recentArea, ...(gates ? { gateSlices: recentGate, gatePvpSlices: recentGatePvp, gatePvpShipSlices: recentGatePvpShip } : {}) });
   const in15 = Object.entries(recent).filter(([t]) => +t >= Math.floor(Date.now() / 1000) - 15 * 60).reduce((n, [, s]) => n + Object.values(s).reduce((a, b) => a + b, 0), 0);
   log(`Recent kills: ${in15} in the last 15 minutes`);
 
@@ -223,7 +227,7 @@ try {
   let split = null;
   try {
     const rows = Object.values(byDay).flat().map(k => [k.id, k.t, k.system, k.ship, Math.round(k.value),
-      (k.pvp ? F_PVP : 0) | (k.pvpShip ? F_SHIP : 0) | (k.npcOnly ? F_NPC : 0), gates ? nearestGateKm(gates, k) : null]);
+      (k.pvp ? F_PVP : 0) | (k.pvpShip ? F_SHIP : 0) | (k.area ? F_AREA : 0) | (k.npcOnly ? F_NPC : 0), gates ? nearestGateKm(gates, k) : null]);
     const added = await appendKills(KLOG, rows);
     const kl = await loadLog(KLOG);
     // "since" is the day logging began (late-reported kills can land in older day files, so the

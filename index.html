@@ -2881,6 +2881,9 @@ footer .contact p{margin:0 0 10px}
   const CONCORD_CORP = 1000125;
   const isPvpKill = km => (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP ||
     (a.corporation_id && !(a.corporation_id >= 1000000 && a.corporation_id < 2000000)));
+  // Smartbombs, bombs and bomb launchers (copy of worker/src/area-weapons.mjs): kills where one was an attacker's weapon.
+  const AREA_WEAPONS = new Set([1547,1549,1551,1553,1557,1559,1563,1565,3897,3899,3901,3903,3907,3909,3913,3915,3937,3939,3941,3943,3947,3949,3953,3955,3977,3979,3981,3983,3987,3989,3993,3995,4256,9668,9670,9678,9680,9702,9706,9728,9734,9744,9750,9762,9772,9784,9790,9800,9808,14188,14190,14192,14194,14196,14198,14200,14202,14204,14206,14208,14210,14212,14214,14218,14220,14222,14224,14226,14228,14544,14546,14548,14550,14692,14694,14696,14698,14784,14786,14788,14790,14792,14794,14796,14798,15152,15154,15156,15158,15405,15925,15927,15929,15931,15933,15935,15937,15939,15941,15943,15945,15947,15949,15951,15953,15955,15957,15959,15961,15963,21532,21534,21536,21538,23864,23866,23868,27912,27914,27916,27918,27920,28545,28550,28557,41548,41549,41550,41551,84434,84435,84436,84437,84438,84439,84440,84441,84442,84443,84444,84445,84495,84496,84497,84498,84499,84500,84740]);
+  const isAreaKill = km => (km.attackers || []).some(a => AREA_WEAPONS.has(a.weapon_type_id));
   const isPvpShipKill = km => !!(km.victim && km.victim.character_id) && (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP);
   // which kills are being counted: "all", "pvp" or "ship" (PvP ships and pods only)
   function killMode() {
@@ -2962,7 +2965,7 @@ footer .contact p{margin:0 0 10px}
         if (km && km.solar_system_id && km.killmail_id && !recentLive.has(km.killmail_id)) {
           const t = Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000);
           if (t >= Date.now() / 1000 - 3600) {
-            recentLive.set(km.killmail_id, { sys: km.solar_system_id, t, gate: gateOn && onGate(km.solar_system_id, km.victim && km.victim.position), pvp: isPvpKill(km), pvpShip: isPvpShipKill(km) });
+            recentLive.set(km.killmail_id, { sys: km.solar_system_id, t, gate: gateOn && onGate(km.solar_system_id, km.victim && km.victim.position), pvp: isPvpKill(km), pvpShip: isPvpShipKill(km), area: isAreaKill(km) });
             if (t >= Date.now() / 1000 - 120) recentFresh.add(km.solar_system_id);
             recentRerender();
           }
@@ -3144,7 +3147,16 @@ footer .contact p{margin:0 0 10px}
   // Warnings along a planned route: possible gate camps, recent kills and pirate insurgencies.
   // Counts PvP kills when the data has them (whatever the page's own PvP filter says), and is rechecked
   // every 30 seconds while the route is on screen, since players keep it open while they fly.
-  const CAMP_MINUTES = 20, CAMP_KILLS = 2;
+  const CAMP_MINUTES = 20, CAMP_KILLS = 2, AREA_MINUTES = 30;
+  // PvP kills by a smartbomb or bomb in a system over the last `minutes` (any distance from a gate).
+  function routeArea(id, minutes) {
+    if (!recentSnap || !recentSnap.areaSlices) return 0;
+    const from = Date.now() / 1000 - minutes * 60;
+    let n = 0;
+    for (const [start, sys] of Object.entries(recentSnap.areaSlices)) if (+start + 60 > from && sys[id]) n += sys[id];
+    for (const k of recentLive.values()) if (k.sys === +id && k.t >= from && k.pvp && k.area) n++;
+    return n;
+  }
   function routeRecent(id, minutes, gateOnly) {
     if (!recentSnap) return 0;
     const pvp = gateOnly ? !!recentSnap.gatePvpSlices : !!recentSnap.pvpSlices;
@@ -3167,6 +3179,8 @@ footer .contact p{margin:0 0 10px}
       if (recentSnap) {
         const camp = gateOn ? routeRecent(id, CAMP_MINUTES, true) : 0;
         const gate60 = gateOn ? routeRecent(id, 60, true) : 0, k15 = routeRecent(id, 15);
+        const area = routeArea(id, AREA_MINUTES);
+        if (area) list.push({ lv: 2, tag: "smartbombs", text: `Smartbombs or bombs: ${plural(area, "PvP kill")} in the last ${AREA_MINUTES} minutes. Don’t sit on gates, and don’t warp straight gate to gate here.` });
         if (camp >= CAMP_KILLS) list.push({ lv: 2, tag: "gate camp?", text: `Possible gate camp: ${plural(camp, pvp + "kill")} on gates in the last ${CAMP_MINUTES} minutes` });
         else if (gate60 || k15) {
           const parts = [k15 ? `${plural(k15, pvp + "kill")} in the last 15 minutes` : "", gate60 ? `${plural(gate60, pvp + "kill")} on gates in the last hour` : ""].filter(Boolean);
@@ -3202,6 +3216,7 @@ footer .contact p{margin:0 0 10px}
     else {
       notes.push(recentLiveOn ? "Kills from zKillboard, live; rechecked every 30 seconds." : `Kills from zKillboard up to ${new Date(recentSnap.updated).toISOString().slice(11, 16)} EVE time.`);
       if (!gateOn) notes.push("Gate kill data isn’t available, so gate camps can’t be spotted.");
+      if (!recentSnap.areaSlices) notes.push("Smartbomb data isn’t available yet, so smartbomb kills aren’t checked.");
       else notes.push(`“Possible gate camp” means ${CAMP_KILLS} or more ${recentSnap.gatePvpSlices ? "PvP " : ""}kills within 100 km of a stargate in the last ${CAMP_MINUTES} minutes. Camps can start at any moment, so stay alert.`);
     }
     box.append(el("div", "r-warn-note", notes.join(" ")));

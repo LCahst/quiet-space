@@ -9,6 +9,7 @@
 // State lives in one D1 row, because the free Workers KV allows only 1,000 writes a day.
 
 import gatesBin from "./gates.bin"; // ArrayBuffer (wrangler bundles .bin files as data)
+import { isAreaKill } from "./area-weapons.mjs";
 
 const R2Z2 ="https://r2z2.zkillboard.com/ephemeral";
 const SEED_URL = "https://lcahst.github.io/quiet-space/data/kills-recent.json"; // GitHub snapshot, used once to start
@@ -91,12 +92,13 @@ async function update(env) {
       if (seed && seed.slices && typeof seed.nextSeq === "number") {
         s.slices = seed.slices; s.gateSlices = seed.gateSlices || {};
         s.pvpSlices = seed.pvpSlices || {}; s.gatePvpSlices = seed.gatePvpSlices || {};
-        s.pvpShipSlices = seed.pvpShipSlices || {}; s.gatePvpShipSlices = seed.gatePvpShipSlices || {}; s.next = seed.nextSeq;
+        s.pvpShipSlices = seed.pvpShipSlices || {}; s.gatePvpShipSlices = seed.gatePvpShipSlices || {}; s.areaSlices = seed.areaSlices || {}; s.next = seed.nextSeq;
       }
     } catch { /* start empty from the current head */ }
   }
   s.gateSlices ||= {}; // state saved before gate kills were counted
   s.pvpSlices ||= {}; s.gatePvpSlices ||= {}; s.pvpShipSlices ||= {}; s.gatePvpShipSlices ||= {}; // or before PvP kills were
+  s.areaSlices ||= {}; // or before smartbomb and bomb kills were
   if (head.sequence - s.next > MAX_BEHIND) s.next = head.sequence - MAX_BEHIND;
 
   // Read forward one kill at a time until the feed has nothing newer (404) or this run's budget is spent.
@@ -121,7 +123,9 @@ async function update(env) {
       const gate = onGate(km.solar_system_id, km.victim && km.victim.position);
       add(s.slices);
       if (gate) add(s.gateSlices);
-      if (isPvp(km)) { add(s.pvpSlices); if (gate) add(s.gatePvpSlices); }
+      const pvp = isPvp(km);
+      if (pvp) { add(s.pvpSlices); if (gate) add(s.gatePvpSlices); }
+      if (pvp && isAreaKill(km)) add(s.areaSlices); // a player's smartbomb or bomb among the weapons
       if (isPvpShip(km)) { add(s.pvpShipSlices); if (gate) add(s.gatePvpShipSlices); }
       added++;
     }
@@ -132,7 +136,7 @@ async function update(env) {
   // Drop anything older than 90 minutes.
   const cutoff = now() - KEEP_SECONDS;
   for (const k of Object.keys(s.slices)) if (+k < cutoff) delete s.slices[k];
-  for (const sl of [s.gateSlices, s.pvpSlices, s.gatePvpSlices, s.pvpShipSlices, s.gatePvpShipSlices]) for (const k of Object.keys(sl)) if (+k < cutoff) delete sl[k];
+  for (const sl of [s.gateSlices, s.pvpSlices, s.gatePvpSlices, s.pvpShipSlices, s.gatePvpShipSlices, s.areaSlices]) for (const k of Object.keys(sl)) if (+k < cutoff) delete sl[k];
   for (const [id, t] of Object.entries(s.ids)) if (t < cutoff) delete s.ids[id];
 
   s.updated = new Date().toISOString();
@@ -161,9 +165,10 @@ export default {
       if (!s) return json({ error: "not ready yet" }, 503);
       // Same shape as the GitHub snapshot, plus how fresh and how far behind the feed it is.
       // gateSlices: kills within 100 km of a stargate; pvpSlices and gatePvpSlices: the same, PvP only (see isPvp).
+      // areaSlices: PvP kills where an attacker used a smartbomb or bomb (see area-weapons.mjs).
       return json({ updated: s.updated, nextSeq: s.next, sliceSeconds: SLICE, slices: s.slices, gateSlices: s.gateSlices || {},
         pvpSlices: s.pvpSlices || {}, gatePvpSlices: s.gatePvpSlices || {},
-        pvpShipSlices: s.pvpShipSlices || {}, gatePvpShipSlices: s.gatePvpShipSlices || {}, behind: s.behind, source: "worker" },
+        pvpShipSlices: s.pvpShipSlices || {}, gatePvpShipSlices: s.gatePvpShipSlices || {}, areaSlices: s.areaSlices || {}, behind: s.behind, source: "worker" },
         200, { "Cache-Control": "public, max-age=15" });
     }
     if (pathname === "/status") {

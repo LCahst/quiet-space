@@ -4,13 +4,14 @@
 // One file per day, data/kills/YYYY-MM-DD.ndjson, with one JSON array per line:
 //   [killId, unixTime, systemId, shipTypeId, isk, flags, gateKm]
 // flags (add together): 1 PvP (a player pilot, a player corporation or CONCORD among the attackers),
-//   2 PvP between ships (a piloted ship or capsule lost to a player pilot or CONCORD), 8 killed only by NPCs.
+//   2 PvP between ships (a piloted ship or capsule lost to a player pilot or CONCORD), 4 a smartbomb or bomb
+//   among the attackers' weapons (from 2026-11-19; see worker/src/area-weapons.mjs), 8 killed only by NPCs.
 // gateKm: distance from the nearest stargate in whole km, or null when unknown. "On a gate" is worked out
 //   from it when the figures are built, so the gate distance can change later for every stored kill.
 // Nothing else is kept: no attackers, fittings or names.
 import { readFile, appendFile, mkdir, readdir, unlink } from "node:fs/promises";
 
-export const F_PVP = 1, F_SHIP = 2, F_NPC = 8;
+export const F_PVP = 1, F_SHIP = 2, F_AREA = 4, F_NPC = 8;
 export const KEEP_DAYS = 30;
 const dayOf = t => new Date(t * 1000).toISOString().slice(0, 10);
 const dayNum = d => Math.floor(Date.parse(d + "T00:00:00Z") / 86400e3);
