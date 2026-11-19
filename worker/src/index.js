@@ -8,9 +8,10 @@
 // per run; the feed averages about 5 a minute) and 10 ms of CPU (waiting on the network doesn't count).
 // State lives in one D1 row, because the free Workers KV allows only 1,000 writes a day.
 
-const R2Z2 = "https://r2z2.zkillboard.com/ephemeral";
+import gatesBin from "./gates.bin"; // ArrayBuffer (wrangler bundles .bin files as data)
+
+const R2Z2 ="https://r2z2.zkillboard.com/ephemeral";
 const SEED_URL = "https://lcahst.github.io/quiet-space/data/kills-recent.json"; // GitHub snapshot, used once to start
-const GATES_URL = "https://lcahst.github.io/quiet-space/data/gates.json";       // stargate positions, from build-map.mjs
 const GATE_KM = 100;            // a kill within this distance of a stargate counts as a gate kill
 const UA = "QuietSpace/1.0 (+https://github.com/LCahst/quiet-space)";
 const MAX_FETCH = 40;           // kills per run, leaving room under the ~50 request limit
@@ -38,14 +39,21 @@ async function saveState(env, s) {
 }
 const get = url => fetch(url, { headers: { "User-Agent": UA, "Accept-Encoding": "gzip" }, cf: { cacheTtl: 0 } });
 
-// Stargate positions ({ systemId: [x, y, z, ...] in km }). Kept in memory between runs while Cloudflare
-// reuses the same instance, and cached at Cloudflare's edge for a day, since gates almost never move.
-let gatesCache = null;
-async function loadGates() {
-  if (gatesCache) return gatesCache;
-  const r = await fetch(GATES_URL, { headers: { "User-Agent": UA }, cf: { cacheTtl: 86400, cacheEverything: true } });
-  if (!r.ok) throw new Error(`gates.json answered ${r.status}`);
-  return (gatesCache = await r.json());
+// Stargate positions in km, bundled with the Worker as raw 64-bit floats (built by
+// scripts/build-worker-gates.mjs), so a run needs no download or JSON parsing. Layout:
+// [n, systemIds x n (ascending), starts x (n + 1), x, y, z, ...].
+const GATES = new Float64Array(gatesBin);
+const GATE_N = GATES[0];
+const GATE_COORDS = 1 + GATE_N + GATE_N + 1; // where the coordinates begin
+// Index range of a system's gate coordinates, or null if it has none (binary search on the sorted ids).
+function gateRange(sys) {
+  let lo = 1, hi = GATE_N;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1, id = GATES[mid];
+    if (id === sys) { const s = 1 + GATE_N + (mid - 1); return [GATE_COORDS + GATES[s], GATE_COORDS + GATES[s + 1]]; }
+    if (id < sys) lo = mid + 1; else hi = mid - 1;
+  }
+  return null;
 }
 // PvP: at least one attacker is a player pilot, a player corporation (for example its structure), or CONCORD
 // (whose kills follow a player attacking someone in high sec). NPC corporations have IDs 1,000,000 to 1,999,999.
@@ -59,11 +67,11 @@ function isPvp(km) {
 function isPvpShip(km) {
   return !!(km.victim && km.victim.character_id) && (km.attackers || []).some(a => a.character_id || a.corporation_id === CONCORD_CORP);
 }
-function onGate(gates, sys, p) {
-  const g = gates[sys];
-  if (!g || !p) return false;
-  const x = p.x / 1000, y = p.y / 1000, z = p.z / 1000;
-  for (let i = 0; i < g.length; i += 3) {
+function onGate(sys, p) {
+  const r = gateRange(sys);
+  if (!r || !p) return false;
+  const x = p.x / 1000, y = p.y / 1000, z = p.z / 1000, g = GATES;
+  for (let i = r[0]; i < r[1]; i += 3) {
     const dx = x - g[i], dy = y - g[i + 1], dz = z - g[i + 2];
     if (dx * dx + dy * dy + dz * dz <= GATE_KM * GATE_KM) return true;
   }
@@ -72,8 +80,6 @@ function onGate(gates, sys, p) {
 
 async function update(env) {
   let s = await loadState(env);
-  // Without gate positions, gate kills would be undercounted, so wait for the next run instead.
-  const gates = await loadGates();
   const head = await (await get(`${R2Z2}/sequence.json`)).json();
   if (typeof head.sequence !== "number") throw new Error("sequence.json has no sequence number");
 
@@ -112,7 +118,7 @@ async function update(env) {
       const t = Math.floor(Date.parse(km.killmail_time || new Date().toISOString()) / 1000);
       s.ids[id] = t; // reprocessed kills can reappear under a new sequence number; count each kill once
       const add = slices => { const x = (slices[Math.floor(t / SLICE) * SLICE] ||= {}); x[km.solar_system_id] = (x[km.solar_system_id] || 0) + 1; };
-      const gate = onGate(gates, km.solar_system_id, km.victim && km.victim.position);
+      const gate = onGate(km.solar_system_id, km.victim && km.victim.position);
       add(s.slices);
       if (gate) add(s.gateSlices);
       if (isPvp(km)) { add(s.pvpSlices); if (gate) add(s.gatePvpSlices); }
