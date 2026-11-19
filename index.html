@@ -1279,14 +1279,14 @@ footer .contact p{margin:0 0 10px}
       rows.push({ id, sys, reg, a: activity(id) });
     }
     const pvp = r => r.a.ship + r.a.pod;
-    // "Most dangerous right now": flagged systems first (possible gate camps and smartbomb kills, smartbombs
-    // weighing more), then PvP kills anywhere in the last 15 minutes, then gate traffic.
+    // "Most dangerous right now": flagged systems first (possible gate camps and smartbomb kills, every flagged
+    // kill counting once), then PvP kills anywhere in the last 15 minutes, then gate traffic.
     if (sort === "danger") {
       const live = liveDangerCounts();
       for (const r of rows) {
         const k = String(r.id), camp = live.gate.get(k) || 0, area = live.area.get(k) || 0;
         const flagged = (gateOn && camp >= CAMP_KILLS) || area > 0;
-        r.dg = [flagged ? 1 : 0, area * 3 + (gateOn && camp >= CAMP_KILLS ? camp : 0), live.pvp.get(k) || 0];
+        r.dg = [flagged ? 1 : 0, area + (gateOn && camp >= CAMP_KILLS ? camp : 0), live.pvp.get(k) || 0];
       }
     }
     const cmp = {
