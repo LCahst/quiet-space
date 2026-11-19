@@ -426,12 +426,15 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .flag-camp{background:#d6311f}
 .flag-bomb{background:#b5177a;box-shadow:0 0 0 2px rgba(181,23,122,.3),0 0 10px rgba(181,23,122,.5)}
 .legend .flag{padding:0 4px;height:17px}
+.flag-recent{background:transparent;color:var(--danger);box-shadow:inset 0 0 0 1.5px var(--danger)}
+.flag-recent .flag-ago{font-weight:600;opacity:.85;margin-left:1px}
 .flag-new{animation:flagPop 1.4s ease-out 2}
 @keyframes flagPop{0%{transform:scale(1)}20%{transform:scale(1.25)}40%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){.flag-new{animation:none}}
 /* flagged rows: a red edge and a faint red wash */
 #sysTable tr.row-flag td{background:rgba(214,48,36,.07)}
 #sysTable tr.row-flag td:first-child{box-shadow:inset 4px 0 0 #d6311f}
+#sysTable tr.row-recent td:first-child{box-shadow:inset 4px 0 0 rgba(214,49,31,.45)}
 /* region with the constellation underneath */
 td.where{line-height:1.25}
 td.where .where-reg,td.where .where-cons{display:block;white-space:nowrap}
@@ -729,7 +732,7 @@ footer .contact p{margin:0 0 10px}
       <label class="checkline" id="onlyStructLabel" hidden><input type="checkbox" id="onlyStruct"> Public player structures</label>
       <label class="checkline" id="onlyIslandLabel" hidden><input type="checkbox" id="onlyIsland"> High-sec island status</label>
       <label class="checkline" id="onlyRecentLabel" title="Ship and pod kills from zKillboard, updated about every minute, then live while this page is open" hidden><input type="checkbox" id="onlyRecent"> Kills in the last 15 minutes</label>
-      <label class="checkline" id="onlyFlaggedLabel" title="Possible gate camps (2+ PvP kills on gates in 15 minutes) and smartbomb or bomb kills (in the last 30 minutes), from zKillboard" hidden><input type="checkbox" id="onlyFlagged"> Possible gate camps or smartbombs</label>
+      <label class="checkline" id="onlyFlaggedLabel" title="Gate camps now (2+ PvP kills on gates in 15 minutes) or within the last hour, and smartbomb or bomb kills in the last 30 minutes, from zKillboard" hidden><input type="checkbox" id="onlyFlagged"> Gate camps (now or recent) or smartbombs</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
   </form>
@@ -1252,7 +1255,7 @@ footer .contact p{margin:0 0 10px}
     let flagged = null;
     if ($("onlyFlagged").checked) {
       const live = liveDangerCounts(); flagged = new Set();
-      if (gateOn) for (const [id, n] of live.gate) if (n >= CAMP_KILLS) flagged.add(id);
+      if (gateOn) for (const [id, n] of live.gate60) if (n >= CAMP_KILLS) flagged.add(id); // camps now or within the hour
       for (const [id, n] of live.area) if (n > 0) flagged.add(id);
     }
 
@@ -1280,13 +1283,15 @@ footer .contact p{margin:0 0 10px}
     }
     const pvp = r => r.a.ship + r.a.pod;
     // "Most dangerous right now": flagged systems first (possible gate camps and smartbomb kills, every flagged
-    // kill counting once), then PvP kills anywhere in the last 15 minutes, then gate traffic.
+    // kill counting once), then recent gate camps (within the hour), then PvP kills anywhere in the last
+    // 15 minutes, then gate traffic.
     if (sort === "danger") {
       const live = liveDangerCounts();
       for (const r of rows) {
         const k = String(r.id), camp = live.gate.get(k) || 0, area = live.area.get(k) || 0;
-        const flagged = (gateOn && camp >= CAMP_KILLS) || area > 0;
-        r.dg = [flagged ? 1 : 0, area + (gateOn && camp >= CAMP_KILLS ? camp : 0), live.pvp.get(k) || 0];
+        const flagged = (gateOn && camp >= CAMP_KILLS) || area > 0, hour = gateOn ? live.gate60.get(k) || 0 : 0;
+        const tier = flagged ? 2 : hour >= CAMP_KILLS ? 1 : 0;
+        r.dg = [tier, tier === 2 ? area + (gateOn && camp >= CAMP_KILLS ? camp : 0) : tier === 1 ? hour : 0, live.pvp.get(k) || 0];
       }
     }
     const cmp = {
@@ -1401,7 +1406,7 @@ footer .contact p{margin:0 0 10px}
   }
 
   function withFilterText() {
-    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"], ["onlyStruct", "public player structures"], ["onlyIsland", "high-sec island status"], ["onlyRecent", "kills in the last 15 minutes"], ["onlyFlagged", "a possible gate camp or smartbomb kills"]]
+    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"], ["onlyStruct", "public player structures"], ["onlyIsland", "high-sec island status"], ["onlyRecent", "kills in the last 15 minutes"], ["onlyFlagged", "a gate camp (now or within the hour) or smartbomb kills"]]
       .filter(([id]) => $(id).checked).map(([, label]) => label);
     if (!parts.length) return "";
     const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
@@ -1457,32 +1462,52 @@ footer .contact p{margin:0 0 10px}
     if (!recentSnap) return out;
     const camp = gateOn ? routeRecent(id, CAMP_MINUTES, true) : 0;
     if (camp >= CAMP_KILLS) out.push({ kind: "camp", n: camp, text: `Possible gate camp: ${camp} PvP kills on gates in the last ${CAMP_MINUTES} minutes` });
+    else if (gateOn) {
+      // quieter now, but camped within the hour: gank fleets often wait out their timers and strike again
+      const hour = routeRecent(id, RECENT_CAMP_MINUTES, true);
+      if (hour >= CAMP_KILLS) {
+        const ago = lastGatePvpMinutes(id);
+        out.push({ kind: "recent", n: hour, ago, text: `Recent gate camp: ${hour} PvP kills on gates in the last hour${ago !== null ? `, the latest ${ago} minute${ago === 1 ? "" : "s"} ago` : ""}. Quiet for now, but camps often come back.` });
+      }
+    }
     const area = routeArea(id, AREA_MINUTES);
     if (area) out.push({ kind: "bomb", n: area, text: `Smartbombs or bombs: ${area} PvP kill${area === 1 ? "" : "s"} in the last ${AREA_MINUTES} minutes. Don’t sit on gates, and don’t warp straight gate to gate.` });
     return out;
   }
+  // minutes since the latest PvP kill on one of the system's gates (null if none in the snapshot or live)
+  function lastGatePvpMinutes(id) {
+    if (!recentSnap) return null;
+    const slices = recentSnap.gatePvpSlices || recentSnap.gateSlices || {};
+    let last = 0;
+    for (const [start, sys] of Object.entries(slices)) if (sys[id] && +start + 59 > last) last = +start + 59;
+    for (const k of recentLive.values()) if (k.sys === +id && k.gate && k.pvp && k.t > last) last = k.t;
+    return last ? Math.max(0, Math.round((Date.now() / 1000 - last) / 60)) : null;
+  }
   function flagBadge(id, x) {
     const b = el("span", "flag flag-" + x.kind);
-    b.innerHTML = FLAG_ICONS[x.kind];
+    b.innerHTML = FLAG_ICONS[x.kind === "recent" ? "camp" : x.kind];
     b.append(el("b", null, String(x.n)));
+    if (x.kind === "recent" && x.ago !== null) b.append(el("span", "flag-ago", `· ${x.ago}m`));
     b.title = x.text; b.setAttribute("role", "img"); b.setAttribute("aria-label", x.text);
     const key = x.kind + ":" + id;
     if (!flagSeen.has(key)) { flagSeen.add(key); b.classList.add("flag-new"); }
     return b;
   }
   function liveDangerCounts() {
-    const out = { gate: new Map(), area: new Map(), pvp: new Map() };
+    const out = { gate: new Map(), gate60: new Map(), area: new Map(), pvp: new Map() };
     if (!recentSnap) return out;
     const now = Date.now() / 1000, from15 = now - CAMP_MINUTES * 60, from30 = now - AREA_MINUTES * 60;
     const add = (m, id, n) => m.set(id, (m.get(id) || 0) + n);
     const sum = (slices, from, m) => { for (const [start, sys] of Object.entries(slices || {})) if (+start + 60 > from) for (const [id, n] of Object.entries(sys)) add(m, id, n); };
     const pvpOk = !!recentSnap.pvpSlices, gatePvpOk = !!recentSnap.gatePvpSlices;
     sum(gatePvpOk ? recentSnap.gatePvpSlices : recentSnap.gateSlices, from15, out.gate);
+    sum(gatePvpOk ? recentSnap.gatePvpSlices : recentSnap.gateSlices, now - RECENT_CAMP_MINUTES * 60, out.gate60);
     sum(recentSnap.areaSlices, from30, out.area);
     sum(pvpOk ? recentSnap.pvpSlices : recentSnap.slices, from15, out.pvp);
     for (const k of recentLive.values()) {
       const id = String(k.sys);
       if (k.t >= from15 && k.gate && (!gatePvpOk || k.pvp)) add(out.gate, id, 1);
+      if (k.t >= now - RECENT_CAMP_MINUTES * 60 && k.gate && (!gatePvpOk || k.pvp)) add(out.gate60, id, 1);
       if (k.t >= from30 && k.pvp && k.area) add(out.area, id, 1);
       if (k.t >= from15 && (!pvpOk || k.pvp)) add(out.pvp, id, 1);
     }
@@ -1497,7 +1522,7 @@ footer .contact p{margin:0 0 10px}
     nameTd.append(nameBtn);
     if (flags.length) {
       const fw = el("span", "flags"); for (const x of flags) fw.append(flagBadge(r.id, x));
-      nameTd.append(fw); tr.className = "row-flag";
+      nameTd.append(fw); tr.className = flags.some(x => x.kind !== "recent") ? "row-flag" : "row-recent";
     }
     nameTd.append(featureIcons(r.id, r.sys)); tr.appendChild(nameTd);
     const sec = document.createElement("td"); sec.appendChild(secChip(r.sys)); tr.appendChild(sec);
@@ -2159,9 +2184,10 @@ footer .contact p{margin:0 0 10px}
     isIcon.setAttribute("role", "img"); isIcon.setAttribute("aria-label", "High-sec island");
     fh.append(isIcon);
     h.append(fh, "High-sec island");
-    const fl = (kind, text) => { const sp = document.createElement("span"); const bd = el("span", "flag flag-" + kind); bd.innerHTML = FLAG_ICONS[kind]; bd.setAttribute("aria-hidden", "true"); sp.append(bd, text); return sp; };
+    const fl = (kind, text) => { const sp = document.createElement("span"); const bd = el("span", "flag flag-" + kind); bd.innerHTML = FLAG_ICONS[kind === "recent" ? "camp" : kind]; bd.setAttribute("aria-hidden", "true"); sp.append(bd, text); return sp; };
     $("legend").append(a, g, b, c, d, h, e,
       fl("camp", "Possible gate camp: 2+ PvP kills on gates in 15 min"),
+      fl("recent", "Recent gate camp: 2+ in the last hour, quiet now"),
       fl("bomb", "Smartbomb or bomb kills in the last 30 min"));
   }
 
@@ -3398,7 +3424,7 @@ footer .contact p{margin:0 0 10px}
   // Warnings along a planned route: possible gate camps, recent kills and pirate insurgencies.
   // Counts PvP kills when the data has them (whatever the page's own PvP filter says), and is rechecked
   // every 30 seconds while the route is on screen, since players keep it open while they fly.
-  const CAMP_MINUTES = 15, CAMP_KILLS = 2, AREA_MINUTES = 30;
+  const CAMP_MINUTES = 15, CAMP_KILLS = 2, AREA_MINUTES = 30, RECENT_CAMP_MINUTES = 60;
   // PvP kills by a smartbomb or bomb in a system over the last `minutes` (any distance from a gate).
   function routeArea(id, minutes) {
     if (!recentSnap || !recentSnap.areaSlices) return 0;
