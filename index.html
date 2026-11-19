@@ -1270,7 +1270,18 @@ footer .contact p{margin:0 0 10px}
       rows.push({ id, sys, reg, a: activity(id) });
     }
     const pvp = r => r.a.ship + r.a.pod;
+    // "Most dangerous right now": flagged systems first (possible gate camps and smartbomb kills, smartbombs
+    // weighing more), then PvP kills anywhere in the last 15 minutes, then gate traffic.
+    if (sort === "danger") {
+      const live = liveDangerCounts();
+      for (const r of rows) {
+        const k = String(r.id), camp = live.gate.get(k) || 0, area = live.area.get(k) || 0;
+        const flagged = (gateOn && camp >= CAMP_KILLS) || area > 0;
+        r.dg = [flagged ? 1 : 0, area * 3 + (gateOn && camp >= CAMP_KILLS ? camp : 0), live.pvp.get(k) || 0];
+      }
+    }
     const cmp = {
+      danger: (x, y) => x.dg[0] - y.dg[0] || x.dg[1] - y.dg[1] || x.dg[2] - y.dg[2] || x.a.jumps - y.a.jumps,
       overall: (x, y) => (x.a.jumps + pvp(x)) - (y.a.jumps + pvp(y)) || x.a.npc - y.a.npc,
       avg: (x, y) => avgOf(x.id) - avgOf(y.id) || x.a.jumps - y.a.jumps,
       isk7: (x, y) => iskOf(x.id, "7") - iskOf(y.id, "7") || x.a.jumps - y.a.jumps,
@@ -1449,6 +1460,24 @@ footer .contact p{margin:0 0 10px}
     const key = x.kind + ":" + id;
     if (!flagSeen.has(key)) { flagSeen.add(key); b.classList.add("flag-new"); }
     return b;
+  }
+  function liveDangerCounts() {
+    const out = { gate: new Map(), area: new Map(), pvp: new Map() };
+    if (!recentSnap) return out;
+    const now = Date.now() / 1000, from15 = now - CAMP_MINUTES * 60, from30 = now - AREA_MINUTES * 60;
+    const add = (m, id, n) => m.set(id, (m.get(id) || 0) + n);
+    const sum = (slices, from, m) => { for (const [start, sys] of Object.entries(slices || {})) if (+start + 60 > from) for (const [id, n] of Object.entries(sys)) add(m, id, n); };
+    const pvpOk = !!recentSnap.pvpSlices, gatePvpOk = !!recentSnap.gatePvpSlices;
+    sum(gatePvpOk ? recentSnap.gatePvpSlices : recentSnap.gateSlices, from15, out.gate);
+    sum(recentSnap.areaSlices, from30, out.area);
+    sum(pvpOk ? recentSnap.pvpSlices : recentSnap.slices, from15, out.pvp);
+    for (const k of recentLive.values()) {
+      const id = String(k.sys);
+      if (k.t >= from15 && k.gate && (!gatePvpOk || k.pvp)) add(out.gate, id, 1);
+      if (k.t >= from30 && k.pvp && k.area) add(out.area, id, 1);
+      if (k.t >= from15 && (!pvpOk || k.pvp)) add(out.pvp, id, 1);
+    }
+    return out;
   }
   function rowEl(r) {
     const tr = document.createElement("tr");
@@ -3045,6 +3074,9 @@ footer .contact p{margin:0 0 10px}
     $("anotherBtn").textContent = t.another;
     $("regHead").textContent = t.reg; $("consHead").textContent = t.cons; $("panelNote").textContent = t.note;
     [...$("sort").options].forEach(o => { if (t.sort[o.value]) o.textContent = t.sort[o.value]; });
+    // "Most dangerous right now" only makes sense in loud mode
+    const dg = $("sort").querySelector('option[value="danger"]');
+    if (dg) { dg.hidden = !loud; if (!loud && $("sort").value === "danger") $("sort").value = "overall"; }
     document.title = t.title;
   }
   function setLoud(on) {
@@ -3134,6 +3166,9 @@ footer .contact p{margin:0 0 10px}
     if (sel.querySelector('option[value="recent"]')) return;
     const killsOpt = sel.querySelector('option[value="kills"]');
     sel.insertBefore(new Option(loud ? "Most kills, last 15 minutes" : "Fewest kills, last 15 minutes", "recent"), killsOpt ? killsOpt.nextSibling : null);
+    const dg = new Option("Most dangerous right now", "danger"); dg.hidden = !loud;
+    dg.title = "Possible gate camps and smartbomb kills first, then PvP kills in the last 15 minutes";
+    sel.insertBefore(dg, sel.querySelector('option[value="recent"]'));
   }
   async function startRecentKills(snap) {
     recentSnap = snap;
