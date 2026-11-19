@@ -418,6 +418,26 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 
 /* Station and jump clone markers */
 .feat{display:inline-flex;gap:4px;margin-left:8px;vertical-align:-3px}
+/* warning badges: solid, so they stand out from the outline icons around them */
+.flags{display:inline-flex;gap:4px;margin-left:8px;vertical-align:-3px}
+.flag{display:inline-flex;align-items:center;gap:3px;height:19px;padding:0 6px 0 4px;border-radius:10px;color:#fff;font-family:var(--cond);font-size:.78rem;line-height:1;cursor:help;box-shadow:0 0 0 2px rgba(214,48,36,.28),0 0 10px rgba(214,48,36,.45)}
+.flag svg{width:14px;height:14px;display:block}
+.flag b{font-weight:700}
+.flag-camp{background:#d6311f}
+.flag-bomb{background:#b5177a;box-shadow:0 0 0 2px rgba(181,23,122,.3),0 0 10px rgba(181,23,122,.5)}
+.legend .flag{padding:0 4px;height:17px}
+.flag-new{animation:flagPop 1.4s ease-out 2}
+@keyframes flagPop{0%{transform:scale(1)}20%{transform:scale(1.25)}40%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.flag-new{animation:none}}
+/* flagged rows: a red edge and a faint red wash */
+#sysTable tr.row-flag td{background:rgba(214,48,36,.07)}
+#sysTable tr.row-flag td:first-child{box-shadow:inset 4px 0 0 #d6311f}
+/* region with the constellation underneath */
+td.where{line-height:1.25}
+td.where .where-reg,td.where .where-cons{display:block;white-space:nowrap}
+td.where .where-cons{font-size:.8rem;color:var(--muted);margin-top:1px}
+td.where .where-cons button,td.where .where-cons a{color:inherit;font-size:inherit}
+th .th-sub{font-weight:400;font-size:.78rem;opacity:.85}
 .feat svg{width:16px;height:16px;display:block}
 .feat .f-station{color:var(--muted)}
 .feat .f-clone{color:var(--accent)}
@@ -718,7 +738,7 @@ footer .contact p{margin:0 0 10px}
     <table id="sysTable" class="hide-avg hide-size hide-recent hide-gate">
       <thead>
         <tr>
-          <th scope="col" rowspan="2">System</th><th scope="col" rowspan="2">Sec</th><th scope="col" rowspan="2">Region</th><th scope="col" rowspan="2">Constellation</th>
+          <th scope="col" rowspan="2">System</th><th scope="col" rowspan="2">Sec</th><th scope="col" rowspan="2">Region<br><span class="th-sub">Constellation</span></th>
           <th scope="colgroup" colspan="4" class="grp" id="esiGroup" title="CCP’s official figures from ESI, which cover the most recently completed hour">Last hour</th>
           <th scope="colgroup" class="grp c-recent" id="liveGroup" title="Kills reported to zKillboard, updated about every minute and live while this page is open">Live</th>
           <th scope="col" rowspan="2" class="num two c-avg" title="Average gate jumps per hour over the last 30 days">30-day<br>avg</th>
@@ -1405,22 +1425,52 @@ footer .contact p{margin:0 0 10px}
   }
   function numCell(n) { return cell(liveLoaded ? n.toLocaleString() : "…", "num" + (n === 0 ? " zero" : "")); }
 
+  // Possible gate camps and smartbomb kills, the same rules as the route planner's warnings:
+  // 2+ PvP kills on gates in 15 minutes (matching the "Gate 15 min" column with the PvP filter on), and any PvP kill by a smartbomb or bomb in 30 minutes.
+  const FLAG_ICONS = {
+    camp: '<svg viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 14V8.5a4.5 4.5 0 0 1 9 0V14"/><path d="M2 14h12"/></g><circle cx="8" cy="9" r="1.6" fill="currentColor"/></svg>',
+    bomb: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.6" fill="currentColor"/><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M8 1.2v2.2M8 12.6v2.2M1.2 8h2.2M12.6 8h2.2M3.2 3.2l1.5 1.5M11.3 11.3l1.5 1.5M12.8 3.2l-1.5 1.5M4.7 11.3l-1.5 1.5"/></g></svg>'
+  };
+  const flagSeen = new Set(); // flags already shown once, so only new ones pulse
+  function systemFlags(id) {
+    const out = [];
+    if (!recentSnap) return out;
+    const camp = gateOn ? routeRecent(id, CAMP_MINUTES, true) : 0;
+    if (camp >= CAMP_KILLS) out.push({ kind: "camp", n: camp, text: `Possible gate camp: ${camp} PvP kills on gates in the last ${CAMP_MINUTES} minutes` });
+    const area = routeArea(id, AREA_MINUTES);
+    if (area) out.push({ kind: "bomb", n: area, text: `Smartbombs or bombs: ${area} PvP kill${area === 1 ? "" : "s"} in the last ${AREA_MINUTES} minutes. Don’t sit on gates, and don’t warp straight gate to gate.` });
+    return out;
+  }
+  function flagBadge(id, x) {
+    const b = el("span", "flag flag-" + x.kind);
+    b.innerHTML = FLAG_ICONS[x.kind];
+    b.append(el("b", null, String(x.n)));
+    b.title = x.text; b.setAttribute("role", "img"); b.setAttribute("aria-label", x.text);
+    const key = x.kind + ":" + id;
+    if (!flagSeen.has(key)) { flagSeen.add(key); b.classList.add("flag-new"); }
+    return b;
+  }
   function rowEl(r) {
     const tr = document.createElement("tr");
     const nameTd = document.createElement("td"); nameTd.className = "sys";
     const nameBtn = document.createElement("button"); nameBtn.type = "button"; nameBtn.className = "sys-link";
     nameBtn.textContent = r.sys.n; nameBtn.addEventListener("click", () => openSystem(r.id));
-    nameTd.append(nameBtn, featureIcons(r.id, r.sys)); tr.appendChild(nameTd);
-    const sec = document.createElement("td"); sec.appendChild(secChip(r.sys)); tr.appendChild(sec);
-    if (r.reg !== undefined) {
-      const regTd = document.createElement("td");
-      const box = factionBox(r.reg); if (box) regTd.append(box);
-      regTd.append(regionButton(r.reg)); tr.appendChild(regTd);
+    const flags = systemFlags(r.id);
+    nameTd.append(nameBtn);
+    if (flags.length) {
+      const fw = el("span", "flags"); for (const x of flags) fw.append(flagBadge(r.id, x));
+      nameTd.append(fw); tr.className = "row-flag";
     }
-    else tr.appendChild(cell("…"));
-    if (r.sys.c !== undefined && catalog.constellations[r.sys.c]) {
-      const consTd = document.createElement("td"); consTd.append(constellationButton(r.sys.c)); tr.appendChild(consTd);
-    } else tr.appendChild(cell("…"));
+    nameTd.append(featureIcons(r.id, r.sys)); tr.appendChild(nameTd);
+    const sec = document.createElement("td"); sec.appendChild(secChip(r.sys)); tr.appendChild(sec);
+    {
+      const where = document.createElement("td"); where.className = "where";
+      const top = el("span", "where-reg");
+      if (r.reg !== undefined) { const box = factionBox(r.reg); if (box) top.append(box); top.append(regionButton(r.reg)); } else top.append("…");
+      const sub = el("span", "where-cons");
+      if (r.sys.c !== undefined && catalog.constellations[r.sys.c]) sub.append(constellationButton(r.sys.c));
+      where.append(top, sub); tr.appendChild(where);
+    }
     tr.appendChild(numCell(r.a.jumps));
     tr.appendChild(numCell(r.a.ship));
     tr.appendChild(numCell(r.a.pod));
@@ -2071,7 +2121,10 @@ footer .contact p{margin:0 0 10px}
     isIcon.setAttribute("role", "img"); isIcon.setAttribute("aria-label", "High-sec island");
     fh.append(isIcon);
     h.append(fh, "High-sec island");
-    $("legend").append(a, g, b, c, d, h, e);
+    const fl = (kind, text) => { const sp = document.createElement("span"); const bd = el("span", "flag flag-" + kind); bd.innerHTML = FLAG_ICONS[kind]; bd.setAttribute("aria-hidden", "true"); sp.append(bd, text); return sp; };
+    $("legend").append(a, g, b, c, d, h, e,
+      fl("camp", "Possible gate camp: 2+ PvP kills on gates in 15 min"),
+      fl("bomb", "Smartbomb or bomb kills in the last 30 min"));
   }
 
   // ---------- System details ----------
@@ -3300,7 +3353,7 @@ footer .contact p{margin:0 0 10px}
   // Warnings along a planned route: possible gate camps, recent kills and pirate insurgencies.
   // Counts PvP kills when the data has them (whatever the page's own PvP filter says), and is rechecked
   // every 30 seconds while the route is on screen, since players keep it open while they fly.
-  const CAMP_MINUTES = 20, CAMP_KILLS = 2, AREA_MINUTES = 30;
+  const CAMP_MINUTES = 15, CAMP_KILLS = 2, AREA_MINUTES = 30;
   // PvP kills by a smartbomb or bomb in a system over the last `minutes` (any distance from a gate).
   function routeArea(id, minutes) {
     if (!recentSnap || !recentSnap.areaSlices) return 0;
