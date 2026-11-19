@@ -1,12 +1,14 @@
-// Quiet Space recent kills, kept up to date every minute on Cloudflare's free Workers plan.
+// Quiet Space recent kills, kept up to date every minute on Cloudflare Workers (Workers Paid plan).
 //
 // Every minute: read new kills from zKillboard's R2Z2 feed (one request per kill) and keep the last
 // 90 minutes in 1-minute slices per system. Serves the same kills-recent.json the GitHub Action makes,
 // so the page can load an up-to-the-minute snapshot and only top up the last minute or so live.
 //
-// Free plan limits that shape this: about 50 outgoing requests per run (so at most MAX_FETCH kills
-// per run; the feed averages about 5 a minute) and 10 ms of CPU (waiting on the network doesn't count).
-// State lives in one D1 row, because the free Workers KV allows only 1,000 writes a day.
+// Limits that shape this (Workers Paid): 30 s of CPU per run (wrangler.jsonc sets it; a run uses about
+// 10-50 ms, waiting on the network doesn't count) and 10,000 outgoing requests per run. The real cap is
+// zKillboard's request rate (about 10 a second, see GAP_MS), so MAX_FETCH keeps each run well inside its
+// minute: the feed averages about 9 kills a minute, and a big backlog is cleared in a few runs.
+// State lives in one D1 row (one write a minute), which suits D1 better than Workers KV.
 
 import gatesBin from "./gates.bin"; // ArrayBuffer (wrangler bundles .bin files as data)
 import { isAreaKill } from "./area-weapons.mjs";
@@ -15,7 +17,7 @@ const R2Z2 ="https://r2z2.zkillboard.com/ephemeral";
 const SEED_URL = "https://lcahst.github.io/quiet-space/data/kills-recent.json"; // GitHub snapshot, used once to start
 const GATE_KM = 100;            // a kill within this distance of a stargate counts as a gate kill
 const UA = "QuietSpace/1.0 (+https://github.com/LCahst/quiet-space)";
-const MAX_FETCH = 40;           // kills per run, leaving room under the ~50 request limit
+const MAX_FETCH = 250;          // kills per run: about 30-40 s at zKillboard's pace, so runs never overlap
 const GAP_MS = 100;             // zKillboard asks for no more than about 10 requests a second
 const SLICE = 60;               // 1-minute slices
 const KEEP_SECONDS = 90 * 60;   // keep 90 minutes of slices

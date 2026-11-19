@@ -1,10 +1,12 @@
 {
-  // Cloudflare Worker that keeps Quiet Space's recent kills up to the minute (free Workers plan).
+  // Cloudflare Worker that keeps Quiet Space's recent kills up to the minute (Workers Paid plan).
   // Deploy from this folder with: npx wrangler deploy
   "name": "quietspace-kills",
   "main": "src/index.js",
   "compatibility_date": "2026-06-01",
   "triggers": { "crons": ["* * * * *"] },
+  // CPU per run; only the paid plan accepts a limit here (a deploy on the free plan is refused)
+  "limits": { "cpu_ms": 30000 },
   "d1_databases": [
     {
       "binding": "DB",
