@@ -216,6 +216,9 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .r-msg{color:var(--muted);font-size:.9rem}
 .r-summary{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:3px;padding:8px 12px;margin:4px 0 10px}
 .r-summary b{color:var(--ink)}
+.r-usual{margin-top:6px;padding-top:6px;border-top:1px solid var(--line)}
+.r-usual .r-lvl{font-weight:700;color:var(--ink)}
+.r-usual small{display:block;color:var(--muted);font-size:.8rem;margin-top:2px}
 .r-list{width:100%;border-collapse:collapse;font-size:.92rem}
 .r-list th,.r-list td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
 .r-list th{color:var(--muted);font-weight:500}
@@ -3226,6 +3229,65 @@ footer .contact p{margin:0 0 10px}
       for (const x of w.get(+span.dataset.i) || []) { const t = el("span", "r-tag lv" + x.lv, x.tag); t.title = x.text; span.append(t); }
     });
   }
+  // Usual traffic on a route: the route's systems' weekly patterns (average jumps for each of the week's
+  // 168 day-and-hour slots, EVE time) added together. r.weekly keeps the result for the traffic chart.
+  // Hours the collector missed are null; fill a short gap (up to 3 hours) with the average of the hours either side.
+  function fillGaps(prof) {
+    const out = prof.slice();
+    for (let i = 0; i < 168; i++) {
+      if (out[i] !== null) continue;
+      let a = null, b = null;
+      for (let k = 1; k <= 3 && a === null; k++) a = prof[(i - k + 168) % 168];
+      for (let k = 1; k <= 3 && b === null; k++) b = prof[(i + k) % 168];
+      out[i] = a !== null && b !== null ? (a + b) / 2 : (a ?? b);
+    }
+    return out;
+  }
+  async function routeWeekly(r) {
+    if (r.weekly) return r.weekly;
+    const ids = [...new Set(r.path)];
+    const regs = [...new Set(ids.map(id => regionOf(catalog.systems[id])).filter(x => x !== undefined))];
+    const files = new Map(await Promise.all(regs.map(async reg => [reg, await loadProfiles(reg)])));
+    const sums = Array(168).fill(null), rows = [];
+    let n = 0, weeks = 0;
+    for (const id of ids) {
+      const p = files.get(regionOf(catalog.systems[id]));
+      const prof = p && p.systems ? p.systems[id] : undefined;
+      if (prof === undefined || prof === null) continue;
+      n++; weeks = Math.max(weeks, p.weeks || 0);
+      const vals = prof === 0 ? Array(168).fill(0) : fillGaps(prof);
+      rows.push(vals);
+      for (let i = 0; i < 168; i++) if (vals[i] !== null) sums[i] = (sums[i] || 0) + vals[i];
+    }
+    return (r.weekly = n ? { sums, rows, n, total: ids.length, weeks } : null);
+  }
+  const nowSlot = () => { const d = new Date(); return ((d.getUTCDay() + 6) % 7) * 24 + d.getUTCHours(); };
+  async function updateUsual(r) {
+    const box = $("rUsual"); if (!box) return;
+    const slot = nowSlot();
+    if (box.dataset.slot === String(slot)) return;
+    const w = await routeWeekly(r);
+    if (routeState.last !== r || !$("rUsual")) return;
+    box.dataset.slot = slot;
+    box.replaceChildren();
+    const known = w ? w.sums.filter(v => v !== null) : [];
+    const now = w ? w.sums[slot] : null;
+    if (!w || now === null || known.length < 24) { box.append("No weekly traffic pattern for this route yet."); r.usualText = ""; return; }
+    // where this hour sits among the route's own week: bottom third low, top third high
+    const rank = known.filter(v => v < now).length / known.length;
+    const level = rank < 1 / 3 ? "low" : rank > 2 / 3 ? "high" : "average";
+    const ahead = [1, 2, 3].map(k => w.sums[(slot + k) % 168]).filter(v => v !== null);
+    const next = ahead.length ? ahead.reduce((a, b) => a + b, 0) / ahead.length : null;
+    const trend = next === null ? "" : next > now * 1.2 ? " It usually gets busier over the next 3 hours." : next < now * 0.8 ? " It usually gets quieter over the next 3 hours." : " It usually stays about the same over the next 3 hours.";
+    // a typical system on the route (median), so one trade hub doesn't make the whole route look busy
+    const at = w.rows.map(v => v[slot]).filter(v => v !== null).sort((a, b) => a - b);
+    const per = at.length ? (at.length % 2 ? at[(at.length - 1) / 2] : (at[at.length / 2 - 1] + at[at.length / 2]) / 2) : 0;
+    const when = `${slotLabel(slot, 1, true)} EVE`;
+    box.append("Usual traffic at this time (", when, "): ", el("span", "r-lvl", level), " for this route.");
+    box.append(el("small", null, `About ${Math.round(now).toLocaleString()} gate jumps an hour across the route; a typical system on it sees about ${per < 10 ? per.toFixed(1) : Math.round(per)} jumps an hour.${trend} From ${w.weeks >= 12 ? "the last 12 weeks" : `${w.weeks} week${w.weeks === 1 ? "" : "s"} of data so far`}${w.n < w.total ? `, ${w.n} of ${w.total} systems` : ""}.`));
+    r.usualText = `Usual traffic at ${when}: ${level} for this route, about ${Math.round(now)} jumps an hour across the route, about ${per < 10 ? per.toFixed(1) : Math.round(per)} in a typical system.${trend}`;
+  }
+  setInterval(() => { if (routeState.last && $("rUsual")) updateUsual(routeState.last); }, 30000);
   setInterval(() => { if (routeState.last && $("rWarn") && !$("rResult").closest("[hidden]")) updateRouteWarnings(routeState.last); }, 30000);
   function renderRoute(r) {
     const box = $("rResult"); box.replaceChildren();
@@ -3259,6 +3321,7 @@ footer .contact p{margin:0 0 10px}
       note = ex > 0 ? ` The shortest route with these settings is ${r.shortest} jumps; this one takes ${ex} more to go round busier systems.` : ` This is also the shortest route with these settings.`;
     }
     sum.innerHTML = `<b>${routeTitle(r)}</b><br>${tj.toLocaleString()} gate jumps and ${tk} ship and pod kills across the route in the last hour${avgs.length ? `, ${(avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)} jumps an hour on average over 30 days` : ""}.${note}`;
+    const usual = el("div", "r-usual", "Checking usual traffic for this time…"); usual.id = "rUsual"; sum.append(usual);
     box.append(sum);
     const warn = el("div", "r-warn"); warn.id = "rWarn"; warn.setAttribute("aria-live", "polite"); box.append(warn);
     const wrap = el("div", "r-wrap"), t = el("table", "r-list");
@@ -3278,6 +3341,7 @@ footer .contact p{margin:0 0 10px}
     });
     t.append(tb); wrap.append(t); box.append(wrap);
     updateRouteWarnings(r);
+    updateUsual(r);
     const acts = el("div", "r-actions");
     const btn = (label, fn, primary) => { const x = el("button", "btn" + (primary ? " primary" : ""), label); x.type = "button"; x.addEventListener("click", fn); acts.append(x); return x; };
     btn("Download as text file", () => downloadRoute(r), true);
@@ -3297,6 +3361,7 @@ footer .contact p{margin:0 0 10px}
       const label = i === 0 ? "Start" : (r.loop && i === n ? "Back" : `${i}.`);
       lines.push(`${label.padEnd(6)} ${sys.n} (${d === null ? "?" : d.toFixed(1)}), ${catalog.regions[regionOf(sys)] || ""}: ${jumps[id] || 0} jumps, ${routeKills(id)} kills in the last hour${again.has(i) ? " (again)" : ""}`);
     });
+    if (r.usualText) lines.push(r.usualText);
     const w = [...routeWarnings(r).entries()].flatMap(([i, list]) => list.map(x => `  ${catalog.systems[r.path[i]].n} (${stepLabel(r, i).toLowerCase()}): ${x.text}`));
     if (w.length) lines.push("", `Warnings as of ${new Date().toISOString().slice(11, 16)} EVE time:`, ...w);
     lines.push("", `Route map on Dotlan: ${dotlanRoute(r.path)}`, "Planned with Quiet Space: https://lcahst.github.io/quiet-space/");
