@@ -12,6 +12,7 @@
 :root{
   --bg:#e7ecf2; --panel:#f6f8fb; --ink:#18212d; --muted:#556172; --line:#c6d0db;
   --accent:#2a64a8; --row-hover:#e9eff6; --focus:#2a64a8;
+  --danger:#c0362b; --caution:#9a5b00;
   --sans:"Saira", "Segoe UI", system-ui, sans-serif;
   --cond:"Saira Semi Condensed", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
   color-scheme: light;
@@ -23,11 +24,13 @@
   :root:not([data-theme="light"]){
     --bg:#131b26; --panel:#1b2532; --ink:#dde5ee; --muted:#8a97a8; --line:#2b394a;
     --accent:#72aef0; --row-hover:#212d3c; --focus:#72aef0; color-scheme:dark;
+    --danger:#ff7468; --caution:#f0b44c;
   }
 }
 :root[data-theme="dark"]{
   --bg:#131b26; --panel:#1b2532; --ink:#dde5ee; --muted:#8a97a8; --line:#2b394a;
   --accent:#72aef0; --row-hover:#212d3c; --focus:#72aef0; color-scheme:dark;
+    --danger:#ff7468; --caution:#f0b44c;
 }
 @media (prefers-color-scheme: dark){
   :root.loud:not([data-theme="light"]){--accent:#ff7a3d;--focus:#ff7a3d}
@@ -218,6 +221,18 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .r-list td.k{color:#d33a2c;font-weight:700}
 .r-list .r-step{color:var(--muted)}
 .r-list .sys-link{font-weight:600}
+.r-warn{border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:3px;padding:8px 12px;margin:0 0 10px;background:var(--panel)}
+.r-warn.lv1{border-left-color:var(--caution)}
+.r-warn.lv2{border-left-color:var(--danger)}
+.r-warn b{color:var(--ink)}
+.r-warn ul{margin:6px 0 4px;padding-left:18px}
+.r-warn li{margin:2px 0}
+.r-warn .lv2-t{color:var(--danger);font-weight:700}
+.r-warn .lv1-t{color:var(--caution);font-weight:700}
+.r-warn .r-warn-note{color:var(--muted);font-size:.85rem;margin-top:4px}
+.r-tag{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border:1px solid currentColor;border-radius:2px;padding:0 4px;vertical-align:1px;margin-left:4px;cursor:help}
+.r-tag.lv2{color:var(--danger)}
+.r-tag.lv1{color:var(--caution)}
 .r-again{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:0 4px;vertical-align:1px}
 .r-wrap{overflow-x:auto}
 .r-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
@@ -3125,6 +3140,77 @@ footer .contact p{margin:0 0 10px}
     r.path.forEach((id, i) => { if (seen.has(id) && !(r.loop && i === n)) out.add(i); seen.add(id); });
     return out;
   }
+  // Warnings along a planned route: possible gate camps, recent kills and pirate insurgencies.
+  // Counts PvP kills when the data has them (whatever the page's own PvP filter says), and is rechecked
+  // every 30 seconds while the route is on screen, since players keep it open while they fly.
+  const CAMP_MINUTES = 20, CAMP_KILLS = 2;
+  function routeRecent(id, minutes, gateOnly) {
+    if (!recentSnap) return 0;
+    const pvp = gateOnly ? !!recentSnap.gatePvpSlices : !!recentSnap.pvpSlices;
+    const slices = recentSnap[gateOnly ? (pvp ? "gatePvpSlices" : "gateSlices") : (pvp ? "pvpSlices" : "slices")];
+    if (!slices) return 0;
+    const from = Date.now() / 1000 - minutes * 60;
+    let n = 0;
+    for (const [start, sys] of Object.entries(slices)) if (+start + 60 > from && sys[id]) n += sys[id];
+    for (const k of recentLive.values()) if (k.sys === +id && k.t >= from && (!gateOnly || k.gate) && (!pvp || k.pvp)) n++;
+    return n;
+  }
+  // Map of path index (first visit of each system) to its warnings: { lv: 2 danger | 1 caution, tag, text }.
+  function routeWarnings(r) {
+    const out = new Map(), seen = new Set();
+    const pvp = recentSnap && recentSnap.pvpSlices ? "PvP " : "";
+    const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+    r.path.forEach((id, i) => {
+      if (seen.has(id)) return; seen.add(id);
+      const list = [];
+      if (recentSnap) {
+        const camp = gateOn ? routeRecent(id, CAMP_MINUTES, true) : 0;
+        const gate60 = gateOn ? routeRecent(id, 60, true) : 0, k15 = routeRecent(id, 15);
+        if (camp >= CAMP_KILLS) list.push({ lv: 2, tag: "gate camp?", text: `Possible gate camp: ${plural(camp, pvp + "kill")} on gates in the last ${CAMP_MINUTES} minutes` });
+        else if (gate60 || k15) {
+          const parts = [k15 ? `${plural(k15, pvp + "kill")} in the last 15 minutes` : "", gate60 ? `${plural(gate60, pvp + "kill")} on gates in the last hour` : ""].filter(Boolean);
+          list.push({ lv: 1, tag: "kills", text: "Recent kills: " + parts.join(", ") });
+        }
+      }
+      const ins = prebuilt.insurgency && prebuilt.insurgency.systems[id];
+      if (ins) { const c = insCampaign(ins); list.push({ lv: 1, tag: "insurgency", text: `Pirate insurgency${c && c.faction ? ` (${pirateName(c.faction)})` : ""}` }); }
+      if (list.length) out.set(i, list);
+    });
+    return out;
+  }
+  function stepLabel(r, i) { return i === 0 ? "Start" : (r.loop && i === r.path.length - 1 ? "Back" : `Jump ${i}`); }
+  function updateRouteWarnings(r) {
+    const box = $("rWarn"); if (!box) return;
+    const w = routeWarnings(r);
+    const all = [...w.entries()].flatMap(([i, list]) => list.map(x => ({ i, ...x })));
+    const top = all.reduce((m, x) => Math.max(m, x.lv), 0);
+    box.className = "r-warn" + (top ? " lv" + top : "");
+    box.replaceChildren();
+    const head = el("b", null, all.length ? `${all.length} warning${all.length === 1 ? "" : "s"} on this route` : "No warnings on this route right now");
+    box.append(head);
+    if (all.length) {
+      const ul = el("ul");
+      for (const x of all.sort((a, b) => b.lv - a.lv || a.i - b.i)) {
+        const li = el("li"); li.append(el("span", "lv" + x.lv + "-t", catalog.systems[r.path[x.i]].n), ` (${stepLabel(r, x.i).toLowerCase()}): ${x.text}`);
+        ul.append(li);
+      }
+      box.append(ul);
+    } else box.append(el("div", null, "No recent kills or gate kills and no pirate insurgencies along the way."));
+    const notes = [];
+    if (!recentSnap) notes.push("Recent kill data hasn’t loaded, so kills aren’t checked.");
+    else {
+      notes.push(recentLiveOn ? "Kills from zKillboard, live; rechecked every 30 seconds." : `Kills from zKillboard up to ${new Date(recentSnap.updated).toISOString().slice(11, 16)} EVE time.`);
+      if (!gateOn) notes.push("Gate kill data isn’t available, so gate camps can’t be spotted.");
+      else notes.push(`“Possible gate camp” means ${CAMP_KILLS} or more ${recentSnap.gatePvpSlices ? "PvP " : ""}kills within 100 km of a stargate in the last ${CAMP_MINUTES} minutes. Camps can start at any moment, so stay alert.`);
+    }
+    box.append(el("div", "r-warn-note", notes.join(" ")));
+    // tags on the route's rows
+    document.querySelectorAll("#rResult .r-tags").forEach(span => {
+      span.replaceChildren();
+      for (const x of w.get(+span.dataset.i) || []) { const t = el("span", "r-tag lv" + x.lv, x.tag); t.title = x.text; span.append(t); }
+    });
+  }
+  setInterval(() => { if (routeState.last && $("rWarn") && !$("rResult").closest("[hidden]")) updateRouteWarnings(routeState.last); }, 30000);
   function renderRoute(r) {
     const box = $("rResult"); box.replaceChildren();
     const n = r.path.length - 1;
@@ -3158,6 +3244,7 @@ footer .contact p{margin:0 0 10px}
     }
     sum.innerHTML = `<b>${routeTitle(r)}</b><br>${tj.toLocaleString()} gate jumps and ${tk} ship and pod kills across the route in the last hour${avgs.length ? `, ${(avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1)} jumps an hour on average over 30 days` : ""}.${note}`;
     box.append(sum);
+    const warn = el("div", "r-warn"); warn.id = "rWarn"; warn.setAttribute("aria-live", "polite"); box.append(warn);
     const wrap = el("div", "r-wrap"), t = el("table", "r-list");
     t.innerHTML = `<thead><tr><th>#</th><th>System</th><th>Region</th><th class="num">Jumps, last hour</th><th class="num">Kills, last hour</th><th class="num">30-day avg</th></tr></thead>`;
     const tb = document.createElement("tbody");
@@ -3168,11 +3255,13 @@ footer .contact p{margin:0 0 10px}
       b.addEventListener("click", () => openSystem(id));
       name.append(secChip(sys), " ", b);
       if (again.has(i)) { const tag = el("span", "r-again", "again"); tag.title = "The route passes through this system a second time"; name.append(" ", tag); }
+      const tags = el("span", "r-tags"); tags.dataset.i = i; name.append(tags);
       const k = routeKills(id), a = routeAvg(id);
       tr.append(step, name, el("td", null, catalog.regions[regionOf(sys)] || ""), el("td", "num", String(jumps[id] || 0)), el("td", "num" + (k ? " k" : ""), String(k)), el("td", "num", a == null ? "–" : a.toFixed(1)));
       tb.append(tr);
     });
     t.append(tb); wrap.append(t); box.append(wrap);
+    updateRouteWarnings(r);
     const acts = el("div", "r-actions");
     const btn = (label, fn, primary) => { const x = el("button", "btn" + (primary ? " primary" : ""), label); x.type = "button"; x.addEventListener("click", fn); acts.append(x); return x; };
     btn("Download as text file", () => downloadRoute(r), true);
@@ -3192,6 +3281,8 @@ footer .contact p{margin:0 0 10px}
       const label = i === 0 ? "Start" : (r.loop && i === n ? "Back" : `${i}.`);
       lines.push(`${label.padEnd(6)} ${sys.n} (${d === null ? "?" : d.toFixed(1)}), ${catalog.regions[regionOf(sys)] || ""}: ${jumps[id] || 0} jumps, ${routeKills(id)} kills in the last hour${again.has(i) ? " (again)" : ""}`);
     });
+    const w = [...routeWarnings(r).entries()].flatMap(([i, list]) => list.map(x => `  ${catalog.systems[r.path[i]].n} (${stepLabel(r, i).toLowerCase()}): ${x.text}`));
+    if (w.length) lines.push("", `Warnings as of ${new Date().toISOString().slice(11, 16)} EVE time:`, ...w);
     lines.push("", `Route map on Dotlan: ${dotlanRoute(r.path)}`, "Planned with Quiet Space: https://lcahst.github.io/quiet-space/");
     return lines.join("\n");
   }
