@@ -729,6 +729,7 @@ footer .contact p{margin:0 0 10px}
       <label class="checkline" id="onlyStructLabel" hidden><input type="checkbox" id="onlyStruct"> Public player structures</label>
       <label class="checkline" id="onlyIslandLabel" hidden><input type="checkbox" id="onlyIsland"> High-sec island status</label>
       <label class="checkline" id="onlyRecentLabel" title="Ship and pod kills from zKillboard, updated about every minute, then live while this page is open" hidden><input type="checkbox" id="onlyRecent"> Kills in the last 15 minutes</label>
+      <label class="checkline" id="onlyFlaggedLabel" title="Possible gate camps (2+ PvP kills on gates in 15 minutes) and smartbomb or bomb kills (in the last 30 minutes), from zKillboard" hidden><input type="checkbox" id="onlyFlagged"> Possible gate camps or smartbombs</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
   </form>
@@ -1247,6 +1248,13 @@ footer .contact p{margin:0 0 10px}
     const onlyStruct = $("onlyStruct").checked;
     const onlyIsland = $("onlyIsland").checked;
     const onlyRecent = $("onlyRecent").checked;
+    // flagged systems, counted once for the whole table (same rules as the badges)
+    let flagged = null;
+    if ($("onlyFlagged").checked) {
+      const live = liveDangerCounts(); flagged = new Set();
+      if (gateOn) for (const [id, n] of live.gate) if (n >= CAMP_KILLS) flagged.add(id);
+      for (const [id, n] of live.area) if (n > 0) flagged.add(id);
+    }
 
     const rows = [];
     for (const idStr in catalog.systems) {
@@ -1267,6 +1275,7 @@ footer .contact p{margin:0 0 10px}
       if (onlyStruct && !(prebuilt.structCounts && prebuilt.structCounts[id])) continue;
       if (onlyIsland && !(islands && islands.has(id))) continue;
       if (onlyRecent && !recentKills(id, 15)) continue;
+      if (flagged && !flagged.has(String(id))) continue;
       rows.push({ id, sys, reg, a: activity(id) });
     }
     const pvp = r => r.a.ship + r.a.pod;
@@ -1392,7 +1401,7 @@ footer .contact p{margin:0 0 10px}
   }
 
   function withFilterText() {
-    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"], ["onlyStruct", "public player structures"], ["onlyIsland", "high-sec island status"], ["onlyRecent", "kills in the last 15 minutes"]]
+    const parts = [["onlyStations", "NPC stations"], ["onlyClones", "jump clone services"], ["onlyFactory", "manufacturing services"], ["onlyFW", "faction warfare"], ["onlyIns", "a pirate insurgency"], ["onlyStruct", "public player structures"], ["onlyIsland", "high-sec island status"], ["onlyRecent", "kills in the last 15 minutes"], ["onlyFlagged", "a possible gate camp or smartbomb kills"]]
       .filter(([id]) => $(id).checked).map(([, label]) => label);
     if (!parts.length) return "";
     const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
@@ -3173,6 +3182,7 @@ footer .contact p{margin:0 0 10px}
   async function startRecentKills(snap) {
     recentSnap = snap;
     $("onlyRecentLabel").hidden = false;
+    $("onlyFlaggedLabel").hidden = false;
     if (snap.pvpSlices) {
       $("pvpGroup").hidden = false;
       try { pvpOn = localStorage.getItem("quietspace.pvpOnly") === "1"; pvpShipsOn = localStorage.getItem("quietspace.pvpShips") === "1"; } catch (e) {}
@@ -5155,6 +5165,7 @@ footer .contact p{margin:0 0 10px}
   $("pvpOnly").addEventListener("change", onPvpChange);
   $("pvpShips").addEventListener("change", onPvpChange);
   $("onlyRecent").addEventListener("change", onFilterChange);
+  $("onlyFlagged").addEventListener("change", onFilterChange);
   $("moreBtn").addEventListener("click", () => { shown += PAGE; render(); });
   $("anotherBtn").addEventListener("click", pickAnother);
   $("copyHero").addEventListener("click", () => {
