@@ -301,6 +301,89 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .ta-val .n{display:inline-block;min-width:3.2em;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
 .ta-track{display:inline-block;width:calc(100% - 4em);margin-left:8px;vertical-align:middle}
 .ta-bar{display:block;height:8px;border-radius:0 4px 4px 0;background:var(--accent)}
+.rm-layer{position:fixed;inset:0;z-index:1000;background:#0a0e14}
+.rl{position:relative;margin:0 0 12px;background:#0a0e14;border:1px solid #223042;border-radius:6px;color:#e3eaf2;font-family:var(--sans)}
+.rl-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px 0}
+.rl-big{font:inherit;font-size:.82rem;font-weight:600;color:#e3eaf2;background:#0d131c;border:1px solid #2f4157;border-radius:5px;padding:6px 12px;min-height:32px;cursor:pointer}
+.rl-big:hover{border-color:#72aef0}
+.rl-big:focus-visible{outline:2px solid #72aef0;outline-offset:2px}
+.rl-narrow .rl-top{justify-content:flex-end}
+.rl-scroll{overflow-x:auto;overflow-y:hidden}
+.rl-svg{display:block}
+.rl-band{stroke:#243245;stroke-width:1}
+.rm-flow-layer{position:absolute;left:0;top:0;pointer-events:none}
+.rl-inner{position:relative}
+.rs{list-style:none;margin:6px 0 0;padding:0 0 6px}
+.rs li{position:relative}
+.rs li+li::before{content:"";position:absolute;left:31px;top:-12px;height:24px;width:3px;background:#8fd0ff;opacity:.7;border-radius:2px}
+.rs-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:inherit;background:none;border:0;padding:7px 10px 7px 14px;min-height:52px;cursor:pointer}
+.rs-row:hover,.rs-row:focus-visible{background:#111a26;outline:none}
+.rs-dot{flex:none;width:36px;height:36px;border-radius:50%;border:2.5px solid;display:grid;place-items:center;font-family:var(--cond);font-weight:700;font-size:.78rem;background:#0b1119;position:relative;z-index:1}
+.rs-main{flex:1;min-width:0;display:grid}
+.rs-name{font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs-step{color:#8593a5;font-weight:500}
+.rs-tag{font-family:var(--cond);font-weight:700;font-size:.68rem;letter-spacing:.05em;border:1px solid currentColor;border-radius:3px;padding:0 4px;vertical-align:1px}
+.rs-sub{color:#8593a5;font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs-val{flex:none;color:#c9d3df;font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.rm{position:absolute;inset:0;background:#0a0e14;overflow:hidden;touch-action:none;user-select:none;color:#e3eaf2;font-family:var(--sans)}
+.rm-svg{display:block;cursor:grab}
+.rm-svg:active{cursor:grabbing}
+.rm-hud{position:absolute;display:flex;gap:8px;pointer-events:none}
+.rm-hud>*{pointer-events:auto}
+.rm-top{top:10px;right:10px;left:10px;justify-content:space-between;align-items:flex-start}
+.rm-bottom{left:10px;right:10px;bottom:10px;justify-content:space-between;align-items:flex-end}
+.rm-big{font:inherit;font-size:.82rem;font-weight:600;color:#e3eaf2;background:rgba(13,19,28,.92);border:1px solid #2f4157;border-radius:5px;padding:6px 12px;min-height:32px;cursor:pointer}
+.rm-big:hover{border-color:#72aef0}
+.rm-seg{display:inline-flex;border:1px solid #223042;border-radius:5px;overflow:hidden;background:#0d131c}
+.rm-seg button{font:inherit;font-size:.82rem;color:#8593a5;background:transparent;border:0;padding:6px 12px;cursor:pointer;min-height:32px}
+.rm-seg button[aria-pressed="true"]{background:#72aef0;color:#06121f;font-weight:700}
+.rm-legend{background:rgba(13,19,28,.92);border:1px solid #223042;border-radius:5px;padding:6px 10px;font-family:var(--cond);font-size:.74rem;color:#8593a5;display:grid;gap:4px}
+.rm-legend small{font-size:.7rem}
+.rm-keys{display:flex;gap:2px}
+.rm-keys i{display:inline-block;width:14px;height:7px;border-radius:2px}
+.rm-zoom{display:flex;flex-direction:column;gap:4px}
+.rm-zoom button{width:36px;height:36px;font:inherit;font-size:1.05rem;color:#c9d3df;background:rgba(13,19,28,.92);border:1px solid #223042;border-radius:5px;cursor:pointer}
+.rm-zoom button:hover,.rm-seg button:hover{color:#fff}
+.rm-zoom button:focus-visible,.rm-seg button:focus-visible,.rm-big:focus-visible{outline:2px solid #72aef0;outline-offset:2px}
+.rm-svg line,.rm-svg path{vector-effect:non-scaling-stroke}
+.rm-region{fill:#4d5e74;font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.3em;text-anchor:middle;pointer-events:none}
+.rm-stub{stroke:#1f2a38;stroke-width:1.2}
+.rm-gate{stroke:#2a3a4d;stroke-width:1.3}
+.rm-gate-bg{stroke:#1d2836;stroke-width:1}
+.rm-cross{stroke-dasharray:5 4}
+.rm-arrow{stroke:#3a4a5e;stroke-width:1.4}
+.rm-arrowhead{fill:none;stroke:#5d6e84;stroke-width:1.6}
+.rm-route{stroke-width:3.2;stroke-linecap:round}
+.rm-route-glow{fill:none;stroke:#cfe3f5;stroke-width:8;opacity:.16;stroke-linecap:round;stroke-linejoin:round}
+.rm-chev{fill:none;stroke:#0a0e14;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rm-sys{cursor:pointer}
+.rm-sys:focus{outline:none}
+.rm-sys:focus-visible circle{stroke:#fff}
+.rm-sys.rm-on:hover circle,.rm-sys.rm-nb:hover circle{stroke:#fff}
+.rm-dot{opacity:.75}
+.rm-val{font-family:var(--cond);font-weight:700;font-size:9.5px;text-anchor:middle;pointer-events:none}
+.rm-val.on{font-size:11px}
+.rm-ring-traffic{fill:none;stroke:#ffd27a;stroke-width:1.5}
+.rm-ring-kills{fill:none;stroke:#ff8a7a;stroke-width:1.5}
+.rm-chip{fill:rgba(10,14,20,.88);stroke:#2f4157}
+.rm-chip-t{fill:#e3eaf2;font-family:var(--cond);font-weight:600;font-size:11.5px;text-anchor:middle}
+.rm-nb{fill:#5f6d80;font-family:var(--cond);font-size:10px;text-anchor:middle}
+.rm-labels{pointer-events:none}
+.rm-tag{fill:rgba(10,14,20,.92)}
+.rm-tag.rm-danger{stroke:#ff6b5e}.rm-tag.rm-caution{stroke:#f0b44c}
+.rm-tag-t{font-family:var(--cond);font-weight:700;font-size:9.5px;letter-spacing:.06em;text-anchor:middle}
+.rm-tag-t.rm-danger{fill:#ff6b5e}.rm-tag-t.rm-caution{fill:#f0b44c}
+/* detail by zoom level: 0 overview, 1 the route fitted, 2 closer, 3 closest */
+.rm-svg[data-z="0"] .rm-lod-mid,.rm-svg[data-z="0"] .rm-sys.rm-nb{display:none}
+.rm-svg:not([data-z="0"]) .rm-lod-far{display:none}
+.rm-svg[data-z="0"] .rm-crowd,.rm-svg[data-z="1"] .rm-crowd{display:none}
+.rm-svg[data-z="0"] .rm-lod-near,.rm-svg[data-z="1"] .rm-lod-near{display:none}
+.rm-svg[data-z="2"] .rm-bg .rm-dot,.rm-svg[data-z="3"] .rm-bg .rm-dot{display:none}
+.rm-svg:not([data-z="3"]) .rm-lod-names{display:none}
+.rm-svg[data-z="3"] .rm-region{display:none}
+.rm-tip{position:absolute;z-index:2;max-width:260px;background:rgba(13,19,28,.96);border:1px solid #2f4157;border-radius:5px;padding:7px 10px;font-size:.8rem;color:#a7b3c2;line-height:1.45;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.rm-tip b{color:#fff;font-size:.9rem}
+.rm-tip-danger{color:#ff8a7a}.rm-tip-caution{color:#f0b44c}
 .r-again{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:0 4px;vertical-align:1px}
 .r-wrap{overflow-x:auto}
 .r-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
@@ -3352,6 +3435,10 @@ footer .contact p{margin:0 0 10px}
     r.usualText = `Usual traffic at ${when}: ${level} for this route, about ${Math.round(now)} jumps an hour across the route, about ${per < 10 ? per.toFixed(1) : Math.round(per)} in a typical system.${trend}`;
   }
   setInterval(() => { if (routeState.last && $("rUsual")) updateUsual(routeState.last); }, 30000);
+  setInterval(() => {
+    if (routeState.last && routeState.map && $("rMap") && !$("rMap").hidden) routeState.map.refresh();
+    if (routeState.bigMap) routeState.bigMap.refresh();
+  }, 30000);
   setInterval(() => { if (routeState.last && $("rWarn") && !$("rResult").closest("[hidden]")) updateRouteWarnings(routeState.last); }, 30000);
   // ---------- Analyze traffic: when is this route quiet? ----------
   // Each departure hour of the week is scored by the traffic in every system at the time you'd reach it,
@@ -3823,6 +3910,582 @@ footer .contact p{margin:0 0 10px}
       draw();
     }
   }
+  // ---------- Route map: the route drawn over the real star map ----------
+  // Systems sit at their real positions, so jump drives and bridges can be added later. Every system of
+  // the regions the route passes through is drawn faintly behind it, and the systems one jump off the
+  // route a little stronger. Systems and labels keep the same size on screen while you zoom: zooming
+  // spreads them apart, and the detail shown grows with the zoom level (route only, then neighbours'
+  // names, then every system's security and name). Very distant neighbours (Turnur's gate to Zarzakh,
+  // say) become labelled arrows rather than stretching the map.
+  const RM_KEY = "quietspace.routemap";
+  function rmPrefs() { try { return JSON.parse(localStorage.getItem(RM_KEY)) || {}; } catch (e) { return {}; } }
+  function rmSave(p) { try { localStorage.setItem(RM_KEY, JSON.stringify({ ...rmPrefs(), ...p })); } catch (e) {} }
+  const rmSecCol = sys => { const d = displaySec(sys.s); return d === null ? "#8593a5" : SEC_COLORS[secKey(d)]; };
+  // one sequential hue per measure, dim to bright on the dark map
+  function rmHeat(v, max, hue) {
+    const t = !v || max <= 0 ? 0 : Math.log1p(v) / Math.log1p(max);
+    const [a, b] = hue === "kills" ? [[52, 22, 22], [255, 104, 88]] : [[52, 40, 18], [255, 200, 70]];
+    return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(",")})`;
+  }
+  // zoom levels, by screen pixels per map unit (1 = the route fitted to the panel)
+  const rmLevel = z => z < 0.6 ? 0 : z < 1.7 ? 1 : z < 3 ? 2 : 3;
+
+  // Positions, labels and everything else that doesn't change while the route is shown.
+  function rmLayout(r, W, H) {
+    const md = getMapData(), path = r.path.map(String), n = path.length;
+    const linksOf = id => (md.links[id] || []).map(String);
+    const first = new Map(); path.forEach((id, i) => { if (!first.has(id)) first.set(id, i); });
+    const onRoute = new Set(path);
+    const P0 = id => { const p = md.pos[id]; return p ? { x: p[0], y: -p[1] } : null; };
+    const regOf = id => catalog.systems[id] ? regionOf(catalog.systems[id]) : undefined;
+    const routeRegs = new Set(path.map(regOf).filter(x => x !== undefined));
+    const legs = path.slice(1).map((id, i) => { const a = P0(path[i]), b = P0(id); return a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0; }).filter(Boolean).sort((a, b) => a - b);
+    const typical = legs.length ? legs[legs.length >> 1] : 1;
+    // neighbours one jump off the route; far ones outside the route's regions become arrows
+    const nbrs = new Map(), far = new Map();
+    for (const id of onRoute) for (const nb of linksOf(id)) {
+      if (onRoute.has(nb) || !catalog.systems[nb] || !md.pos[nb]) continue;
+      const a = P0(id), b = P0(nb);
+      if (!routeRegs.has(regOf(nb)) && Math.hypot(a.x - b.x, a.y - b.y) > typical * 3.5 && n > 2) { if (!far.has(nb)) far.set(nb, id); continue; }
+      if (!nbrs.has(nb)) nbrs.set(nb, id);
+    }
+    // the rest of the route's regions and the regions next to them, drawn faintly behind
+    const bgRegs = new Set(routeRegs);
+    for (const [id, sys] of Object.entries(catalog.systems)) {
+      if (!routeRegs.has(regionOf(sys))) continue;
+      for (const x of linksOf(id)) { const g = regOf(x); if (g !== undefined && md.pos[x] && Math.hypot(P0(x).x - P0(id).x, P0(x).y - P0(id).y) < typical * 6) bgRegs.add(g); }
+    }
+    const bg = [];
+    for (const [id, sys] of Object.entries(catalog.systems)) {
+      if (onRoute.has(id) || nbrs.has(id) || far.has(id) || !md.pos[id]) continue;
+      if (bgRegs.has(regionOf(sys))) bg.push(id);
+    }
+    const detail = [...first.keys(), ...nbrs.keys()].filter(id => md.pos[id]);
+    const ids = [...detail, ...bg];
+    const shown = new Set(ids);
+    // fit the route and its neighbours to the panel; everything else uses the same scale
+    const pad = { l: 60, r: 60, t: 60, b: 74 };
+    const raw = detail.map(P0), xs = raw.map(p => p.x), ys = raw.map(p => p.y);
+    const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const sc = Math.min((W - pad.l - pad.r) / Math.max(1, maxX - minX), (H - pad.t - pad.b) / Math.max(1, maxY - minY));
+    const ox = pad.l + ((W - pad.l - pad.r) - (maxX - minX) * sc) / 2, oy = pad.t + ((H - pad.t - pad.b) - (maxY - minY) * sc) / 2;
+    const toMap = p => ({ x: ox + (p.x - minX) * sc, y: oy + (p.y - minY) * sc });
+    const P = new Map(), home = new Map();
+    const bgSet = new Set(bg);
+    for (const id of ids) { const p = toMap(P0(id)); P.set(id, p); if (!bgSet.has(id)) home.set(id, { ...p }); }
+    // nudge the route and its neighbours apart, always pulling back towards the real spot; smaller
+    // panels nudge less, so a phone keeps the real shape and zooming does the spreading
+    const gap = Math.min(1, Math.min(W, H * 1.4) / 760);
+    const pts = detail.map(id => [id, P.get(id)]);
+    for (let it = 0; it < 260; it++) {
+      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+        const [ka, a] = pts[i], [kb, b] = pts[j], dx = b.x - a.x, dy = b.y - a.y;
+        const min = (onRoute.has(ka) && onRoute.has(kb) ? 68 : 52) * gap;
+        if (Math.abs(dx) > min || Math.abs(dy) > min) continue;
+        const d = Math.hypot(dx, dy) || 0.01;
+        if (d < min) { const k = (min - d) / d / 2; a.x -= dx * k; a.y -= dy * k; b.x += dx * k; b.y += dy * k; }
+      }
+      for (const [id, h] of home) { const p = P.get(id); p.x += (h.x - p.x) * 0.06; p.y += (h.y - p.y) * 0.06; }
+    }
+    const bounds = (() => { const all = [...P.values()]; return { x1: Math.min(...all.map(p => p.x)), y1: Math.min(...all.map(p => p.y)), x2: Math.max(...all.map(p => p.x)), y2: Math.max(...all.map(p => p.y)) }; })();
+    const dir = (from, to) => { const a = P0(from), b = P0(to), dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1; return { x: dx / d, y: dy / d }; };
+    // gates: between drawn systems (dashed between regions), stubs to systems off the map, arrows to far ones
+    const links = [], stubs = [], seen = new Set();
+    for (const id of ids) for (const nb of linksOf(id)) {
+      if (shown.has(nb)) {
+        const key = id < nb ? id + "-" + nb : nb + "-" + id;
+        if (!seen.has(key)) { seen.add(key); links.push({ a: id, b: nb, cross: regOf(id) !== regOf(nb), bg: !(home.has(id) && home.has(nb)) }); }
+      } else if (home.has(id) && md.pos[nb] && !(far.has(nb) && far.get(nb) === id)) stubs.push([id, dir(id, nb)]);
+    }
+    const arrows = [...far].map(([id, from]) => ({ id, from, u: dir(from, id) }));
+    const legSet = new Set(); for (let i = 0; i < n - 1; i++) legSet.add(path[i] < path[i + 1] ? path[i] + "-" + path[i + 1] : path[i + 1] + "-" + path[i]);
+    // label placement at the fitted zoom: least overlap with systems, the route, gates and labels
+    const boxes = [];
+    const add = (x, y, w, h, wt) => boxes.push([x - w / 2, y - h / 2, x + w / 2, y + h / 2, wt]);
+    const cover = (x1, y1, x2, y2) => { let t = 0; for (const b of boxes) { const ox2 = Math.min(x2, b[2]) - Math.max(x1, b[0]); if (ox2 <= 0) continue; const oy2 = Math.min(y2, b[3]) - Math.max(y1, b[1]); if (oy2 > 0) t += ox2 * oy2 * b[4]; } return t; };
+    for (const id of detail) { const p = P.get(id), rr = onRoute.has(id) ? 22 : 14; add(p.x, p.y, rr * 2, rr * 2, 3); }
+    for (const id of bg) { const p = P.get(id); if (p.x > -40 && p.x < W + 40 && p.y > -40 && p.y < H + 40) add(p.x, p.y, 6, 6, 0.5); }
+    for (const l of links) {
+      if (l.bg && !(legSet.has(l.a < l.b ? l.a + "-" + l.b : l.b + "-" + l.a))) continue;
+      const pa = P.get(l.a), pb = P.get(l.b), wt = legSet.has(l.a < l.b ? l.a + "-" + l.b : l.b + "-" + l.a) ? 2 : 0.4;
+      for (let t = 0.15; t <= 0.86; t += 0.07) add(pa.x + (pb.x - pa.x) * t, pa.y + (pb.y - pa.y) * t, 8, 8, wt);
+    }
+    for (const a of arrows) { const p = P.get(a.from); for (let t = 0.2; t <= 1; t += 0.16) add(p.x + a.u.x * 64 * t, p.y + a.u.y * 64 * t, 8, 8, 1); }
+    const spot = (p, rr, w, h, pref) => {
+      const c = [[0, rr + 7 + h / 2], [0, -(rr + 7 + h / 2)], [rr + 7 + w / 2, 0], [-(rr + 7 + w / 2), 0], [rr + w / 2, rr + h / 2 + 2], [-(rr + w / 2), rr + h / 2 + 2], [rr + w / 2, -(rr + h / 2 + 2)], [-(rr + w / 2), -(rr + h / 2 + 2)], [0, rr + 28 + h / 2], [0, -(rr + 28 + h / 2)]];
+      let best = c[0], bs = Infinity;
+      c.forEach(([dx, dy], i) => {
+        const x1 = p.x + dx - w / 2, y1 = p.y + dy - h / 2;
+        // stay inside the panel at the fitted zoom (the corners hold the controls)
+        const out = Math.max(0, 8 - x1) + Math.max(0, x1 + w - (W - 8)) + Math.max(0, 50 - y1) + Math.max(0, y1 + h - (H - 60));
+        const s = cover(x1, y1, x1 + w, y1 + h) + out * 400 + (i === pref ? 0 : 40) + i * 4;
+        if (s < bs) { bs = s; best = [dx, dy]; }
+      });
+      add(p.x + best[0], p.y + best[1], w + 6, h + 4, 2);
+      best.crowded = bs - 40 > w * h * 0.25;
+      return best;
+    };
+    const chip = id => { const i = first.get(id); return (i === 0 ? (r.loop ? "START · BACK · " : "START · ") : i === n - 1 ? "END · " : `${i} · `) + catalog.systems[id].n; };
+    const labels = new Map();
+    for (const id of first.keys()) if (P.get(id)) { const t = chip(id), i = first.get(id); labels.set(id, { text: t, at: spot(P.get(id), 16, t.length * 6.4 + 16, 19, 0), ends: i === 0 || i === n - 1 }); }
+    const tagSpots = new Map();
+    for (const [i, list] of routeWarnings(r)) {
+      const id = path[i]; if (!P.get(id)) continue;
+      const w = list.reduce((t, x) => t + x.tag.length * 6.2 + 12, 0) + (list.length - 1) * 5;
+      tagSpots.set(id, spot(P.get(id), 16, w, 16, 1));
+    }
+    for (const id of nbrs.keys()) if (P.get(id)) { const t = catalog.systems[id].n, at = spot(P.get(id), 11, t.length * 5.6 + 4, 13, 0); labels.set(id, { text: t, at, crowded: at.crowded }); }
+    for (const a of arrows) {
+      const p = P.get(a.from), sys = catalog.systems[a.id], lw = (sys.n.length + 4) * 5.8;
+      a.label = { anchor: a.u.x < -0.3 ? "end" : a.u.x > 0.3 ? "start" : "middle", dx: a.u.x * 74, dy: a.u.y * 74 + 4 };
+      const x1 = a.label.anchor === "start" ? p.x + a.label.dx : a.label.anchor === "end" ? p.x + a.label.dx - lw : p.x + a.label.dx - lw / 2;
+      a.label.crowded = cover(x1, p.y + a.label.dy - 10, x1 + lw, p.y + a.label.dy + 3) > lw * 13 * 0.25;
+    }
+    // regions: a soft tint and a name at the middle of the whole region
+    const regions = new Map();
+    for (const id of ids) { const reg = regOf(id); if (reg === undefined) continue; if (!regions.has(reg)) regions.set(reg, { list: [], name: (catalog.regions[reg] || "").toUpperCase() }); regions.get(reg).list.push(id); }
+    for (const g of regions.values()) { const ps = g.list.map(id => P.get(id)); g.cx = ps.reduce((t, p) => t + p.x, 0) / ps.length; g.cy = ps.reduce((t, p) => t + p.y, 0) / ps.length; g.big = g.list.length >= 6; }
+    return { P, ids, detail, bg, nbrs, first, links, stubs, arrows, labels, tagSpots, regions, legSet, W, H, onRoute, bounds, home, path };
+  }
+
+  function renderRouteMap(r, host, opts = {}) {
+    const prefs = rmPrefs();
+    const st = { mode: ["security", "traffic", "kills"].includes(prefs.mode) ? prefs.mode : "security", vb: null, L: null, W: 0, H: 0, groups: [] };
+    host.replaceChildren();
+    const wrap = el("div", "rm"); host.append(wrap);
+    const svg = svgEl("svg", { class: "rm-svg", role: "img", "aria-label": `Map of the route ${routeTitle(r)}; the list below has every system` });
+    const tip = el("div", "rm-tip"); tip.hidden = true;
+    const hudTop = el("div", "rm-hud rm-top"), hudBottom = el("div", "rm-hud rm-bottom");
+    const modes = el("div", "rm-seg"); modes.setAttribute("role", "group"); modes.setAttribute("aria-label", "Colour systems by");
+    for (const [v, t] of [["security", "Security"], ["traffic", "Traffic"], ["kills", "Kills"]]) {
+      const b = el("button", null, t); b.type = "button"; b.setAttribute("aria-pressed", String(st.mode === v));
+      b.addEventListener("click", () => { st.mode = v; rmSave({ mode: v }); modes.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); draw(); });
+      modes.append(b);
+    }
+    const bigB = el("button", "rm-big", "Close map"); bigB.type = "button";
+    bigB.addEventListener("click", () => { if (opts.onClose) opts.onClose(); });
+    hudTop.append(bigB, modes);
+    const legend = el("div", "rm-legend");
+    const zoom = el("div", "rm-zoom");
+    const zb = (label, txt, fn) => { const b = el("button", null, txt); b.type = "button"; b.setAttribute("aria-label", label); b.title = label; b.addEventListener("click", fn); zoom.append(b); return b; };
+    zb("Zoom in", "+", () => zoomBy(1 / 1.5));
+    zb("Zoom out", "−", () => zoomBy(1.5));
+    zb("Fit the route", "⤢", () => { st.vb = [0, 0, st.W, st.H]; applyVb(); });
+    hudBottom.append(legend, zoom);
+    wrap.append(svg);
+    rmFlow(wrap, () => {
+      if (!st.L) return [];
+      const [vx, vy, vw] = st.vb, f = st.W / vw;
+      return st.L.path.map(id => st.L.P.get(id)).filter(Boolean).map(p => [(p.x - vx) * f, (p.y - vy) * f]);
+    });
+    wrap.append(hudTop, hudBottom, tip);
+
+    function layout(force) {
+      const cw = Math.max(280, Math.round(wrap.clientWidth)), ch = Math.max(240, Math.round(wrap.clientHeight));
+      if (!force && st.L && Math.abs(cw - st.W) < 6 && Math.abs(ch - st.H) < 6) return;
+      st.W = cw; st.H = ch; st.L = rmLayout(r, cw, ch); st.vb = [0, 0, cw, ch];
+      svg.setAttribute("width", cw); svg.setAttribute("height", ch);
+      draw();
+    }
+    const zNow = () => st.W / st.vb[2];
+    // systems and labels keep their size on screen: each is drawn at its spot and scaled by 1 / zoom
+    function applyVb() {
+      svg.setAttribute("viewBox", st.vb.map(v => v.toFixed(2)).join(" "));
+      const z = zNow(), k = (1 / z).toFixed(4);
+      for (const [g, x, y] of st.groups) g.setAttribute("transform", `translate(${x},${y}) scale(${k})`);
+      svg.dataset.z = rmLevel(z);
+    }
+    function zoomBy(f, cx, cy) {
+      const [x, y, w, h] = st.vb, nw = Math.min(st.W * 6, Math.max(st.W / 8, w * f)), nh = nw * st.H / st.W;
+      const px = cx === undefined ? x + w / 2 : cx, py = cy === undefined ? y + h / 2 : cy;
+      st.vb = [px - (px - x) * nw / w, py - (py - y) * nh / h, nw, nh]; applyVb();
+    }
+
+    function draw() {
+      const L = st.L; if (!L) return;
+      svg.replaceChildren(); tip.hidden = true; st.groups = [];
+      const S = (tag, a, parent) => { const e = svgEl(tag, a); (parent || svg).append(e); return e; };
+      const place = (g, x, y) => st.groups.push([g, x.toFixed(1), y.toFixed(1)]);
+      const defs = S("defs", {});
+      const glow = S("filter", { id: "rmGlow", x: "-50%", y: "-50%", width: "200%", height: "200%" }, defs);
+      S("feGaussianBlur", { stdDeviation: 3 }, glow);
+      // region tints and names, in map units, so they grow and shrink with the map
+      for (const g of L.regions.values()) if (g.big) { const rg = S("g", {}), t = S("text", { y: 4, class: "rm-region" }, rg); t.textContent = g.name; place(rg, g.cx, g.cy); }
+      const warn = routeWarnings(r), tagsBy = new Map([...warn].map(([i, list]) => [L.path[i], list]));
+      const val = id => st.mode === "traffic" ? (jumps[id] || 0) : st.mode === "kills" ? routeKills(id) : 0;
+      const max = Math.max(1, ...L.ids.map(val));
+      const heat = st.mode !== "security";
+      // gates
+      for (const l of L.links) {
+        if (L.legSet.has(l.a < l.b ? l.a + "-" + l.b : l.b + "-" + l.a)) continue;
+        const pa = L.P.get(l.a), pb = L.P.get(l.b);
+        S("line", { x1: pa.x, y1: pa.y, x2: pb.x, y2: pb.y, class: (l.bg ? "rm-gate-bg" : "rm-gate") + (l.cross ? " rm-cross" : "") });
+      }
+      for (const [id, u] of L.stubs) { const p = L.P.get(id), gs = S("g", {}); S("line", { x1: 0, y1: 0, x2: u.x * 24, y2: u.y * 24, class: "rm-stub" }, gs); place(gs, p.x, p.y); }
+      for (const a of L.arrows) {
+        const p = L.P.get(a.from), sys = catalog.systems[a.id], ga = S("g", { class: "rm-lod-mid" });
+        S("line", { x1: 0, y1: 0, x2: a.u.x * 64, y2: a.u.y * 64, class: "rm-arrow" }, ga);
+        S("path", { d: "M-6,-4 L0,0 L-6,4", class: "rm-arrowhead", transform: `translate(${a.u.x * 64},${a.u.y * 64}) rotate(${Math.atan2(a.u.y, a.u.x) * 180 / Math.PI})` }, ga);
+        const t = S("text", { x: a.label.dx, y: a.label.dy, "text-anchor": a.label.anchor, class: "rm-nb" + (a.label.crowded ? " rm-crowd" : "") }, ga);
+        t.textContent = sys.n + " "; const s2 = S("tspan", { fill: rmSecCol(sys), "font-weight": 700 }, t); s2.textContent = displaySec(sys.s) === null ? "" : displaySec(sys.s).toFixed(1);
+        place(ga, p.x, p.y);
+      }
+      // the route: each jump fades from one system's security colour to the next
+      const rp = L.path.map(id => L.P.get(id)).filter(Boolean);
+      const d = rp.map((p, i) => (i ? "L" : "M") + p.x.toFixed(1) + "," + p.y.toFixed(1)).join("");
+      S("path", { d, class: "rm-route-glow", filter: "url(#rmGlow)" });
+      for (let i = 0; i < L.path.length - 1; i++) {
+        const a = L.P.get(L.path[i]), b = L.P.get(L.path[i + 1]); if (!a || !b) continue;
+        let stroke = "#cfe3f5";
+        if (!heat) {
+          const gid = "rmLeg" + i, lg = S("linearGradient", { id: gid, gradientUnits: "userSpaceOnUse", x1: a.x, y1: a.y, x2: b.x, y2: b.y }, defs);
+          S("stop", { offset: "0", "stop-color": rmSecCol(catalog.systems[L.path[i]]) }, lg); S("stop", { offset: "1", "stop-color": rmSecCol(catalog.systems[L.path[i + 1]]) }, lg);
+          stroke = `url(#${gid})`;
+        }
+        S("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: "rm-route", stroke });
+        if (Math.hypot(b.x - a.x, b.y - a.y) > 50) { const gc = S("g", { class: "rm-lod-mid" }); S("path", { d: "M-4,-4 L2,0 L-4,4", class: "rm-chev", transform: `rotate(${Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI})` }, gc); place(gc, (a.x + b.x) / 2, (a.y + b.y) / 2); }
+      }
+      // systems: background first, then neighbours, then the route on top
+      const nodeLayer = S("g", {}), labelLayer = S("g", { class: "rm-labels" });
+      const order = [...L.bg, ...L.nbrs.keys(), ...L.first.keys()];
+      for (const id of order) {
+        const sys = catalog.systems[id], p = L.P.get(id); if (!p) continue;
+        const kind = L.onRoute.has(id) ? "on" : L.nbrs.has(id) ? "nb" : "bg";
+        const col = rmSecCol(sys), ds = displaySec(sys.s), v = val(id);
+        const g = S("g", { class: "rm-sys rm-" + kind, tabindex: kind === "on" ? 0 : -1 }, nodeLayer);
+        g.dataset.id = id; place(g, p.x, p.y);
+        const fill = heat ? (v ? rmHeat(v, max, st.mode) : "#161d27") : "#0b1119";
+        if (kind === "bg") {
+          S("circle", { r: 2.6, fill: heat && v ? rmHeat(v, max, st.mode) : col, class: "rm-dot" }, g);
+          const full = S("g", { class: "rm-lod-near" }, g);
+          S("circle", { r: 9, fill, stroke: heat ? "#2a3442" : col, "stroke-width": 1.2, opacity: 0.85 }, full);
+          const t = S("text", { y: 3.5, class: "rm-val" }, full); t.textContent = heat ? String(v) : (ds === null ? "?" : ds.toFixed(1)); t.setAttribute("fill", heat ? "#8a95a5" : col);
+          const nm = S("text", { y: 21, class: "rm-nb rm-lod-names" }, full); nm.textContent = sys.n;
+        } else {
+          const rr = kind === "on" ? 15 : 11;
+          if (kind === "on") S("circle", { r: 4.5, fill: heat && v ? rmHeat(v, max, st.mode) : col, class: "rm-dot rm-lod-far" }, g);
+          const full = S("g", { class: kind === "on" ? "rm-lod-mid" : "rm-lod-mid" }, g);
+          if (heat && kind === "on") S("circle", { r: rr + 3.5, class: "rm-ring-" + st.mode }, full);
+          S("circle", { r: rr, fill, stroke: heat ? (kind === "on" ? "#0a0e14" : "#2a3442") : col, "stroke-width": kind === "on" ? 2.6 : 1.5, opacity: kind === "on" ? 1 : 0.85 }, full);
+          const t = S("text", { y: 4, class: "rm-val" + (kind === "on" ? " on" : "") }, full);
+          if (heat) { t.textContent = String(v); t.setAttribute("fill", v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : kind === "on" ? "#e8dcc4" : "#6b7787"); }
+          else { t.textContent = ds === null ? "?" : ds.toFixed(1); t.setAttribute("fill", col); }
+        }
+        // labels on the top layer
+        const lab = L.labels.get(id), tags = kind === "on" ? tagsBy.get(id) : null;
+        if (lab || tags) {
+          const lg = S("g", {}, labelLayer); place(lg, p.x, p.y);
+          if (lab && kind === "on") {
+            const w = lab.text.length * 6.4 + 16, cg = S("g", { class: lab.ends ? "" : "rm-lod-mid" }, lg);
+            S("rect", { x: lab.at[0] - w / 2, y: lab.at[1] - 9.5, width: w, height: 19, rx: 3, class: "rm-chip" }, cg);
+            const lt = S("text", { x: lab.at[0], y: lab.at[1] + 4, class: "rm-chip-t" }, cg); lt.textContent = lab.text;
+          } else if (lab) { const lt = S("text", { x: lab.at[0], y: lab.at[1] + 4, class: "rm-nb rm-lod-mid" + (lab.crowded ? " rm-crowd" : "") }, lg); lt.textContent = lab.text; }
+          if (tags) {
+            const at = L.tagSpots.get(id) || [0, -26], widths = tags.map(x => x.tag.length * 6.2 + 12), gw = widths.reduce((a, b) => a + b, 0) + (tags.length - 1) * 5;
+            let x = at[0] - gw / 2;
+            tags.forEach((x2, k) => {
+              const c = x2.lv === 2 ? "rm-danger" : "rm-caution";
+              S("rect", { x, y: at[1] - 8, width: widths[k], height: 16, rx: 3, class: "rm-tag " + c }, lg);
+              const tt = S("text", { x: x + widths[k] / 2, y: at[1] + 3.5, class: "rm-tag-t " + c }, lg); tt.textContent = x2.tag.toUpperCase();
+              x += widths[k] + 5;
+            });
+          }
+        }
+        g.addEventListener("pointerenter", () => showTip(id, tags));
+        g.addEventListener("pointerleave", () => { tip.hidden = true; });
+        g.addEventListener("click", () => { if (!st.dragged) openSystem(id); });
+        g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openSystem(id); } });
+      }
+      legend.replaceChildren();
+      if (!heat) {
+        const row = el("div", "rm-keys");
+        for (const k of SCALE) { const i = document.createElement("i"); i.style.background = SEC_COLORS[k]; i.title = k; row.append(i); }
+        legend.append(el("span", null, "Security"), row);
+      } else {
+        const row = el("div", "rm-keys");
+        for (const t of [0, 0.2, 0.4, 0.6, 0.8, 1]) { const i = document.createElement("i"); i.style.background = rmHeat(Math.round(Math.expm1(t * Math.log1p(max))), max, st.mode); row.append(i); }
+        legend.append(el("span", null, st.mode === "traffic" ? "Gate jumps, last hour" : "Ship and pod kills, last hour"), row, el("small", null, `0 to ${max.toLocaleString()}`));
+      }
+      applyVb();
+    }
+    function showTip(id, tags) {
+      const sys = catalog.systems[id], ds = displaySec(sys.s), i = st.L.first.get(id);
+      const rows = [el("b", null, sys.n)];
+      rows.push(el("div", null, `${ds === null ? "?" : ds.toFixed(1)} · ${catalog.regions[regionOf(sys)] || ""}${i !== undefined ? ` · ${i === 0 ? "start" : i === r.path.length - 1 ? "end" : "jump " + i}` : st.L.nbrs.has(id) ? " · next to the route" : ""}`));
+      rows.push(el("div", null, `${(jumps[id] || 0).toLocaleString()} jumps, ${routeKills(id)} kills in the last hour`));
+      for (const x of tags || []) rows.push(el("div", x.lv === 2 ? "rm-tip-danger" : "rm-tip-caution", x.text));
+      tip.replaceChildren(...rows); tip.hidden = false;
+      const g = svg.querySelector(`g[data-id="${id}"]`), gb = g.getBoundingClientRect(), wb = wrap.getBoundingClientRect();
+      const tw = tip.offsetWidth, th = tip.offsetHeight;
+      let x = gb.right - wb.left + 8, y = gb.top - wb.top;
+      if (x + tw > wb.width - 6) x = gb.left - wb.left - tw - 8;
+      tip.style.left = Math.max(6, x) + "px"; tip.style.top = Math.max(6, Math.min(wb.height - th - 6, y)) + "px";
+    }
+    // pan with a drag, zoom with the wheel or a pinch; moves are followed on the window so a drag that
+    // leaves the map still ends cleanly (and clicks on systems still reach them)
+    const ptrs = new Map(); let start = null;
+    const toMap = (cx, cy) => { const b = svg.getBoundingClientRect(); return [st.vb[0] + (cx - b.left) / b.width * st.vb[2], st.vb[1] + (cy - b.top) / b.height * st.vb[3]]; };
+    const snap = () => ({ vb: st.vb.slice(), pts: new Map([...ptrs].map(([k, v]) => [k, v.slice()])) });
+    svg.addEventListener("pointerdown", e => { ptrs.set(e.pointerId, [e.clientX, e.clientY]); st.dragged = false; start = snap(); });
+    const onMove = e => {
+      if (!svg.isConnected) { window.removeEventListener("pointermove", onMove); window.removeEventListener("pointerup", end); window.removeEventListener("pointercancel", end); return; }
+      if (!ptrs.has(e.pointerId) || !start) return;
+      ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+      const b = svg.getBoundingClientRect(), k = start.vb[2] / b.width;
+      if (ptrs.size === 1) {
+        const [sx, sy] = start.pts.get(e.pointerId) || [e.clientX, e.clientY], dx = e.clientX - sx, dy = e.clientY - sy;
+        if (Math.abs(dx) + Math.abs(dy) > 4) { st.dragged = true; tip.hidden = true; }
+        st.vb = [start.vb[0] - dx * k, start.vb[1] - dy * k, start.vb[2], start.vb[3]]; applyVb();
+      } else if (ptrs.size === 2 && start.pts.size === 2) {
+        const [a0, b0] = [...start.pts.values()], [a1, b1] = [...ptrs.values()];
+        const d0 = Math.hypot(a0[0] - b0[0], a0[1] - b0[1]), d1 = Math.hypot(a1[0] - b1[0], a1[1] - b1[1]);
+        if (d0 > 0 && d1 > 0) {
+          st.dragged = true; st.vb = start.vb.slice();
+          const m0 = [(a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2], m1 = [(a1[0] + b1[0]) / 2, (a1[1] + b1[1]) / 2];
+          const [cx, cy] = toMap(m0[0], m0[1]); zoomBy(d0 / d1, cx, cy);
+          const k2 = st.vb[2] / b.width; st.vb = [st.vb[0] - (m1[0] - m0[0]) * k2, st.vb[1] - (m1[1] - m0[1]) * k2, st.vb[2], st.vb[3]]; applyVb();
+        }
+      }
+    };
+    function end(e) { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); start = ptrs.size ? snap() : null; }
+    window.addEventListener("pointermove", onMove); window.addEventListener("pointerup", end); window.addEventListener("pointercancel", end);
+    svg.addEventListener("wheel", e => { e.preventDefault(); const [cx, cy] = toMap(e.clientX, e.clientY); zoomBy(e.deltaY > 0 ? 1.15 : 1 / 1.15, cx, cy); }, { passive: false });
+    if (window.ResizeObserver) new ResizeObserver(() => layout(false)).observe(wrap);
+    requestAnimationFrame(() => layout(true));
+    return { refresh: () => { if (st.L) { const vb = st.vb; st.L = rmLayout(r, st.W, st.H); draw(); st.vb = vb; applyVb(); } } };
+  }
+  // ---------- Route overview: the route as a straight line, and the large map ----------
+  // Inline, the route is drawn as a schematic: jumps evenly spaced left to right, with a gentle wave that
+  // follows its real north-south drift, and the systems one jump off it above or below on the side
+  // they really are. On a phone it becomes a vertical strip. The real-position map (renderRouteMap)
+  // opens from it as the large map, on wider screens only.
+  const RL_NARROW = 560;
+  // The route "flow": dashes of light moving from start to end, drawn on a canvas of its own so the map
+  // underneath is never redrawn. About 30 frames a second, a few line segments each; stops when the
+  // map is out of view or the tab is hidden, and is off for visitors who ask for reduced motion.
+  function rmFlow(host, points) {
+    const c = document.createElement("canvas"); c.className = "rm-flow-layer"; c.setAttribute("aria-hidden", "true"); host.append(c);
+    const ctx = c.getContext("2d"), reduce = window.matchMedia ? matchMedia("(prefers-reduced-motion: reduce)") : null;
+    let visible = true, raf = 0, last = 0;
+    const frame = t => {
+      raf = 0;
+      if (!c.isConnected) return;
+      // while the large map covers the overview, the overview's flow stays still (nothing to redraw)
+      const covered = !host.closest(".rm-layer") && document.querySelector(".rm-layer");
+      if (t - last >= 33 && !covered) {
+        last = t;
+        const dpr = window.devicePixelRatio || 1, w = host.clientWidth, h = host.clientHeight;
+        if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); c.style.width = w + "px"; c.style.height = h + "px"; }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+        if (!(reduce && reduce.matches)) {
+          const pts = points();
+          if (pts.length > 1) {
+            ctx.setLineDash([3, 25]); ctx.lineDashOffset = -((t / 1800) * 28 % 28);
+            ctx.lineWidth = 2.2; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "rgba(255,255,255,.8)";
+            ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+          }
+        }
+      }
+      if (visible && !document.hidden) raf = requestAnimationFrame(frame);
+    };
+    const start = () => { if (!raf && visible && !document.hidden && c.isConnected) raf = requestAnimationFrame(frame); };
+    if (window.IntersectionObserver) new IntersectionObserver(es => { visible = es[0].isIntersecting; start(); }).observe(host);
+    document.addEventListener("visibilitychange", start);
+    start();
+  }
+  function renderRouteOverview(r, host) {
+    const st = { mode: ["security", "traffic", "kills"].includes(rmPrefs().mode) ? rmPrefs().mode : "security", width: 0 };
+    host.replaceChildren();
+    const box = el("div", "rl"); host.append(box);
+    const top = el("div", "rl-top");
+    const bigB = el("button", "rl-big", "Open large map"); bigB.type = "button";
+    bigB.title = "The route on the real star map, with the regions around it";
+    bigB.addEventListener("click", () => openLargeMap(r));
+    const modes = el("div", "rm-seg"); modes.setAttribute("role", "group"); modes.setAttribute("aria-label", "Colour systems by");
+    for (const [v, t] of [["security", "Security"], ["traffic", "Traffic"], ["kills", "Kills"]]) {
+      const b = el("button", null, t); b.type = "button"; b.setAttribute("aria-pressed", String(st.mode === v));
+      b.addEventListener("click", () => { st.mode = v; rmSave({ mode: v }); modes.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); draw(); });
+      modes.append(b);
+    }
+    top.append(bigB, modes);
+    const body = el("div", "rl-body");
+    const tip = el("div", "rm-tip"); tip.hidden = true;
+    box.append(top, body, tip);
+
+    const md = getMapData(), path = r.path.map(String), n = path.length;
+    const first = new Map(); path.forEach((id, i) => { if (!first.has(id)) first.set(id, i); });
+    const onRoute = new Set(path);
+    const linksOf = id => (md.links[id] || []).map(String).filter(x => catalog.systems[x]);
+    const val = id => st.mode === "traffic" ? (jumps[id] || 0) : st.mode === "kills" ? routeKills(id) : 0;
+    const stepName = i => i === 0 ? (r.loop ? "Start" : "Start") : r.loop && i === n - 1 ? "Back" : i === n - 1 ? "End" : String(i);
+
+    function draw() {
+      tip.hidden = true;
+      const W = Math.round(box.clientWidth) || 800; st.width = W;
+      const narrow = W < RL_NARROW;
+      box.classList.toggle("rl-narrow", narrow);
+      bigB.hidden = narrow; // the large map is for bigger screens
+      if (narrow) strip(); else line(W);
+    }
+
+    // ---- phones: a vertical strip, one row per jump ----
+    function strip() {
+      body.replaceChildren();
+      const warn = routeWarnings(r), tagsAt = new Map([...warn].map(([i, list]) => [path[i], list]));
+      const max = Math.max(1, ...path.map(val));
+      const list = el("ol", "rs");
+      path.forEach((id, i) => {
+        const sys = catalog.systems[id], ds = displaySec(sys.s), col = rmSecCol(sys), v = val(id);
+        const li = el("li"), b = el("button", "rs-row"); b.type = "button";
+        const dot = el("span", "rs-dot"); dot.textContent = ds === null ? "?" : ds.toFixed(1);
+        if (st.mode === "security") { dot.style.borderColor = col; dot.style.color = col; }
+        else { dot.style.background = v ? rmHeat(v, max, st.mode) : "#161d27"; dot.style.borderColor = "#2a3442"; dot.textContent = String(v); dot.style.color = v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : "#c9d3df"; }
+        const main = el("span", "rs-main");
+        const name = el("span", "rs-name"); name.append(el("span", "rs-step", stepName(i) + " · "), sys.n);
+        for (const x of (first.get(id) === i ? tagsAt.get(id) : null) || []) name.append(" ", el("span", "rs-tag " + (x.lv === 2 ? "rm-tip-danger" : "rm-tip-caution"), x.tag.toUpperCase()));
+        const others = linksOf(id).filter(x => !onRoute.has(x)).map(x => catalog.systems[x].n);
+        const sub = el("span", "rs-sub", (catalog.regions[regionOf(sys)] || "") + (others.length ? ` · ${others.length} other gate${others.length === 1 ? "" : "s"}: ${others.slice(0, 3).join(", ")}${others.length > 3 ? "…" : ""}` : ""));
+        main.append(name, sub);
+        const right = el("span", "rs-val");
+        const j = jumps[id] || 0, k = routeKills(id);
+        right.append(el("span", null, st.mode === "kills" ? `${k} kill${k === 1 ? "" : "s"}` : `${j.toLocaleString()} jumps`));
+        b.append(dot, main, right);
+        b.addEventListener("click", () => openSystem(id));
+        li.append(b); list.append(li);
+      });
+      body.append(list);
+    }
+
+    // ---- wider screens: the route left to right ----
+    function line(W) {
+      body.replaceChildren();
+      const H = 300, padX = 64, minStep = 80;
+      const step = n > 1 ? Math.max(minStep, (W - padX * 2) / (n - 1)) : 0;
+      const SW = Math.max(W, Math.round(padX * 2 + step * (n - 1)));
+      const scroller = el("div", "rl-scroll"), inner = el("div", "rl-inner"); scroller.append(inner); body.append(scroller);
+      const svg = svgEl("svg", { width: SW, height: H, viewBox: `0 0 ${SW} ${H}`, class: "rl-svg", role: "img", "aria-label": `The route ${routeTitle(r)} as a line; the list below has every system` });
+      inner.style.width = SW + "px"; inner.style.height = H + "px"; inner.append(svg);
+      const S = (tag, a, parent) => { const e = svgEl(tag, a); (parent || svg).append(e); return e; };
+      // the route's real north-south drift, squeezed into a gentle wave
+      const realY = id => { const p = md.pos[id]; return p ? -p[1] : 0; }, realX = id => { const p = md.pos[id]; return p ? p[0] : 0; };
+      const ys = path.map(realY), lo = Math.min(...ys), hi = Math.max(...ys), mid = H / 2 + 6, amp = 34;
+      const P = new Map();
+      path.forEach((id, i) => { if (!P.has(id)) P.set(id, { x: padX + i * step, y: mid + (hi === lo ? 0 : ((realY(id) - (hi + lo) / 2) / (hi - lo)) * 2 * amp) }); });
+      const pos = path.map((id, i) => ({ x: padX + i * step, y: P.get(id).y })); // loops come back at the far end
+      rmFlow(inner, () => pos.map(p => [p.x, p.y]));
+      // neighbours: above or below on the side they really are; shared ones between their jumps
+      const legs = path.slice(1).map((id, i) => Math.hypot(realX(id) - realX(path[i]), realY(id) - realY(path[i]))).filter(Boolean).sort((a, b) => a - b);
+      const typical = legs.length ? legs[legs.length >> 1] : 1;
+      const nb = new Map();
+      path.forEach((id, i) => { if (first.get(id) !== i) return; for (const x of linksOf(id)) if (!onRoute.has(x)) (nb.get(x) || nb.set(x, []).get(x)).push(i); });
+      const NP = new Map(), home = new Map(), side = new Map();
+      for (const [id, steps] of nb) {
+        const bx = steps.reduce((t, i) => t + pos[i].x, 0) / steps.length, by = steps.reduce((t, i) => t + pos[i].y, 0) / steps.length;
+        const r0 = path[steps[0]], dy = realY(id) - realY(r0), dx = realX(id) - realX(r0);
+        const sgn = Math.abs(dy) > typical * 0.15 ? Math.sign(dy) : (steps[0] % 2 ? 1 : -1);
+        const h = { x: bx + Math.max(-34, Math.min(34, dx / typical * 26)), y: by + sgn * (steps.length > 1 ? 66 : 92) };
+        NP.set(id, { ...h }); home.set(id, h); side.set(id, sgn);
+      }
+      const pts = [...NP];
+      for (let it = 0; it < 200; it++) {
+        for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+          const a = pts[i][1], b = pts[j][1], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01;
+          if (d < 50) { const k = (50 - d) / d / 2; a.x -= dx * k; a.y -= dy * k; b.x += dx * k; b.y += dy * k; }
+        }
+        for (const [id, p] of pts) {
+          for (const q of pos) { const dx = p.x - q.x, dy = p.y - q.y, d = Math.hypot(dx, dy) || 0.01; if (d < 58) { const k = (58 - d) / d; p.x += dx * k; p.y += dy * k; } }
+          const h = home.get(id); p.x += (h.x - p.x) * 0.05; p.y += (h.y - p.y) * 0.05;
+          p.y = Math.max(22, Math.min(H - 22, p.y)); p.x = Math.max(20, Math.min(SW - 20, p.x));
+          if (side.get(id) < 0) p.y = Math.min(p.y, mid - 34); else p.y = Math.max(p.y, mid + 34);
+        }
+      }
+      // region bands over the stretch of route inside each region
+      for (let i0 = 0, i = 1; i <= n; i++) {
+        if (i < n && regionOf(catalog.systems[path[i]]) === regionOf(catalog.systems[path[i0]])) continue;
+        const x1 = pos[i0].x - 30, x2 = pos[i - 1].x + 30, y = 16;
+        S("line", { x1, x2, y1: y, y2: y, class: "rl-band" }); S("line", { x1, x2: x1, y1: y - 4, y2: y + 4, class: "rl-band" }); S("line", { x1: x2, x2, y1: y - 4, y2: y + 4, class: "rl-band" });
+        const t = S("text", { x: (x1 + x2) / 2, y: y - 5, class: "rm-region" }); t.textContent = (catalog.regions[regionOf(catalog.systems[path[i0]])] || "").toUpperCase();
+        i0 = i;
+      }
+      const warn = routeWarnings(r), tagsAt = new Map([...warn].map(([i, list]) => [path[i], list]));
+      const heat = st.mode !== "security", max = Math.max(1, ...[...path, ...nb.keys()].map(val));
+      // gates: neighbours to the route and to each other
+      for (const [id, steps] of nb) { const p = NP.get(id); for (const i of steps) S("line", { x1: p.x, y1: p.y, x2: pos[i].x, y2: pos[i].y, class: "rm-gate" }); for (const x of linksOf(id)) if (NP.has(x) && x > id) { const q = NP.get(x); S("line", { x1: p.x, y1: p.y, x2: q.x, y2: q.y, class: "rm-gate" }); } }
+      // route: glow, then each jump in the colours of its two systems
+      const dAll = pos.map((p, i) => (i ? "L" : "M") + p.x.toFixed(1) + "," + p.y.toFixed(1)).join("");
+      const defs = S("defs", {});
+      S("path", { d: dAll, class: "rm-route-glow" });
+      for (let i = 0; i < n - 1; i++) {
+        const a = pos[i], b = pos[i + 1]; let stroke = "#cfe3f5";
+        if (!heat) { const g = S("linearGradient", { id: "rlLeg" + i, gradientUnits: "userSpaceOnUse", x1: a.x, y1: a.y, x2: b.x, y2: b.y }, defs); S("stop", { offset: 0, "stop-color": rmSecCol(catalog.systems[path[i]]) }, g); S("stop", { offset: 1, "stop-color": rmSecCol(catalog.systems[path[i + 1]]) }, g); stroke = `url(#rlLeg${i})`; }
+        S("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: "rm-route", stroke });
+        S("path", { d: "M-4,-4 L2,0 L-4,4", class: "rm-chev", transform: `translate(${(a.x + b.x) / 2},${(a.y + b.y) / 2}) rotate(${Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI})` });
+      }
+      const node = (id, p, on, i) => {
+        const sys = catalog.systems[id], ds = displaySec(sys.s), col = rmSecCol(sys), v = val(id), rr = on ? 15 : 10;
+        const g = S("g", { class: "rm-sys " + (on ? "rm-on" : "rm-nb"), transform: `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`, tabindex: on ? 0 : -1 });
+        const fill = heat ? (v ? rmHeat(v, max, st.mode) : "#161d27") : "#0b1119";
+        if (on && heat) S("circle", { r: rr + 3.5, class: "rm-ring-" + st.mode }, g);
+        S("circle", { r: rr, fill, stroke: heat ? (on ? "#0a0e14" : "#2a3442") : col, "stroke-width": on ? 2.6 : 1.4, opacity: on ? 1 : 0.85 }, g);
+        const t = S("text", { y: on ? 4 : 3.5, class: "rm-val" + (on ? " on" : "") }, g);
+        if (heat) { t.textContent = String(v); t.setAttribute("fill", v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : on ? "#e8dcc4" : "#6b7787"); }
+        else { t.textContent = ds === null ? "?" : ds.toFixed(1); t.setAttribute("fill", col); }
+        g.addEventListener("pointerenter", () => showTip(id, g, on ? tagsAt.get(id) : null, i));
+        g.addEventListener("pointerleave", () => { tip.hidden = true; });
+        g.addEventListener("click", () => openSystem(id));
+        g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openSystem(id); } });
+        return g;
+      };
+      for (const [id, p] of NP) {
+        node(id, p, false);
+        const t = S("text", { x: p.x, y: p.y + (side.get(id) < 0 ? -15 : 22), class: "rm-nb" }); t.textContent = catalog.systems[id].n;
+      }
+      const labels = S("g", { class: "rm-labels" });
+      path.forEach((id, i) => {
+        const p = pos[i]; node(id, p, true, i);
+        if (first.get(id) !== i && !(r.loop && i === n - 1)) return;
+        // labels alternate below and above when the jumps are too close for labels side by side;
+        // a label moves to the other side if a neighbour sits right where it would go. Tags go opposite.
+        const blocked = dir => [...NP].some(([x, q]) => Math.sign(side.get(x)) === dir && Math.abs(q.x - p.x) < 46 && Math.abs(q.y - p.y) < 62);
+        let below = step >= 130 ? true : i % 2 === 0;
+        if (blocked(below ? 1 : -1) && !blocked(below ? -1 : 1)) below = !below;
+        const text = `${stepName(i) === "Start" || stepName(i) === "End" || stepName(i) === "Back" ? stepName(i).toUpperCase() + " · " : stepName(i) + " · "}${catalog.systems[id].n}`;
+        const w = text.length * 6.4 + 16, ly = below ? p.y + 26 : p.y - 26;
+        S("rect", { x: p.x - w / 2, y: ly - 9.5, width: w, height: 19, rx: 3, class: "rm-chip" }, labels);
+        const lt = S("text", { x: p.x, y: ly + 4, class: "rm-chip-t" }, labels); lt.textContent = text;
+        const tags = first.get(id) === i ? tagsAt.get(id) : null;
+        if (tags) {
+          const widths = tags.map(x => x.tag.length * 6.2 + 12), gw = widths.reduce((a, b) => a + b, 0) + (tags.length - 1) * 5, ty = below ? p.y - 28 : p.y + 28;
+          let x = p.x - gw / 2;
+          tags.forEach((x2, k) => { const c = x2.lv === 2 ? "rm-danger" : "rm-caution"; S("rect", { x, y: ty - 8, width: widths[k], height: 16, rx: 3, class: "rm-tag " + c }, labels); const tt = S("text", { x: x + widths[k] / 2, y: ty + 3.5, class: "rm-tag-t " + c }, labels); tt.textContent = x2.tag.toUpperCase(); x += widths[k] + 5; });
+        }
+      });
+    }
+    function showTip(id, g, tags, i) {
+      const sys = catalog.systems[id], ds = displaySec(sys.s);
+      const rows = [el("b", null, sys.n), el("div", null, `${ds === null ? "?" : ds.toFixed(1)} · ${catalog.regions[regionOf(sys)] || ""}${i !== undefined ? " · " + (i === 0 ? "start" : i === n - 1 ? (r.loop ? "back at the start" : "end") : "jump " + i) : " · next to the route"}`),
+        el("div", null, `${(jumps[id] || 0).toLocaleString()} jumps, ${routeKills(id)} kills in the last hour`)];
+      for (const x of tags || []) rows.push(el("div", x.lv === 2 ? "rm-tip-danger" : "rm-tip-caution", x.text));
+      tip.replaceChildren(...rows); tip.hidden = false;
+      const gb = g.getBoundingClientRect(), wb = box.getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+      let x = gb.right - wb.left + 8; if (x + tw > wb.width - 6) x = gb.left - wb.left - tw - 8;
+      tip.style.left = Math.max(6, x) + "px"; tip.style.top = Math.max(6, Math.min(wb.height - th - 6, gb.top - wb.top)) + "px";
+    }
+    if (window.ResizeObserver) new ResizeObserver(() => { const w = Math.round(box.clientWidth); if (Math.abs(w - st.width) > 6) draw(); }).observe(box);
+    requestAnimationFrame(draw);
+    return { refresh: draw };
+  }
+
+  // The large map: the real-position map over the whole route dialog, with the regions around the route.
+  function openLargeMap(r) {
+    const dlg = $("routeDialog");
+    const layer = el("div", "rm-layer");
+    const close = () => { layer.remove(); document.removeEventListener("keydown", onKey, true); routeState.bigMap = null; };
+    const onKey = e => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); } };
+    document.addEventListener("keydown", onKey, true);
+    dlg.append(layer);
+    routeState.bigMap = renderRouteMap(r, layer, { onClose: close });
+  }
   function renderRoute(r) {
     const box = $("rResult"); box.replaceChildren();
     const n = r.path.length - 1;
@@ -3858,6 +4521,9 @@ footer .contact p{margin:0 0 10px}
     const usual = el("div", "r-usual", "Checking usual traffic for this time…"); usual.id = "rUsual"; sum.append(usual);
     box.append(sum);
     const warn = el("div", "r-warn"); warn.id = "rWarn"; warn.setAttribute("aria-live", "polite"); box.append(warn);
+    const mapHost = el("div", "rm-host"); mapHost.id = "rMap"; box.append(mapHost);
+    mapHost.hidden = rmPrefs().hidden === true;
+    if (!mapHost.hidden) routeState.map = renderRouteOverview(r, mapHost); else routeState.map = null;
     const wrap = el("div", "r-wrap"), t = el("table", "r-list");
     t.innerHTML = `<thead><tr><th>#</th><th>System</th><th>Region</th><th class="num">Jumps, last hour</th><th class="num">Kills, last hour</th><th class="num">30-day avg</th></tr></thead>`;
     const tb = document.createElement("tbody");
@@ -3892,6 +4558,12 @@ footer .contact p{margin:0 0 10px}
     });
     taB.setAttribute("aria-expanded", "false"); taB.setAttribute("aria-controls", "rTa");
     acts.insertBefore(taB, acts.children[1]);
+    const mapB = btn(mapHost.hidden ? "Show map" : "Hide map", () => {
+      mapHost.hidden = !mapHost.hidden; rmSave({ hidden: mapHost.hidden });
+      mapB.textContent = mapHost.hidden ? "Show map" : "Hide map";
+      if (!mapHost.hidden && !mapHost.childNodes.length) routeState.map = renderRouteOverview(r, mapHost);
+    });
+    acts.insertBefore(mapB, acts.children[2]);
     box.append(acts, taHost);
   }
   const dotlanRoute = path => "https://evemaps.dotlan.net/route/" + path.map(id => encodeURIComponent(catalog.systems[id].n.replace(/ /g, "_"))).join(":");
