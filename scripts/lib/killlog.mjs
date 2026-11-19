@@ -94,3 +94,44 @@ export function buildSplits(rows) {
   }
   return { windows, kills24 };
 }
+
+// Kills by time of week, for the route planner's traffic analysis. For each system with kills, a list of
+// [slot, pvp, pvpOnGate, pvpAreaWeapon] totals, where slot = day of week (Monday 0) x 24 + EVE hour.
+// slotHours[slot] says how many times that hour of the week falls inside the logged period, so the page
+// can turn totals into "per week" averages while the log is still filling. Grouped by region:
+// returns { regionId: { systemId: [[slot, pvp, gate, area], ...] } } plus slotHours.
+export function buildWeekly(rows, since, regionOfSystem, gateKm = 100) {
+  const now = Date.now() / 1000;
+  // Logging began part-way through the "since" day, and kills reported late trickle into the hours before
+  // that, so start at the first hour with at least a quarter of the typical hourly number of kills.
+  // Otherwise the hours before logging began would count as "no kills" instead of "no data".
+  let start = Math.max(Date.parse(since + "T00:00:00Z") / 1000, Math.floor(now / 86400 - (KEEP_DAYS - 1)) * 86400);
+  const perHour = new Map();
+  for (const r of rows) if (r[1] >= start) { const h = Math.floor(r[1] / 3600); perHour.set(h, (perHour.get(h) || 0) + 1); }
+  if (perHour.size) {
+    const counts = [...perHour.values()].sort((x, y) => x - y), typical = counts[counts.length >> 1];
+    const firstFull = Math.min(...[...perHour].filter(([, n]) => n >= typical / 4).map(([h]) => h));
+    start = Math.max(start, firstFull * 3600);
+  }
+  const slotOf = t => ((Math.floor(t / 86400) + 3) % 7) * 24 + Math.floor(t / 3600) % 24; // 1970-01-01 was a Thursday
+  const slotHours = Array(168).fill(0);
+  // only whole hours that ended at least 30 minutes ago count: kills reach the log a few minutes late
+  const end = Math.floor((now - 1800) / 3600) * 3600;
+  for (let t = Math.floor(start / 3600) * 3600; t < end; t += 3600) slotHours[slotOf(t)]++;
+  const bySys = {};
+  for (const r of rows) {
+    if (!(r[5] & F_PVP) || r[1] < start || r[1] >= end) continue;
+    const slot = slotOf(r[1]);
+    const e = ((bySys[r[2]] ||= {})[slot] ||= [0, 0, 0]);
+    e[0]++;
+    if (r[6] != null && r[6] <= gateKm) e[1]++;
+    if (r[5] & F_AREA) e[2]++;
+  }
+  const regions = {};
+  for (const [id, slots] of Object.entries(bySys)) {
+    const reg = regionOfSystem(+id);
+    if (reg === undefined) continue;
+    (regions[reg] ||= {})[id] = Object.entries(slots).map(([slot, v]) => [+slot, ...v]);
+  }
+  return { regions, slotHours };
+}

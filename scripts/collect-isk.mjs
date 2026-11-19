@@ -8,7 +8,7 @@
 import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { names } from "./lib/esi.mjs";
 import { updateFwShips } from "./lib/fwships.mjs";
-import { appendKills, loadLog, buildSplits, F_PVP, F_SHIP, F_AREA, F_NPC } from "./lib/killlog.mjs";
+import { appendKills, loadLog, buildSplits, buildWeekly, F_PVP, F_SHIP, F_AREA, F_NPC } from "./lib/killlog.mjs";
 import { isAreaKill } from "../worker/src/area-weapons.mjs";
 
 const DATA = process.env.DATA_DIR || "data";
@@ -237,6 +237,16 @@ try {
     if (kl.rows.length) {
       const todayN = Math.floor(Date.now() / 86400e3), firstN = Math.floor(Date.parse(klState.since + "T00:00:00Z") / 86400e3);
       split = { ...buildSplits(kl.rows), since: klState.since, days: Math.min(KEEP_DAYS, todayN - firstN + 1) };
+      // Kills by time of week, one file per region (like the jump patterns in profiles/), for the route planner.
+      const catalog = await readJSON(`${DATA}/public/catalog.json`, null);
+      if (catalog) {
+        const wk = buildWeekly(kl.rows, klState.since, id => { const sys = catalog.systems[id]; return sys ? catalog.consToRegion[sys.c] : undefined; });
+        const updated = new Date().toISOString();
+        await mkdir(`${DATA}/public/killweek`, { recursive: true });
+        for (const reg of Object.values(catalog.consToRegion).filter((v, i, a) => a.indexOf(v) === i))
+          await writeJSON(`${DATA}/public/killweek/${reg}.json`, { updated, since: klState.since, slotHours: wk.slotHours, systems: wk.regions[reg] || {} });
+        log(`Kills by time of week: ${Object.keys(wk.regions).length} regions with PvP kills`);
+      }
     }
     log(`Kill log: ${added} new kills, ${kl.rows.length} kept over ${kl.days.length} day file(s)`);
   } catch (e) { log(`Kill log skipped (${e.message})`); }

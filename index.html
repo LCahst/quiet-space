@@ -13,6 +13,7 @@
   --bg:#e7ecf2; --panel:#f6f8fb; --ink:#18212d; --muted:#556172; --line:#c6d0db;
   --accent:#2a64a8; --row-hover:#e9eff6; --focus:#2a64a8;
   --danger:#c0362b; --caution:#9a5b00;
+  --d0:#2a78d6; --d1:#eb6834; --d2:#1baf7a; --d3:#eda100; --d4:#e87ba4; --d5:#008300; --d6:#6250d6;
   --sans:"Saira", "Segoe UI", system-ui, sans-serif;
   --cond:"Saira Semi Condensed", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
   color-scheme: light;
@@ -25,12 +26,14 @@
     --bg:#131b26; --panel:#1b2532; --ink:#dde5ee; --muted:#8a97a8; --line:#2b394a;
     --accent:#72aef0; --row-hover:#212d3c; --focus:#72aef0; color-scheme:dark;
     --danger:#ff7468; --caution:#f0b44c;
+    --d0:#3987e5; --d1:#d95926; --d2:#199e70; --d3:#c98500; --d4:#d55181; --d5:#0ca30c; --d6:#9085e9;
   }
 }
 :root[data-theme="dark"]{
   --bg:#131b26; --panel:#1b2532; --ink:#dde5ee; --muted:#8a97a8; --line:#2b394a;
   --accent:#72aef0; --row-hover:#212d3c; --focus:#72aef0; color-scheme:dark;
     --danger:#ff7468; --caution:#f0b44c;
+    --d0:#3987e5; --d1:#d95926; --d2:#199e70; --d3:#c98500; --d4:#d55181; --d5:#0ca30c; --d6:#9085e9;
 }
 @media (prefers-color-scheme: dark){
   :root.loud:not([data-theme="light"]){--accent:#ff7a3d;--focus:#ff7a3d}
@@ -237,6 +240,67 @@ dialog.statsd .d-body{display:block;columns:auto;column-count:auto}
 .r-tag{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border:1px solid currentColor;border-radius:2px;padding:0 4px;vertical-align:1px;margin-left:4px;cursor:help}
 .r-tag.lv2{color:var(--danger)}
 .r-tag.lv1{color:var(--caution)}
+.ta{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+.ta h3{font-size:1.05rem;margin:0 0 4px;color:var(--ink)}
+.ta h4{font-size:.95rem;margin:0 0 6px;color:var(--ink)}
+.ta-note{font-size:.82rem;color:var(--muted);margin:2px 0 8px;line-height:1.4}
+.ta-head{margin:8px 0 2px;font-size:.88rem;color:var(--muted)}
+.ta-head b{color:var(--ink)}
+.ta-controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;margin:8px 0 6px}
+.ta-controls .r-field{width:auto;min-width:0}
+.ta-controls select,.ta-controls input[type=number]{max-width:100%}
+.ta-controls input[type=number]{width:7em}
+.ta-days{display:flex;flex-wrap:wrap;gap:3px}
+.ta-days button{font:inherit;font-size:.85rem;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:4px 8px;cursor:pointer}
+.ta-days button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.ta-days .ta-preset{background:transparent;color:var(--accent)}
+.ta-check{font-size:.88rem;color:var(--muted);display:flex;gap:6px;align-items:center;padding-bottom:6px}
+.ta-chart{position:relative;margin:4px 0 2px;min-width:0}
+.ta-chart svg{display:block;max-width:100%;height:auto;outline-offset:2px}
+.ta-chart svg:focus-visible,.ta-grid:focus-visible{outline:2px solid var(--focus)}
+.ta-ax{fill:var(--muted);font-family:var(--cond);font-size:11px}
+.ta-grid-l{stroke:var(--line);stroke-width:1}
+.ta-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ta-area{fill:var(--accent);opacity:.1}
+.ta-off{fill:var(--panel);opacity:.7}
+.ta-now{stroke:var(--muted);stroke-width:1}
+.ta-sel{stroke:var(--ink);stroke-width:1.5}
+.ta-hair{stroke:var(--muted);stroke-width:1}
+.ta-dot{fill:var(--accent);stroke:var(--panel);stroke-width:2}
+.ta-dot-sel{fill:var(--ink)}
+.ta-tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:6px 9px;font-size:.82rem;color:var(--muted);box-shadow:0 2px 10px rgba(0,0,0,.18);white-space:nowrap;z-index:3;line-height:1.45}
+.ta-tip b{color:var(--ink);font-size:.95rem}
+.ta-tip small{display:block;font-size:.78rem}
+.ta-tip .k{display:inline-block;width:12px;height:2px;border-radius:1px;vertical-align:middle;margin-right:6px}
+.ta-legend{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 6px}
+.ta-legend button{font:inherit;font-size:.8rem;background:none;border:1px solid var(--line);border-radius:3px;padding:2px 8px;color:var(--ink);cursor:pointer}
+.ta-legend button[aria-pressed="false"]{opacity:.45}
+.ta-legend i{display:inline-block;width:14px;height:2px;border-radius:1px;vertical-align:middle;margin-right:6px}
+.ta-grid{display:grid;grid-template-columns:2.4em repeat(24,minmax(0,1fr));gap:2px;font-family:var(--cond);font-size:.72rem;color:var(--muted);align-items:center;margin:6px 0}
+.ta-grid .h{grid-column:span 6}
+.ta-grid .c{height:20px;border-radius:2px;cursor:pointer}
+.ta-grid .c:hover{outline:1px solid var(--ink)}
+.ta-grid .c.x{background:repeating-linear-gradient(45deg,var(--line) 0 2px,transparent 2px 4px)}
+.ta-grid .c.off{opacity:.3}
+.ta-grid .c.sel{outline:2px solid var(--ink);outline-offset:1px}
+.ta-x-key{display:inline-block;width:11px;height:11px;border-radius:2px;margin-left:10px;background:repeating-linear-gradient(45deg,var(--line) 0 2px,transparent 2px 4px)}
+.ta-table th,.ta-table td{padding:3px 5px;font-size:.8rem;cursor:pointer}
+.ta-table tr.off{opacity:.4}
+.ta-table td.sel{background:var(--row-hover);font-weight:700;color:var(--ink)}
+.ta-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px 20px;margin-top:10px}
+.ta-best-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.ta-best-head h4{margin:0}
+.r-seg.ta-small button{padding:3px 10px;font-size:.82rem}
+.ta-best ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ta-best li button{display:block;width:100%;text-align:left;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:6px 10px;cursor:pointer}
+.ta-best li button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.ta-best .u{color:var(--muted)}
+.ta-best small{display:block;color:var(--muted);font-size:.8rem}
+.ta-along-t td{padding:4px 6px}
+.ta-val{min-width:130px}
+.ta-val .n{display:inline-block;min-width:3.2em;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.ta-track{display:inline-block;width:calc(100% - 4em);margin-left:8px;vertical-align:middle}
+.ta-bar{display:block;height:8px;border-radius:0 4px 4px 0;background:var(--accent)}
 .r-again{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:0 4px;vertical-align:1px}
 .r-wrap{overflow-x:auto}
 .r-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
@@ -3185,7 +3249,7 @@ footer .contact p{margin:0 0 10px}
         const area = routeArea(id, AREA_MINUTES);
         if (area) list.push({ lv: 2, tag: "smartbombs", text: `Smartbombs or bombs: ${plural(area, "PvP kill")} in the last ${AREA_MINUTES} minutes. Don’t sit on gates, and don’t warp straight gate to gate here.` });
         if (camp >= CAMP_KILLS) list.push({ lv: 2, tag: "gate camp?", text: `Possible gate camp: ${plural(camp, pvp + "kill")} on gates in the last ${CAMP_MINUTES} minutes` });
-        else if (gate60 || k15) {
+        if (gate60 || k15) {
           const parts = [k15 ? `${plural(k15, pvp + "kill")} in the last 15 minutes` : "", gate60 ? `${plural(gate60, pvp + "kill")} on gates in the last hour` : ""].filter(Boolean);
           list.push({ lv: 1, tag: "kills", text: "Recent kills: " + parts.join(", ") });
         }
@@ -3248,7 +3312,7 @@ footer .contact p{margin:0 0 10px}
     const ids = [...new Set(r.path)];
     const regs = [...new Set(ids.map(id => regionOf(catalog.systems[id])).filter(x => x !== undefined))];
     const files = new Map(await Promise.all(regs.map(async reg => [reg, await loadProfiles(reg)])));
-    const sums = Array(168).fill(null), rows = [];
+    const sums = Array(168).fill(null), rows = [], byId = new Map();
     let n = 0, weeks = 0;
     for (const id of ids) {
       const p = files.get(regionOf(catalog.systems[id]));
@@ -3256,10 +3320,10 @@ footer .contact p{margin:0 0 10px}
       if (prof === undefined || prof === null) continue;
       n++; weeks = Math.max(weeks, p.weeks || 0);
       const vals = prof === 0 ? Array(168).fill(0) : fillGaps(prof);
-      rows.push(vals);
+      rows.push(vals); byId.set(id, vals);
       for (let i = 0; i < 168; i++) if (vals[i] !== null) sums[i] = (sums[i] || 0) + vals[i];
     }
-    return (r.weekly = n ? { sums, rows, n, total: ids.length, weeks } : null);
+    return (r.weekly = n ? { sums, rows, byId, n, total: ids.length, weeks } : null);
   }
   const nowSlot = () => { const d = new Date(); return ((d.getUTCDay() + 6) % 7) * 24 + d.getUTCHours(); };
   async function updateUsual(r) {
@@ -3289,6 +3353,476 @@ footer .contact p{margin:0 0 10px}
   }
   setInterval(() => { if (routeState.last && $("rUsual")) updateUsual(routeState.last); }, 30000);
   setInterval(() => { if (routeState.last && $("rWarn") && !$("rResult").closest("[hidden]")) updateRouteWarnings(routeState.last); }, 30000);
+  // ---------- Analyze traffic: when is this route quiet? ----------
+  // Each departure hour of the week is scored by the traffic in every system at the time you'd reach it,
+  // assuming an even pace over the trip. Jumps come from the weekly jump patterns (profiles/); kills from
+  // the 30-day kill log (killweek/, PvP kills only), averaged per hour over the time logged so far.
+  const TA_METRICS = {
+    "jumps-sum": { label: "Gate jumps, whole route", kind: "jumps", agg: "sum", unit: "gate jumps an hour, added up across the route" },
+    "jumps-median": { label: "Gate jumps, typical system", kind: "jumps", agg: "median", unit: "gate jumps an hour in a typical system on the route" },
+    "jumps-max": { label: "Gate jumps, busiest system", kind: "jumps", agg: "max", unit: "gate jumps an hour in the route's busiest system" },
+    "pvp-sum": { label: "PvP kills, whole route", kind: "pvp", agg: "sum", unit: "PvP kills an hour, added up across the route" },
+    "gate-sum": { label: "PvP kills on gates, whole route", kind: "gate", agg: "sum", unit: "PvP kills on gates an hour, added up across the route" },
+    "area-sum": { label: "Smartbomb and bomb kills, whole route", kind: "area", agg: "sum", unit: "smartbomb and bomb kills an hour, added up across the route" }
+  };
+  const TA_KEY = "quietspace.analyze";
+  const DAY_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const killWeekFiles = new Map();
+  function loadKillWeek(reg) {
+    if (!killWeekFiles.has(reg)) killWeekFiles.set(reg, fetchData(`killweek/${reg}.json`));
+    return killWeekFiles.get(reg);
+  }
+  // Per system, 168 per-hour kill averages for each kind (null for hours of the week the log hasn't covered yet).
+  async function routeKillWeekly(r) {
+    if (r.killWeekly !== undefined) return r.killWeekly;
+    const ids = [...new Set(r.path)];
+    const regs = [...new Set(ids.map(id => regionOf(catalog.systems[id])).filter(x => x !== undefined))];
+    const files = new Map(await Promise.all(regs.map(async reg => [reg, await loadKillWeek(reg)])));
+    const byKind = { pvp: new Map(), gate: new Map(), area: new Map() };
+    let since = null, covered = 0;
+    for (const id of ids) {
+      const f = files.get(regionOf(catalog.systems[id]));
+      if (!f || !f.slotHours) continue;
+      since = f.since; covered = f.slotHours.reduce((a, b) => a + b, 0);
+      const base = f.slotHours.map(h => h > 0 ? 0 : null);
+      const arr = { pvp: base.slice(), gate: base.slice(), area: base.slice() };
+      for (const [slot, p, g, a] of (f.systems && f.systems[id]) || []) {
+        const h = f.slotHours[slot];
+        if (arr.pvp[slot] === null) continue;
+        arr.pvp[slot] = p / h; arr.gate[slot] = g / h; arr.area[slot] = a / h;
+      }
+      for (const k of Object.keys(arr)) byKind[k].set(id, arr[k]);
+    }
+    return (r.killWeekly = since ? { byKind, since, covered } : null);
+  }
+  function taLoadPrefs() {
+    let p = {};
+    try { p = JSON.parse(localStorage.getItem(TA_KEY)) || {}; } catch (e) {}
+    return {
+      metric: TA_METRICS[p.metric] ? p.metric : "jumps-sum",
+      // always opens on today, by day: most people checking a route want the next few hours
+      view: "day",
+      tz: p.tz === "local" ? "local" : "eve",
+      rank: p.rank === "busy" ? "busy" : "quiet",
+      ends: p.ends !== false,
+      days: null // set to today once the time zone is known
+    };
+  }
+  function taSavePrefs(st) {
+    try { localStorage.setItem(TA_KEY, JSON.stringify({ metric: st.metric, tz: st.tz, rank: st.rank, ends: st.ends })); } catch (e) {}
+  }
+  const taOffset = () => Math.round(-new Date().getTimezoneOffset() / 60); // whole hours ahead of EVE time
+  const taHourLabel = h => String(((h % 24) + 24) % 24).padStart(2, "0") + ":00";
+  // Display slot d (in the chosen time zone) as "Tue 04:00".
+  const taSlotText = d => `${WEEKDAYS[Math.floor(((d % 168) + 168) % 168 / 24)]} ${taHourLabel(d)}`;
+  function taFmt(v, kind) {
+    if (v === null || v === undefined) return "–";
+    if (kind === "jumps") return v >= 10 ? Math.round(v).toLocaleString() : v.toFixed(1);
+    return v >= 10 ? v.toFixed(0) : v >= 1 ? v.toFixed(1) : v.toFixed(2);
+  }
+  function taAgg(vals, agg) {
+    if (agg === "sum") return vals.reduce((a, b) => a + b, 0);
+    if (agg === "max") return Math.max(...vals);
+    const v = vals.slice().sort((a, b) => a - b), m = v.length >> 1;
+    return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+  }
+  // The route's steps that count, and each one's arrival as a fraction of the trip.
+  function taSteps(r, st) {
+    const n = r.path.length - 1;
+    return r.path.map((id, i) => ({ id, i, f: n ? i / n : 0 })).filter(x => st.ends || (x.i !== 0 && x.i !== n));
+  }
+  // Value of a 168-hour pattern at a fractional EVE hour of the week, straight-line between hours.
+  function taAt(v, x) {
+    const i = Math.floor(x), f = x - i, a = v[((i % 168) + 168) % 168], b = v[(((i + 1) % 168) + 168) % 168];
+    return a === null ? (f > 0.5 ? b : null) : b === null ? (f < 0.5 ? a : null) : a + (b - a) * f;
+  }
+  // Score for every departure hour, indexed by EVE slot.
+  function taSeries(r, st, data, m) {
+    const steps = taSteps(r, st), out = Array(168).fill(null);
+    for (let s = 0; s < 168; s++) {
+      const vals = [];
+      let gap = false;
+      for (const x of steps) {
+        const v = data.get(x.id);
+        if (!v) continue;
+        const val = taAt(v, s + x.f * st.trip / 60);
+        if (val === null) { gap = true; break; }
+        vals.push(val);
+      }
+      if (!gap && vals.length) out[s] = taAgg(vals, m.agg);
+    }
+    return out;
+  }
+  function taNiceMax(v) {
+    if (!(v > 0)) return 1;
+    const p = 10 ** Math.floor(Math.log10(v)), m = v / p;
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p;
+  }
+
+  function openAnalyzer(r, host) {
+    const st = { ...taLoadPrefs(), trip: Math.max(10, r.path.length - 1), sel: null, hover: null };
+    const off = taOffset();
+    if (!off) st.tz = "eve";
+    { const d = new Date(), h = ((d.getUTCDay() + 6) % 7) * 24 + d.getUTCHours() + (st.tz === "local" ? off : 0); st.days = new Set([Math.floor((((h % 168) + 168) % 168) / 24)]); }
+    host.replaceChildren(el("h3", null, "Analyze traffic on this route"), el("p", "ta-note", "Loading traffic patterns…"));
+    Promise.all([routeWeekly(r), routeKillWeekly(r)]).then(([w, kw]) => {
+      if (!host.isConnected) return;
+      build(w, kw);
+    });
+
+    function build(w, kw) {
+      host.replaceChildren(el("h3", null, "Analyze traffic on this route"));
+      host.append(el("p", "ta-note", "Each departure time is scored by the traffic in every system at the hour you’d reach it. Pick a time on the chart or from the list to see the route at that time."));
+      // ---- controls (one row, above everything they change) ----
+      const ctr = el("div", "ta-controls");
+      const field = (label, input) => { const l = el("label", "r-field"); l.append(label, input); ctr.append(l); return input; };
+      const metric = document.createElement("select");
+      for (const [k, m] of Object.entries(TA_METRICS)) metric.append(new Option(m.label, k));
+      metric.value = st.metric;
+      field("Measure", metric);
+      const trip = document.createElement("input");
+      Object.assign(trip, { type: "number", min: 5, max: 600, step: 5, value: st.trip });
+      field("Trip length (minutes)", trip);
+      const seg = (label, opts, cur, onPick) => {
+        const f = el("div", "r-field"); f.append(label);
+        const g = el("div", "r-seg"); g.setAttribute("role", "group"); g.setAttribute("aria-label", label);
+        for (const [v, t] of opts) {
+          const b = el("button", null, t); b.type = "button"; b.setAttribute("aria-pressed", String(v === cur));
+          b.addEventListener("click", () => { g.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); onPick(v); });
+          g.append(b);
+        }
+        f.append(g); ctr.append(f); return g;
+      };
+      if (off) seg("Times in", [["eve", "EVE time"], ["local", "Your time"]], st.tz, v => {
+        // keep the same moment selected when switching zones
+        if (st.sel !== null) st.sel = (st.sel + (v === "local" ? off : -off) + 168) % 168;
+        st.tz = v; taSavePrefs(st); draw();
+      });
+      seg("Show", [["week", "Week"], ["day", "By day"], ["grid", "Grid"], ["table", "Table"]], st.view, v => { st.view = v; taSavePrefs(st); draw(); });
+      const daysF = el("div", "r-field"); daysF.append("Days");
+      const daysBox = el("div", "ta-days");
+      const dayBtns = WEEKDAYS.map((name, k) => {
+        const b = el("button", null, name); b.type = "button"; b.title = DAY_FULL[k];
+        b.addEventListener("click", () => { if (st.days.has(k)) { if (st.days.size > 1) st.days.delete(k); } else st.days.add(k); syncDays(); });
+        daysBox.append(b); return b;
+      });
+      const preset = (t, set, tip) => { const b = el("button", "ta-preset", t); b.type = "button"; if (tip) b.title = tip; b.addEventListener("click", () => { st.days = new Set(typeof set === "function" ? set() : set); syncDays(); }); daysBox.append(b); };
+      // today in the chosen time zone (EVE or the player's own)
+      preset("Today", () => [Math.floor(nowDisp() / 24) % 7], "Show only today");
+      preset("All", [0, 1, 2, 3, 4, 5, 6]); preset("Weekdays", [0, 1, 2, 3, 4]); preset("Weekend", [5, 6]);
+      daysF.append(daysBox); ctr.append(daysF);
+      const endsL = el("label", "ta-check"); const ends = document.createElement("input"); ends.type = "checkbox"; ends.checked = st.ends;
+      endsL.append(ends, " Count the start and destination systems"); ctr.append(endsL);
+      host.append(ctr);
+
+      const head = el("p", "ta-head");
+      const chart = el("div", "ta-chart");
+      const tip = el("div", "ta-tip"); tip.hidden = true;
+      const note = el("p", "ta-note");
+      const cols = el("div", "ta-cols");
+      const best = el("div", "ta-best"), along = el("div", "ta-along");
+      cols.append(best, along);
+      host.append(head, chart, note, cols);
+
+      function syncDays() { dayBtns.forEach((b, k) => b.setAttribute("aria-pressed", String(st.days.has(k)))); taSavePrefs(st); draw(); }
+      metric.addEventListener("change", () => { st.metric = metric.value; taSavePrefs(st); draw(); });
+      trip.addEventListener("change", () => { const v = Math.round(+trip.value); st.trip = v >= 5 && v <= 600 ? v : st.trip; trip.value = st.trip; draw(); });
+      ends.addEventListener("change", () => { st.ends = ends.checked; taSavePrefs(st); draw(); });
+      dayBtns.forEach((b, k) => b.setAttribute("aria-pressed", String(st.days.has(k))));
+      if (window.ResizeObserver) { let last = 0; new ResizeObserver(() => { const wd = chart.clientWidth; if (Math.abs(wd - last) > 4) { last = wd; if (st.view === "week" || st.view === "day") drawChart(); } }).observe(chart); }
+
+      let cur = null; // { disp: values by display slot, m, kind, avg, max }
+      function compute() {
+        const m = TA_METRICS[st.metric];
+        const data = m.kind === "jumps" ? (w ? w.byId : null) : (kw ? kw.byKind[m.kind] : null);
+        if (!data || !data.size) return { m, none: true };
+        const ev = taSeries(r, st, data, m);
+        const shift = st.tz === "local" ? off : 0;
+        const disp = Array.from({ length: 168 }, (_, d) => ev[((d - shift) % 168 + 168) % 168]);
+        const known = disp.filter(v => v !== null);
+        const avg = known.length ? known.reduce((a, b) => a + b, 0) / known.length : null;
+        return { m, data, disp, avg, max: known.length ? Math.max(...known) : 0, known: known.length, shift };
+      }
+      // the current time as a display slot (fractional hours into the week, in the chosen time zone)
+      const nowDisp = () => { const d = new Date(), h = ((d.getUTCDay() + 6) % 7) * 24 + d.getUTCHours() + (st.tz === "local" ? off : 0); return ((h % 168) + 168) % 168 + d.getUTCMinutes() / 60; };
+      const otherZone = d => off ? (st.tz === "eve" ? `your time ${taSlotText(d + off)}` : `EVE ${taSlotText(d - off)}`) : "";
+      const zoneName = () => st.tz === "eve" ? "EVE" : "your time";
+      function untilText(d) {
+        let h = (d - Math.floor(nowDisp()) + 168) % 168;
+        if (h === 0) return "this hour";
+        const days = Math.floor(h / 24); h %= 24;
+        return "in " + (days ? `${days} d ` : "") + `${h} h`;
+      }
+      function vsAvg(v) {
+        if (cur.avg === null || !(cur.avg > 0) || v === null) return "";
+        const p = Math.round((v - cur.avg) / cur.avg * 100);
+        return p === 0 ? "about average for this route" : p < 0 ? `${-p}% below this route’s average` : `${p}% above this route’s average`;
+      }
+      function select(d) { st.sel = ((d % 168) + 168) % 168; drawChart(); drawBest(); drawAlong(); }
+
+      function draw() {
+        cur = compute();
+        if (st.sel === null) st.sel = Math.floor(nowDisp()) % 168;
+        drawChart(); drawBest(); drawAlong();
+        // what the data covers
+        const bits = [];
+        if (w) bits.push(`Jumps from ${w.weeks >= 12 ? "the last 12 weeks" : `${w.weeks} week${w.weeks === 1 ? "" : "s"} of data so far`}.`);
+        if (kw) bits.push(`Kills from the kill log, which started on ${new Date(kw.since + "T00:00:00Z").toLocaleDateString(undefined, { day: "numeric", month: "short", timeZone: "UTC" })}: ${(kw.covered / 24).toFixed(1)} days so far, so kill patterns are still filling in and hours not yet covered show as gaps.`);
+        else bits.push("Kill patterns aren’t available yet.");
+        bits.push(`Times are ${st.tz === "eve" ? "EVE time (UTC)" : "your time"}.`);
+        note.textContent = bits.join(" ");
+      }
+
+      // ---- the chart area: week line, lines by day, grid or table ----
+      function drawChart() {
+        chart.replaceChildren(); tip.hidden = true;
+        chart.className = "ta-chart ta-v-" + st.view;
+        if (cur.none) { head.textContent = ""; chart.append(el("p", "ta-note", cur.m.kind === "jumps" ? "No weekly jump pattern for this route yet." : "No kill pattern for this route yet: the kill log is still filling in.")); return; }
+        if (!cur.known) { head.textContent = ""; chart.append(el("p", "ta-note", "No data for these hours yet.")); return; }
+        head.replaceChildren(el("b", null, cur.m.label), ` — ${cur.m.unit}, by departure time (${zoneName()}).`);
+        if (st.view === "week") weekChart();
+        else if (st.view === "day") dayChart();
+        else if (st.view === "grid") gridChart();
+        else tableChart();
+        chart.append(tip);
+      }
+      function placeTip(px, py, rows) {
+        tip.replaceChildren(...rows); tip.hidden = false;
+        const W = chart.clientWidth, tw = tip.offsetWidth;
+        tip.style.left = Math.max(0, Math.min(W - tw, px + 12 > W - tw ? px - tw - 12 : px + 12)) + "px";
+        tip.style.top = Math.max(0, py - 10) + "px";
+      }
+      function tipRows(d, v, key) {
+        if (v === null) return [el("div", null, `Leave ${taSlotText(d)} ${st.tz === "eve" ? "EVE" : "your time"}`), el("small", null, "No data yet for this hour")];
+        const a = el("div"); a.append(el("b", null, taFmt(v, cur.m.kind)), " ", el("span", null, cur.m.kind === "jumps" ? "jumps an hour" : "kills an hour"));
+        const b = el("div", null, `Leave ${taSlotText(d)} ${st.tz === "eve" ? "EVE" : ""}`.trim());
+        if (key) b.prepend(key);
+        const rows = [a, b];
+        const o = otherZone(d); if (o) rows.push(el("small", null, o));
+        const c = vsAvg(v); if (c) rows.push(el("small", null, c));
+        return rows;
+      }
+      function axes(svg, W, H, mg, max, xTicks) {
+        const pw = W - mg.l - mg.r, ph = H - mg.t - mg.b;
+        for (let k = 0; k <= 4; k++) {
+          const v = max * k / 4, y = mg.t + ph - ph * k / 4;
+          svg.append(svgEl("line", { x1: mg.l, x2: W - mg.r, y1: y, y2: y, class: "ta-grid-l" }));
+          const t = svgEl("text", { x: mg.l - 6, y: y + 4, "text-anchor": "end", class: "ta-ax" }); t.textContent = taFmt(v, cur.m.kind === "jumps" && max >= 10 ? "jumps" : "kills").replace(/\.0+$/, ""); svg.append(t);
+        }
+        for (const [x, label, line] of xTicks) {
+          if (line) svg.append(svgEl("line", { x1: x, x2: x, y1: mg.t, y2: mg.t + ph, class: "ta-grid-l" }));
+          if (label) { const t = svgEl("text", { x: label[1], y: H - 8, "text-anchor": "middle", class: "ta-ax" }); t.textContent = label[0]; svg.append(t); }
+        }
+        return { pw, ph };
+      }
+      function linePath(vals, X, Y) {
+        let d = "", pen = false;
+        vals.forEach((v, i) => { if (v === null) { pen = false; return; } d += (pen ? "L" : "M") + X(i).toFixed(1) + "," + Y(v).toFixed(1); pen = true; });
+        return d;
+      }
+      function areaPath(vals, X, Y, base) {
+        let d = "", run = [];
+        const flush = () => { if (run.length) { d += `M${X(run[0]).toFixed(1)},${base}` + run.map(i => `L${X(i).toFixed(1)},${Y(vals[i]).toFixed(1)}`).join("") + `L${X(run[run.length - 1]).toFixed(1)},${base}Z`; run = []; } };
+        vals.forEach((v, i) => { if (v === null) flush(); else run.push(i); });
+        flush(); return d;
+      }
+      function weekChart() {
+        const W = Math.max(300, chart.clientWidth || 640), H = 230, mg = { l: 44, r: 12, t: 16, b: 26 };
+        const max = taNiceMax(cur.max), svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": `${cur.m.label} by departure time over the week` });
+        const pw0 = W - mg.l - mg.r, X = d => mg.l + d * pw0 / 168 + pw0 / 336;
+        const ticks = [];
+        for (let k = 0; k < 7; k++) ticks.push([mg.l + k * pw0 / 7, [W < 420 ? WEEKDAYS[k][0] : WEEKDAYS[k], mg.l + (k + 0.5) * pw0 / 7], k > 0]);
+        const { ph } = axes(svg, W, H, mg, max, ticks);
+        const Y = v => mg.t + ph - ph * Math.min(v, max) / max, base = mg.t + ph;
+        svg.append(svgEl("path", { d: areaPath(cur.disp, X, Y, base), class: "ta-area" }), svgEl("path", { d: linePath(cur.disp, X, Y), class: "ta-line" }));
+        // days left out are washed back
+        for (let k = 0; k < 7; k++) if (!st.days.has(k)) svg.append(svgEl("rect", { x: mg.l + k * pw0 / 7, y: mg.t, width: pw0 / 7, height: ph, class: "ta-off" }));
+        const nx = X(nowDisp() - 0.5);
+        svg.append(svgEl("line", { x1: nx, x2: nx, y1: mg.t - 4, y2: base, class: "ta-now" }));
+        const nt = svgEl("text", { x: nx, y: mg.t - 6, "text-anchor": "middle", class: "ta-ax" }); nt.textContent = "now"; svg.append(nt);
+        for (const d of bestList()) if (cur.disp[d] !== null) svg.append(svgEl("circle", { cx: X(d), cy: Y(cur.disp[d]), r: 4, class: "ta-dot" }));
+        const sx = X(st.sel), sv = cur.disp[st.sel];
+        svg.append(svgEl("line", { x1: sx, x2: sx, y1: mg.t, y2: base, class: "ta-sel" }));
+        if (sv !== null) svg.append(svgEl("circle", { cx: sx, cy: Y(sv), r: 5, class: "ta-dot ta-dot-sel" }));
+        const hair = svgEl("line", { y1: mg.t, y2: base, class: "ta-hair", visibility: "hidden" }); svg.append(hair);
+        const hit = svgEl("rect", { x: mg.l, y: 0, width: pw0, height: H, fill: "transparent" }); svg.append(hit);
+        const at = e => { const b = svg.getBoundingClientRect(); return Math.max(0, Math.min(167, Math.floor(((e.clientX - b.left) * W / b.width - mg.l) / pw0 * 168))); };
+        hit.addEventListener("pointermove", e => {
+          const d = at(e), x = X(d); hair.setAttribute("x1", x); hair.setAttribute("x2", x); hair.setAttribute("visibility", "visible");
+          const b = svg.getBoundingClientRect(); placeTip((x / W) * b.width, mg.t, tipRows(d, cur.disp[d]));
+        });
+        hit.addEventListener("pointerleave", () => { hair.setAttribute("visibility", "hidden"); tip.hidden = true; });
+        hit.addEventListener("click", e => select(at(e)));
+        chart.append(svg);
+        keyNav(svg, 1, 24);
+      }
+      function dayChart() {
+        const W = Math.max(300, chart.clientWidth || 640), H = 230, mg = { l: 44, r: 12, t: 12, b: 26 };
+        const days = [...st.days].sort((a, b) => a - b);
+        const vals = k => Array.from({ length: 24 }, (_, h) => cur.disp[k * 24 + h]);
+        const shown = days.flatMap(vals).filter(v => v !== null);
+        const max = taNiceMax(shown.length ? Math.max(...shown) : 0);
+        const legend = el("div", "ta-legend");
+        for (let k = 0; k < 7; k++) {
+          const b = el("button"); b.type = "button"; b.setAttribute("aria-pressed", String(st.days.has(k)));
+          const i = document.createElement("i"); i.style.background = `var(--d${k})`; b.append(i, DAY_FULL[k]);
+          b.addEventListener("click", () => dayBtns[k].click());
+          legend.append(b);
+        }
+        chart.append(legend);
+        const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": `${cur.m.label} by hour of the day, one line per day` });
+        const pw0 = W - mg.l - mg.r, X = h => mg.l + h * pw0 / 23;
+        const ticks = [0, 3, 6, 9, 12, 15, 18, 21].map(h => [X(h), [W < 420 && h % 6 ? "" : taHourLabel(h).slice(0, 2), X(h)], false]);
+        const { ph } = axes(svg, W, H, mg, max, ticks);
+        const Y = v => mg.t + ph - ph * Math.min(v, max) / max, base = mg.t + ph;
+        for (const k of days) svg.append(svgEl("path", { d: linePath(vals(k), X, Y), class: "ta-line ta-dayline", style: `stroke:var(--d${k})` }));
+        const sk = Math.floor(st.sel / 24), sh = st.sel % 24;
+        if (st.days.has(sk) && cur.disp[st.sel] !== null) svg.append(svgEl("circle", { cx: X(sh), cy: Y(cur.disp[st.sel]), r: 5, class: "ta-dot ta-dot-sel", style: `fill:var(--d${sk})` }));
+        const hair = svgEl("line", { y1: mg.t, y2: base, class: "ta-hair", visibility: "hidden" }); svg.append(hair);
+        const hit = svgEl("rect", { x: mg.l - 8, y: 0, width: pw0 + 16, height: H, fill: "transparent" }); svg.append(hit);
+        const pos = e => { const b = svg.getBoundingClientRect(); return { h: Math.max(0, Math.min(23, Math.round(((e.clientX - b.left) * W / b.width - mg.l) / pw0 * 23))), y: (e.clientY - b.top) * H / b.height, b }; };
+        hit.addEventListener("pointermove", e => {
+          const { h, b } = pos(e), x = X(h); hair.setAttribute("x1", x); hair.setAttribute("x2", x); hair.setAttribute("visibility", "visible");
+          const rows = [el("div", null, `Leave at ${taHourLabel(h)} ${st.tz === "eve" ? "EVE" : "your time"}`)];
+          for (const k of days.slice().sort((a, b2) => (cur.disp[a * 24 + h] ?? 1e9) - (cur.disp[b2 * 24 + h] ?? 1e9))) {
+            const row = el("div"), key = el("span", "k"); key.style.background = `var(--d${k})`;
+            row.append(key, el("b", null, taFmt(cur.disp[k * 24 + h], cur.m.kind)), " ", DAY_FULL[k]); rows.push(row);
+          }
+          placeTip((x / W) * b.width, mg.t, rows);
+        });
+        hit.addEventListener("pointerleave", () => { hair.setAttribute("visibility", "hidden"); tip.hidden = true; });
+        hit.addEventListener("click", e => {
+          // pick the line nearest the pointer at that hour
+          const { h, y } = pos(e);
+          let bestK = days[0], bestD = Infinity;
+          for (const k of days) { const v = cur.disp[k * 24 + h]; if (v !== null && Math.abs(Y(v) - y) < bestD) { bestD = Math.abs(Y(v) - y); bestK = k; } }
+          select(bestK * 24 + h);
+        });
+        chart.append(svg);
+        keyNav(svg, 1, 24);
+      }
+      function gridChart() {
+        const grid = el("div", "ta-grid"); grid.tabIndex = 0;
+        grid.setAttribute("role", "grid"); grid.setAttribute("aria-label", `${cur.m.label} by day and departure hour`);
+        grid.append(el("span"));
+        [0, 6, 12, 18].forEach(h => grid.append(el("span", "h", taHourLabel(h))));
+        // colours run from the route's quietest hour to its busiest, so busy routes still show contrast
+        const known = cur.disp.filter(v => v !== null), lo = Math.min(...known), span = Math.max(...known) - lo;
+        const cellColor = v => weeklyColor(span > 0 ? Math.round(Math.expm1((v - lo) / span * Math.log1p(100))) : 0, 100);
+        for (let k = 0; k < 7; k++) {
+          grid.append(el("span", null, WEEKDAYS[k]));
+          for (let h = 0; h < 24; h++) {
+            const d = k * 24 + h, v = cur.disp[d], c = el("span", "c" + (st.days.has(k) ? "" : " off") + (d === st.sel ? " sel" : ""));
+            if (v === null) c.classList.add("x"); else c.style.background = cellColor(v);
+            c.addEventListener("pointerenter", () => { const b = grid.getBoundingClientRect(), cb = c.getBoundingClientRect(); placeTip(cb.left - b.left + cb.width / 2, cb.top - b.top + 22, tipRows(d, v)); });
+            c.addEventListener("pointerleave", () => { tip.hidden = true; });
+            c.addEventListener("click", () => select(d));
+            grid.append(c);
+          }
+        }
+        const key = el("div", "hm-key");
+        const sw = color => { const i = document.createElement("i"); i.style.background = color; return i; };
+        key.append(span > 0 ? `Quietest ${taFmt(lo, cur.m.kind)}` : "Quiet", ...[0, 0.35, 0.6, 0.8, 1].map(t => sw(weeklyColor(t === 0 ? 0 : Math.round(Math.expm1(t * Math.log1p(100))), 100))), span > 0 ? `Busiest ${taFmt(lo + span, cur.m.kind)}` : "Busiest", el("span", "ta-x-key"), "no data yet");
+        chart.append(grid, key);
+        keyNav(grid, 1, 24);
+      }
+      function tableChart() {
+        const wrap = el("div", "r-wrap"), t = el("table", "r-list ta-table");
+        const hr = document.createElement("tr"); hr.append(el("th", null, zoneName() === "EVE" ? "EVE" : "Your time"));
+        for (let h = 0; h < 24; h++) hr.append(el("th", "num", taHourLabel(h).slice(0, 2)));
+        const thead = document.createElement("thead"); thead.append(hr); t.append(thead);
+        const tb = document.createElement("tbody");
+        for (let k = 0; k < 7; k++) {
+          const tr = document.createElement("tr"); if (!st.days.has(k)) tr.className = "off";
+          tr.append(el("th", null, WEEKDAYS[k]));
+          for (let h = 0; h < 24; h++) {
+            const d = k * 24 + h, td = el("td", "num" + (d === st.sel ? " sel" : ""), taFmt(cur.disp[d], cur.m.kind));
+            td.addEventListener("click", () => select(d)); tr.append(td);
+          }
+          tb.append(tr);
+        }
+        t.append(tb); wrap.append(t); chart.append(wrap);
+      }
+      // arrow keys move the selected time (left/right an hour, up/down a day)
+      function keyNav(node, step, row) {
+        node.setAttribute("tabindex", "0");
+        node.addEventListener("keydown", e => {
+          const m = { ArrowLeft: -step, ArrowRight: step, ArrowUp: -row, ArrowDown: row }[e.key];
+          if (m === undefined) return;
+          e.preventDefault(); select(st.sel + m);
+          const again = chart.querySelector("svg, .ta-grid"); if (again) again.focus();
+        });
+      }
+
+      // ---- best departure times ----
+      function bestList() {
+        if (cur.none || !cur.known) return [];
+        const cand = [];
+        // with only today picked, suggest the hours still to come today rather than next week's
+        const nowH = Math.floor(nowDisp()), onlyToday = st.days.size === 1 && st.days.has(Math.floor(nowH / 24));
+        for (let d = 0; d < 168; d++) if (st.days.has(Math.floor(d / 24)) && cur.disp[d] !== null && (!onlyToday || d >= nowH)) cand.push(d);
+        cand.sort((a, b) => st.rank === "quiet" ? cur.disp[a] - cur.disp[b] : cur.disp[b] - cur.disp[a]);
+        const picks = [];
+        for (const d of cand) {
+          if (picks.every(p => Math.min((d - p + 168) % 168, (p - d + 168) % 168) >= 3)) picks.push(d);
+          if (picks.length === 5) break;
+        }
+        return picks;
+      }
+      function drawBest() {
+        best.replaceChildren();
+        const h = el("div", "ta-best-head"); h.append(el("h4", null, st.rank === "quiet" ? "Quietest times to leave" : "Busiest times to leave"));
+        const g = el("div", "r-seg ta-small");
+        for (const [v, t] of [["quiet", "Quietest"], ["busy", "Busiest"]]) {
+          const b = el("button", null, t); b.type = "button"; b.setAttribute("aria-pressed", String(st.rank === v));
+          b.addEventListener("click", () => { st.rank = v; taSavePrefs(st); drawChart(); drawBest(); });
+          g.append(b);
+        }
+        h.append(g); best.append(h);
+        const picks = bestList();
+        const todayOnly = st.days.size === 1 && st.days.has(Math.floor(Math.floor(nowDisp()) / 24));
+        if (!picks.length) { best.append(el("p", "ta-note", todayOnly ? "No hours with data left today." : "No times to suggest yet for these days.")); return; }
+        if (todayOnly) best.append(el("p", "ta-note", "Hours still to come today."));
+        const ol = el("ol");
+        for (const d of picks) {
+          const li = el("li"), b = el("button"); b.type = "button"; b.setAttribute("aria-pressed", String(d === st.sel));
+          const top = el("span", "t"); top.append(el("b", null, `${DAY_FULL[Math.floor(d / 24)]} ${taHourLabel(d)}`), ` ${st.tz === "eve" ? "EVE" : ""}`, el("span", "u", ` · ${untilText(d)}`));
+          b.append(top);
+          const o = otherZone(d); if (o) b.append(el("small", null, o.charAt(0).toUpperCase() + o.slice(1)));
+          b.append(el("small", null, `${taFmt(cur.disp[d], cur.m.kind)} ${cur.m.kind === "jumps" ? "jumps" : "kills"} an hour${vsAvg(cur.disp[d]) ? " · " + vsAvg(cur.disp[d]) : ""}`));
+          b.addEventListener("click", () => select(d));
+          li.append(b); ol.append(li);
+        }
+        best.append(ol);
+      }
+
+      // ---- the route at the selected time ----
+      function drawAlong() {
+        along.replaceChildren();
+        const d = st.sel;
+        along.append(el("h4", null, `Along the route if you leave ${taSlotText(d)} ${st.tz === "eve" ? "EVE" : "your time"}`));
+        if (cur.none) { along.append(el("p", "ta-note", "No data for this measure yet.")); return; }
+        const evSlot = ((d - cur.shift) % 168 + 168) % 168, n = r.path.length - 1;
+        const rows = taSteps(r, st).map(x => { const v = cur.data.get(x.id); return { ...x, mins: Math.round(x.f * st.trip), v: v ? taAt(v, evSlot + x.f * st.trip / 60) : null }; });
+        const max = Math.max(...rows.map(x => x.v || 0), 1e-9);
+        const total = cur.disp[d];
+        along.append(el("p", "ta-note", total === null ? "No data for this time yet." : `${cur.m.label}: ${taFmt(total, cur.m.kind)}${vsAvg(total) ? ` (${vsAvg(total)})` : ""}.`));
+        const wrap = el("div", "r-wrap"), t = el("table", "r-list ta-along-t");
+        t.innerHTML = `<thead><tr><th>#</th><th>System</th><th class="num">Arrive</th><th>${cur.m.kind === "jumps" ? "Jumps an hour" : "Kills an hour"}</th></tr></thead>`;
+        const tb = document.createElement("tbody");
+        for (const x of rows) {
+          const sys = catalog.systems[x.id], tr = document.createElement("tr");
+          const name = el("td"); name.append(secChip(sys), " ", sys.n);
+          const val = el("td", "ta-val"); val.append(el("span", "n", taFmt(x.v, cur.m.kind)));
+          if (x.v) { const bar = el("span", "ta-bar"); bar.style.width = Math.max(2, Math.round(x.v / max * 100)) + "%"; const track = el("span", "ta-track"); track.append(bar); val.append(track); }
+          tr.append(el("td", "r-step", x.i === 0 ? "Start" : (r.loop && x.i === n ? "Back" : String(x.i))), name, el("td", "num", `+${x.mins} min`), val);
+          tb.append(tr);
+        }
+        t.append(tb); wrap.append(t); along.append(wrap);
+      }
+      draw();
+    }
+  }
   function renderRoute(r) {
     const box = $("rResult"); box.replaceChildren();
     const n = r.path.length - 1;
@@ -3348,7 +3882,17 @@ footer .contact p{margin:0 0 10px}
     const copyB = btn("Copy list", async () => { try { await navigator.clipboard.writeText(routeText(r)); copyB.textContent = "Copied"; } catch (e) { copyB.textContent = "Couldn’t copy"; } setTimeout(() => copyB.textContent = "Copy list", 1500); });
     const dl = el("a", "btn", "Open on Dotlan"); dl.href = dotlanRoute(r.path); dl.target = "_blank"; dl.rel = "noopener"; acts.append(dl);
     const saveB = btn("Save in this browser", () => { saveRoute(r); saveB.textContent = "Saved"; saveB.disabled = true; });
-    box.append(acts);
+    const taHost = el("section", "ta"); taHost.id = "rTa"; taHost.hidden = true;
+    const taB = btn("Analyze traffic", () => {
+      taHost.hidden = !taHost.hidden;
+      taB.textContent = taHost.hidden ? "Analyze traffic" : "Hide traffic analysis";
+      taB.setAttribute("aria-expanded", String(!taHost.hidden));
+      if (!taHost.hidden && !taHost.childNodes.length) openAnalyzer(r, taHost);
+      if (!taHost.hidden) taHost.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    });
+    taB.setAttribute("aria-expanded", "false"); taB.setAttribute("aria-controls", "rTa");
+    acts.insertBefore(taB, acts.children[1]);
+    box.append(acts, taHost);
   }
   const dotlanRoute = path => "https://evemaps.dotlan.net/route/" + path.map(id => encodeURIComponent(catalog.systems[id].n.replace(/ /g, "_"))).join(":");
   function routeText(r) {
