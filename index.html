@@ -3337,12 +3337,12 @@ footer .contact p{margin:0 0 10px}
       s.addEventListener("change", () => { c[key] = s.value === "" ? null : Number(s.value); changed(); });
       f.append(s); return f;
     };
-    const regF = el("label", "r-field adv-wide"); regF.append("Regions (hold Ctrl or ⌘ to pick several)");
+    const regF = el("label", "r-field adv-wide"); regF.append("Regions");
     const regS = document.createElement("select"); regS.multiple = true; regS.size = 6;
     Object.entries(catalog.regions).filter(([id]) => !UNREACHABLE.has(+id) && Object.values(catalog.systems).some(s => String(regionOf(s)) === id))
       .sort((a, b) => a[1].localeCompare(b[1])).forEach(([id, n]) => { const o = new Option(n, id); o.selected = c.regions.map(String).includes(id); regS.append(o); });
     regS.addEventListener("change", () => { c.regions = [...regS.selectedOptions].map(o => +o.value); changed(); });
-    regF.append(regS);
+    regF.append(regS, el("small", "adv-note", "To pick more than one region, hold Ctrl (⌘ on a Mac) while you click each one. Ctrl-click a picked region to unpick it. On a phone, just tap each region."));
     const nearF = el("label", "r-field"); nearF.append("Near a system");
     const nearI = document.createElement("input"); nearI.setAttribute("list", "rSystems"); nearI.autocomplete = "off"; nearI.spellcheck = false; nearI.placeholder = "Type a system name"; nearI.value = c.near;
     nearI.addEventListener("input", () => { c.near = nearI.value.trim(); changed(); });
