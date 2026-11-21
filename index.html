@@ -4175,20 +4175,25 @@ footer .contact p{margin:0 0 10px}
   const rmLevel = z => z < 0.6 ? 0 : z < 1.7 ? 1 : z < 3 ? 2 : 3;
 
   // Positions, labels and everything else that doesn't change while the route is shown.
-  function rmLayout(r, W, H) {
+  function rmLayout(r, W, H, layout) {
     const md = getMapData(), path = r.path.map(String), n = path.length;
     const linksOf = id => (md.links[id] || []).map(String);
     const first = new Map(); path.forEach((id, i) => { if (!first.has(id)) first.set(id, i); });
     const onRoute = new Set(path);
-    const P0 = id => { const p = md.pos[id]; return p ? { x: p[0], y: -p[1] } : null; };
     const regOf = id => catalog.systems[id] ? regionOf(catalog.systems[id]) : undefined;
     const routeRegs = new Set(path.map(regOf).filter(x => x !== undefined));
+    // positions: the game's 2D map as CCP publishes it (each region exactly as the game draws it; gates between
+    // regions come out long, as the game spreads its regions apart), or real positions seen from above
+    const twoD = layout !== "real" && md.pos2 && path.every(id => md.pos2[id]);
+    const P0 = twoD
+      ? id => { const p = md.pos2[id]; return p ? { x: p[0], y: -p[1] } : null; }
+      : id => { const p = md.pos[id]; return p ? { x: p[0], y: -p[1] } : null; };
     const legs = path.slice(1).map((id, i) => { const a = P0(path[i]), b = P0(id); return a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0; }).filter(Boolean).sort((a, b) => a - b);
     const typical = legs.length ? legs[legs.length >> 1] : 1;
     // neighbours one jump off the route; far ones outside the route's regions become arrows
     const nbrs = new Map(), far = new Map();
     for (const id of onRoute) for (const nb of linksOf(id)) {
-      if (onRoute.has(nb) || !catalog.systems[nb] || !md.pos[nb]) continue;
+      if (onRoute.has(nb) || !catalog.systems[nb] || !P0(nb)) continue;
       const a = P0(id), b = P0(nb);
       if (!routeRegs.has(regOf(nb)) && Math.hypot(a.x - b.x, a.y - b.y) > typical * 3.5 && n > 2) { if (!far.has(nb)) far.set(nb, id); continue; }
       if (!nbrs.has(nb)) nbrs.set(nb, id);
@@ -4197,14 +4202,14 @@ footer .contact p{margin:0 0 10px}
     const bgRegs = new Set(routeRegs);
     for (const [id, sys] of Object.entries(catalog.systems)) {
       if (!routeRegs.has(regionOf(sys))) continue;
-      for (const x of linksOf(id)) { const g = regOf(x); if (g !== undefined && md.pos[x] && Math.hypot(P0(x).x - P0(id).x, P0(x).y - P0(id).y) < typical * 6) bgRegs.add(g); }
+      for (const x of linksOf(id)) { const g = regOf(x); if (g !== undefined && P0(x) && Math.hypot(P0(x).x - P0(id).x, P0(x).y - P0(id).y) < typical * 6) bgRegs.add(g); }
     }
     const bg = [];
     for (const [id, sys] of Object.entries(catalog.systems)) {
-      if (onRoute.has(id) || nbrs.has(id) || far.has(id) || !md.pos[id]) continue;
+      if (onRoute.has(id) || nbrs.has(id) || far.has(id) || !P0(id)) continue;
       if (bgRegs.has(regionOf(sys))) bg.push(id);
     }
-    const detail = [...first.keys(), ...nbrs.keys()].filter(id => md.pos[id]);
+    const detail = [...first.keys(), ...nbrs.keys()].filter(id => P0(id));
     const ids = [...detail, ...bg];
     const shown = new Set(ids);
     // fit the route and its neighbours to the panel; everything else uses the same scale
@@ -4239,7 +4244,7 @@ footer .contact p{margin:0 0 10px}
       if (shown.has(nb)) {
         const key = id < nb ? id + "-" + nb : nb + "-" + id;
         if (!seen.has(key)) { seen.add(key); links.push({ a: id, b: nb, cross: regOf(id) !== regOf(nb), bg: !(home.has(id) && home.has(nb)) }); }
-      } else if (home.has(id) && md.pos[nb] && !(far.has(nb) && far.get(nb) === id)) stubs.push([id, dir(id, nb)]);
+      } else if (home.has(id) && P0(nb) && !(far.has(nb) && far.get(nb) === id)) stubs.push([id, dir(id, nb)]);
     }
     const arrows = [...far].map(([id, from]) => ({ id, from, u: dir(from, id) }));
     const legSet = new Set(); for (let i = 0; i < n - 1; i++) legSet.add(path[i] < path[i + 1] ? path[i] + "-" + path[i + 1] : path[i + 1] + "-" + path[i]);
@@ -4289,7 +4294,7 @@ footer .contact p{margin:0 0 10px}
     const regions = new Map();
     for (const id of ids) { const reg = regOf(id); if (reg === undefined) continue; if (!regions.has(reg)) regions.set(reg, { list: [], name: (catalog.regions[reg] || "").toUpperCase() }); regions.get(reg).list.push(id); }
     for (const g of regions.values()) { const ps = g.list.map(id => P.get(id)); g.cx = ps.reduce((t, p) => t + p.x, 0) / ps.length; g.cy = ps.reduce((t, p) => t + p.y, 0) / ps.length; g.big = g.list.length >= 6; }
-    return { P, ids, detail, bg, nbrs, first, links, stubs, arrows, labels, tagSpots, regions, legSet, W, H, onRoute, bounds, home, path };
+    return { P, ids, detail, bg, nbrs, first, links, stubs, arrows, labels, tagSpots, regions, legSet, W, H, onRoute, bounds, home, path, twoD };
   }
 
   function renderRouteMap(r, host, opts = {}) {
@@ -4308,8 +4313,17 @@ footer .contact p{margin:0 0 10px}
     }
     const bigB = el("button", "rm-big", "Close map"); bigB.type = "button";
     bigB.addEventListener("click", () => { if (opts.onClose) opts.onClose(); });
+    // place systems like the game's 2D map (default) or by their real positions (kept for jump ranges later)
+    st.layout = prefs.layout === "real" ? "real" : "2d";
+    const lays = el("div", "rm-seg"); lays.setAttribute("role", "group"); lays.setAttribute("aria-label", "Place systems by");
+    for (const [v, t] of [["2d", "Game 2D map"], ["real", "Real positions"]]) {
+      const b = el("button", null, t); b.type = "button"; b.setAttribute("aria-pressed", String(st.layout === v));
+      b.addEventListener("click", () => { if (st.layout === v) return; st.layout = v; rmSave({ layout: v }); lays.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); layout(true); });
+      lays.append(b);
+    }
+    if (!getMapData().pos2) lays.hidden = true; // opened as a local file: real positions only
     const when = rmWhenSeg(r);
-    const right = el("div", "rl-right"); right.append(when, modes);
+    const right = el("div", "rl-right"); right.append(lays, when, modes);
     hudTop.append(bigB, right);
     const legend = el("div", "rm-legend");
     const zoom = el("div", "rm-zoom");
@@ -4329,7 +4343,7 @@ footer .contact p{margin:0 0 10px}
     function layout(force) {
       const cw = Math.max(280, Math.round(wrap.clientWidth)), ch = Math.max(240, Math.round(wrap.clientHeight));
       if (!force && st.L && Math.abs(cw - st.W) < 6 && Math.abs(ch - st.H) < 6) return;
-      st.W = cw; st.H = ch; st.L = rmLayout(r, cw, ch); st.vb = [0, 0, cw, ch];
+      st.W = cw; st.H = ch; st.L = rmLayout(r, cw, ch, st.layout); st.vb = [0, 0, cw, ch];
       svg.setAttribute("width", cw); svg.setAttribute("height", ch);
       draw();
     }
@@ -4499,7 +4513,7 @@ footer .contact p{margin:0 0 10px}
     svg.addEventListener("wheel", e => { e.preventDefault(); const [cx, cy] = toMap(e.clientX, e.clientY); zoomBy(e.deltaY > 0 ? 1.15 : 1 / 1.15, cx, cy); }, { passive: false });
     if (window.ResizeObserver) new ResizeObserver(() => layout(false)).observe(wrap);
     requestAnimationFrame(() => layout(true));
-    return { refresh: () => { if (st.L) { const vb = st.vb; st.L = rmLayout(r, st.W, st.H); draw(); st.vb = vb; applyVb(); } }, redraw: () => { if (st.L) draw(); } };
+    return { refresh: () => { if (st.L) { const vb = st.vb; st.L = rmLayout(r, st.W, st.H, st.layout); draw(); st.vb = vb; applyVb(); } }, redraw: () => { if (st.L) draw(); } };
   }
   // ---------- Route overview: the route as a straight line, and the large map ----------
   // Inline, the route is drawn as a schematic: jumps evenly spaced left to right, with a gentle wave that
