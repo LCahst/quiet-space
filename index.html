@@ -3718,7 +3718,7 @@ footer .contact p{margin:0 0 10px}
   function iskList(win, typeNames) {
     const ol = document.createElement("ol");
     if (!win || !win.top || !win.top.length) { const li = el("li", "d-note", "No kills recorded yet."); ol.append(li); return ol; }
-    win.top.slice(0, 10).forEach(([id, isk, kills, top3]) => {
+    win.top.slice(0, 6).forEach(([id, isk, kills, top3]) => {
       const sys = catalog.systems[id];
       const li = document.createElement("li");
       const row = el("div", "isk-row");
@@ -3755,7 +3755,7 @@ footer .contact p{margin:0 0 10px}
     if (!prebuilt.isk) {
       card.classList.add("pending");
       const p = el("p", null, location.protocol === "file:"
-        ? "Shown on the hosted site: the ten systems with the most ISK destroyed in the last 7 and 30 days, each with its three biggest kills, from zKillboard."
+        ? "Shown on the hosted site: the six systems with the most ISK destroyed in the last 7 and 30 days, each with its three biggest kills, from zKillboard."
         : "Collecting kills from zKillboard. The first rankings appear within the hour.");
       body.append(p);
       return;
