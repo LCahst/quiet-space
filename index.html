@@ -4317,7 +4317,7 @@ footer .contact p{margin:0 0 10px}
     st.layout = prefs.layout === "real" ? "real" : "2d";
     const lays = el("div", "rm-seg"); lays.setAttribute("role", "group"); lays.setAttribute("aria-label", "Place systems by");
     for (const [v, t, tip] of [["2d", "2D", "Placed like the game’s 2D map"], ["real", "3D", "Real positions in space, seen from above"]]) {
-      const b = el("button", null, t); b.type = "button"; b.title = tip; b.setAttribute("aria-label", tip); b.setAttribute("aria-pressed", String(st.layout === v));
+      const b = el("button", null, t); b.type = "button"; b.title = tip; b.setAttribute("aria-label", t + ": " + tip); b.setAttribute("aria-pressed", String(st.layout === v));
       b.addEventListener("click", () => { if (st.layout === v) return; st.layout = v; rmSave({ layout: v }); lays.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); layout(true); });
       lays.append(b);
     }
