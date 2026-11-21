@@ -498,7 +498,6 @@ td.c-recent.fresh{animation:recentpulse 1.6s ease-out 2}
 dialog.mapd{width:min(1120px,calc(100% - 16px));height:min(92vh,900px);max-height:none;padding:0;border:1px solid var(--m-line);background:var(--m-bg);color:var(--m-ink);border-radius:4px}
 dialog.mapd::backdrop{background:rgba(5,8,12,.7)}
 dialog.mapd[data-maptheme="dark"]{--m-bg:#0e1622;--m-panel:#162232;--m-ink:#d8e1ec;--m-muted:#7f8ea2;--m-line:#26364a;--m-edge:#3d516b;--m-edge-x:#6aa9e8;--m-focus:#ffffff;color-scheme:dark}
-dialog.mapd[data-maptheme="light"]{--m-bg:#f2f5f9;--m-panel:#ffffff;--m-ink:#18212d;--m-muted:#5a6676;--m-line:#c9d3de;--m-edge:#a3b2c3;--m-edge-x:#2a64a8;--m-focus:#101a28;color-scheme:light}
 .map-wrap{display:flex;flex-direction:column;height:100%}
 .map-head{display:flex;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--m-line);flex-wrap:wrap;align-items:flex-start}
 .map-head h2{margin:0;font-size:1.5rem;font-weight:600;line-height:1.15}
@@ -507,37 +506,43 @@ dialog.mapd[data-maptheme="light"]{--m-bg:#f2f5f9;--m-panel:#ffffff;--m-ink:#182
 .map-tools label{display:flex;align-items:center;gap:6px}
 .map-tools select,.mbtn{font:inherit;color:var(--m-ink);background:var(--m-panel);border:1px solid var(--m-line);border-radius:3px;padding:5px 10px;cursor:pointer}
 .mbtn:hover{border-color:var(--m-edge-x)}
-.map-stage{position:relative;flex:1;min-height:0;overflow:hidden}
+.map-stage{position:relative;flex:1;min-height:0;overflow:hidden;background:#0b1119}
 #mapSvg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none}
 #mapSvg.dragging{cursor:grabbing}
-.map-zoom{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px}
-.map-zoom .mbtn{width:36px;padding:4px 0;font-size:1rem;line-height:1.4}
 .map-status{position:absolute;left:16px;right:16px;top:45%;text-align:center;color:var(--m-muted);font-family:var(--cond);margin:0;pointer-events:none}
 .map-info{flex:none;height:58px;padding:0 18px;border-top:1px solid var(--m-line);display:flex;gap:16px;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;overflow-y:hidden;font-family:var(--cond)}
 .map-info .mbtn{flex:none}
-.map-head,.map-legend{flex:none}
+.map-head{flex:none}
 .map-info b{font-family:var(--sans);font-weight:600;font-size:1.05rem}
 .map-info .mi-sub{color:var(--m-muted)}
-.map-legend{padding:0 18px 12px;display:flex;gap:6px 18px;flex-wrap:wrap;color:var(--m-muted);font-family:var(--cond);font-size:.85rem;align-items:center}
-.map-legend span{display:inline-flex;align-items:center;gap:6px}
-.map-legend i{display:inline-block;width:11px;height:11px;border-radius:50%}
-.map-legend .lg-line{width:22px;height:0;border-top:2px dashed var(--m-edge-x);border-radius:0}
-.map-legend .lg-ring{background:none;border:2px solid var(--m-focus)}
-.m-edge{stroke:var(--m-edge);stroke-width:1.3;vector-effect:non-scaling-stroke;fill:none}
-.m-edge.cross{stroke-dasharray:2 3}
-.m-edge.out{stroke:var(--m-edge-x);stroke-dasharray:6 4}
-.m-node{cursor:pointer}
-.m-node .dot{stroke:var(--m-bg);stroke-width:1.5;vector-effect:non-scaling-stroke}
-.m-node.dim{opacity:.55}
-.m-node.out .dot{fill:var(--m-bg);stroke:var(--m-edge-x);stroke-width:1.6}
-.m-node .ring{fill:none;stroke:none;vector-effect:non-scaling-stroke;stroke-width:2}
-.m-node.here .ring{stroke:var(--m-focus)}
-.m-node.sel .ring{stroke:var(--m-edge-x);stroke-dasharray:3 2}
-.m-node.here.sel .ring{stroke:var(--m-focus);stroke-dasharray:none}
-.m-node text{fill:var(--m-ink);font-family:var(--cond);paint-order:stroke;stroke:var(--m-bg);stroke-width:.3em;stroke-linejoin:round}
-.m-node.out text{fill:var(--m-muted)}
-.m-node:hover .dot,.m-node:focus-visible .dot{stroke:var(--m-focus)}
-.m-node.far{opacity:.7}
+.map-info .mi-danger{color:#ff8a7a;font-weight:600}
+.map-info .mi-caution{color:#f0b44c;font-weight:600}
+/* systems placed like the game's 2D map, drawn in the route map's style; sizes stay the same on screen */
+.qm-top{top:10px;right:10px;left:10px;justify-content:flex-end}
+#mapSvg line{vector-effect:non-scaling-stroke}
+.qm-gate{stroke:#2a3a4d;stroke-width:1.3}
+.qm-gate.x{stroke:#4f7fae;stroke-dasharray:5 4}
+.qm-gate.ctx{opacity:.2}
+.qm-cons{fill:#4d5e74;font-family:var(--cond);font-weight:600;font-size:11px;letter-spacing:.18em;text-anchor:middle;pointer-events:none;text-transform:uppercase}
+.qm-cons.focus{fill:#8fa3bb}
+.qm-region{fill:#3c4b5e;font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.3em;text-anchor:middle;pointer-events:none;text-transform:uppercase}
+.qm-sys{cursor:pointer}
+.qm-sys:focus{outline:none}
+.qm-sys:focus-visible .qm-c,.qm-sys:hover .qm-c{stroke:#fff}
+.qm-sys.dim{opacity:.6}
+.qm-sys.far{opacity:.62}
+.qm-sys.out{opacity:.7}
+.qm-sys.ctx{opacity:.16}
+.qm-sys.ctx:hover{opacity:.5}
+.qm-ctx-tags{opacity:.35}
+.qm-name{fill:#c4cfdc;font-family:var(--cond);font-weight:500;font-size:11px;pointer-events:none;paint-order:stroke;stroke:#0b1119;stroke-width:3px;stroke-linejoin:round}
+.qm-name.out{fill:#5b697c}
+.qm-name.ctx{fill:#3a4656}
+.qm-name.here{fill:#fff;font-weight:700}
+.qm-here{fill:none;stroke:#fff;stroke-width:2}
+.qm-sel{fill:none;stroke:#72aef0;stroke-width:2;stroke-dasharray:4 3}
+.qm-labels{pointer-events:none}
+#mapSvg[data-d="dots"] .qm-full,#mapSvg[data-d="full"] .qm-dots,#mapSvg .qm-hide{display:none}
 .seg{display:inline-flex;border:1px solid var(--m-line);border-radius:3px;overflow:hidden}
 .seg button{font:inherit;color:var(--m-muted);background:var(--m-panel);border:0;padding:5px 10px;cursor:pointer}
 .seg button+button{border-left:1px solid var(--m-line)}
@@ -899,24 +904,30 @@ footer .contact p{margin:0 0 10px}
             <button type="button" id="mapModeRegion" aria-pressed="true">Region</button>
             <button type="button" id="mapModeNear" aria-pressed="false">Within 3 jumps</button>
           </div>
-          <label for="mapColour">Colour by
-            <select id="mapColour"><option value="sec">Security</option><option value="act">Gate jumps, last hour</option></select>
-          </label>
-          <button class="mbtn" id="mapTheme" type="button">Light mode</button>
           <button class="mbtn" id="mapClose" type="button">Close</button>
         </div>
       </div>
       <div class="map-stage">
-        <svg id="mapSvg" aria-label="Region map"></svg>
-        <div class="map-zoom">
-          <button class="mbtn" id="mapZoomIn" type="button" aria-label="Zoom in">+</button>
-          <button class="mbtn" id="mapZoomOut" type="button" aria-label="Zoom out">−</button>
-          <button class="mbtn" id="mapReset" type="button" aria-label="Fit region">⤢</button>
+        <svg id="mapSvg" role="img" aria-label="Map of the systems; select one for its details"></svg>
+        <div class="rm-hud qm-top">
+          <div class="rm-seg" id="mapColours" role="group" aria-label="Colour systems by">
+            <button type="button" data-c="security" aria-pressed="true">Security</button>
+            <button type="button" data-c="traffic" aria-pressed="false">Traffic</button>
+            <button type="button" data-c="kills" aria-pressed="false">Kills</button>
+          </div>
         </div>
+        <div class="rm-hud rm-bottom">
+          <div class="rm-legend" id="mapLegend"></div>
+          <div class="rm-zoom">
+            <button type="button" id="mapZoomIn" aria-label="Zoom in" title="Zoom in">+</button>
+            <button type="button" id="mapZoomOut" aria-label="Zoom out" title="Zoom out">−</button>
+            <button type="button" id="mapReset" aria-label="Fit the map" title="Fit the map">⤢</button>
+          </div>
+        </div>
+        <div class="rm-tip" id="mapTip" hidden></div>
         <p class="map-status" id="mapStatus"></p>
       </div>
       <div class="map-info" id="mapInfo"></div>
-      <div class="map-legend" id="mapLegend"></div>
     </div>
   </dialog>
 
@@ -2495,7 +2506,7 @@ footer .contact p{margin:0 0 10px}
   // ---------- 2D maps: whole region, or everything within 3 jumps ----------
   const MAP_KEY = "quietspace.mapdata.v1";
   const NEAR_JUMPS = 3;
-  let mapData = null; // { pos: {id: [x, z]}, links: {id: [destId, ...]} }
+  let mapData = null; // { pos: {id: [x, z]}, links: {id: [destId, ...]}, pos2: {id: [x, y]} the game's 2D map, hosted site only }
   function getMapData() {
     if (mapData) return mapData;
     try { mapData = JSON.parse(localStorage.getItem(MAP_KEY)) || null; } catch (e) { mapData = null; }
@@ -2564,15 +2575,11 @@ footer .contact p{margin:0 0 10px}
 
   const SVGNS = "http://www.w3.org/2000/svg";
   const svgEl = (tag, attrs) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
-  const map = { mode: "region", reg: null, focus: null, sel: null, dist: null, vb: null, bounds: null, nodes: new Map(), consLabels: [], loading: 0, dragged: false };
+  // V: what the map shows { ids, out (other regions' systems next to the region), dist (jumps from the centre),
+  // ctx (the rest of the centre's region, faded, in the nearby view) }. All ids are strings.
+  const map = { mode: "region", reg: null, focus: null, sel: null, dist: null, loading: 0, colour: "security", V: null,
+    W: 0, H: 0, vb: [0, 0, 1, 1], P: new Map(), groups: [], nodes: new Map(), labels: [], tagged: [], nn: 30, density: null, twoD: true };
 
-  function activityColor(j, max) {
-    if (!j) return "#5f6f82";
-    const t = max > 1 ? Math.log1p(j) / Math.log1p(max) : 1;
-    const a = [242, 201, 76], b = [214, 64, 42]; // amber to red
-    const c = a.map((v, i) => Math.round(v + (b[i] - v) * t));
-    return `rgb(${c[0]},${c[1]},${c[2]})`;
-  }
   // Weekly pattern colours: green when quiet, through yellow and orange, to dark red at the busiest hours.
   const WEEK_STOPS = [[0, [46, 160, 87]], [0.35, [168, 201, 72]], [0.6, [242, 196, 66]], [0.8, [232, 120, 40]], [1, [170, 32, 28]]];
   function weeklyColor(j, max) {
@@ -2582,173 +2589,252 @@ footer .contact p{margin:0 0 10px}
     const c = a.map((v, k) => Math.round(v + (b[k] - v) * Math.min(1, Math.max(0, f))));
     return `rgb(${c[0]},${c[1]},${c[2]})`;
   }
-  function nodeFill(id, maxJumps) {
-    const sys = catalog.systems[id];
-    if (!sys) return "#5f6f82";
-    if ($("mapColour").value === "act") return activityColor(activity(id).jumps, maxJumps);
-    if (regionOf(sys) === POCHVEN) return "#7a2a44";
-    const d = displaySec(sys.s);
-    return d === null ? "#5f6f82" : SEC_COLORS[secKey(d)];
+
+  const mapLinks = id => (getMapData().links[id] || []).map(String).filter(x => catalog.systems[x]);
+  const mapVal = id => map.colour === "traffic" ? activity(id).jumps : map.colour === "kills" ? routeKills(id) : 0;
+  // The map places systems like the game's 2D map (CCP's schematic layout from the static data). Opened as a
+  // local file, that layout isn't available and the map falls back to real positions seen from above.
+  function mapXY(ids) {
+    const md = getMapData();
+    const twoD = !!md.pos2 && ids.every(id => md.pos2[id]);
+    return { twoD, X: id => twoD ? md.pos2[id][0] : md.pos[id][0], Y: id => twoD ? -md.pos2[id][1] : -md.pos[id][1] };
   }
 
-  function mapScale() {
+  function mapLayout() {
+    const V = map.V; if (!V) return;
+    const stage = $("mapSvg").parentElement;
+    const W = Math.max(280, Math.round(stage.clientWidth)), H = Math.max(240, Math.round(stage.clientHeight));
+    map.W = W; map.H = H; map.vb = [0, 0, W, H];
+    const svg = $("mapSvg"); svg.setAttribute("width", W); svg.setAttribute("height", H);
+    const { twoD, X, Y } = mapXY(V.ids); map.twoD = twoD;
+    const fReg = regionOf(catalog.systems[map.focus]), inView = new Set(V.ids);
+    const B = new Map(V.ids.map(id => [id, [X(id), Y(id)]]));
+    const sameReg = (a, b) => regionOf(catalog.systems[a]) === regionOf(catalog.systems[b]);
+    const lens = [];
+    V.ids.forEach(a => { if (regionOf(catalog.systems[a]) === fReg) mapLinks(a).forEach(b => { if (a < b && inView.has(b) && sameReg(a, b)) lens.push(Math.hypot(X(a) - X(b), Y(a) - Y(b))); }); });
+    lens.sort((a, b) => a - b);
+    const leg = lens.length ? lens[lens.length >> 1] : 1;
+    const step = (a, b, k) => { const dx = X(b) - X(a), dy = Y(b) - Y(a), d = Math.hypot(dx, dy) || 1, p = B.get(a); return [p[0] + dx / d * leg * k, p[1] + dy / d * leg * k]; };
+    const dj = id => V.dist && V.dist.has(id) ? V.dist.get(id) : 99;
+    if (twoD) {
+      // The game draws each region on its own, so other regions can be far away on its 2D map. Systems in
+      // other regions are placed one jump at a time from the gate that leads to them, in the game's direction,
+      // then nudged apart; the centre's region keeps the game's layout.
+      const fixed = new Set(V.ids.filter(id => regionOf(catalog.systems[id]) === fReg));
+      const order = V.ids.filter(id => !fixed.has(id)).sort((a, b) => dj(a) - dj(b));
+      for (const b of order) {
+        const a = mapLinks(b).filter(x => inView.has(x) && (fixed.has(x) || dj(x) < dj(b))).sort((x, y) => fixed.has(y) - fixed.has(x))[0];
+        if (a) B.set(b, step(a, b, V.dist ? 1.2 : 1.4));
+      }
+      const min = leg * 0.85;
+      for (let it = 0; it < 60; it++) {
+        for (const a of order) for (const b of V.ids) {
+          if (a === b) continue;
+          const p = B.get(a), q = B.get(b), dx = p[0] - q[0], dy = p[1] - q[1], d = Math.hypot(dx, dy);
+          if (d >= min) continue;
+          const ux = d ? dx / d : Math.cos(it), uy = d ? dy / d : Math.sin(it), push = (min - d) * (fixed.has(b) ? 0.5 : 0.25);
+          B.set(a, [p[0] + ux * push, p[1] + uy * push]);
+          if (!fixed.has(b)) B.set(b, [q[0] - ux * push, q[1] - uy * push]);
+        }
+      }
+    }
+    // fit the region (or the systems within 3 jumps); everything else uses the same scale
+    const fit = V.ids.filter(id => !V.out.has(id) && !V.ctx.has(id));
+    const xs = fit.map(id => B.get(id)[0]), ys = fit.map(id => B.get(id)[1]);
+    const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const pad = { l: 40, r: 56, t: 60, b: 74 };
+    const sc = Math.min((W - pad.l - pad.r) / Math.max(1e-9, maxX - minX), (H - pad.t - pad.b) / Math.max(1e-9, maxY - minY));
+    const ox = pad.l + ((W - pad.l - pad.r) - (maxX - minX) * sc) / 2, oy = pad.t + ((H - pad.t - pad.b) - (maxY - minY) * sc) / 2;
+    map.P = new Map(V.ids.map(id => [id, { x: ox + (B.get(id)[0] - minX) * sc, y: oy + (B.get(id)[1] - minY) * sc }]));
+    // typical spacing between systems at the fitted zoom decides dots or full circles
+    const pts = fit.map(id => map.P.get(id));
+    const nn = pts.map(p => { let m = Infinity; for (const q of pts) if (q !== p) m = Math.min(m, Math.hypot(p.x - q.x, p.y - q.y)); return m; }).sort((a, b) => a - b);
+    map.nn = nn.length > 1 ? nn[Math.floor(nn.length * 0.3)] : 40;
+    drawMap();
+  }
+
+  const mapZ = () => map.W / map.vb[2];
+  function applyMapView() {
     const svg = $("mapSvg");
-    const cw = svg.clientWidth || 800, ch = svg.clientHeight || 500;
-    return Math.max(map.vb.w / cw, map.vb.h / ch); // map units per screen pixel
-  }
-  function applyViewBox() {
-    const v = map.vb;
-    $("mapSvg").setAttribute("viewBox", `${v.x} ${v.y} ${v.w} ${v.h}`);
-    const k = mapScale();
-    map.nodes.forEach(n => {
-      const big = n.here ? 1.4 : 1;
-      n.dot.setAttribute("r", (n.out ? 4 : 5) * big * k);
-      n.ring.setAttribute("r", 10 * k);
-      n.text.setAttribute("x", n.x + 8 * k); n.text.setAttribute("y", n.y + 4 * k);
-      n.text.setAttribute("font-size", 12 * k);
-    });
-    map.consLabels.forEach(t => t.setAttribute("font-size", 15 * k));
-  }
-  function fitMap() {
-    const b = map.bounds, pad = Math.max(b.w, b.h) * 0.08 + 1;
-    map.vb = { x: b.x - pad, y: b.y - pad, w: b.w + pad * 2, h: b.h + pad * 2 };
-    applyViewBox();
+    svg.setAttribute("viewBox", map.vb.map(v => v.toFixed(2)).join(" "));
+    const k = (1 / mapZ()).toFixed(4);
+    for (const [g, x, y] of map.groups) g.setAttribute("transform", `translate(${x},${y}) scale(${k})`);
+    const d = map.nn * mapZ() < 34 ? "dots" : "full";
+    if (d !== map.density) { map.density = d; svg.dataset.d = d; }
+    declutterMap();
   }
   function zoomMap(f, cx, cy) {
-    const v = map.vb, size = Math.max(map.bounds.w, map.bounds.h);
-    const nw = Math.min(size * 3 + 10, Math.max(size / 25 + 1, v.w * f));
-    const real = nw / v.w;
-    if (cx === undefined) { cx = v.x + v.w / 2; cy = v.y + v.h / 2; }
-    map.vb = { x: cx - (cx - v.x) * real, y: cy - (cy - v.y) * real, w: v.w * real, h: v.h * real };
-    applyViewBox();
-  }
-  function svgPoint(clientX, clientY) {
-    const svg = $("mapSvg"), pt = svg.createSVGPoint();
-    pt.x = clientX; pt.y = clientY;
-    const ctm = svg.getScreenCTM();
-    return ctm ? pt.matrixTransform(ctm.inverse()) : { x: map.vb.x, y: map.vb.y };
+    const [x, y, w, h] = map.vb, nw = Math.min(map.W * 4, Math.max(map.W / 12, w * f)), nh = nw * map.H / map.W;
+    const px = cx === undefined ? x + w / 2 : cx, py = cy === undefined ? y + h / 2 : cy;
+    map.vb = [px - (px - x) * nw / w, py - (py - y) * nh / h, nw, nh]; applyMapView();
   }
 
-  function renderMapLegend() {
-    const lg = $("mapLegend"); lg.replaceChildren();
-    const item = (swatch, text) => { const s = document.createElement("span"); s.append(swatch, text); lg.append(s); };
-    const dot = color => { const i = document.createElement("i"); i.style.background = color; return i; };
-    if ($("mapColour").value === "act") {
-      item(dot("#5f6f82"), "No jumps");
-      item(dot(activityColor(1, 1000)), "Few jumps");
-      item(dot(activityColor(1000, 1000)), map.mode === "nearby" ? "Busiest on this map" : "Busiest in region");
+  // Names that would cover another name, a system or a warning tag are hidden until there's room, most
+  // important first. Warning tags that would cover each other become a small dot on the system.
+  let declutterPending = false;
+  function declutterMap() {
+    if (declutterPending) return; declutterPending = true;
+    requestAnimationFrame(() => {
+      declutterPending = false;
+      const z = mapZ(), [vx, vy] = map.vb, full = map.density === "full";
+      const scr = p => [(p.x - vx) * z, (p.y - vy) * z];
+      const boxes = [], hit = b => boxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+      const tagBoxes = [];
+      for (const n of map.tagged) {
+        const [x, y] = scr(n.p), ty = y + (full ? -27 : -15), b = [x - n.tagW / 2 - 2, ty - 9, x + n.tagW / 2 + 2, ty + 9];
+        const show = n.id === map.focus || n.id === map.sel || !tagBoxes.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+        if (show) tagBoxes.push(b);
+        n.tagEls.forEach(e => e.classList.toggle("qm-hide", !show)); n.pip.classList.toggle("qm-hide", show);
+      }
+      boxes.push(...tagBoxes);
+      map.nodes.forEach(n => { const [x, y] = scr(n.p), r = full ? (n.out ? 10 : 14) : (n.out ? 4 : 6); boxes.push([x - r, y - r, x + r, y + r]); });
+      for (const L of map.labels) {
+        const [x, y] = scr(L.p), w = L.w;
+        const b = full ? [x - w / 2, y + 17, x + w / 2, y + 30] : [x + 7, y - 6, x + 9 + w, y + 7];
+        const onScreen = b[2] > 0 && b[0] < map.W && b[3] > 0 && b[1] < map.H;
+        const show = L.id === map.focus || L.id === map.sel || (onScreen && !hit(b));
+        if (show && onScreen) boxes.push(b);
+        L.full.classList.toggle("qm-hide", !show); L.dots.classList.toggle("qm-hide", !show);
+      }
+    });
+  }
+
+  function drawMap() {
+    const V = map.V, svg = $("mapSvg"), tip = $("mapTip");
+    svg.replaceChildren(); map.groups = []; map.nodes = new Map(); map.labels = []; tip.hidden = true;
+    const S = (tag, a, parent) => { const e = svgEl(tag, a); (parent || svg).append(e); return e; };
+    const place = (g, x, y) => map.groups.push([g, x.toFixed(1), y.toFixed(1)]);
+    const P = map.P, shown = new Set(V.ids), fSys = catalog.systems[map.focus], fCons = fSys.c, fReg = regionOf(fSys), dist = V.dist;
+    const sysOf = id => catalog.systems[id], regOf = id => regionOf(sysOf(id));
+    const main = V.ids.filter(id => !V.out.has(id));
+    const heat = map.colour !== "security";
+    const max = Math.max(1, ...main.filter(id => !V.ctx.has(id)).map(mapVal));
+    // region names in the nearby view when it crosses regions, constellation names in the region view
+    const gText = S("g", {});
+    const centre = list => [list.reduce((t, p) => t + p.x, 0) / list.length, list.reduce((t, p) => t + p.y, 0) / list.length];
+    const groupBy = (ids, key) => { const m = new Map(); ids.forEach(id => { const k = key(id); if (!m.has(k)) m.set(k, []); m.get(k).push(P.get(id)); }); return m; };
+    if (dist) {
+      const byR = groupBy(main.filter(id => !V.ctx.has(id)), regOf);
+      if (byR.size > 1) byR.forEach((l, r) => { const [cx, cy] = centre(l), g = S("g", {}, gText), t = S("text", { y: 4, class: "qm-region" }, g); t.textContent = catalog.regions[r] || ""; place(g, cx, cy); });
     } else {
-      ["1.0", "0.7", "0.5", "0.3", "0.0"].forEach(k => item(dot(SEC_COLORS[k]), k === "0.0" ? "≤0.0" : k));
+      groupBy(main, id => sysOf(id).c).forEach((l, c) => { const [cx, cy] = centre(l), g = S("g", {}, gText), t = S("text", { y: -16, class: "qm-cons" + (c === fCons ? " focus" : "") }, g); t.textContent = catalog.constellations[c] || ""; place(g, cx, cy); });
     }
-    const ring = document.createElement("i"); ring.className = "lg-ring"; item(ring, "Selected system");
-    const line = document.createElement("i"); line.className = "lg-line"; item(line, "Gate to another region");
-  }
-
-  // Draws a set of systems. outSet: systems drawn hollow (region view's neighbours). dist: jumps from the centre (nearby view).
-  function renderGraph(ids, outSet, dist) {
-    const md = getMapData();
-    const svg = $("mapSvg");
-    svg.replaceChildren();
-    map.nodes = new Map(); map.consLabels = [];
-    const all = ids.filter(id => md.pos[id]);
-    if (!all.length) { $("mapStatus").textContent = "No map data for these systems."; return; }
-    const shown = new Set(all);
-
-    // Normalise EVE coordinates (metres, top-down x/z) to a 0–1000 box.
-    const xs = all.map(id => md.pos[id][0]), zs = all.map(id => -md.pos[id][1]);
-    const minX = Math.min(...xs), minZ = Math.min(...zs);
-    const span = Math.max(Math.max(...xs) - minX, Math.max(...zs) - minZ) || 1;
-    const pts = new Map(all.map(id => [id, { x: (md.pos[id][0] - minX) / span * 1000, y: (-md.pos[id][1] - minZ) / span * 1000 }]));
-    const px = all.map(id => pts.get(id).x), py = all.map(id => pts.get(id).y);
-    map.bounds = { x: Math.min(...px), y: Math.min(...py), w: Math.max(...px) - Math.min(...px), h: Math.max(...py) - Math.min(...py) };
-
-    const focusSys = catalog.systems[map.focus];
-    const focusCons = focusSys ? focusSys.c : undefined;
-    const focusReg = focusSys ? regionOf(focusSys) : undefined;
-    const gEdges = svgEl("g", {}), gCons = svgEl("g", {}), gNodes = svgEl("g", {});
-    svg.append(gEdges, gCons, gNodes);
-
-    const drawn = new Set();
-    all.forEach(id => {
-      (md.links[id] || []).forEach(d => {
-        if (!shown.has(d)) return;
-        const key = id < d ? `${id}-${d}` : `${d}-${id}`;
-        if (drawn.has(key)) return;
-        drawn.add(key);
-        const a = pts.get(id), b = pts.get(d);
-        const sa = catalog.systems[id], sb = catalog.systems[d];
-        let cls = "m-edge";
-        if (!sa || !sb || regionOf(sa) !== regionOf(sb)) cls += " out";
-        else if (sa.c !== sb.c) cls += " cross";
-        gEdges.append(svgEl("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: cls }));
-      });
-    });
-
-    // Faint constellation names at each constellation's centre
-    const byCons = new Map();
-    all.forEach(id => {
-      if (outSet.has(id) || !catalog.systems[id]) return;
-      const c = catalog.systems[id].c;
-      if (!byCons.has(c)) byCons.set(c, []);
-      byCons.get(c).push(pts.get(id));
-    });
-    byCons.forEach((list, c) => {
-      const cx = list.reduce((t, p) => t + p.x, 0) / list.length, cy = list.reduce((t, p) => t + p.y, 0) / list.length;
-      const t = svgEl("text", { x: cx, y: cy - 14, class: "m-cons" + (c === focusCons ? " focus" : "") });
-      t.textContent = catalog.constellations[c] || "";
-      gCons.append(t); map.consLabels.push(t);
-    });
-
-    const maxJumps = Math.max(1, ...all.filter(id => !outSet.has(id)).map(id => activity(id).jumps));
-    all.forEach(id => {
-      const p = pts.get(id), out = outSet.has(id);
-      const sys = catalog.systems[id];
-      const reg = sys ? regionOf(sys) : undefined;
-      const g = svgEl("g", { class: "m-node", tabindex: "0", role: "button" });
-      const here = id === map.focus;
-      if (out) g.classList.add("out");
-      else if (!dist && focusCons !== undefined && sys && sys.c !== focusCons) g.classList.add("dim");
+    // gates
+    const gG = S("g", {}), drawn = new Set();
+    V.ids.forEach(id => mapLinks(id).forEach(d => {
+      if (!shown.has(d)) return; const key = id < d ? id + "-" + d : d + "-" + id; if (drawn.has(key)) return; drawn.add(key);
+      const a = P.get(id), b = P.get(d);
+      S("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: "qm-gate" + (regOf(id) !== regOf(d) ? " x" : "") + (V.ctx.has(id) || V.ctx.has(d) ? " ctx" : "") }, gG);
+    }));
+    // systems, then names and warning tags on top
+    const gN = S("g", {}), gL = S("g", { class: "qm-labels" });
+    for (const id of [...V.ctx, ...V.out, ...main.filter(id => !V.ctx.has(id))]) {
+      const sys = sysOf(id), p = P.get(id), out = V.out.has(id), ctx = V.ctx.has(id), here = id === map.focus;
+      const col = rmSecCol(sys), ds = displaySec(sys.s), v = mapVal(id);
+      const g = S("g", { class: "qm-sys", tabindex: out || ctx ? -1 : 0, role: "button" }, gN); place(g, p.x, p.y);
+      if (out) g.classList.add("out"); else if (!dist && sys.c !== fCons) g.classList.add("dim");
       if (dist && dist.get(id) === NEAR_JUMPS) g.classList.add("far");
-      if (here) g.classList.add("here");
-      const ring = svgEl("circle", { cx: p.x, cy: p.y, class: "ring" });
-      const dot = svgEl("circle", { cx: p.x, cy: p.y, class: "dot" });
-      if (!out) dot.setAttribute("fill", nodeFill(id, maxJumps));
-      const text = svgEl("text", {});
-      const name = sys ? sys.n : `System ${id}`;
-      const otherRegion = reg !== focusReg;
-      text.textContent = (out || (dist && otherRegion)) ? `${name} (${catalog.regions[reg] || "other region"})` : name;
-      const dj = dist ? dist.get(id) : null;
-      g.setAttribute("aria-label", text.textContent + (dj === null || dj === undefined ? "" : dj === 0 ? ", centre" : `, ${dj} jump${dj === 1 ? "" : "s"} away`));
-      g.append(ring, dot, text);
+      if (ctx) g.classList.add("ctx");
+      const dn = dist && dist.has(id) ? dist.get(id) : null;
+      g.setAttribute("aria-label", `${sys.n}, security ${ds === null ? "unknown" : ds.toFixed(1)}${dn ? `, ${dn} jump${dn === 1 ? "" : "s"} away` : ""}`);
+      const pv = regOf(id) === POCHVEN;
+      // a dot, for when systems are close together on screen
+      const gd = S("g", { class: "qm-dots" }, g);
+      if (here) S("circle", { r: 10, class: "qm-here" }, gd);
+      S("circle", { r: 11, class: "qm-sel qm-hide", "data-sel": 1 }, gd);
+      S("circle", { r: out ? 3.5 : 5.5, fill: out ? "#0b1119" : heat ? (v ? rmHeat(v, max, map.colour) : "#2a3442") : pv ? "#7a2a44" : col, stroke: out ? col : "#0b1119", "stroke-width": out ? 1.4 : 1, class: "qm-c" }, gd);
+      // a circle with the security, jumps or kills inside
+      const gf = S("g", { class: "qm-full" }, g), rr = out ? 10 : 13;
+      if (here) S("circle", { r: rr + 6, class: "qm-here" }, gf);
+      S("circle", { r: rr + 6, class: "qm-sel qm-hide", "data-sel": 1 }, gf);
+      if (heat && !out) S("circle", { r: rr + 3, class: "rm-ring-" + map.colour }, gf);
+      S("circle", { r: rr, fill: heat ? (v ? rmHeat(v, max, map.colour) : "#161d27") : "#0b1119", stroke: heat ? "#2a3442" : col, "stroke-width": out ? 1.4 : 2.2, class: "qm-c" }, gf);
+      const t = S("text", { y: 3.8, class: "rm-val" }, gf);
+      if (heat) { t.textContent = out ? "" : rmFmtV(v, map.colour); t.setAttribute("fill", v && Math.log1p(v) / Math.log1p(max) > 0.55 ? "#1a1205" : "#8a95a5"); if (t.textContent.length > 3) t.setAttribute("font-size", "8.5"); }
+      else { t.textContent = ds === null ? "?" : ds.toFixed(1); t.setAttribute("fill", col); }
+      // the name: below a circle, beside a dot
+      const lg = S("g", {}, gL); place(lg, p.x, p.y);
+      const label = out || (dist && regOf(id) !== fReg) ? `${sys.n} · ${catalog.regions[regOf(id)] || ""}` : sys.n;
+      const cls = "qm-name" + (ctx ? " ctx" : out ? " out" : "") + (here ? " here" : "");
+      const lf = S("text", { y: 28, "text-anchor": "middle", class: cls + " qm-full" }, lg); lf.textContent = label;
+      const ld = S("text", { x: 9, y: 4, class: cls + " qm-dots" }, lg); ld.textContent = label;
+      const tl = out ? [] : systemWarnings(id);
+      const node = { id, g, p, out, tagW: 0, tags: tl };
+      if (tl.length) {
+        const widths = tl.map(x => x.tag.length * 6.2 + 12), tagW = widths.reduce((a, b) => a + b, 0) + (tl.length - 1) * 5;
+        node.tagW = tagW; node.lv = tl.reduce((m, x) => Math.max(m, x.lv), 0); node.tagEls = [];
+        const tagHost = S("g", ctx ? { class: "qm-ctx-tags" } : {}, lg);
+        for (const [cl, y0] of [["qm-full", -27], ["qm-dots", -15]]) {
+          const tg = S("g", {}, S("g", { class: cl }, tagHost)); node.tagEls.push(tg); let x = -tagW / 2;
+          tl.forEach((w, k) => { const c = w.lv === 2 ? "rm-danger" : "rm-caution"; S("rect", { x, y: y0 - 8, width: widths[k], height: 16, rx: 3, class: "rm-tag " + c }, tg); const tt = S("text", { x: x + widths[k] / 2, y: y0 + 3.5, class: "rm-tag-t " + c }, tg); tt.textContent = w.tag.toUpperCase(); x += widths[k] + 5; });
+        }
+        // shown instead of the tag when there's no room for it
+        node.pip = S("g", { class: "qm-hide" + (ctx ? " qm-ctx-tags" : "") }, lg);
+        const pc = node.lv === 2 ? "#ff6b5e" : "#f0b44c";
+        S("circle", { cx: 11, cy: -11, r: 4.5, fill: pc, stroke: "#0b1119", "stroke-width": 1.5, class: "qm-full" }, node.pip);
+        S("circle", { cx: 5, cy: -5, r: 3.2, fill: pc, stroke: "#0b1119", "stroke-width": 1, class: "qm-dots" }, node.pip);
+      }
+      map.nodes.set(id, node);
+      const pri = here ? 1e9 : (tl.length ? 1e7 : 0) - (out ? 1e6 : 0) - (ctx ? 2e6 : 0) - (dn !== null ? dn * 1e4 : 0) + activity(id).jumps;
+      map.labels.push({ id, p, w: label.length * 5.6 + 4, full: lf, dots: ld, pri });
+      g.addEventListener("pointerenter", () => showMapTip(id));
+      g.addEventListener("pointerleave", () => { tip.hidden = true; });
       g.addEventListener("click", () => { if (!map.dragged) selectMapSystem(id); });
       g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectMapSystem(id); } });
-      g.addEventListener("mouseenter", () => showMapInfo(id));
-      g.addEventListener("mouseleave", () => showMapInfo(map.sel));
-      gNodes.append(g);
-      map.nodes.set(id, { g, dot, ring, text, x: p.x, y: p.y, out, here, maxJumps });
-    });
-    renderMapLegend();
+    }
+    map.labels.sort((a, b) => b.pri - a.pri);
+    map.tagged = [...map.nodes.values()].filter(n => n.tagW).sort((a, b) => (b.id === map.focus) - (a.id === map.focus) || V.ctx.has(a.id) - V.ctx.has(b.id) || b.lv - a.lv || activity(b.id).jumps - activity(a.id).jumps);
+    renderMapLegend(max);
+    map.density = null; applyMapView(); markMapSelection();
   }
 
-  function recolourMap() {
-    map.nodes.forEach((n, id) => { if (!n.out) n.dot.setAttribute("fill", nodeFill(id, n.maxJumps)); });
-    renderMapLegend();
+  function renderMapLegend(max) {
+    const lg = $("mapLegend"); lg.replaceChildren();
+    const row = el("div", "rm-keys");
+    if (map.colour === "security") {
+      for (const k of SCALE) { const i = document.createElement("i"); i.style.background = SEC_COLORS[k]; i.title = k; row.append(i); }
+      lg.append(el("span", null, "Security"), row);
+    } else {
+      for (const t of [0, 0.2, 0.4, 0.6, 0.8, 1]) { const i = document.createElement("i"); i.style.background = rmHeat(Math.round(Math.expm1(t * Math.log1p(max))), max, map.colour); row.append(i); }
+      lg.append(el("span", null, map.colour === "traffic" ? "Gate jumps, last hour" : "Ship and pod kills, last hour"), row, el("small", null, `0 to ${rmFmtV(max, map.colour)}`));
+    }
+    lg.append(el("small", null, "Dashed gates lead to another region"));
+    if (!map.twoD) lg.append(el("small", null, "Real positions: the game’s 2D layout comes with the hosted site"));
+  }
+  function markMapSelection() {
+    map.nodes.forEach((n, id) => n.g.querySelectorAll("[data-sel]").forEach(c => c.classList.toggle("qm-hide", id !== map.sel || id === map.focus)));
+    declutterMap();
+  }
+  function showMapTip(id) {
+    const sys = catalog.systems[id], ds = displaySec(sys.s), V = map.V, tip = $("mapTip"), a = activity(id);
+    const rows = [el("b", null, sys.n), el("div", null, `${ds === null ? "?" : ds.toFixed(1)} · ${catalog.constellations[sys.c] || ""}, ${catalog.regions[regionOf(sys)] || ""}`)];
+    rows.push(el("div", null, `${a.jumps.toLocaleString()} jumps, ${routeKills(id)} kills in the last hour`));
+    if (V.ctx.has(id)) rows.push(el("div", null, `More than ${NEAR_JUMPS} jumps away`));
+    else if (V.dist && id !== map.focus && V.dist.has(id)) { const n = V.dist.get(id); rows.push(el("div", null, `${n} jump${n === 1 ? "" : "s"} from ${catalog.systems[map.focus].n}`)); }
+    for (const w of (map.nodes.get(id) || {}).tags || []) rows.push(el("div", w.lv === 2 ? "rm-tip-danger" : "rm-tip-caution", w.text));
+    tip.replaceChildren(...rows); tip.hidden = false;
+    const gb = map.nodes.get(id).g.getBoundingClientRect(), wb = $("mapSvg").parentElement.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = gb.right - wb.left + 8; const y = gb.top - wb.top;
+    if (x + tw > wb.width - 6) x = gb.left - wb.left - tw - 8;
+    tip.style.left = Math.max(6, x) + "px"; tip.style.top = Math.max(6, Math.min(wb.height - th - 6, y)) + "px";
   }
 
   function showMapInfo(id) {
     const box = $("mapInfo");
     box.replaceChildren();
     const sys = id !== null && id !== undefined && catalog.systems[id];
-    if (!sys) { box.append(el("span", "mi-sub", "Select a system to see its details. Drag to pan, scroll or use the buttons to zoom.")); return; }
+    if (!sys) { box.append(el("span", "mi-sub", "Select a system to see its details. Drag to pan, scroll or pinch to zoom.")); return; }
     const reg = regionOf(sys);
-    const a = activity(id);
+    const a = activity(id), k = routeKills(id);
     box.append(secChip(sys), el("b", null, sys.n),
       el("span", "mi-sub", `${catalog.constellations[sys.c] || "…"}, ${catalog.regions[reg] || "…"}`),
-      el("span", null, `${a.jumps} jump${a.jumps === 1 ? "" : "s"}, ${a.ship + a.pod} kill${a.ship + a.pod === 1 ? "" : "s"} last hour`));
-    if (map.mode === "nearby" && map.dist && map.dist.has(id) && id !== map.focus) {
-      const n = map.dist.get(id);
-      box.append(el("span", "mi-sub", `${n} gate jump${n === 1 ? "" : "s"} from ${catalog.systems[map.focus].n}`));
+      el("span", null, `${a.jumps} jump${a.jumps === 1 ? "" : "s"}, ${k} kill${k === 1 ? "" : "s"} last hour`));
+    const V = map.V;
+    if (map.mode === "nearby" && V && id !== map.focus) {
+      box.append(el("span", "mi-sub", V.dist.has(id) ? `${V.dist.get(id)} gate jump${V.dist.get(id) === 1 ? "" : "s"} from ${catalog.systems[map.focus].n}` : `More than ${NEAR_JUMPS} jumps from ${catalog.systems[map.focus].n}`));
     }
+    for (const w of systemWarnings(id)) box.append(el("span", w.lv === 2 ? "mi-danger" : "mi-caution", w.text));
     const btn = (label, fn) => { const b = el("button", "mbtn", label); b.type = "button"; b.addEventListener("click", fn); box.append(b); };
     btn("View details", () => { $("mapDialog").close(); openSystem(id); });
     if (map.mode === "nearby") {
@@ -2760,9 +2846,8 @@ footer .contact p{margin:0 0 10px}
     }
   }
   function selectMapSystem(id) {
-    if (map.sel !== null && map.nodes.has(map.sel)) map.nodes.get(map.sel).g.classList.remove("sel");
     map.sel = id;
-    if (map.nodes.has(id)) map.nodes.get(id).g.classList.add("sel");
+    markMapSelection();
     showMapInfo(id);
   }
 
@@ -2770,20 +2855,26 @@ footer .contact p{margin:0 0 10px}
     $("mapModeRegion").setAttribute("aria-pressed", String(map.mode === "region"));
     $("mapModeNear").setAttribute("aria-pressed", String(map.mode === "nearby"));
   }
+  function setMapColour(c) {
+    map.colour = c;
+    document.querySelectorAll("#mapColours button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.c === c)));
+    if (map.V && $("mapDialog").open) drawMap();
+  }
 
   async function openMap(systemId, mode) {
+    systemId = String(systemId);
     const sys = catalog.systems[systemId];
     const dlg = $("mapDialog");
     if (!dlg.open) dlg.showModal();
     map.mode = mode || map.mode || "region";
     setModeButtons();
     const ticket = ++map.loading;
-    $("mapSvg").replaceChildren(); $("mapLegend").replaceChildren(); $("mapInfo").replaceChildren();
-    map.vb = null; map.nodes = new Map();
+    $("mapSvg").replaceChildren(); $("mapLegend").replaceChildren(); $("mapInfo").replaceChildren(); $("mapTip").hidden = true;
+    map.V = null; map.nodes = new Map(); map.labels = []; map.tagged = [];
     const reg = sys ? regionOf(sys) : undefined;
     map.focus = systemId; map.sel = systemId; map.dist = null; map.reg = reg;
     const title = $("mapTitle");
-    if (!sys || (map.mode === "region" && reg === undefined)) {
+    if (!sys || reg === undefined) {
       title.textContent = sys ? sys.n : "Map";
       $("mapSub").textContent = "";
       $("mapStatus").textContent = "This system’s region is still loading. Try again once the background map check finishes.";
@@ -2792,40 +2883,46 @@ footer .contact p{margin:0 0 10px}
     if (map.mode === "region") {
       title.textContent = catalog.regions[reg] || "Region";
       const box = factionBox(reg); if (box) title.prepend(box);
-      $("mapSub").textContent = `Highlighting ${sys.n} and the ${catalog.constellations[sys.c] || "its"} constellation. Dashed blue links lead to neighbouring regions.`;
+      $("mapSub").textContent = `Highlighting ${sys.n} and the ${catalog.constellations[sys.c] || "its"} constellation. Dashed links lead to neighbouring regions.`;
     } else {
       title.textContent = `Within ${NEAR_JUMPS} jumps of ${sys.n}`;
       $("mapSub").textContent = "Loading nearby systems…";
     }
     $("mapStatus").textContent = "Loading map…";
     const progress = msg => { if (ticket === map.loading) $("mapStatus").textContent = msg; };
+    const regionIds = r => Object.keys(catalog.systems).filter(id => regionOf(catalog.systems[id]) === r);
     try {
+      await ensureRegionGraph(reg, progress);
+      if (ticket !== map.loading || !dlg.open) return;
+      const md = getMapData();
       if (map.mode === "region") {
-        await ensureRegionGraph(reg, progress);
-        if (ticket !== map.loading || !dlg.open) return;
-        const md = getMapData();
-        const ids = Object.keys(catalog.systems).map(Number).filter(id => regionOf(catalog.systems[id]) === reg);
-        const inRegion = new Set(ids);
-        const outside = [...new Set(ids.flatMap(id => md.links[id] || []).filter(d => !inRegion.has(d)))];
-        $("mapStatus").textContent = "";
-        renderGraph(ids.concat(outside), new Set(outside), null);
+        const ids = regionIds(reg).filter(id => md.pos[id]), inRegion = new Set(ids);
+        const out = [...new Set(ids.flatMap(mapLinks).filter(d => !inRegion.has(d) && md.pos[d]))];
+        map.V = { ids: ids.concat(out), out: new Set(out), dist: null, ctx: new Set() };
       } else {
-        const dist = await ensureNearbyGraph(systemId, NEAR_JUMPS, progress);
+        const raw = await ensureNearbyGraph(Number(systemId), NEAR_JUMPS, progress);
         if (ticket !== map.loading || !dlg.open) return;
+        const dist = new Map([...raw].map(([k, v]) => [String(k), v]).filter(([k]) => catalog.systems[k] && md.pos[k]));
         map.dist = dist;
-        const regions = new Set([...dist.keys()].map(id => catalog.systems[id] && regionOf(catalog.systems[id])).filter(r => r !== undefined));
-        $("mapSub").textContent = `${dist.size} systems across ${regions.size} region${regions.size === 1 ? "" : "s"}. Dashed blue links cross into another region, and systems ${NEAR_JUMPS} jumps out are slightly faded.`;
-        $("mapStatus").textContent = "";
-        renderGraph([...dist.keys()], new Set(), dist);
+        // the rest of the centre's region, faded, so the area is seen in the game's layout
+        const ctx = regionIds(reg).filter(id => !dist.has(id) && md.pos[id]);
+        map.V = { ids: [...dist.keys(), ...ctx], out: new Set(), dist, ctx: new Set(ctx) };
+        const regions = new Set([...dist.keys()].map(id => regionOf(catalog.systems[id])));
+        $("mapSub").textContent = `${dist.size} systems across ${regions.size} region${regions.size === 1 ? "" : "s"}. The rest of ${catalog.regions[reg] || "the region"} is faded, and dashed links cross into another region.`;
       }
+      $("mapStatus").textContent = "";
     } catch (e) {
       if (ticket === map.loading) $("mapStatus").textContent = `Couldn’t load the map from ESI (${e.message}). Close and reopen to try again.`;
       return;
     }
-    if (!map.bounds) return;
-    fitMap();
+    if (!map.V.ids.length) { $("mapStatus").textContent = "No map data for these systems."; return; }
+    // wait a frame so the dialog has its size
+    await new Promise(r => requestAnimationFrame(r));
+    if (ticket !== map.loading) return;
+    mapLayout();
     selectMapSystem(systemId);
   }
+
 
   // ---------- Hosted data (built by the GitHub Action) ----------
   // When the page runs from GitHub Pages, the Action publishes ready-made files in data/.
@@ -2870,7 +2967,7 @@ footer .contact p{margin:0 0 10px}
     }
     if (md && md.pos && md.links) {
       const cur = getMapData();
-      mapData = { pos: { ...cur.pos, ...md.pos }, links: { ...cur.links, ...md.links } };
+      mapData = { pos: { ...cur.pos, ...md.pos }, links: { ...cur.links, ...md.links }, pos2: md.pos2 || cur.pos2 };
       saveMapData();
     }
     if (act && act.systems) prebuilt.activity = act;
@@ -3128,8 +3225,7 @@ footer .contact p{margin:0 0 10px}
     $("statsHero").hidden = !on;
     if (!on && $("statsDialog").open) $("statsDialog").close();
     applyLoudText();
-    $("mapColour").value = on ? "act" : "sec";
-    if ($("mapDialog").open) recolourMap();
+    setMapColour(on ? "traffic" : "security");
     try { localStorage.setItem("quietspace.loud", on ? "1" : "0"); } catch (e) {}
     applyHostedColumns();
     onFilterChange();
@@ -3481,6 +3577,8 @@ footer .contact p{margin:0 0 10px}
     });
     return out;
   }
+  // One system's warnings right now (the region and nearby maps use these too)
+  function systemWarnings(id) { return routeWarnings({ path: [id] }).get(0) || []; }
   function stepLabel(r, i) { return i === 0 ? "Start" : (r.loop && i === r.path.length - 1 ? "Back" : `Jump ${i}`); }
   function updateRouteWarnings(r) {
     const box = $("rWarn"); if (!box) return;
@@ -5217,46 +5315,48 @@ footer .contact p{margin:0 0 10px}
   $("mapModeNear").addEventListener("click", () => { if (map.focus !== null && map.mode !== "nearby") openMap(map.sel ?? map.focus, "nearby"); });
   $("mapClose").addEventListener("click", () => $("mapDialog").close());
   $("mapDialog").addEventListener("close", () => { map.loading++; });
-  $("mapColour").addEventListener("change", recolourMap);
-  $("mapTheme").addEventListener("click", () => {
-    const dlg = $("mapDialog");
-    const dark = dlg.dataset.maptheme !== "light";
-    dlg.dataset.maptheme = dark ? "light" : "dark";
-    $("mapTheme").textContent = dark ? "Dark mode" : "Light mode";
-  });
-  $("mapZoomIn").addEventListener("click", () => { if (map.vb) zoomMap(1 / 1.4); });
-  $("mapZoomOut").addEventListener("click", () => { if (map.vb) zoomMap(1.4); });
-  $("mapReset").addEventListener("click", () => { if (map.bounds) fitMap(); });
+  // pan with a drag, zoom with the wheel, a pinch or the buttons; moves are followed on the window so a drag
+  // that leaves the map still ends cleanly, and a click on a system after a drag doesn't select it
   (() => {
-    const svg = $("mapSvg");
-    let drag = null;
-    svg.addEventListener("wheel", e => {
-      if (!map.vb) return;
-      e.preventDefault();
-      const p = svgPoint(e.clientX, e.clientY);
-      zoomMap(Math.exp(e.deltaY * 0.0015), p.x, p.y);
-    }, { passive: false });
-    svg.addEventListener("pointerdown", e => {
-      if (!map.vb || e.button !== 0) return;
-      drag = { x: e.clientX, y: e.clientY, vb: { ...map.vb }, k: mapScale(), id: e.pointerId };
-      map.dragged = false;
-    });
-    svg.addEventListener("pointermove", e => {
-      if (!drag || e.pointerId !== drag.id) return;
-      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-      if (!map.dragged && Math.hypot(dx, dy) < 4) return;
-      if (!map.dragged) { map.dragged = true; svg.setPointerCapture(e.pointerId); svg.classList.add("dragging"); }
-      map.vb = { ...drag.vb, x: drag.vb.x - dx * drag.k, y: drag.vb.y - dy * drag.k };
-      applyViewBox();
+    const svg = $("mapSvg"), ptrs = new Map(); let start = null;
+    const toMap = (cx, cy) => { const b = svg.getBoundingClientRect(); return [map.vb[0] + (cx - b.left) / b.width * map.vb[2], map.vb[1] + (cy - b.top) / b.height * map.vb[3]]; };
+    const snap = () => ({ vb: map.vb.slice(), pts: new Map([...ptrs].map(([k, v]) => [k, v.slice()])) });
+    svg.addEventListener("pointerdown", e => { if (!map.V) return; ptrs.set(e.pointerId, [e.clientX, e.clientY]); map.dragged = false; start = snap(); });
+    window.addEventListener("pointermove", e => {
+      if (!ptrs.has(e.pointerId) || !start) return;
+      ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+      const b = svg.getBoundingClientRect(), k = start.vb[2] / b.width;
+      if (ptrs.size === 1) {
+        const [sx, sy] = start.pts.get(e.pointerId) || [e.clientX, e.clientY], dx = e.clientX - sx, dy = e.clientY - sy;
+        if (Math.abs(dx) + Math.abs(dy) > 4) { map.dragged = true; $("mapTip").hidden = true; svg.classList.add("dragging"); }
+        map.vb = [start.vb[0] - dx * k, start.vb[1] - dy * k, start.vb[2], start.vb[3]]; applyMapView();
+      } else if (ptrs.size === 2 && start.pts.size === 2) {
+        const [a0, b0] = [...start.pts.values()], [a1, b1] = [...ptrs.values()];
+        const d0 = Math.hypot(a0[0] - b0[0], a0[1] - b0[1]), d1 = Math.hypot(a1[0] - b1[0], a1[1] - b1[1]);
+        if (d0 > 0 && d1 > 0) {
+          map.dragged = true; map.vb = start.vb.slice();
+          const m0 = [(a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2], m1 = [(a1[0] + b1[0]) / 2, (a1[1] + b1[1]) / 2];
+          const [cx, cy] = toMap(m0[0], m0[1]); zoomMap(d0 / d1, cx, cy);
+          const k2 = map.vb[2] / b.width; map.vb = [map.vb[0] - (m1[0] - m0[0]) * k2, map.vb[1] - (m1[1] - m0[1]) * k2, map.vb[2], map.vb[3]]; applyMapView();
+        }
+      }
     });
     const end = e => {
-      if (!drag || e.pointerId !== drag.id) return;
-      drag = null; svg.classList.remove("dragging");
-      setTimeout(() => { map.dragged = false; }, 0);
+      if (!ptrs.has(e.pointerId)) return;
+      ptrs.delete(e.pointerId); start = ptrs.size ? snap() : null;
+      if (!ptrs.size) { svg.classList.remove("dragging"); setTimeout(() => { map.dragged = false; }, 0); }
     };
-    svg.addEventListener("pointerup", end);
-    svg.addEventListener("pointercancel", end);
-    window.addEventListener("resize", () => { if (map.vb && $("mapDialog").open) applyViewBox(); });
+    window.addEventListener("pointerup", end); window.addEventListener("pointercancel", end);
+    svg.addEventListener("wheel", e => { if (!map.V) return; e.preventDefault(); const [cx, cy] = toMap(e.clientX, e.clientY); zoomMap(e.deltaY > 0 ? 1.15 : 1 / 1.15, cx, cy); }, { passive: false });
+    $("mapZoomIn").addEventListener("click", () => { if (map.V) zoomMap(1 / 1.5); });
+    $("mapZoomOut").addEventListener("click", () => { if (map.V) zoomMap(1.5); });
+    $("mapReset").addEventListener("click", () => { if (map.V) { map.vb = [0, 0, map.W, map.H]; applyMapView(); } });
+    document.querySelectorAll("#mapColours button").forEach(b => b.addEventListener("click", () => setMapColour(b.dataset.c)));
+    let lastW = 0, lastH = 0;
+    if (window.ResizeObserver) new ResizeObserver(() => {
+      const st = svg.parentElement, w = st.clientWidth, h = st.clientHeight;
+      if (map.V && $("mapDialog").open && (Math.abs(w - lastW) > 6 || Math.abs(h - lastH) > 6)) { lastW = w; lastH = h; mapLayout(); }
+    }).observe(svg.parentElement);
   })();
   $("dClose").addEventListener("click", () => $("sysDialog").close());
   $("sysDialog").addEventListener("click", e => { if (e.target === $("sysDialog")) $("sysDialog").close(); });
@@ -5274,7 +5374,7 @@ footer .contact p{margin:0 0 10px}
   window.addEventListener("resize", positionPop);
 
   $("loudBtn").addEventListener("click", () => setLoud(!loud));
-  try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); $("statsHero").hidden = false; applyLoudText(); $("mapColour").value = "act"; } } catch (e) {}
+  try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); $("statsHero").hidden = false; applyLoudText(); setMapColour("traffic"); } } catch (e) {}
 
   buildScale();
   buildLegend();

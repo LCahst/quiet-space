@@ -92,7 +92,7 @@ log(`Stations: ${stationIds.length} (fetched ${needSt.length})`);
 // 5. System radius from CCP's static data, fetched once. If it can't be fetched or fails the
 //    Jita/New Caldari check, fall back to measuring from planet positions (step 6).
 async function loadSdeRadius() {
-  const result = { ok: false, at: new Date().toISOString(), radius: {}, checks: [], note: "" };
+  const result = { ok: false, at: new Date().toISOString(), radius: {}, pos2: {}, checks: [], note: "" };
   const zip = `${tmpdir()}/quiet-space-sde.zip`;
   const report = [`SDE check, ${result.at}`, `Source: ${SDE_URL}`];
   try {
@@ -110,6 +110,8 @@ async function loadSdeRadius() {
       const id = rec._key ?? rec.solarSystemID ?? rec.id;
       if (String(id) in SDE_CHECKS) report.push(`\nRecord for ${id}:`, line);
       if (id !== undefined && typeof rec.radius === "number" && rec.radius > 0) result.radius[id] = Math.round(rec.radius / AU * 100) / 100;
+      // the game's 2D map layout (schematic, drawn region by region), in light years
+      if (id !== undefined && rec.position2D) result.pos2[id] = [Math.round(rec.position2D.x / 9.4607e12) / 1000, Math.round(rec.position2D.y / 9.4607e12) / 1000];
     }
     result.checks = Object.entries(SDE_CHECKS).map(([id, want]) => ({ id: +id, name: c.systems[id]?.n || id, want, got: result.radius[id] }));
     const pass = result.checks.every(x => typeof x.got === "number" && Math.abs(x.got - x.want) <= 0.15);
@@ -125,12 +127,15 @@ async function loadSdeRadius() {
   await mkdir(`${DATA}/samples`, { recursive: true });
   await writeFile(`${DATA}/samples/sde-check.txt`, report.join("\n"));
   if (!result.ok) result.radius = {}; // don't store values that failed the check
+  if (Object.keys(result.pos2).length < 5000) result.pos2 = null; // the k-space systems should all have one
   return result;
 }
-if (!c.sde?.ok) {
-  log("Fetching system radius from CCP's static data export...");
-  c.sde = await loadSdeRadius();
-  log(c.sde.note);
+if (!c.sde?.ok || !c.sde.pos2) {
+  log("Fetching system radius and 2D map positions from CCP's static data export...");
+  const fresh = await loadSdeRadius();
+  // a radius that passed before is kept even if this download fails its check
+  c.sde = fresh.ok || !c.sde?.ok ? fresh : { ...c.sde, pos2: fresh.pos2 };
+  log(c.sde.note, `2D map positions: ${c.sde.pos2 ? Object.keys(c.sde.pos2).length : "not found, trying again next run"}`);
 } else {
   log(`Using saved SDE radius from ${c.sde.at} (verified, not downloaded again).`);
 }
@@ -155,7 +160,7 @@ for (const [id, r] of Object.entries(c.regions)) {
   catalog.regions[id] = r.name;
   r.cons.forEach(cid => { catalog.consToRegion[cid] = +id; catalog.constellations[cid] = c.constellations[cid] || `Constellation ${cid}`; });
 }
-const mapdata = { pos: {}, links: {} };
+const mapdata = { pos: {}, links: {}, pos2: {} };
 const LY = 9.4607e15; // metres per light year
 const galaxy = { unit: "light years", pos: {} };
 const stations = {};
@@ -178,6 +183,7 @@ for (const [id, s] of Object.entries(c.systems)) {
   }
   catalog.systems[id] = out;
   if (s.p) mapdata.pos[id] = s.p;
+  if (c.sde?.pos2?.[id]) mapdata.pos2[id] = c.sde.pos2[id];
   if (s.p3) galaxy.pos[id] = s.p3.map(v => Math.round(v / LY * 1000) / 1000);
   if (gates.every(Boolean)) mapdata.links[id] = [...new Set(gates.map(g => g.d))];
 }
