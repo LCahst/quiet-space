@@ -3343,12 +3343,25 @@ footer .contact p{margin:0 0 10px}
       .sort((a, b) => a[1].localeCompare(b[1])).forEach(([id, n]) => { const o = new Option(n, id); o.selected = c.regions.map(String).includes(id); regS.append(o); });
     regS.addEventListener("change", () => { c.regions = [...regS.selectedOptions].map(o => +o.value); changed(); });
     regF.append(regS, el("small", "adv-note", "To pick more than one region, hold Ctrl (⌘ on a Mac) while you click each one. Ctrl-click a picked region to unpick it. On a phone, just tap each region."));
+    // Near a system: the jumps box only appears once a real system is typed, starting at 5 jumps
     const nearF = el("label", "r-field"); nearF.append("Near a system");
     const nearI = document.createElement("input"); nearI.setAttribute("list", "rSystems"); nearI.autocomplete = "off"; nearI.spellcheck = false; nearI.placeholder = "Type a system name"; nearI.value = c.near;
-    nearI.addEventListener("input", () => { c.near = nearI.value.trim(); changed(); });
     nearF.append(nearI);
-    body.append(section("where", "Location and security", true, secSel("secMin", "Security from"), secSel("secMax", "Security to"), nearF,
-      num("Within jumps of it", "nearJumps", { min: 0, max: 30 }), regF));
+    const jumpsF = el("label", "r-field"), jumpsT = document.createTextNode("");
+    const jumpsI = document.createElement("input"); jumpsI.type = "number"; jumpsI.min = 0; jumpsI.max = 30; jumpsI.step = 1; jumpsI.inputMode = "numeric";
+    jumpsF.append(jumpsT, jumpsI);
+    const syncNear = () => {
+      const id = findSystemByName(c.near);
+      jumpsF.hidden = id === null;
+      if (id === null) { c.nearJumps = null; return; }
+      jumpsT.textContent = `Max jumps from ${catalog.systems[id].n}`;
+      if (c.nearJumps === null) c.nearJumps = 5;
+      jumpsI.value = c.nearJumps;
+    };
+    nearI.addEventListener("input", () => { c.near = nearI.value.trim(); syncNear(); changed(); });
+    jumpsI.addEventListener("input", () => { const v = Number(jumpsI.value); c.nearJumps = jumpsI.value.trim() === "" || Number.isNaN(v) ? null : Math.max(0, Math.round(v)); changed(); });
+    syncNear();
+    body.append(section("where", "Location and security", true, secSel("secMin", "Security from"), secSel("secMax", "Security to"), nearF, jumpsF, regF));
 
     // B. Activity
     body.append(section("act", "Activity", false,
