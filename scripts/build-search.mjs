@@ -131,11 +131,11 @@ if (st) {
     const info = st.stations?.[x];
     let mask = 0;
     for (const name of info?.sv || []) { const i = SERVICES.indexOf(SERVICE_ALIASES[name] || name); if (i >= 0) mask |= 1 << i; }
-    stations[x] = [+sid, mask];
+    stations[x] = [+sid, mask, info?.n || ""];
   }
 }
 // agents' stations that ESI's list doesn't have still need their system
-for (const a of sde.agents) if (!stations[a[0]] && sde.stationSystem[a[0]]) stations[a[0]] = [sde.stationSystem[a[0]], 0];
+for (const a of sde.agents) if (!stations[a[0]] && sde.stationSystem[a[0]]) stations[a[0]] = [sde.stationSystem[a[0]], 0, ""];
 
 const out = {
   v: 1, updated: new Date().toISOString(), sdeBuild: sde.build,
@@ -143,7 +143,7 @@ const out = {
   dscanAU: Math.round(2147483647e3 / AU * 1000) / 1000,
   // id: [belts, moons, [planets by type], best belt's farthest gate in AU or null]; the site's systems only (no wormholes)
   systems: st ? Object.fromEntries(Object.entries(sde.systems).filter(([id]) => st.systems?.[id])) : sde.systems,
-  // station id: [system id, services bit mask]
+  // station id: [system id, services bit mask, name]
   stations,
   // [station id, level, division index or -1, kind index, corporation id, locator 0/1, name]
   agents: sde.agents,

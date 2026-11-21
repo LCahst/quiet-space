@@ -494,6 +494,56 @@ td.c-recent.fresh{animation:recentpulse 1.6s ease-out 2}
 
 .fbox{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
 
+/* Advanced search */
+.adv-open{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.adv-open .hint{margin:0}
+.adv-grid input:not([type=checkbox]),.adv-grid select{box-sizing:border-box;max-width:100%;min-width:0}
+.adv-grid input[type=checkbox]{flex:none}
+.adv-bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:10px 0 6px;padding:8px 12px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:3px;background:var(--panel)}
+.adv-bar span{color:var(--muted)}
+dialog.advd{width:min(920px,calc(100% - 16px));height:min(92vh,980px);max-height:none}
+dialog.advd[open]{display:flex;flex-direction:column}
+.advd-wrap{display:flex;flex-direction:column;flex:1;min-height:0}
+.advd-wrap .d-head{flex:none}
+.advd-body{flex:1;min-height:0;overflow:auto;padding:12px 22px 16px;display:grid;gap:10px;align-content:start}
+.advd-foot{flex:none;border-top:1px solid var(--line);padding:10px 22px 14px;display:grid;gap:6px}
+.advd-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn-primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
+.btn-primary:disabled{opacity:.6;cursor:default}
+.adv-why{margin:0;color:var(--danger);font-weight:600}
+.adv-why:empty{display:none}
+.adv-note{margin:0;color:var(--muted);font-size:.85rem}
+.adv-note:empty{display:none}
+.adv-top{display:grid;gap:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.adv-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.adv-lbl{color:var(--muted);font-size:.85rem;min-width:4.5em}
+.adv-chip{padding:4px 10px;font-size:.88rem}
+.adv-saved{display:inline-flex;align-items:center}
+.adv-x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:0 6px;line-height:1}
+.adv-x:hover{color:var(--danger)}
+.adv-sec{border:1px solid var(--line);border-radius:3px;background:var(--bg)}
+.adv-sec summary{cursor:pointer;padding:9px 12px;font-weight:600}
+.adv-n{color:var(--accent);font-weight:600}
+.adv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:12px 18px;padding:4px 12px 14px;align-items:start}
+.adv-wide{grid-column:1/-1}
+.adv-grid .checkline{align-self:center}
+.adv-ticks{display:flex;flex-wrap:wrap;gap:6px 16px;border:0;padding:0;margin:0}
+.adv-ticks legend{width:100%;padding:0;margin-bottom:4px;color:var(--muted)}
+.adv-planets{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px 12px;border:0;padding:0;margin:0}
+.adv-planets legend{padding:0;margin-bottom:4px;color:var(--muted)}
+.adv-agents{display:grid;gap:10px}
+.adv-agent{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:10px 16px;border:1px solid var(--line);border-radius:3px;padding:8px 12px 12px;margin:0;align-items:end}
+.adv-agent legend{font-weight:600;padding:0 4px}
+.adv-levels{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;grid-column:1/-1}
+.adv-rm{justify-self:start}
+.adv-keep{display:flex;gap:8px;flex-wrap:wrap}
+.adv-keep input{flex:1;min-width:12em;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 8px}
+.r-field select[multiple]{padding:4px}
+.c-adv{font-size:.85rem;color:var(--muted);min-width:12em}
+.adv-why-box ul{margin:4px 0;padding-left:1.2em}
+.adv-why-box p{margin:0 0 4px}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:560px){dialog.advd{width:100%;height:100%;max-width:100%;max-height:100%;border-radius:0}.advd-body,.advd-foot{padding-left:14px;padding-right:14px}}
 /* 2D region map */
 dialog.mapd{width:min(1120px,calc(100% - 16px));height:min(92vh,900px);max-height:none;padding:0;border:1px solid var(--m-line);background:var(--m-bg);color:var(--m-ink);border-radius:4px}
 dialog.mapd::backdrop{background:rgba(5,8,12,.7)}
@@ -552,7 +602,7 @@ dialog.mapd[data-maptheme="dark"]{--m-bg:#0e1622;--m-panel:#162232;--m-ink:#d8e1
 .m-cons.focus{opacity:.6}
 
 /* Hosted-data columns and weekly heat map */
-table.hide-avg .c-avg, table.hide-size .c-size{display:none}
+table.hide-avg .c-avg, table.hide-size .c-size, table.hide-adv .c-adv{display:none}
 .avg-link{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:3px;font-variant-numeric:tabular-nums}
 .avg-link:hover{color:var(--accent)}
 .hm{display:grid;grid-template-columns:2.6em repeat(24,11px);gap:2px;margin:10px 0 4px;font-family:var(--cond);font-size:.72rem;color:var(--muted);align-items:center}
@@ -741,11 +791,17 @@ footer .contact p{margin:0 0 10px}
       <label class="checkline" id="onlyFlaggedLabel" title="Gate camps now (2+ PvP kills on gates in 15 minutes) or within the last hour, and smartbomb or bomb kills in the last 30 minutes, from zKillboard" hidden><input type="checkbox" id="onlyFlagged"> Gate camps (now or recent) or smartbombs</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
+    <div class="control adv-open">
+      <button class="btn" id="advBtn" type="button">Advanced search</button>
+      <p class="hint">Station services, agents, asteroid belts, d-scan, planets, trade hubs and more.</p>
+    </div>
   </form>
+
+  <div class="adv-bar" id="advBar" role="status" hidden></div>
 
   <div class="legend" id="legend"></div>
   <div class="table-wrap">
-    <table id="sysTable" class="hide-avg hide-size hide-recent hide-gate">
+    <table id="sysTable" class="hide-avg hide-size hide-recent hide-gate hide-adv">
       <thead>
         <tr>
           <th scope="col" rowspan="2">System</th><th scope="col" rowspan="2">Sec</th><th scope="col" rowspan="2">Region<br><span class="th-sub">Constellation</span></th>
@@ -755,6 +811,7 @@ footer .contact p{margin:0 0 10px}
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 7 days">ISK<br>7d</th>
           <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 30 days">ISK<br>30d</th>
           <th scope="col" rowspan="2" class="num two c-size" title="Distance from the star to the farthest planet, stargate or station">Size<br>(AU)</th>
+          <th scope="col" rowspan="2" class="c-adv" title="What each system matched in your advanced search">Matched</th>
           <th scope="col" rowspan="2">Links</th>
         </tr>
         <tr>
@@ -892,6 +949,26 @@ footer .contact p{margin:0 0 10px}
 
   <div class="st-pop" id="stPop" role="tooltip" hidden></div>
 
+  <dialog class="sysd advd" id="advDialog" aria-labelledby="advTitle">
+    <div class="advd-wrap">
+      <div class="d-head">
+        <div>
+          <h2 id="advTitle">Advanced search</h2>
+          <div class="d-sub">Find systems by station services, agents, asteroid belts, d-scan coverage, planets, travel and activity. Leave anything blank to ignore it.</div>
+        </div>
+        <button class="btn" id="advClose" type="button">Close</button>
+      </div>
+      <div class="advd-body" id="advBody"></div>
+      <div class="advd-foot">
+        <p class="adv-why" id="advWhy" role="status"></p>
+        <p class="adv-note" id="advPanel"></p>
+        <div class="advd-btns">
+          <button class="btn" id="advReset" type="button">Clear all</button>
+          <button class="btn btn-primary" id="advGo" type="button">Show systems</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
   <dialog class="mapd" id="mapDialog" aria-labelledby="mapTitle" data-maptheme="dark">
     <div class="map-wrap">
       <div class="map-head">
@@ -1275,6 +1352,8 @@ footer .contact p{margin:0 0 10px}
       for (const [id, n] of live.area) if (n > 0) flagged.add(id);
     }
 
+    // advanced search: systems passing every criterion, with what they matched
+    const advSet = adv.crit && adv.data ? advMatches(adv.crit) : null;
     const rows = [];
     for (const idStr in catalog.systems) {
       const id = +idStr, sys = catalog.systems[idStr];
@@ -1295,7 +1374,8 @@ footer .contact p{margin:0 0 10px}
       if (onlyIsland && !(islands && islands.has(id))) continue;
       if (onlyRecent && !recentKills(id, 15)) continue;
       if (flagged && !flagged.has(String(id))) continue;
-      rows.push({ id, sys, reg, a: activity(id) });
+      if (advSet && !advSet.has(idStr)) continue;
+      rows.push({ id, sys, reg, a: activity(id), adv: advSet ? advSet.get(idStr) : null });
     }
     const pvp = r => r.a.ship + r.a.pod;
     // "Most dangerous right now": flagged systems first (possible gate camps and smartbomb kills, every flagged
@@ -1433,6 +1513,7 @@ footer .contact p{margin:0 0 10px}
   function render() {
     if (popAnchor && !$("stPop").hidden) { renderDeferred = true; return; }
     currentRows = getRows();
+    renderAdvBar();
     renderHero();
     renderSummary();
     const tbody = $("rows");
@@ -1445,9 +1526,9 @@ footer .contact p{margin:0 0 10px}
     const n = currentRows.length;
     let text = "";
     if (Object.keys(catalog.systems).length) {
-      if (n === 0) text = `No systems match${withFilterText()}. Untick a box or widen your filters.`;
+      if (n === 0) text = `No systems match${withFilterText()}${adv.crit ? ' and your advanced search' : ''}. Untick a box or widen your filters.`;
       else {
-        text = `${n.toLocaleString()} system${n === 1 ? " matches" : "s match"}${withFilterText()}. `;
+        text = `${n.toLocaleString()} system${n === 1 ? " matches" : "s match"}${withFilterText()}${adv.crit ? " and your advanced search" : ""}. `;
         if (!liveLoaded) text += "Waiting for live traffic…";
         else if (zero === n) text += n === 1 ? "It had no gate jumps in the last hour." : "None of them had any gate jumps in the last hour.";
         else if (zero === 0) text += n === 1 ? "It had gate traffic in the last hour." : "All of them had gate traffic in the last hour.";
@@ -1587,6 +1668,7 @@ footer .contact p{margin:0 0 10px}
     tr.appendChild(cell(prebuilt.isk ? fmtIsk(iskOf(r.id, "7")) : "", "num c-isk"));
     tr.appendChild(cell(prebuilt.isk ? fmtIsk(iskOf(r.id, "30")) : "", "num c-isk"));
     tr.appendChild(cell(typeof r.sys.r === "number" ? r.sys.r.toFixed(1) : "…", "num c-size"));
+    tr.appendChild(cell(r.adv ? advSummaryText(r.adv) : "", "c-adv"));
     const links = document.createElement("td"); links.className = "links";
     const d = document.createElement("a"); d.href = dotlan(r.sys.n); d.target = "_blank"; d.rel = "noopener"; d.textContent = "Dotlan";
     const z = document.createElement("a"); z.href = `https://zkillboard.com/system/${r.id}/`; z.target = "_blank"; z.rel = "noopener"; z.textContent = "zKill";
@@ -2387,6 +2469,7 @@ footer .contact p{margin:0 0 10px}
       section("Stations", stationBox, true),
       section("Links", links, true)
     );
+    { const why = advWhySection(id); if (why) $("dBody").prepend(section("Why it matched", why, true)); }
     if (!dlg.open) dlg.showModal();
     $("sysDialog").scrollTop = 0;
 
@@ -2933,6 +3016,435 @@ footer .contact p{margin:0 0 10px}
     selectMapSystem(systemId);
   }
 
+
+  // ---------- Advanced search ----------
+  // A dialog with every criterion (services, agents, belts, d-scan from a belt, planets, travel...). Its data
+  // (search.json, built daily from CCP's static data) loads the first time the dialog opens. Matches are
+  // applied on top of the panel's filters, and the search is kept in the page address so it can be shared.
+  const ADV_SAVED_KEY = "quietspace.advsearch";
+  const HUBS = [["Jita", "30000142"], ["Amarr", "30002187"], ["Dodixie", "30002659"], ["Rens", "30002510"], ["Hek", "30002053"]];
+  const ADV_SERVICE_LABELS = { factory: "Manufacturing", labratory: "Research", "reprocessing-plant": "Reprocessing", cloning: "Clone bay", "repair-facilities": "Repair shop", insurance: "Insurance", fitting: "Fitting", market: "Market", "loyalty-point-store": "LP store", "office-rental": "Corporation offices", "security-offices": "Security office" };
+  const ADV_KIND_LABELS = { mission: "Mission", research: "Research", fw: "Faction warfare", storyline: "Storyline", career: "Career", epic: "Epic arc", event: "Event", other: "Other" };
+  const ADV_DIV_LABELS = { security: "Security", distribution: "Distribution", mining: "Mining", research: "R&D" };
+  const ADV_PLANET_LABELS = { barren: "Barren", gas: "Gas", ice: "Ice", lava: "Lava", oceanic: "Oceanic", plasma: "Plasma", storm: "Storm", temperate: "Temperate" };
+  const adv = { data: null, kills24: null, loading: null, crit: null, draft: null, cache: new Map() };
+
+  function advBlank() {
+    return { secMin: null, secMax: null, regions: [], near: "", nearJumps: null, maxJumps: null, maxAvg: null, noKills1h: false, noKills24h: false,
+      services: [], oneStation: true, minStations: null, agents: [], minBelts: null, ice: false, minMoons: null, planets: [0, 0, 0, 0, 0, 0, 0, 0],
+      maxRadius: null, dscan: false, maxGates: null, hubJumps: null, hubs: HUBS.map(h => h[0]), fw: false, ins: false, island: false, struct: false };
+  }
+  const advAgentBlank = () => ({ levels: [], div: "", kind: "", corp: "", locator: false });
+  // starter searches, filled into the dialog to run as they are or change
+  const ADV_EXAMPLES = [
+    ["Quiet industry base", "Low sec (0.1 to 0.4) with manufacturing, research and a clone bay in one station", { secMin: 0.1, secMax: 0.4, services: ["factory", "labratory", "cloning"] }],
+    ["Level 4 mission hub", "High sec, a level 4 Security mission agent, with a market and clone bay in the agent’s station", { secMin: 0.5, services: ["market", "cloning"], agents: [{ levels: [4], div: "security", kind: "mission", corp: "", locator: false }] }],
+    ["Watchable mining spot", "At least 5 asteroid belts, a belt within d-scan range of every stargate, and no more than 2 stargates", { minBelts: 5, dscan: true, maxGates: 2 }]
+  ];
+
+  function loadAdvData() {
+    if (!adv.loading) adv.loading = Promise.all([fetchData("search.json"), fetchData("kills24.json")]).then(([d, k]) => {
+      if (!d || !d.systems) throw new Error("no search data");
+      adv.kills24 = k && k.systems ? k : null;
+      // per system: its stations (services and name) and agents
+      const stations = new Map(), agents = new Map();
+      for (const [sid, [sys, mask, name]] of Object.entries(d.stations)) { const k2 = String(sys); if (!stations.has(k2)) stations.set(k2, []); stations.get(k2).push({ id: sid, mask, name }); }
+      for (const [st, level, div, kind, corp, loc, name] of d.agents) {
+        const s = d.stations[st]; if (!s) continue;
+        const k2 = String(s[0]); if (!agents.has(k2)) agents.set(k2, []);
+        agents.get(k2).push({ st: String(st), level, div: div >= 0 ? d.divisions[div] : "", kind: d.kinds[kind], corp: String(corp), loc: !!loc, name });
+      }
+      d.byStations = stations; d.byAgents = agents;
+      adv.data = d;
+      return d;
+    }).catch(e => { adv.loading = null; throw e; });
+    return adv.loading;
+  }
+
+  // Jumps from a system along stargates, up to a limit (cached per start and limit)
+  function advJumps(from, limit) {
+    const key = from + ":" + limit;
+    if (adv.cache.has(key)) return adv.cache.get(key);
+    const links = getMapData().links, dist = new Map([[String(from), 0]]);
+    let frontier = [String(from)];
+    for (let d = 1; d <= limit && frontier.length; d++) {
+      const next = [];
+      for (const id of frontier) for (const n of links[id] || []) { const k = String(n); if (!dist.has(k)) { dist.set(k, d); next.push(k); } }
+      frontier = next;
+    }
+    adv.cache.set(key, dist);
+    return dist;
+  }
+
+  function advCorpMatch(want, a) {
+    if (!want) return true;
+    if (want.startsWith("f:")) { const c = adv.data.corps[a.corp]; return !!c && String(c[1]) === want.slice(2); }
+    return a.corp === want.slice(2);
+  }
+  const advAgentOk = (r, a) => (!r.levels.length || r.levels.includes(a.level)) && (!r.div || a.div === r.div) && (!r.kind || a.kind === r.kind) && advCorpMatch(r.corp, a) && (!r.locator || a.loc);
+  const advFmtSec = v => (v < 0 ? "−" : "") + Math.abs(v).toFixed(1);
+
+  // The criteria as a list of { label, test(id, info) }: each test fills in info for "Why it matched"
+  function advTests(c) {
+    const D = adv.data, T = [], add = (label, test) => T.push({ label, test });
+    const sysOf = id => catalog.systems[id];
+    if (c.secMin !== null || c.secMax !== null) add(c.secMin !== null && c.secMax !== null ? (c.secMin === c.secMax ? `security ${advFmtSec(c.secMin)}` : `security ${advFmtSec(c.secMin)} to ${advFmtSec(c.secMax)}`) : c.secMin !== null ? `security ${advFmtSec(c.secMin)} or higher` : `security ${advFmtSec(c.secMax)} or lower`,
+      id => { const d = displaySec(sysOf(id).s); return d !== null && (c.secMin === null || d >= c.secMin - 1e-9) && (c.secMax === null || d <= c.secMax + 1e-9); });
+    if (c.regions.length) { const set = new Set(c.regions.map(String)); add(c.regions.length === 1 ? `the ${catalog.regions[c.regions[0]] || "chosen"} region` : `your ${c.regions.length} regions`, id => set.has(String(regionOf(sysOf(id))))); }
+    if (c.near && c.nearJumps !== null) {
+      const from = findSystemByName(c.near);
+      const dist = from === null ? new Map() : advJumps(from, c.nearJumps);
+      add(`within ${c.nearJumps} jump${c.nearJumps === 1 ? "" : "s"} of ${from === null ? c.near : catalog.systems[from].n}`, (id, info) => { if (!dist.has(id)) return false; info.near = [catalog.systems[from].n, dist.get(id)]; return true; });
+    }
+    if (c.maxJumps !== null) add(`at most ${c.maxJumps} gate jumps in the last hour`, id => activity(+id).jumps <= c.maxJumps);
+    if (c.maxAvg !== null) add(`a 30-day average of at most ${c.maxAvg} jumps an hour`, id => !prebuilt.activity || avgOf(id) <= c.maxAvg);
+    if (c.noKills1h) add("no ship or pod kills in the last hour", id => routeKills(id) === 0);
+    if (c.noKills24h) add("no kills in the last 24 hours", id => !adv.kills24 || !adv.kills24.systems[id]);
+    if (c.services.length || c.agents.length) {
+      const mask = c.services.reduce((m, s) => m | (1 << D.services.indexOf(s)), 0);
+      const parts = [c.services.length ? c.services.map(s => ADV_SERVICE_LABELS[s].toLowerCase()).join(", ") : "", c.agents.length ? `${c.agents.length} agent${c.agents.length === 1 ? "" : "s"}` : ""].filter(Boolean).join(" and ");
+      add(`${parts}${c.oneStation ? " in one station" : ""}`, (id, info) => {
+        const sts = D.byStations.get(id) || [], ags = D.byAgents.get(id) || [];
+        // each agent requirement needs its own agent
+        const pick = pool => { const used = new Set(), got = []; for (const r of c.agents) { const a = pool.find(x => !used.has(x) && advAgentOk(r, x)); if (!a) return null; used.add(a); got.push(a); } return got; };
+        if (c.oneStation) {
+          for (const s of sts) {
+            if ((s.mask & mask) !== mask) continue;
+            const got = pick(ags.filter(a => a.st === s.id));
+            if (got) { info.station = s.name; info.agents = got; return true; }
+          }
+          return false;
+        }
+        const all = sts.reduce((m, s) => m | s.mask, 0);
+        if ((all & mask) !== mask) return false;
+        const got = pick(ags); if (!got) return false;
+        info.agents = got; if (c.services.length) info.stations = sts.filter(s => s.mask & mask).map(s => s.name);
+        return true;
+      });
+    }
+    if (c.minStations !== null) add(`at least ${c.minStations} NPC station${c.minStations === 1 ? "" : "s"}`, id => ((sysOf(id).sid || []).length) >= c.minStations);
+    const sd = id => D.systems[id];
+    if (c.minBelts !== null) add(`at least ${c.minBelts} asteroid belt${c.minBelts === 1 ? "" : "s"}`, id => !!sd(id) && sd(id)[0] >= c.minBelts);
+    if (c.ice) add("ice belts", id => !!iceTypeOf(sysOf(id), +id));
+    if (c.minMoons !== null) add(`at least ${c.minMoons} moon${c.minMoons === 1 ? "" : "s"}`, id => !!sd(id) && sd(id)[1] >= c.minMoons);
+    if (c.planets.some(n => n > 0)) {
+      const want = c.planets.map((n, i) => [n, i]).filter(([n]) => n > 0);
+      add(want.map(([n, i]) => `${n} ${ADV_PLANET_LABELS[D.planets[i]].toLowerCase()}`).join(", ") + " planet" + (want.length === 1 && want[0][0] === 1 ? "" : "s"), id => !!sd(id) && want.every(([n, i]) => sd(id)[2][i] >= n));
+    }
+    if (c.maxRadius !== null) add(`a radius of at most ${c.maxRadius} AU`, id => typeof sysOf(id).r === "number" && sysOf(id).r <= c.maxRadius);
+    if (c.dscan) add("a belt within d-scan range of every stargate", (id, info) => { const v = sd(id) && sd(id)[3]; if (v === null || v === undefined || v > D.dscanAU) return false; info.dscan = v; return true; });
+    if (c.maxGates !== null) add(`at most ${c.maxGates} stargate${c.maxGates === 1 ? "" : "s"}`, id => (getMapData().links[id] || []).length <= c.maxGates);
+    if (c.hubJumps !== null && c.hubs.length) {
+      const hubs = HUBS.filter(h => c.hubs.includes(h[0])).map(([n, hid]) => [n, advJumps(hid, c.hubJumps)]);
+      add(`at most ${c.hubJumps} jumps from ${c.hubs.length === HUBS.length ? "a trade hub" : c.hubs.join(" or ")}`, (id, info) => {
+        let best = null; for (const [n, dist] of hubs) if (dist.has(id) && (!best || dist.get(id) < best[1])) best = [n, dist.get(id)];
+        if (!best) return false; info.hub = best; return true;
+      });
+    }
+    if (c.fw) add("faction warfare", id => !!(fwMap && fwMap.has(+id)));
+    if (c.ins) add("a pirate insurgency", id => !!(prebuilt.insurgency && prebuilt.insurgency.systems[id]));
+    if (c.island) add("high-sec island status", id => !!(islands && islands.has(+id)));
+    if (c.struct) add("public player structures", id => !!(prebuilt.structCounts && prebuilt.structCounts[id]));
+    return T;
+  }
+  // Map(system id -> info) of the systems that pass every criterion (panel filters not included)
+  function advMatches(c) {
+    const T = advTests(c), out = new Map();
+    for (const id in catalog.systems) { const info = {}; if (T.every(t => t.test(id, info))) out.set(id, info); }
+    return out;
+  }
+  // the criteria in use (for the bar above the table and the button)
+  const advActive = c => !!c && advTests(c).length > 0;
+
+  function advSummaryText(info) {
+    const bits = [];
+    if (info.station) bits.push(info.station);
+    else if (info.stations && info.stations.length) bits.push(info.stations.length === 1 ? info.stations[0] : `${info.stations.length} stations`);
+    if (info.agents && info.agents.length) bits.push(`${info.agents.length} agent${info.agents.length === 1 ? "" : "s"}: ${info.agents.map(a => `L${a.level} ${ADV_DIV_LABELS[a.div] || ADV_KIND_LABELS[a.kind]}`).join(", ")}`);
+    if (info.dscan !== undefined) bits.push(`Belt d-scan ${info.dscan < 0.01 ? "< 0.01" : info.dscan.toFixed(1)} AU`);
+    if (info.hub) bits.push(`${info.hub[0]} ${info.hub[1]} jump${info.hub[1] === 1 ? "" : "s"}`);
+    if (info.near) bits.push(`${info.near[1]} from ${info.near[0]}`);
+    return bits.join(" · ");
+  }
+  // "Why it matched", in the system details
+  function advWhySection(id) {
+    if (!adv.crit || !adv.data) return null;
+    const info = advMatches(adv.crit).get(String(id));
+    if (!info) return null;
+    const box = el("div", "adv-why-box");
+    if (info.station) box.append(el("p", null, `Services you picked, all in ${info.station}`));
+    else if (info.stations && info.stations.length) box.append(el("p", null, `Services you picked, across: ${info.stations.join("; ")}`));
+    if (info.agents && info.agents.length) {
+      const ul = el("ul");
+      for (const a of info.agents) {
+        const corp = adv.data.corps[a.corp], st = adv.data.stations[a.st];
+        ul.append(el("li", null, `${a.name}: level ${a.level} ${ADV_KIND_LABELS[a.kind].toLowerCase()} agent${a.div ? `, ${ADV_DIV_LABELS[a.div]}` : ""}, ${corp ? corp[0] : "unknown corporation"}${a.loc ? ", locator" : ""}${st && st[2] ? ` (${st[2]})` : ""}`));
+      }
+      box.append(ul);
+    }
+    if (info.dscan !== undefined) box.append(el("p", null, `From its best asteroid belt, the farthest stargate is ${info.dscan < 0.01 ? "under 0.01" : info.dscan.toFixed(2)} AU away (d-scan reaches ${(Math.floor(adv.data.dscanAU * 10) / 10).toFixed(1)} AU)`));
+    if (info.hub) box.append(el("p", null, `${info.hub[1]} jump${info.hub[1] === 1 ? "" : "s"} from ${info.hub[0]}`));
+    if (info.near) box.append(el("p", null, `${info.near[1]} jump${info.near[1] === 1 ? "" : "s"} from ${info.near[0]}`));
+    if (!box.childNodes.length) box.append(el("p", null, "Matches every criterion in your advanced search."));
+    box.append(el("p", "adv-note", "The search can’t check your standings: higher-level agents need corporation or faction standing, and level 4 and 5 missions need Omega."));
+    return box;
+  }
+
+  // ---- the page address: #adv=... keeps the search so it can be bookmarked or shared ----
+  function advEncode(c) {
+    const b = advBlank(), o = {};
+    for (const k in c) if (JSON.stringify(c[k]) !== JSON.stringify(b[k])) o[k] = c[k];
+    return encodeURIComponent(JSON.stringify(o));
+  }
+  function advDecode(s) {
+    try { const o = JSON.parse(decodeURIComponent(s)); const c = { ...advBlank(), ...o }; c.agents = (c.agents || []).map(a => ({ ...advAgentBlank(), ...a })); return c; } catch (e) { return null; }
+  }
+  function advSetHash(c) {
+    const url = location.pathname + location.search + (c ? "#adv=" + advEncode(c) : "");
+    try { history.replaceState(null, "", url); } catch (e) { /* file:// in some browsers */ }
+  }
+
+  // ---- applying and clearing ----
+  function advApply(c) {
+    adv.crit = advActive(c) ? c : null;
+    advSetHash(adv.crit);
+    $("sysTable").classList.toggle("hide-adv", !adv.crit);
+    renderAdvBar();
+    onFilterChange();
+  }
+  function renderAdvBar() {
+    const bar = $("advBar");
+    if (!adv.crit) { bar.hidden = true; $("advBtn").textContent = "Advanced search"; return; }
+    const T = advTests(adv.crit), n = currentRows.length;
+    bar.hidden = false; bar.replaceChildren();
+    bar.append(el("b", null, "Advanced search"), el("span", null, `${T.length} criteri${T.length === 1 ? "on" : "a"}, ${n.toLocaleString()} system${n === 1 ? "" : "s"}`));
+    const ed = el("button", "btn", "Edit"); ed.type = "button"; ed.addEventListener("click", openAdvSearch);
+    const cl = el("button", "btn", "Clear"); cl.type = "button"; cl.addEventListener("click", () => advApply(null));
+    const cp = el("button", "btn", "Copy link"); cp.type = "button";
+    cp.addEventListener("click", () => { const done = () => { cp.textContent = "Link copied"; setTimeout(() => { cp.textContent = "Copy link"; }, 1600); }; try { navigator.clipboard.writeText(location.href).then(done, () => {}); } catch (e) {} });
+    bar.append(ed, cp, cl);
+    $("advBtn").textContent = `Advanced search (${T.length})`;
+  }
+  // how many systems the table would show with these criteria and the panel's filters
+  function currentRowsCountWith(c) {
+    const saved = adv.crit; adv.crit = advActive(c) ? c : null;
+    try { return getRows().length; } finally { adv.crit = saved; }
+  }
+  // the panel filters still in use, so nothing filters out of sight
+  function advPanelText() {
+    const bits = [];
+    if ($("search").value.trim()) bits.push(`name contains “${$("search").value.trim()}”`);
+    if ($("region").value) bits.push(catalog.regions[$("region").value] || "a region");
+    if ($("constellation").value) bits.push(catalog.constellations[$("constellation").value] || "a constellation");
+    const secs = [...document.querySelectorAll("input[name=sec]")].filter(i => !i.checked).map(i => ({ high: "High", low: "Low", null: "Null", pochven: "Pochven" })[i.value]);
+    if (secs.length) bits.push(`not ${secs.join(", ")}`);
+    const w = withFilterText(); if (w) bits.push(w.trim());
+    return bits.length ? `Also using the panel: ${bits.join("; ")}.` : "";
+  }
+
+  // ---- the dialog ----
+  async function openAdvSearch() {
+    const dlg = $("advDialog");
+    adv.draft = JSON.parse(JSON.stringify(adv.crit || advBlank()));
+    if (!dlg.open) dlg.showModal();
+    if (location.protocol === "file:") { $("advBody").replaceChildren(el("p", "adv-note", "Advanced search needs data that comes with the hosted site. Open the live page to use it.")); $("advGo").disabled = true; return; }
+    if (!adv.data) {
+      $("advBody").replaceChildren(el("p", "adv-note", "Loading the search data…")); $("advGo").disabled = true;
+      try { await loadAdvData(); } catch (e) { $("advBody").replaceChildren(el("p", "adv-note", "Couldn’t load the search data. Close and try again in a moment.")); return; }
+      if (!dlg.open) return;
+    }
+    $("advGo").disabled = false;
+    buildAdvForm();
+    advRefreshCount();
+  }
+
+  let advCountTimer = 0;
+  function advRefreshCount() {
+    clearTimeout(advCountTimer);
+    advCountTimer = setTimeout(() => {
+      const c = adv.draft, T = advTests(c), n = currentRowsCountWith(c);
+      $("advGo").textContent = T.length ? `Show ${n.toLocaleString()} system${n === 1 ? "" : "s"}` : "Show all systems";
+      const why = $("advWhy"); why.textContent = "";
+      if (T.length && n === 0) {
+        // the criterion that empties the list, checked in order on the panel's systems
+        const saved = adv.crit; adv.crit = null; let ids; try { ids = getRows().map(r => String(r.id)); } finally { adv.crit = saved; }
+        for (const t of T) { const before = ids.length; ids = ids.filter(id => t.test(id, {})); if (!ids.length) { why.textContent = `No systems left after “${t.label}” (${before.toLocaleString()} before it).`; break; } }
+      }
+      $("advPanel").textContent = advPanelText();
+      document.querySelectorAll("#advBody details").forEach(d => { const s = d.querySelector(".adv-n"); if (s) { const k = advSectionCount(d.dataset.sec); s.textContent = k ? ` (${k})` : ""; } });
+    }, 120);
+  }
+  // criteria in use per section, for the counts next to section names
+  function advSectionCount(sec) {
+    const c = adv.draft, b = advBlank(), on = k => JSON.stringify(c[k]) !== JSON.stringify(b[k]);
+    const keys = { where: ["secMin", "secMax", "regions", "near"], act: ["maxJumps", "maxAvg", "noKills1h", "noKills24h"], st: ["services", "minStations"], ag: ["agents"], space: ["minBelts", "ice", "minMoons", "planets", "maxRadius", "dscan"], travel: ["maxGates", "hubJumps"], more: ["fw", "ins", "island", "struct"] }[sec] || [];
+    return keys.filter(on).length + (sec === "ag" ? c.agents.length - (c.agents.length ? 1 : 0) : 0);
+  }
+
+  function buildAdvForm() {
+    const c = adv.draft, D = adv.data, body = $("advBody");
+    body.replaceChildren();
+    const changed = () => advRefreshCount();
+    const num = (label, key, opts = {}) => {
+      const f = el("label", "r-field"); f.append(label);
+      const i = document.createElement("input"); i.type = "number"; i.min = opts.min ?? 0; if (opts.max !== undefined) i.max = opts.max; i.step = opts.step ?? 1; i.inputMode = "decimal";
+      i.value = c[key] === null ? "" : c[key]; i.placeholder = opts.ph || "Any";
+      i.addEventListener("input", () => { const v = i.value.trim() === "" ? null : Number(i.value); c[key] = v === null || Number.isNaN(v) ? null : v; if (opts.after) opts.after(); changed(); });
+      f.append(i); if (opts.note) f.append(opts.note); return f;
+    };
+    const tick = (label, key, title) => {
+      const l = el("label", "checkline"); if (title) l.title = title;
+      const i = document.createElement("input"); i.type = "checkbox"; i.checked = !!c[key];
+      i.addEventListener("change", () => { c[key] = i.checked; changed(); });
+      l.append(i, " " + label); return l;
+    };
+    const section = (key, title, open, ...kids) => {
+      const d = el("details", "adv-sec"); d.dataset.sec = key; if (open) d.open = true;
+      const s = el("summary"); s.append(title, el("span", "adv-n")); d.append(s);
+      const g = el("div", "adv-grid"); g.append(...kids); d.append(g); return d;
+    };
+
+    // examples and saved searches
+    const top = el("div", "adv-top");
+    const ex = el("div", "adv-chips"); ex.append(el("span", "adv-lbl", "Examples"));
+    for (const [name, desc, o] of ADV_EXAMPLES) {
+      const b = el("button", "btn adv-chip", name); b.type = "button"; b.title = desc;
+      b.addEventListener("click", () => { adv.draft = { ...advBlank(), ...JSON.parse(JSON.stringify(o)) }; adv.draft.agents = adv.draft.agents.map(a => ({ ...advAgentBlank(), ...a })); buildAdvForm(); advRefreshCount(); });
+      ex.append(b);
+    }
+    top.append(ex);
+    const saved = advSaved();
+    const sv = el("div", "adv-chips"); sv.append(el("span", "adv-lbl", "Saved"));
+    if (!saved.length) sv.append(el("span", "adv-note", "None yet. Name a search below to keep it."));
+    saved.forEach((s, k) => {
+      const w = el("span", "adv-saved");
+      const b = el("button", "btn adv-chip", s.name); b.type = "button";
+      b.addEventListener("click", () => { adv.draft = advDecode(s.c) || advBlank(); buildAdvForm(); advRefreshCount(); });
+      const x = el("button", "adv-x", "×"); x.type = "button"; x.setAttribute("aria-label", `Delete saved search ${s.name}`); x.title = "Delete";
+      x.addEventListener("click", () => { const list = advSaved(); list.splice(k, 1); advSaveList(list); buildAdvForm(); advRefreshCount(); });
+      w.append(b, x); sv.append(w);
+    });
+    top.append(sv);
+    body.append(top);
+
+    // A. Location and security
+    const secSel = (key, ph) => {
+      const f = el("label", "r-field"); f.append(ph);
+      const s = document.createElement("select");
+      s.append(new Option("Any", ""));
+      for (let v = 10; v >= -10; v--) s.append(new Option(advFmtSec(v / 10), String(v / 10)));
+      s.value = c[key] === null ? "" : String(c[key]);
+      s.addEventListener("change", () => { c[key] = s.value === "" ? null : Number(s.value); changed(); });
+      f.append(s); return f;
+    };
+    const regF = el("label", "r-field adv-wide"); regF.append("Regions (hold Ctrl or ⌘ to pick several)");
+    const regS = document.createElement("select"); regS.multiple = true; regS.size = 6;
+    Object.entries(catalog.regions).filter(([id]) => !UNREACHABLE.has(+id) && Object.values(catalog.systems).some(s => String(regionOf(s)) === id))
+      .sort((a, b) => a[1].localeCompare(b[1])).forEach(([id, n]) => { const o = new Option(n, id); o.selected = c.regions.map(String).includes(id); regS.append(o); });
+    regS.addEventListener("change", () => { c.regions = [...regS.selectedOptions].map(o => +o.value); changed(); });
+    regF.append(regS);
+    const nearF = el("label", "r-field"); nearF.append("Near a system");
+    const nearI = document.createElement("input"); nearI.setAttribute("list", "rSystems"); nearI.autocomplete = "off"; nearI.spellcheck = false; nearI.placeholder = "Type a system name"; nearI.value = c.near;
+    nearI.addEventListener("input", () => { c.near = nearI.value.trim(); changed(); });
+    nearF.append(nearI);
+    body.append(section("where", "Location and security", true, secSel("secMin", "Security from"), secSel("secMax", "Security to"), nearF,
+      num("Within jumps of it", "nearJumps", { min: 0, max: 30 }), regF));
+
+    // B. Activity
+    body.append(section("act", "Activity", false,
+      num("Max gate jumps, last hour", "maxJumps"),
+      num("Max 30-day average (jumps an hour)", "maxAvg", { step: 0.5 }),
+      tick("No ship or pod kills in the last hour", "noKills1h"),
+      tick("No kills in the last 24 hours", "noKills24h", "From zKillboard’s kill feed, all kills including NPC deaths")));
+
+    // C. Stations and services
+    const svBox = el("fieldset", "r-field adv-wide adv-ticks"); svBox.append(el("legend", null, "Station services"));
+    for (const s of D.services) {
+      const l = el("label", "checkline"); const i = document.createElement("input"); i.type = "checkbox"; i.checked = c.services.includes(s);
+      i.addEventListener("change", () => { c.services = D.services.filter(x => x === s ? i.checked : c.services.includes(x)); changed(); });
+      l.append(i, " " + ADV_SERVICE_LABELS[s]); svBox.append(l);
+    }
+    body.append(section("st", "Stations and services", true, svBox,
+      tick("All in one station (also for agents)", "oneStation", "One station must have every service you ticked, and the agents you add below. Untick to allow them across the system’s stations."),
+      num("Min NPC stations", "minStations")));
+
+    // D. Agents
+    const agWrap = el("div", "adv-wide adv-agents");
+    const corpList = document.createElement("datalist"); corpList.id = "advCorps";
+    const corpLabel = new Map();
+    const factionsUsed = new Map(); for (const [, [n, f]] of Object.entries(D.corps)) if (f) factionsUsed.set(String(f), D.factions[f] || "");
+    [...factionsUsed].sort((a, b) => a[1].localeCompare(b[1])).forEach(([f, n]) => { const t = `${n} (whole faction)`; corpLabel.set(t, "f:" + f); corpList.append(new Option(t)); });
+    Object.entries(D.corps).sort((a, b) => a[1][0].localeCompare(b[1][0])).forEach(([id, [n, f]]) => { const t = `${n}${f && D.factions[f] ? ` · ${D.factions[f]}` : ""}`; corpLabel.set(t, "c:" + id); corpList.append(new Option(t)); });
+    const labelOfCorp = v => { for (const [t, x] of corpLabel) if (x === v) return t; return ""; };
+    agWrap.append(corpList);
+    c.agents.forEach((r, k) => {
+      const row = el("fieldset", "adv-agent"); row.append(el("legend", null, `Agent ${k + 1}`));
+      const lv = el("div", "adv-levels"); lv.append(el("span", "adv-lbl", "Level"));
+      for (let L = 1; L <= 5; L++) { const l = el("label", "checkline"); const i = document.createElement("input"); i.type = "checkbox"; i.checked = r.levels.includes(L); i.addEventListener("change", () => { r.levels = [1, 2, 3, 4, 5].filter(x => x === L ? i.checked : r.levels.includes(x)); changed(); }); l.append(i, " " + L); lv.append(l); }
+      const sel = (label, key, opts) => { const f = el("label", "r-field"); f.append(label); const s = document.createElement("select"); s.append(new Option("Any", "")); for (const [v, t] of opts) s.append(new Option(t, v)); s.value = r[key]; s.addEventListener("change", () => { r[key] = s.value; changed(); }); f.append(s); return f; };
+      const corpF = el("label", "r-field"); corpF.append("Corporation or faction");
+      const ci = document.createElement("input"); ci.setAttribute("list", "advCorps"); ci.autocomplete = "off"; ci.spellcheck = false; ci.placeholder = "Any"; ci.value = labelOfCorp(r.corp);
+      ci.addEventListener("input", () => { r.corp = corpLabel.get(ci.value) || ""; ci.setCustomValidity(ci.value && !r.corp ? "Pick a corporation or faction from the list" : ""); changed(); });
+      corpF.append(ci);
+      const loc = el("label", "checkline"); const li = document.createElement("input"); li.type = "checkbox"; li.checked = r.locator; li.addEventListener("change", () => { r.locator = li.checked; changed(); }); loc.append(li, " Also locates players");
+      const rm = el("button", "btn adv-rm", "Remove"); rm.type = "button"; rm.addEventListener("click", () => { c.agents.splice(k, 1); buildAdvForm(); changed(); });
+      row.append(lv, sel("Division", "div", Object.entries(ADV_DIV_LABELS)), sel("Type", "kind", Object.entries(ADV_KIND_LABELS).filter(([k2]) => k2 !== "other")), corpF, loc, rm);
+      agWrap.append(row);
+    });
+    const addAg = el("button", "btn", c.agents.length ? "+ Add another agent" : "+ Add an agent"); addAg.type = "button";
+    addAg.addEventListener("click", () => { c.agents.push(advAgentBlank()); buildAdvForm(); const d = $("advBody").querySelector('details[data-sec="ag"]'); if (d) d.open = true; changed(); });
+    agWrap.append(addAg, el("p", "adv-note", "A system needs one agent for each one you add. The search can’t check your standings: higher-level agents need corporation or faction standing, and level 4 and 5 missions need Omega."));
+    body.append(section("ag", "Agents", c.agents.length > 0, agWrap));
+
+    // E. Space and resources
+    const diam = el("small", "adv-note");
+    const setDiam = () => { diam.textContent = c.maxRadius === null ? "The Size column is the radius: from the star to its farthest planet, stargate or station." : `${(c.maxRadius * 2).toFixed(1)} AU across. ${c.maxRadius <= 14.3 ? "From the sun, d-scan covers the whole system." : ""}`; };
+    setDiam();
+    const pl = el("fieldset", "r-field adv-wide adv-planets"); pl.append(el("legend", null, "Min planets of each type (for planetary industry)"));
+    D.planets.forEach((p, i) => {
+      const f = el("label", "r-field"); f.append(ADV_PLANET_LABELS[p]);
+      const inp = document.createElement("input"); inp.type = "number"; inp.min = 0; inp.max = 20; inp.step = 1; inp.inputMode = "numeric"; inp.value = c.planets[i] || ""; inp.placeholder = "0";
+      inp.addEventListener("input", () => { const v = Number(inp.value); c.planets[i] = inp.value.trim() === "" || Number.isNaN(v) ? 0 : Math.max(0, v); changed(); });
+      f.append(inp); pl.append(f);
+    });
+    body.append(section("space", "Space and resources", false,
+      num("Min asteroid belts", "minBelts"), num("Min moons", "minMoons"),
+      num("Max system radius (AU)", "maxRadius", { step: 0.1, note: diam, after: setDiam }),
+      tick("Ice belts", "ice"),
+      tick(`A belt within d-scan range (${(Math.floor(D.dscanAU * 10) / 10).toFixed(1)} AU) of every stargate`, "dscan", "So you can see everyone who arrives while you sit at that belt"),
+      pl));
+
+    // F. Travel
+    const hubBox = el("fieldset", "r-field adv-ticks"); hubBox.append(el("legend", null, "Trade hubs"));
+    for (const [n] of HUBS) { const l = el("label", "checkline"); const i = document.createElement("input"); i.type = "checkbox"; i.checked = c.hubs.includes(n); i.addEventListener("change", () => { c.hubs = HUBS.map(h => h[0]).filter(x => x === n ? i.checked : c.hubs.includes(x)); changed(); }); l.append(i, " " + n); hubBox.append(l); }
+    body.append(section("travel", "Travel", false,
+      num("Max stargates (1 finds dead ends)", "maxGates", { min: 1 }),
+      num("Max jumps to a trade hub", "hubJumps"), hubBox));
+
+    // G. Faction warfare and more
+    body.append(section("more", "Faction warfare and more", false,
+      tick("Faction warfare", "fw"), tick("Pirate insurgency", "ins"), tick("High-sec island status", "island"), tick("Public player structures", "struct")));
+
+    // name and keep this search
+    const keep = el("div", "adv-keep");
+    const ki = document.createElement("input"); ki.type = "text"; ki.id = "advName"; ki.placeholder = "Name this search to keep it"; ki.maxLength = 60;
+    const kl = el("label", "visually-hidden", "Name for this search"); kl.htmlFor = "advName";
+    const kb = el("button", "btn", "Save"); kb.type = "button";
+    kb.addEventListener("click", () => { const name = ki.value.trim(); if (!name) { ki.focus(); return; } const list = advSaved().filter(s => s.name !== name); list.unshift({ name, c: advEncode(adv.draft) }); advSaveList(list.slice(0, 20)); buildAdvForm(); advRefreshCount(); });
+    keep.append(kl, ki, kb);
+    body.append(keep);
+  }
+  function advSaved() { try { return JSON.parse(localStorage.getItem(ADV_SAVED_KEY)) || []; } catch (e) { return []; } }
+  function advSaveList(list) { try { localStorage.setItem(ADV_SAVED_KEY, JSON.stringify(list)); } catch (e) {} }
+
+  // a search in the page address is applied once the page's data is ready
+  async function advFromHash() {
+    const m = location.hash.match(/^#adv=(.*)$/);
+    if (!m || location.protocol === "file:") return;
+    const c = advDecode(m[1]); if (!c) return;
+    try { await loadAdvData(); } catch (e) { return; }
+    advApply(c);
+  }
 
   // ---------- Hosted data (built by the GitHub Action) ----------
   // When the page runs from GitHub Pages, the Action publishes ready-made files in data/.
@@ -5402,6 +5914,10 @@ footer .contact p{margin:0 0 10px}
   window.addEventListener("resize", positionPop);
 
   $("loudBtn").addEventListener("click", () => setLoud(!loud));
+  $("advBtn").addEventListener("click", openAdvSearch);
+  $("advClose").addEventListener("click", () => $("advDialog").close());
+  $("advGo").addEventListener("click", () => { if (!adv.data) return; advApply(adv.draft); $("advDialog").close(); });
+  $("advReset").addEventListener("click", () => { if (!adv.data) return; adv.draft = advBlank(); buildAdvForm(); advRefreshCount(); });
   try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); $("statsHero").hidden = false; applyLoudText(); setMapColour("traffic"); } } catch (e) {}
 
   buildScale();
@@ -5417,7 +5933,7 @@ footer .contact p{margin:0 0 10px}
     render();
     return buildCatalog();
   })
-    .then(() => { recomputeIslands(); render(); })
+    .then(() => { recomputeIslands(); render(); advFromHash(); })
     .then(() => loadSov().then(computeRegionFactions).catch(e => console.warn("Region factions unavailable:", e)))
     .catch(e => showError(e.message + " Reload the page to resume; progress so far is saved."));
 })();
