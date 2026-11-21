@@ -55,6 +55,12 @@ jobs:
           FULL_REBUILD: ${{ inputs.full_rebuild }}
         run: node scripts/build-map.mjs
 
+      # Downloads CCP's static data only when CCP publishes a new build; otherwise reuses its saved result
+      - name: Build Advanced search data (daily, manual, or first run)
+        if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch' || hashFiles('data/public/search.json') == ''
+        continue-on-error: true
+        run: node scripts/build-search.mjs
+
       # Every run, not just the hourly one: GitHub often starts scheduled runs 30-45 minutes late,
       # and ESI's jump data is only served for one hour (it refreshes at about :50), so a late
       # hourly run would miss that hour. The script skips hours it has already recorded.
