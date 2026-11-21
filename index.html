@@ -494,6 +494,54 @@ td.c-recent.fresh{animation:recentpulse 1.6s ease-out 2}
 
 .fbox{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
 
+/* Layout tidy-up (2026-11): compact hero, top-3 rankings, filter rows, folded icon key, slim phone header */
+.hero{padding:26px 0 22px}
+.hero-name{font-size:clamp(2.2rem,6vw,4.2rem)}
+.hero-meta{margin:14px 0 16px;gap:22px}
+.hero-meta dd{font-size:1.35rem}
+.hero-actions{margin-top:18px}
+.status-line{display:flex;align-items:baseline;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.status-refresh{font:inherit;font-family:var(--cond);font-size:.78rem;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.status-refresh:disabled{color:var(--muted);cursor:default;text-decoration:none}
+.rank-panel summary{list-style:none;cursor:default}
+.rank-panel summary::-webkit-details-marker{display:none}
+.rank-panel summary h2{display:inline}
+.summary-panels:not(.top5) .rank-panel li:nth-child(n+4){display:none}
+.link-btn{font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.controls{grid-template-columns:repeat(4,minmax(0,1fr))}
+.controls > .control-col.sec-row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 40px;align-items:flex-start;border-top:1px solid var(--line);padding-top:12px}
+.controls > .control-col.sec-row fieldset.control.kill-counts{margin-top:0}
+.controls > .control-col.sec-row fieldset.control.kill-counts legend{border-top:0;padding-top:0;margin-bottom:4px}
+.controls > .control-col.sec-row .checkline{margin-top:6px}
+.controls > fieldset.show-with{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:2px 22px;border-top:1px solid var(--line);padding-top:12px}
+.controls > fieldset.show-with legend{float:left;width:100%;margin-bottom:2px}
+.controls > fieldset.show-with .checkline{margin-top:6px}
+.controls > fieldset.show-with .hint{width:100%;margin-top:6px}
+.controls > .adv-open{border-top:1px solid var(--line);padding-top:14px}
+.filters-toggle{display:none}
+.legend-key{margin:10px 0 2px}
+.legend-key summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-family:var(--cond);color:var(--muted);font-size:.9rem}
+.legend-key summary:hover{color:var(--ink)}
+.legend-key .legend{padding-top:6px}
+@media (max-width:900px){ .controls{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:720px){
+  .rank-panel summary{cursor:pointer;list-style:revert}
+  .rank-panel summary::-webkit-details-marker{display:revert}
+  .filters-toggle{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px}
+  .controls.folded > :not(.always){display:none}
+  .controls{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  header.site{padding-top:16px;gap:10px}
+  header.site .head-right{width:100%;gap:8px;justify-content:flex-start;flex-wrap:wrap}
+  header.site .map-link{padding:6px 9px;font-size:.8rem}
+  header.site .loud-btn{font-size:.85rem;padding:6px 12px;margin-left:auto;letter-spacing:.06em}
+  header.site .status-wrap{width:100%;align-items:flex-start}
+  header.site .status-line{justify-content:flex-start}
+  header.site .status{text-align:left;font-size:.8rem}
+  .hero-meta{gap:12px 22px}
+  .hero-meta div{min-width:0}
+}
 /* Advanced search */
 .adv-open{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
 .adv-open .hint{margin:0}
@@ -688,7 +736,7 @@ footer .contact p{margin:0 0 10px}
       <button class="loud-btn" id="loudBtn" type="button" aria-pressed="false">Go Loud!</button>
       <div class="status-wrap">
         <div class="status" id="status">Connecting to ESI…</div>
-        <div class="status-sub" id="recentStatus" hidden></div>
+        <div class="status-line"><div class="status-sub" id="recentStatus" hidden></div><button class="status-refresh" id="refreshBtn" type="button" title="Fetch the latest hourly figures from ESI">Refresh ESI data</button></div>
       </div>
     </div>
   </header>
@@ -714,8 +762,6 @@ footer .contact p{margin:0 0 10px}
       <button class="btn" id="nearHero" disabled>Nearby map</button>
       <button class="btn route-btn" id="routeHero" type="button">Plan a quiet route</button>
       <button class="btn route-btn" id="statsHero" type="button" hidden>Kill breakdown</button>
-      <button class="btn" id="copyHero" disabled>Copy name</button>
-      <button class="btn" id="refreshBtn">Refresh ESI data</button>
     </div>
   </section>
 
@@ -730,19 +776,20 @@ footer .contact p{margin:0 0 10px}
   </section>
 
   <section class="summary-panels" aria-label="Region and constellation rankings">
-    <div class="panel">
-      <h2 id="regHead">Quietest regions</h2>
+    <details class="panel rank-panel" open>
+      <summary><h2 id="regHead">Quietest regions</h2></summary>
       <ol id="topRegions"><li class="empty">Waiting for live traffic…</li></ol>
-    </div>
-    <div class="panel">
-      <h2 id="consHead">Quietest constellations</h2>
+    </details>
+    <details class="panel rank-panel" open>
+      <summary><h2 id="consHead">Quietest constellations</h2></summary>
       <ol id="topCons"><li class="empty">Waiting for live traffic…</li></ol>
-    </div>
-    <p class="panel-note" id="panelNote">Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.</p>
+    </details>
+    <p class="panel-note"><span id="panelNote">Ranked by average gate jumps plus ship and pod kills per system in the last hour. Follows your security and Exordium filters. Select a region or constellation to filter the table to it.</span> <button class="link-btn" id="topMore" type="button" aria-expanded="false">Show top 5</button></p>
   </section>
 
+  <button class="btn filters-toggle" id="filtersToggle" type="button" aria-expanded="false" aria-controls="controls">Filters</button>
   <form class="controls" id="controls" onsubmit="return false">
-    <div class="control">
+    <div class="control always">
       <label for="search">Find a system</label>
       <input type="search" id="search" placeholder="Name contains…" autocomplete="off">
     </div>
@@ -763,7 +810,7 @@ footer .contact p{margin:0 0 10px}
         <option value="name">System name</option>
       </select>
     </div>
-    <div class="control-col">
+    <div class="control-col sec-row">
       <fieldset class="control">
         <legend>Security</legend>
         <div class="chips">
@@ -781,7 +828,7 @@ footer .contact p{margin:0 0 10px}
         <label class="checkline k-indent" id="pvpShipsLabel" hidden title="Leave out structures: losses of citadels, other structures and deployables (nothing with a pilot), and kills made only by a player’s structure."><input type="checkbox" id="pvpShips"> Ships and pods only (leave out structures)</label>
       </fieldset>
     </div>
-    <fieldset class="control">
+    <fieldset class="control show-with">
       <legend>Show systems with</legend>
       <label class="checkline"><input type="checkbox" id="onlyStations"> NPC stations</label>
       <label class="checkline"><input type="checkbox" id="onlyClones"> Jump clone services</label>
@@ -794,7 +841,7 @@ footer .contact p{margin:0 0 10px}
       <label class="checkline" id="onlyFlaggedLabel" title="Gate camps now (2+ PvP kills on gates in 15 minutes) or within the last hour, and smartbomb or bomb kills in the last 30 minutes, from zKillboard" hidden><input type="checkbox" id="onlyFlagged"> Gate camps (now or recent) or smartbombs</label>
       <p class="hint">Tick more than one to find systems that have all of them.</p>
     </fieldset>
-    <div class="control adv-open">
+    <div class="control adv-open always">
       <button class="btn btn-primary adv-btn" id="advBtn" type="button"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span id="advBtnText">Advanced search</span></button>
       <p class="hint">Station services, agents, asteroid belts, d-scan, planets, trade hubs and more.</p>
     </div>
@@ -802,7 +849,7 @@ footer .contact p{margin:0 0 10px}
 
   <div class="adv-bar" id="advBar" role="status" hidden></div>
 
-  <div class="legend" id="legend"></div>
+  <details class="legend-key"><summary>Icon key</summary><div class="legend" id="legend"></div></details>
   <div class="table-wrap">
     <table id="sysTable" class="hide-avg hide-size hide-recent hide-gate hide-adv">
       <thead>
@@ -5760,7 +5807,6 @@ footer .contact p{margin:0 0 10px}
       $("marker").style.left = ((idx + 0.5) / 11 * 100) + "%";
     }
     $("anotherBtn").disabled = false;
-    $("copyHero").disabled = false;
     $("detailHero").disabled = false;
     $("mapHero").disabled = false;
     $("nearHero").disabled = false;
@@ -5770,7 +5816,7 @@ footer .contact p{margin:0 0 10px}
     $("heroName").textContent = "Nothing here";
     $("heroLabel").textContent = msg;
     ["heroRegion","heroJumps","heroKills","heroNpc"].forEach(id => $(id).textContent = "…");
-    $("anotherBtn").disabled = true; $("copyHero").disabled = true; $("detailHero").disabled = true; $("mapHero").disabled = true; $("nearHero").disabled = true;
+    $("anotherBtn").disabled = true; $("detailHero").disabled = true; $("mapHero").disabled = true; $("nearHero").disabled = true;
   }
 
   function pickAnother() {
@@ -5826,7 +5872,24 @@ footer .contact p{margin:0 0 10px}
   }
 
   // ---------- Wiring ----------
+  // phones: the filter panel folds behind a Filters button that says how many filters are on
+  function activeFilterCount() {
+    let n = 0;
+    if ($("region").value) n++;
+    if ($("constellation").value) n++;
+    if ($("sort").value !== "overall" && $("sort").value !== "danger") n++;
+    n += [...document.querySelectorAll("input[name=sec]")].filter(i => !i.checked).length ? 1 : 0;
+    if (!$("hideExordium").checked) n++;
+    if ($("pvpOnly").checked) n++;
+    n += [...document.querySelectorAll(".show-with input[type=checkbox]")].filter(i => i.checked).length;
+    return n;
+  }
+  function updateFiltersToggle() {
+    const n = activeFilterCount(), open = $("filtersToggle").getAttribute("aria-expanded") === "true";
+    $("filtersToggle").textContent = (open ? "Hide filters" : "Filters") + (n ? ` (${n} on)` : "");
+  }
   function onFilterChange() {
+    updateFiltersToggle();
     shown = PAGE;
     delete $("anotherBtn").dataset.picked;
     $("heroLabel").textContent = loud ? "Busiest system matching your filters" : "Quietest system matching your filters";
@@ -5858,9 +5921,6 @@ footer .contact p{margin:0 0 10px}
   $("onlyFlagged").addEventListener("change", onFilterChange);
   $("moreBtn").addEventListener("click", () => { shown += PAGE; render(); });
   $("anotherBtn").addEventListener("click", pickAnother);
-  $("copyHero").addEventListener("click", () => {
-    const r = currentRows.find(x => x.id === heroId); if (r) copyName(r.sys.n, $("copyHero"));
-  });
   $("refreshBtn").addEventListener("click", fetchLive);
 
   $("detailHero").addEventListener("click", () => { if (heroId !== null) openSystem(heroId); });
@@ -5931,6 +5991,29 @@ footer .contact p{margin:0 0 10px}
 
   $("loudBtn").addEventListener("click", () => setLoud(!loud));
   $("advBtn").addEventListener("click", openAdvSearch);
+  // rankings: top 3, or top 5 on request; on phones the panels start folded
+  $("topMore").addEventListener("click", () => {
+    const on = document.querySelector(".summary-panels").classList.toggle("top5");
+    $("topMore").textContent = on ? "Show top 3" : "Show top 5"; $("topMore").setAttribute("aria-expanded", String(on));
+  });
+  {
+    const phone = matchMedia("(max-width:720px)");
+    const panels = [...document.querySelectorAll(".rank-panel")];
+    // on wider screens the panels can't be folded (their heading isn't a toggle there)
+    panels.forEach(d => d.querySelector("summary").addEventListener("click", e => { if (!phone.matches) e.preventDefault(); }));
+    const fit = () => {
+      panels.forEach(d => { d.open = !phone.matches; });
+      $("controls").classList.toggle("folded", phone.matches && $("filtersToggle").getAttribute("aria-expanded") !== "true");
+    };
+    fit(); phone.addEventListener("change", fit);
+    $("filtersToggle").addEventListener("click", () => {
+      const open = $("filtersToggle").getAttribute("aria-expanded") !== "true";
+      $("filtersToggle").setAttribute("aria-expanded", String(open));
+      $("controls").classList.toggle("folded", !open);
+      updateFiltersToggle();
+    });
+    updateFiltersToggle();
+  }
   $("advClose").addEventListener("click", () => $("advDialog").close());
   $("advGo").addEventListener("click", () => { if (!adv.data) return; advApply(adv.draft); $("advDialog").close(); });
   $("advReset").addEventListener("click", () => { if (!adv.data) return; adv.draft = advBlank(); buildAdvForm(); advRefreshCount(); });
