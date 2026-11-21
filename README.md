@@ -74,7 +74,7 @@ Edit `index.html` on GitHub (open it and click the pencil icon) or upload a new 
 - System sizes: CCP's static data export.
 - Ice belt systems: the [EVE University wiki](https://wiki.eveuniversity.org/Ice_harvesting).
 
-EVE Online and all related names are trademarks of CCP hf. This is a fan-made tool and isn't affiliated with or endorsed by CCP.
+© 2014 CCP hf. All rights reserved. "EVE", "EVE Online", "CCP", and all related logos and images are trademarks or registered trademarks of CCP hf. This is a fan-made site and isn't affiliated with or endorsed by CCP.
 
 <!-- Test commit, 2026-11-17 -->
 <!-- Test commit 2, 2026-11-17 -->

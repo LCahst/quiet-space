@@ -18,7 +18,8 @@
 *,*::before,*::after{box-sizing:inherit}
 [hidden]{display:none !important}
 html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+.ccp-notice{margin:0;padding:3px 12px;font-size:.68rem;line-height:1.35;color:var(--muted);border-top:1px solid var(--line,#223146);background:var(--panel)}
 a{color:#8fbaf0}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
@@ -191,6 +192,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   </div>
   <aside id="panel" aria-label="Warzone details"></aside>
 </main>
+<p class="ccp-notice">© 2014 CCP hf. All rights reserved. “EVE”, “EVE Online”, “CCP”, and all related logos and images are trademarks or registered trademarks of CCP hf. This is a fan-made site and isn’t affiliated with or endorsed by CCP.</p>
 
 <script>
 (() => {
