@@ -744,11 +744,12 @@ footer .contact p{margin:0 0 10px}
   <section class="hero" aria-live="polite">
     <p class="hero-label" id="heroLabel">Quietest system matching your filters</p>
     <h1 class="hero-name placeholder" id="heroName">Scanning</h1>
-    <dl class="hero-meta">
+    <dl class="hero-meta" id="heroMeta">
       <div><dt>Region</dt><dd id="heroRegion">…</dd></div>
-      <div><dt>Gate jumps, last hour</dt><dd id="heroJumps">…</dd></div>
-      <div><dt>Ships and pods killed</dt><dd id="heroKills">…</dd></div>
-      <div><dt>NPCs killed</dt><dd id="heroNpc">…</dd></div>
+      <div><dt id="heroL2">Gate jumps, last hour</dt><dd id="heroJumps">…</dd></div>
+      <div><dt id="heroL3">Ships and pods killed</dt><dd id="heroKills">…</dd></div>
+      <div><dt id="heroL4">NPCs killed</dt><dd id="heroNpc">…</dd></div>
+      <div id="heroX" hidden><dt id="heroL5">Gate jumps, last hour (ESI)</dt><dd id="heroExtra">…</dd></div>
     </dl>
     <div class="scale" aria-hidden="true">
       <div class="marker" id="marker" style="left:-20px"></div>
@@ -5811,9 +5812,24 @@ footer .contact p{margin:0 0 10px}
     $("heroName").classList.remove("placeholder");
     $("heroName").textContent = r.sys.n;
     $("heroRegion").textContent = r.reg !== undefined ? (catalog.regions[r.reg] || "Unknown") : "…";
-    $("heroJumps").textContent = r.a.jumps.toLocaleString();
-    $("heroKills").textContent = (r.a.ship + r.a.pod).toLocaleString();
-    $("heroNpc").textContent = r.a.npc.toLocaleString();
+    // quiet: ESI's figures for the last hour; loud: zKillboard's live kill counts, with ESI's gate jumps last
+    const z = loud && !!recentSnap;
+    $("heroX").hidden = !z;
+    if (z) {
+      const pvp = killMode() === "all" ? "" : "PvP ", K = w => pvp ? pvp + w : w[0].toUpperCase() + w.slice(1);
+      $("heroL2").textContent = `${K("kills")}, last 15 min (zKillboard)`; $("heroJumps").textContent = recentKills(r.id, 15).toLocaleString();
+      $("heroL3").textContent = `${K("kills")}, last hour (zKillboard)`; $("heroKills").textContent = recentKills(r.id, 60).toLocaleString();
+      $("heroL4").parentElement.hidden = !gateOn;
+      $("heroL4").textContent = `${K("gate kills")}, last hour (zKillboard)`; $("heroNpc").textContent = gateOn ? recentKills(r.id, 60, true).toLocaleString() : "…";
+      $("heroExtra").textContent = r.a.jumps.toLocaleString();
+      $("heroMeta").title = "Kills from zKillboard, updated about every minute (it may miss some kills or get them late). Gate jumps from ESI's hourly figures.";
+    } else {
+      $("heroL2").textContent = "Gate jumps, last hour"; $("heroJumps").textContent = r.a.jumps.toLocaleString();
+      $("heroL3").textContent = "Ships and pods killed"; $("heroKills").textContent = (r.a.ship + r.a.pod).toLocaleString();
+      $("heroL4").parentElement.hidden = false;
+      $("heroL4").textContent = "NPCs killed"; $("heroNpc").textContent = r.a.npc.toLocaleString();
+      $("heroMeta").title = "";
+    }
     const d = displaySec(r.sys.s);
     if (d === null) { $("marker").style.left = "-20px"; }
     else {
@@ -5829,7 +5845,7 @@ footer .contact p{margin:0 0 10px}
     $("heroName").classList.add("placeholder");
     $("heroName").textContent = "Nothing here";
     $("heroLabel").textContent = msg;
-    ["heroRegion","heroJumps","heroKills","heroNpc"].forEach(id => $(id).textContent = "…");
+    ["heroRegion","heroJumps","heroKills","heroNpc","heroExtra"].forEach(id => $(id).textContent = "…");
     $("anotherBtn").disabled = true; $("detailHero").disabled = true; $("mapHero").disabled = true; $("nearHero").disabled = true;
   }
 
