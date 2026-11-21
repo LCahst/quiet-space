@@ -518,7 +518,7 @@ dialog.mapd[data-maptheme="dark"]{--m-bg:#0e1622;--m-panel:#162232;--m-ink:#d8e1
 .map-info .mi-danger{color:#ff8a7a;font-weight:600}
 .map-info .mi-caution{color:#f0b44c;font-weight:600}
 /* systems placed like the game's 2D map, drawn in the route map's style; sizes stay the same on screen */
-.qm-top{top:10px;right:10px;left:10px;justify-content:flex-end}
+.qm-top{top:10px;right:10px;left:10px;justify-content:flex-end;flex-wrap:wrap}
 #mapSvg line{vector-effect:non-scaling-stroke}
 .qm-gate{stroke:#2a3a4d;stroke-width:1.3}
 .qm-gate.x{stroke:#4f7fae;stroke-dasharray:5 4}
@@ -910,6 +910,10 @@ footer .contact p{margin:0 0 10px}
       <div class="map-stage">
         <svg id="mapSvg" role="img" aria-label="Map of the systems; select one for its details"></svg>
         <div class="rm-hud qm-top">
+          <div class="rm-seg" id="mapLayouts" role="group" aria-label="Place systems by">
+            <button type="button" data-l="2d" aria-pressed="true" title="Placed like the game’s 2D map" aria-label="2D: placed like the game’s 2D map">2D</button>
+            <button type="button" data-l="real" aria-pressed="false" title="Real positions in space, seen from above" aria-label="3D: real positions in space, seen from above">3D</button>
+          </div>
           <div class="rm-seg" id="mapColours" role="group" aria-label="Colour systems by">
             <button type="button" data-c="security" aria-pressed="true">Security</button>
             <button type="button" data-c="traffic" aria-pressed="false">Traffic</button>
@@ -2592,11 +2596,12 @@ footer .contact p{margin:0 0 10px}
 
   const mapLinks = id => (getMapData().links[id] || []).map(String).filter(x => catalog.systems[x]);
   const mapVal = id => map.colour === "traffic" ? activity(id).jumps : map.colour === "kills" ? routeKills(id) : 0;
-  // The map places systems like the game's 2D map (CCP's schematic layout from the static data). Opened as a
-  // local file, that layout isn't available and the map falls back to real positions seen from above.
+  // The map places systems like the game's 2D map (CCP's schematic layout from the static data), or by their
+  // real 3D positions seen from above (the 2D | 3D switch, shared with the large route map). Opened as a local
+  // file, the 2D layout isn't available and the switch is hidden.
   function mapXY(ids) {
     const md = getMapData();
-    const twoD = !!md.pos2 && ids.every(id => md.pos2[id]);
+    const twoD = rmPrefs().layout !== "real" && !!md.pos2 && ids.every(id => md.pos2[id]);
     return { twoD, X: id => twoD ? md.pos2[id][0] : md.pos[id][0], Y: id => twoD ? -md.pos2[id][1] : -md.pos[id][1] };
   }
 
@@ -2799,7 +2804,7 @@ footer .contact p{margin:0 0 10px}
       lg.append(el("span", null, map.colour === "traffic" ? "Gate jumps, last hour" : "Ship and pod kills, last hour"), row, el("small", null, `0 to ${rmFmtV(max, map.colour)}`));
     }
     lg.append(el("small", null, "Dashed gates lead to another region"));
-    if (!map.twoD) lg.append(el("small", null, "3D positions seen from above: the game’s 2D layout comes with the hosted site"));
+    if (!getMapData().pos2) lg.append(el("small", null, "3D positions seen from above: the game’s 2D layout comes with the hosted site"));
   }
   function markMapSelection() {
     map.nodes.forEach((n, id) => n.g.querySelectorAll("[data-sel]").forEach(c => c.classList.toggle("qm-hide", id !== map.sel || id === map.focus)));
@@ -2855,6 +2860,11 @@ footer .contact p{margin:0 0 10px}
     $("mapModeRegion").setAttribute("aria-pressed", String(map.mode === "region"));
     $("mapModeNear").setAttribute("aria-pressed", String(map.mode === "nearby"));
   }
+  function syncMapLayoutButtons() {
+    const real = rmPrefs().layout === "real";
+    $("mapLayouts").hidden = !getMapData().pos2;
+    document.querySelectorAll("#mapLayouts button").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.l === "real") === real)));
+  }
   function setMapColour(c) {
     map.colour = c;
     document.querySelectorAll("#mapColours button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.c === c)));
@@ -2867,7 +2877,7 @@ footer .contact p{margin:0 0 10px}
     const dlg = $("mapDialog");
     if (!dlg.open) dlg.showModal();
     map.mode = mode || map.mode || "region";
-    setModeButtons();
+    setModeButtons(); syncMapLayoutButtons();
     const ticket = ++map.loading;
     $("mapSvg").replaceChildren(); $("mapLegend").replaceChildren(); $("mapInfo").replaceChildren(); $("mapTip").hidden = true;
     map.V = null; map.nodes = new Map(); map.labels = []; map.tagged = [];
@@ -5369,6 +5379,7 @@ footer .contact p{margin:0 0 10px}
     $("mapZoomOut").addEventListener("click", () => { if (map.V) zoomMap(1.5); });
     $("mapReset").addEventListener("click", () => { if (map.V) { map.vb = [0, 0, map.W, map.H]; applyMapView(); } });
     document.querySelectorAll("#mapColours button").forEach(b => b.addEventListener("click", () => setMapColour(b.dataset.c)));
+    document.querySelectorAll("#mapLayouts button").forEach(b => b.addEventListener("click", () => { rmSave({ layout: b.dataset.l }); syncMapLayoutButtons(); if (map.V) mapLayout(); }));
     let lastW = 0, lastH = 0;
     if (window.ResizeObserver) new ResizeObserver(() => {
       const st = svg.parentElement, w = st.clientWidth, h = st.clientHeight;
