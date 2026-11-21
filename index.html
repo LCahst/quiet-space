@@ -2799,7 +2799,7 @@ footer .contact p{margin:0 0 10px}
       lg.append(el("span", null, map.colour === "traffic" ? "Gate jumps, last hour" : "Ship and pod kills, last hour"), row, el("small", null, `0 to ${rmFmtV(max, map.colour)}`));
     }
     lg.append(el("small", null, "Dashed gates lead to another region"));
-    if (!map.twoD) lg.append(el("small", null, "Real positions: the game’s 2D layout comes with the hosted site"));
+    if (!map.twoD) lg.append(el("small", null, "3D positions seen from above: the game’s 2D layout comes with the hosted site"));
   }
   function markMapSelection() {
     map.nodes.forEach((n, id) => n.g.querySelectorAll("[data-sel]").forEach(c => c.classList.toggle("qm-hide", id !== map.sel || id === map.focus)));
@@ -4316,8 +4316,8 @@ footer .contact p{margin:0 0 10px}
     // place systems like the game's 2D map (default) or by their real positions (kept for jump ranges later)
     st.layout = prefs.layout === "real" ? "real" : "2d";
     const lays = el("div", "rm-seg"); lays.setAttribute("role", "group"); lays.setAttribute("aria-label", "Place systems by");
-    for (const [v, t] of [["2d", "Game 2D map"], ["real", "Real positions"]]) {
-      const b = el("button", null, t); b.type = "button"; b.setAttribute("aria-pressed", String(st.layout === v));
+    for (const [v, t, tip] of [["2d", "2D", "Placed like the game’s 2D map"], ["real", "3D", "Real positions in space, seen from above"]]) {
+      const b = el("button", null, t); b.type = "button"; b.title = tip; b.setAttribute("aria-label", tip); b.setAttribute("aria-pressed", String(st.layout === v));
       b.addEventListener("click", () => { if (st.layout === v) return; st.layout = v; rmSave({ layout: v }); lays.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); layout(true); });
       lays.append(b);
     }
