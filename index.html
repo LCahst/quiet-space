@@ -816,8 +816,8 @@ footer .contact p{margin:0 0 10px}
         <div class="chips">
           <label><input type="checkbox" name="sec" value="high" checked> High</label>
           <label><input type="checkbox" name="sec" value="low" checked> Low</label>
-          <label><input type="checkbox" name="sec" value="null" checked> Null</label>
-          <label><input type="checkbox" name="sec" value="pochven" checked> Pochven</label>
+          <label><input type="checkbox" name="sec" value="null"> Null</label>
+          <label><input type="checkbox" name="sec" value="pochven"> Pochven</label>
         </div>
         <label class="checkline"><input type="checkbox" id="hideExordium" checked> Hide Exordium (new-player region)</label>
       </fieldset>
@@ -3804,12 +3804,25 @@ footer .contact p{margin:0 0 10px}
     if (dg) { dg.hidden = !loud; if (!loud && $("sort").value === "danger") $("sort").value = "overall"; }
     document.title = t.title;
   }
+  // Each mode's starting filters: quiet looks at high and low sec, least activity first; loud looks everywhere,
+  // most dangerous first. Applied when the page opens and when switching modes.
+  // "Most dangerous right now" is only added once recent kills load, so until then loud mode ranks by
+  // activity, and switches to it when it appears unless the ranking was picked by hand meanwhile.
+  const modeSecs = () => loud ? ["high", "low", "null", "pochven"] : ["high", "low"];
+  let sortPicked = false;
+  function applyModeDefaults() {
+    const want = modeSecs();
+    document.querySelectorAll("input[name=sec]").forEach(i => { i.checked = want.includes(i.value); });
+    sortPicked = false;
+    $("sort").value = loud && $("sort").querySelector('option[value="danger"]') ? "danger" : "overall";
+  }
   function setLoud(on) {
     loud = on;
     document.documentElement.classList.toggle("loud", on);
     $("statsHero").hidden = !on;
     if (!on && $("statsDialog").open) $("statsDialog").close();
     applyLoudText();
+    applyModeDefaults();
     setMapColour(on ? "traffic" : "security");
     try { localStorage.setItem("quietspace.loud", on ? "1" : "0"); } catch (e) {}
     applyHostedColumns();
@@ -3893,6 +3906,7 @@ footer .contact p{margin:0 0 10px}
     const dg = new Option("Most dangerous right now", "danger"); dg.hidden = !loud;
     dg.title = "Possible gate camps and smartbomb kills first, then PvP kills in the last 15 minutes";
     sel.insertBefore(dg, sel.querySelector('option[value="recent"]'));
+    if (loud && !sortPicked) { sel.value = "danger"; onFilterChange(); }
   }
   async function startRecentKills(snap) {
     recentSnap = snap;
@@ -5878,7 +5892,7 @@ footer .contact p{margin:0 0 10px}
     if ($("region").value) n++;
     if ($("constellation").value) n++;
     if ($("sort").value !== "overall" && $("sort").value !== "danger") n++;
-    n += [...document.querySelectorAll("input[name=sec]")].filter(i => !i.checked).length ? 1 : 0;
+    n += [...document.querySelectorAll("input[name=sec]")].some(i => i.checked !== modeSecs().includes(i.value)) ? 1 : 0;
     if (!$("hideExordium").checked) n++;
     if ($("pvpOnly").checked) n++;
     n += [...document.querySelectorAll(".show-with input[type=checkbox]")].filter(i => i.checked).length;
@@ -5898,7 +5912,7 @@ footer .contact p{margin:0 0 10px}
   $("search").addEventListener("input", onFilterChange);
   $("region").addEventListener("change", () => { populateConstellations(); onFilterChange(); });
   $("constellation").addEventListener("change", onFilterChange);
-  $("sort").addEventListener("change", onFilterChange);
+  $("sort").addEventListener("change", () => { sortPicked = true; onFilterChange(); });
   document.querySelectorAll("input[name=sec]").forEach(i => i.addEventListener("change", onFilterChange));
   $("hideExordium").addEventListener("change", () => { populateRegions(); populateConstellations(); onFilterChange(); });
   $("onlyStations").addEventListener("change", onFilterChange);
@@ -6017,7 +6031,7 @@ footer .contact p{margin:0 0 10px}
   $("advClose").addEventListener("click", () => $("advDialog").close());
   $("advGo").addEventListener("click", () => { if (!adv.data) return; advApply(adv.draft); $("advDialog").close(); });
   $("advReset").addEventListener("click", () => { if (!adv.data) return; adv.draft = advBlank(); buildAdvForm(); advRefreshCount(); });
-  try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); $("statsHero").hidden = false; applyLoudText(); setMapColour("traffic"); } } catch (e) {}
+  try { if (localStorage.getItem("quietspace.loud") === "1") { loud = true; document.documentElement.classList.add("loud"); $("statsHero").hidden = false; applyLoudText(); applyModeDefaults(); setMapColour("traffic"); } } catch (e) {}
 
   buildScale();
   buildLegend();
