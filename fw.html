@@ -154,8 +154,8 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
         <option value="">Zones of control only</option>
         <option value="kills1:most">Most kills, last hour</option>
         <option value="kills1:least">Least kills, last hour</option>
-        <option value="kills24:most">Most kills, last 24 hours</option>
-        <option value="kills24:least">Least kills, last 24 hours</option>
+        <option value="kills24:most" title="From zKillboard: kills where a player was among the attackers. zKillboard doesn’t see every kill, and some reach it late, so this can count low.">Most PvP kills, last 24 hours (zKillboard)</option>
+        <option value="kills24:least" title="From zKillboard: kills where a player was among the attackers. zKillboard doesn’t see every kill, and some reach it late, so this can count low.">Least PvP kills, last 24 hours (zKillboard)</option>
         <option value="jumps:most">Most gate jumps, last hour</option>
         <option value="jumps:least">Least gate jumps, last hour</option>
         <option value="avg:most">Busiest, 30-day average</option>
@@ -217,6 +217,9 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   // ---------- Data ----------
   let catalog = null, galaxy = {}, links = {}, feed = [], feedAt = null;
   let activity = null, kills24 = null, insurgency = null;
+  // PvP kills in the last 24 hours from zKillboard (all kills if the file has no PvP split yet)
+  const K24_NOTE = "From zKillboard: kills where a player was among the attackers. zKillboard doesn’t see every kill, and some reach it late, so this can count low.";
+  const pvp24 = id => kills24 ? ((kills24.pvp || kills24.systems)[id] || 0) : 0;
   let jumps1 = {}, kills1 = {}, liveAt = null;
   let prevAmounts = null, prevOccupiers = null, prevAt = null, esiAt = null; // comparison point for "change since the last update"
   const REFRESH_MS = 5 * 60 * 1000;
@@ -383,11 +386,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   function metricValue(id, metric) {
     if (metric === "kills1") return kills1[id] || 0;
     if (metric === "jumps") return jumps1[id] || 0;
-    if (metric === "kills24") return kills24 ? (kills24.systems[id] || 0) : null;
+    if (metric === "kills24") return kills24 ? pvp24(id) : null;
     if (metric === "avg") { const v = activity && activity.systems[id]; return activity ? (v ? v[0] : 0) : null; }
     return null;
   }
-  const METRIC_TEXT = { kills1: "ship and pod kills in the last hour", kills24: "kills in the last 24 hours", jumps: "gate jumps in the last hour", avg: "average gate jumps per hour, 30 days" };
+  const METRIC_TEXT = { kills1: "ship and pod kills in the last hour", kills24: "PvP kills in the last 24 hours (zKillboard)", jumps: "gate jumps in the last hour", avg: "average gate jumps per hour, 30 days" };
   function heatColor(t, mode, a) {
     // most: amber to red; least: quiet systems glow teal (t is already inverted for "least")
     if (mode === "least") return `rgba(${Math.round(40 + 30 * (1 - t))},${Math.round(190 + 40 * t)},${Math.round(200 + 30 * t)},${a})`;
@@ -725,7 +728,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       const rw = (a, b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
       tip.innerHTML = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(sysd && sysd.s)}">${dd === null ? "?" : dd.toFixed(1)}</span><div class="muted">${regionOf(id)}, outside the warzone</div>`
         + rw("Jumps, last hour", (jumps1[id] || 0).toLocaleString()) + rw("Kills, last hour", (kills1[id] || 0).toLocaleString())
-        + (kills24 ? rw("Kills, 24 hours", (kills24.systems[id] || 0).toLocaleString()) : "");
+        + (kills24 ? rw("PvP kills, 24 hours (zKillboard)", pvp24(id).toLocaleString()) : "");
       tip.hidden = false;
       const w = $("stage").clientWidth;
       tip.style.left = Math.min(px, w - 300) + "px"; tip.style.top = Math.max(60, py) + "px";
@@ -742,7 +745,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     if (A) html += row("Net advantage", A.even ? "Even" : `<span style="color:${FACTIONS[A.leader] ? FACTIONS[A.leader].color : "inherit"}">${FACTIONS[A.leader] ? FACTIONS[A.leader].short : A.leader} +${pct0(A.net)}</span>`);
     html += row("Jumps, last hour", (jumps1[id] || 0).toLocaleString());
     html += row("Kills, last hour", (kills1[id] || 0).toLocaleString());
-    if (kills24) html += row("Kills, 24 hours", (kills24.systems[id] || 0).toLocaleString());
+    if (kills24) html += row("PvP kills, 24 hours (zKillboard)", pvp24(id).toLocaleString());
     if (activity) { const v = activity.systems[id]; html += row("30-day avg jumps", (v ? v[0] : 0).toFixed(1)); }
     tip.innerHTML = html; tip.hidden = false;
     const w = $("stage").clientWidth;
@@ -850,10 +853,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
 
     // Most fought over
     const k24 = !!kills24;
-    panel.append(el("h2", null, k24 ? "Most kills, last 24 hours" : "Most kills, last hour"));
-    const fought = zone.ids.map(id => [id, k24 ? (kills24.systems[id] || 0) : (kills1[id] || 0)]).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]).slice(0, 6);
+    panel.append(el("h2", null, k24 ? "Most PvP kills, last 24 hours" : "Most kills, last hour"));
+    if (k24) panel.append(el("p", "muted", "PvP kills reported to zKillboard. It doesn’t see every kill, and some reach it late, so counts can be low."));
+    const fought = zone.ids.map(id => [id, k24 ? pvp24(id) : (kills1[id] || 0)]).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]).slice(0, 6);
     const maxK = fought.length ? fought[0][1] : 1;
-    panel.append(rankList(fought.map(x => x[0]), id => { const v = k24 ? (kills24.systems[id] || 0) : (kills1[id] || 0); return { val: v.toLocaleString(), sub: `${FACTIONS[fw.get(id).occupier].short} held, ${regionOf(id)}`, bar: [v / maxK, "#e0522d"] }; }, "No kills recorded yet."));
+    panel.append(rankList(fought.map(x => x[0]), id => { const v = k24 ? pvp24(id) : (kills1[id] || 0); return { val: v.toLocaleString(), sub: `${FACTIONS[fw.get(id).occupier].short} held, ${regionOf(id)}`, bar: [v / maxK, "#e0522d"] }; }, "No kills recorded yet."));
 
     // Quietest systems by gate jumps alone; any kills are shown in bold red rather than mixed into the ranking.
     const killsNote = id => {
@@ -978,7 +982,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     const tf = (k, v) => t.append(el("dt", null, k), el("dd", null, v));
     tf("Gate jumps, last hour", (jumps1[id] || 0).toLocaleString());
     tf("Kills, last hour", (kills1[id] || 0).toLocaleString());
-    if (kills24) tf("Kills, last 24 hours", (kills24.systems[id] || 0).toLocaleString());
+    if (kills24) { tf("PvP kills, last 24 hours", pvp24(id).toLocaleString()); t.lastChild.previousSibling.title = K24_NOTE; t.lastChild.title = K24_NOTE; }
     if (activity) { const v = activity.systems[id]; tf("30-day average jumps", (v ? v[0] : 0).toFixed(1) + " per hour"); }
     if (insurgency && insurgency.systems[id]) { const e = insurgency.systems[id]; tf("Pirate insurgency", `corruption ${e.cs ?? "?"}/5, suppression ${e.ss ?? "?"}/5`); }
     card.append(t);
@@ -1005,6 +1009,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     if (metric) {
       const r3 = el("div", "lrow");
       const grad = mode === "least" ? `linear-gradient(90deg,${heatColor(1, "least", .9)},${heatColor(0, "least", .3)})` : `linear-gradient(90deg,${heatColor(0, "most", .5)},${heatColor(1, "most", .95)})`;
+      if (metric === "kills24") r3.title = K24_NOTE;
       r3.innerHTML = `<span>${mode === "least" ? "Quietest" : "Least"}</span><span class="heatbar" style="background:${grad}"></span><span>${mode === "least" ? "Busiest" : "Most"} ${METRIC_TEXT[metric]}</span>`;
       if ((metric === "kills24" && !kills24) || (metric === "avg" && !activity)) r3.innerHTML = `<span>This overlay's data isn't available yet.</span>`;
       lg.append(r3);

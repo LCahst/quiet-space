@@ -3099,7 +3099,7 @@ footer .contact p{margin:0 0 10px}
     if (c.maxJumps !== null) add(`at most ${c.maxJumps} gate jumps in the last hour`, id => activity(+id).jumps <= c.maxJumps);
     if (c.maxAvg !== null) add(`a 30-day average of at most ${c.maxAvg} jumps an hour`, id => !prebuilt.activity || avgOf(id) <= c.maxAvg);
     if (c.noKills1h) add("no ship or pod kills in the last hour", id => routeKills(id) === 0);
-    if (c.noKills24h) add("no kills in the last 24 hours", id => !adv.kills24 || !adv.kills24.systems[id]);
+    if (c.noKills24h) add("no PvP kills in the last 24 hours", id => !adv.kills24 || !(adv.kills24.pvp || adv.kills24.systems)[id]);
     if (c.services.length || c.agents.length) {
       const mask = c.services.reduce((m, s) => m | (1 << D.services.indexOf(s)), 0);
       const parts = [c.services.length ? c.services.map(s => ADV_SERVICE_LABELS[s].toLowerCase()).join(", ") : "", c.agents.length ? `${c.agents.length} agent${c.agents.length === 1 ? "" : "s"}` : ""].filter(Boolean).join(" and ");
@@ -3355,7 +3355,7 @@ footer .contact p{margin:0 0 10px}
       num("Max gate jumps, last hour", "maxJumps"),
       num("Max 30-day average (jumps an hour)", "maxAvg", { step: 0.5 }),
       tick("No ship or pod kills in the last hour", "noKills1h"),
-      tick("No kills in the last 24 hours", "noKills24h", "From zKillboard’s kill feed, all kills including NPC deaths")));
+      tick("No PvP kills in the last 24 hours (zKillboard)", "noKills24h", "From zKillboard: kills where a player was among the attackers. zKillboard doesn’t see every kill, and some reach it late, so this can count low.")));
 
     // C. Stations and services
     const svBox = el("fieldset", "r-field adv-wide adv-ticks"); svBox.append(el("legend", null, "Station services"));
