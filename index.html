@@ -4682,8 +4682,10 @@ footer .contact p{margin:0 0 10px}
       const svg = svgEl("svg", { width: SW, height: H, viewBox: `0 0 ${SW} ${H}`, class: "rl-svg", role: "img", "aria-label": `The route ${routeTitle(r)} as a line; the list below has every system` });
       inner.style.width = SW + "px"; inner.style.height = H + "px"; inner.append(svg);
       const S = (tag, a, parent) => { const e = svgEl(tag, a); (parent || svg).append(e); return e; };
-      // the route's real north-south drift, squeezed into a gentle wave
-      const realY = id => { const p = md.pos[id]; return p ? -p[1] : 0; }, realX = id => { const p = md.pos[id]; return p ? p[0] : 0; };
+      // the route's north-south drift on the game's 2D map (or by real positions, as picked on the large map),
+      // squeezed into a gentle wave
+      const src = rmPrefs().layout !== "real" && md.pos2 && path.every(id => md.pos2[id]) ? md.pos2 : md.pos;
+      const realY = id => { const p = src[id]; return p ? -p[1] : 0; }, realX = id => { const p = src[id]; return p ? p[0] : 0; };
       const ys = path.map(realY), lo = Math.min(...ys), hi = Math.max(...ys), mid = H / 2 + 6, amp = 34;
       const P = new Map();
       path.forEach((id, i) => { if (!P.has(id)) P.set(id, { x: padX + i * step, y: mid + (hi === lo ? 0 : ((realY(id) - (hi + lo) / 2) / (hi - lo)) * 2 * amp) }); });
@@ -4792,11 +4794,12 @@ footer .contact p{margin:0 0 10px}
     return { refresh: draw, redraw: draw };
   }
 
-  // The large map: the real-position map over the whole route dialog, with the regions around the route.
+  // The large map: the route on the game's 2D map (or real positions) over the whole route dialog, with the regions around it.
   function openLargeMap(r) {
     const dlg = $("routeDialog");
     const layer = el("div", "rm-layer");
-    const close = () => { layer.remove(); document.removeEventListener("keydown", onKey, true); routeState.bigMap = null; };
+    // the overview follows the large map's Game 2D map | Real positions switch, so redraw it on the way out
+    const close = () => { layer.remove(); document.removeEventListener("keydown", onKey, true); routeState.bigMap = null; if (routeState.map) routeState.map.refresh(); };
     const onKey = e => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); } };
     document.addEventListener("keydown", onKey, true);
     dlg.append(layer);
