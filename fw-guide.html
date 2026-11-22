@@ -110,11 +110,27 @@ ul.points li{margin:4px 0}
 nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 18px 14px;margin:18px 0 22px;font-family:var(--cond)}
 nav.toc > b{display:block;font-family:var(--sans);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--line)}
 nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc;display:grid;gap:6px 32px}
-@media (min-width:640px){nav.toc ol{grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,auto);grid-auto-flow:column}}
+@media (min-width:640px){nav.toc ol{grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,auto);grid-auto-flow:column}}
 nav.toc li{counter-increment:toc;display:grid;grid-template-columns:1.6em 1fr;align-items:baseline;line-height:1.4}
 nav.toc li::before{content:counter(toc);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;padding-right:.6em}
 nav.toc li > a{text-decoration:none}
 nav.toc li > a:hover{text-decoration:underline}
+.danger{background:rgba(217,83,79,.08);border-color:rgba(217,83,79,.45);color:#f0c4c2}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;margin:8px 0 12px}
+.options{display:grid;gap:12px;margin:10px 0}
+.options > *{min-width:0}
+.option{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+.option h3{margin:0 0 6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tag{font-family:var(--cond);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;border:1px solid;border-radius:3px;padding:0 6px}
+.tag.easy{color:#7fd6a5}
+.tag.mid{color:#e8c46a}
+.tag.risk{color:#f08a84}
+.tag.paid{color:#b9a3f0}
+.option p:last-child,.option ul:last-child{margin-bottom:0}
+table.agents{border-collapse:collapse;width:100%;min-width:520px;font-family:var(--cond);font-size:.9rem}
+.agents th,.agents td{border-bottom:1px solid var(--line);padding:6px 10px;text-align:left}
+.agents thead th{background:var(--panel2);font-weight:600}
+.sec{display:inline-block;min-width:2.4em;text-align:center;border-radius:3px;padding:0 4px;font-weight:700;color:#0b1018}
 .ccp-notice{margin:14px 0 0;font-family:var(--cond);color:var(--muted);font-size:.78rem}
 @media (max-width:560px){ .choice{grid-template-columns:1fr;gap:6px} .choice h3:not(:first-child){margin-top:6px} }
 @media (max-width:820px){ .vlist li{grid-template-columns:1.6em 1fr} .vlist .why{grid-column:2} }
@@ -138,6 +154,9 @@ nav.toc li > a:hover{text-decoration:underline}
     <b>On this page</b>
     <ol>
       <li><a href="#before-you-enlist">Before you enlist</a></li>
+      <li><a href="#standing">The standing you need</a></li>
+      <li><a href="#fix-standings">Fixing your standings</a></li>
+      <li><a href="#awoxing">Friendly fire and awoxing</a></li>
       <li><a href="#names">Reading complex names</a></li>
       <li><a href="#picker-h">Which complexes can my ship enter?</a></li>
       <li><a href="#glance">All ships and complexes at a glance</a></li>
@@ -177,6 +196,93 @@ nav.toc li > a:hover{text-decoration:underline}
     <li><b>People to fly with.</b> Friends make losses easier to shrug off and wins more fun, and a group survives far better than a pilot alone.</li>
   </ul>
   <p>Many corps stage from a high-sec system on the edge of the warzone, which the enemy militia can’t enter without their navy coming after them. Ask about staging and logistics when you look for a corp; good ones will have answers ready.</p>
+
+  <h2 id="standing">The standing you need</h2>
+  <p>To enlist in an empire militia, your character needs an <b>unmodified standing of at least 0.0</b> with that empire: the Amarr Empire, Caldari State, Gallente Federation or Minmatar Republic. You can check it on the Standings tab of your character sheet.</p>
+  <p><b>“Unmodified” matters.</b> Skills like Diplomacy and Connections raise your <i>effective</i> standing, which helps with things like agent access, but they don’t count here: only your real, base standing does.</p>
+  <ul class="points">
+    <li><b>Old missions may have cost you.</b> Running missions for one empire usually lowers your standing with its rivals, so a pilot with years of Caldari missions behind them can find their Gallente standing below zero. Check before you settle on a side.</li>
+    <li><b>Joining as a corporation:</b> the corporation’s standing, the average of its members’ standings, must be 0.0 or more. Since June 2026 every member must also be above -5.0 when the corporation applies; anyone below that is listed, and the corporation can remove them or apply later.</li>
+    <li><b>Joining a corporation that’s already enlisted</b> also needs you to be above -5.0 with its empire.</li>
+  </ul>
+  <p>If you’re below 0.0, see <a href="#fix-standings">Fixing your standings</a> below.</p>
+
+  <h2 id="fix-standings">Fixing your standings</h2>
+  <p>If your standing with the empire you want is below 0.0, here are your options, roughly from most useful to most limited.</p>
+  <div class="options">
+    <section class="option">
+      <h3>Run the Sisters of EVE epic arc <span class="tag easy">Best for most pilots</span></h3>
+      <p><b>The Blood-Stained Stars</b> is a 51-mission level 1 chain for the Sisters of EVE. Near the end you choose which empire to help, and that empire gives you a <b>7% standing gain</b> (8.75% with Social V). None of the other empires lose any standing for it.</p>
+      <ul class="points">
+        <li><b>No standing needed to start:</b> talk to Sister Alitura in Arnon, Essence <span class="sec" style="background:#4ecef8">0.8</span>.</li>
+        <li><b>It all happens in high-sec,</b> and a Tech 1 destroyer is enough. It’s mostly travel and can be done in a few hours.</li>
+        <li><b>You can run it again every 90 days.</b> A standing gain is a share of the distance left to +10, so one run lifts you from about -0.7 to 0.0, or from about -0.9 with Social V.</li>
+      </ul>
+    </section>
+    <section class="option">
+      <h3>Join a faction warfare corporation <span class="tag easy">Easiest</span></h3>
+      <p>A corporation enlists on its members’ <i>average</i> standing, so a corporation of pilots in good standing can carry you if you’re only a little below zero, as long as you’re above -5.0. You also get experienced corpmates to fly with, which counts for a lot in faction warfare.</p>
+    </section>
+    <section class="option">
+      <h3>Train the right skills <span class="tag easy">Passive</span></h3>
+      <ul class="points">
+        <li><b>Social</b> raises your real standing gains from missions by 5% per level, so it helps you reach the 0.0 you need. Train it before running the arc or missions here.</li>
+        <li><b>Diplomacy</b> (for factions you’re negative with) and <b>Connections</b> (for factions you’re positive with) raise <i>effective</i> standing only: useful for reaching higher-level agents, but they won’t get you past the enlistment check.</li>
+      </ul>
+    </section>
+    <section class="option">
+      <h3>Turn in pirate tags at a data center <span class="tag mid">One-off</span></h3>
+      <p>Each empire has a data center where agents give faction standing in return for pirate tags, which you can loot or buy on the market. The level 1 agents want 3 copper or 20 bronze tags; higher levels want 20 of pricier tags and need 1.0, 3.0 or 5.0 standing, so below zero you’re limited to level 1.</p>
+      <div class="tablewrap">
+        <table class="agents">
+          <thead><tr><th scope="col">Empire</th><th scope="col">Data center</th><th scope="col">Tags wanted</th></tr></thead>
+          <tbody>
+            <tr><td>Amarr Empire</td><td>Kudi, Domain <span class="sec" style="background:#60dba3">0.7</span></td><td>Blood Raider</td></tr>
+            <tr><td>Caldari State</td><td>Kamokor, Lonetrek <span class="sec" style="background:#60dba3">0.7</span></td><td>Guristas</td></tr>
+            <tr><td>Gallente Federation</td><td>Muer, Everyshore <span class="sec" style="background:#71e554">0.6</span></td><td>Serpentis</td></tr>
+            <tr><td>Minmatar Republic</td><td>Emolgranlan, Heimatar <span class="sec" style="background:#f3fd82">0.5</span></td><td>Angel Cartel</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="points">
+        <li><b>Each agent can only be used once,</b> so this is a one-time top-up, not something to repeat.</li>
+        <li><b>The gains are small at level 1:</b> about 1.7% each for the Gallente agents, the only ones with published figures.</li>
+        <li><b>Failing a data center mission costs standing,</b> so only accept one when you have the tags ready.</li>
+      </ul>
+    </section>
+    <section class="option">
+      <h3>Run the career agents <span class="tag easy">One-off</span></h3>
+      <p>If you haven’t already, each empire’s career agents give standing for easy tutorial missions: three sets per empire, each worth about 7.5%. They only count once per character, and you can find them in the Agency window.</p>
+    </section>
+    <section class="option">
+      <h3>Run empire COSMOS missions <span class="tag risk">One chance only</span></h3>
+      <p>COSMOS missions are storyline chains whose final missions give faction standing. Each empire has a constellation of them: <b>Araz</b> in Kador (Amarr), <b>Okkelen</b> in The Forge (Caldari), <b>Algintal</b> in Sinq Laison near Dodixie (Gallente) and <b>Ani</b> in Metropolis, reached only from Hek (Minmatar). COSMOS agents only look at faction standing: level 1 agents need none, but level 2 needs 2.0, so below zero you’re limited to the level 1 chains.</p>
+      <div class="caveat danger"><b>You can only ever do each COSMOS mission once.</b> Failing one, or letting it expire, locks you out of that mission and the rest of its chain forever. And as soon as you talk to the agent, you get an offer that expires in seven days, so don’t speak to them until you’re ready to run it.</div>
+    </section>
+    <section class="option">
+      <h3>Boost your gains with a Glamourex booster <span class="tag mid">Event or store</span></h3>
+      <p>Glamourex boosters work like extra levels of the Social skill: the Potent version gives <b>+50%</b> to standing gains. Take one before the Sisters arc or a COSMOS chain to get much more out of it. There are two ways to get them, and they behave differently:</p>
+      <ul class="points">
+        <li><b>From in-game events</b> such as Capsuleer Day: these are items that <b>stop working after a set date</b>, so check the description before you buy one on the market.</li>
+        <li><b>In packs from the official EVE Online store:</b> these don’t go stale. They wait in your <b>unclaimed items</b> until you redeem them, but they’re applied to your character <b>the moment you redeem them</b> and only last a limited time from then, so redeem one just before you start the arc or missions.</li>
+      </ul>
+    </section>
+    <section class="option">
+      <h3>Use a standings service <span class="tag paid">Costs ISK</span></h3>
+      <p>Some player corporations raise NPC standings for you, for a fee paid in ISK, the in-game currency. One long-running service advertises on the <a href="https://forums.eveonline.com/t/we-raise-npc-standings-lower-broker-relist-fees-access-epic-arcs-mission-r-d-agents-and-more/21688" target="_blank" rel="noopener">official EVE forums</a> and has a <a href="https://discord.com/invite/tBJmdmtvQq" target="_blank" rel="noopener">Discord server</a>. These are run by players, not CCP, so read how they work and check their reputation before you send any ISK.</p>
+    </section>
+  </div>
+  <p><b>Once you’re in, faction warfare keeps your standing up.</b> Military Campaign objectives give standing with your empire, with no losses elsewhere, and each promotion in your militia gives a one-off standing bonus.</p>
+
+  <h2 id="awoxing">Friendly fire and awoxing</h2>
+  <p>“Awoxing” means attacking pilots on your own side. In faction warfare, everyone in your militia counts as your side, even pilots in other corporations, and the game punishes friendly fire through your standing with your empire.</p>
+  <ul class="points">
+    <li><b>Every attack on a militia mate costs you standing.</b> Since March 2026 the penalty is doubled inside faction warfare sites, battlefields included, and halved outside them.</li>
+    <li><b>Fall below -5.0 and you’re out.</b> You get a warning at downtime, and if your standing isn’t fixed 24 hours later, you’re removed from your corporation. If you’re the CEO, the whole corporation (or alliance) is removed from faction warfare instead.</li>
+    <li><b>Low standing also keeps you out:</b> below -5.0 you can’t join an enlisted corporation, and a corporation can’t enlist while any member is below it.</li>
+    <li><b>Accidents count too.</b> Area weapons like smartbombs hit everyone in range, friend or foe, so be careful where you use them.</li>
+    <li><b>To recover,</b> Military Campaigns and the options in <a href="#fix-standings">Fixing your standings</a> all raise your standing with your empire.</li>
+  </ul>
 
   <h2 id="names">Reading complex names on the probe scanner</h2>
   <p>Complexes show up as combat sites in your probe scanner, and their names tell you everything you need before you warp. Take this one:</p>
@@ -316,6 +422,7 @@ nav.toc li > a:hover{text-decoration:underline}
       <li><b>Battlefields:</b> the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki</a> and CCP’s <a href="https://www.eveonline.com/news/view/patch-notes-version-20-10-2" target="_blank" rel="noopener">version 20.10 patch notes</a>, <a href="https://www.eveonline.com/news/view/factional-warfare-overhaul" target="_blank" rel="noopener">Factional Warfare Overhaul</a> and <a href="https://www.eveonline.com/news/view/feedback-and-iteration-factional-warfare" target="_blank" rel="noopener">Feedback and Iteration</a> articles, with the typical fight length from the Minmatar militia’s <a href="https://my.minmatar.org/guides/faction-warfare-plexing/" target="_blank" rel="noopener">plexing guide</a>.</li>
       <li><b>Spending LP:</b> we recommend the <a href="https://www.fuzzwork.co.uk/lpstore/" target="_blank" rel="noopener">Fuzzwork LP Store</a> by Steve Ronuken and <a href="https://maraarin.github.io/EVE-Online-Loyalty-Point-Comparator/" target="_blank" rel="noopener">Eden’s Loyalty</a> by Arin Mara.</li>
       <li><b>Before you enlist:</b> docking restrictions, corporation enlistment rules and border staging systems from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki</a>; the advice on alts, logistics and corps from our own pilots.</li>
+      <li><b>Standings and friendly fire:</b> the EVE University Wiki’s pages on <a href="https://wiki.eveuniversity.org/Faction_warfare_standings" target="_blank" rel="noopener">faction warfare standings</a>, <a href="https://wiki.eveuniversity.org/The_Blood-Stained_Stars" target="_blank" rel="noopener">The Blood-Stained Stars</a>, <a href="https://wiki.eveuniversity.org/Data_centers" target="_blank" rel="noopener">data centers</a>, <a href="https://wiki.eveuniversity.org/COSMOS" target="_blank" rel="noopener">COSMOS</a>, <a href="https://wiki.eveuniversity.org/Gaining_faction_standings_fast" target="_blank" rel="noopener">gaining faction standings fast</a> and <a href="https://wiki.eveuniversity.org/Social" target="_blank" rel="noopener">social skills</a>; CCP’s <a href="https://www.eveonline.com/news/view/standings-and-awoxing-update" target="_blank" rel="noopener">Standings &amp; Awoxing Update</a> (March 2026) and <a href="https://www.eveonline.com/news/view/cradle-of-war-expansion-notes" target="_blank" rel="noopener">Cradle of War expansion notes</a> (the -5.0 rules and Military Campaign standings). Security statuses come from CCP’s ESI. The Glamourex booster and standings-service advice comes from our own pilots.</li>
       <li><b>Our own pilots’ experience in game:</b> open sites taking capital ships, what the number in a site’s name means for LP rewards, and the Elite and Moderate site bonuses.</li>
     </ul>
     <p>The wording, layout and interactive picker are our own. Game rules can change with patches, so if something here doesn’t match what you see in game, trust the game, and <a href="https://discord.gg/DjvDtTMSy4" target="_blank" rel="noopener">let us know on our Discord</a>.</p>
