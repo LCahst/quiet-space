@@ -772,8 +772,8 @@ footer .contact p{margin:0 0 10px}
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
-  <section class="isk-card loud-only" id="iskCard" aria-label="Most lucrative systems">
-    <h2>Most lucrative systems</h2>
+  <section class="isk-card loud-only" id="iskCard" aria-label="Most ISK destroyed">
+    <h2>Most ISK destroyed</h2>
     <div id="iskBody"></div>
   </section>
 
@@ -3706,7 +3706,7 @@ footer .contact p{margin:0 0 10px}
     return b;
   }
 
-  // ---------- Most lucrative systems (ISK destroyed, from zKillboard via the Action at launch) ----------
+  // ---------- Most ISK destroyed (from zKillboard, via the Action) ----------
   // Expected isk.json shape: { updated, days, types: {typeId: name},
   //   windows: { "7": { systems: {id: [isk, kills]}, top: [[id, isk, kills, [[killId, value, shipTypeId], ...3]], ...10] }, "30": {...} } }
   function fmtIsk(v) {
