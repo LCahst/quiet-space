@@ -3927,7 +3927,9 @@ footer .contact p{margin:0 0 10px}
     $("onlyFlaggedLabel").hidden = false;
     if (snap.pvpSlices) {
       $("pvpGroup").hidden = false;
-      try { pvpOn = localStorage.getItem("quietspace.pvpOnly") === "1"; pvpShipsOn = localStorage.getItem("quietspace.pvpShips") === "1"; } catch (e) {}
+      // PvP only is the default; a visitor who unticked it before ("0" saved) keeps it off.
+      pvpOn = true;
+      try { pvpOn = localStorage.getItem("quietspace.pvpOnly") !== "0"; pvpShipsOn = localStorage.getItem("quietspace.pvpShips") === "1"; } catch (e) {}
       $("pvpOnly").checked = pvpOn; $("pvpShips").checked = pvpShipsOn;
       $("pvpShipsLabel").hidden = !(pvpOn && snap.pvpShipSlices);
     }
