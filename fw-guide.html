@@ -102,6 +102,17 @@ ul.points li{margin:4px 0}
 .caveat{background:rgba(240,190,70,.08);border:1px solid rgba(240,190,70,.35);border-radius:4px;padding:8px 12px;font-family:var(--cond);color:#e8d4a0;margin:8px 0 12px;max-width:85ch}
 .rw{display:block;color:#b8c4d4;font-size:.85rem;margin-top:2px}
 .sources{margin-top:36px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--cond);color:var(--muted);font-size:.9rem}
+.sources ul{margin:6px 0 10px;padding-left:1.2em}
+.sources li{margin:4px 0}
+.sources p{max-width:none}
+nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 18px 14px;margin:18px 0 22px;font-family:var(--cond)}
+nav.toc > b{display:block;font-family:var(--sans);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc;display:grid;gap:6px 32px}
+@media (min-width:640px){nav.toc ol{grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,auto);grid-auto-flow:column}}
+nav.toc li{counter-increment:toc;display:grid;grid-template-columns:1.6em 1fr;align-items:baseline;line-height:1.4}
+nav.toc li::before{content:counter(toc);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;padding-right:.6em}
+nav.toc li > a{text-decoration:none}
+nav.toc li > a:hover{text-decoration:underline}
 .ccp-notice{margin:14px 0 0;font-family:var(--cond);color:var(--muted);font-size:.78rem}
 @media (max-width:820px){ .picker{grid-template-columns:1fr} .vlist li{grid-template-columns:1.6em 1fr} .vlist .why{grid-column:2} }
 </style>
@@ -115,12 +126,27 @@ ul.points li{margin:4px 0}
   <nav class="links"><a href="fw.html">Faction warfare map</a><a href="ships.html">Ship Stats</a><a href="pirate-guide.html">Pirate Guide</a><a href="index.html">Back to the site</a></nav>
 </header>
 <main>
-  <div class="credit">The complex rules on this page are summarised in our own words from the <a href="https://www.patreon.com/EVEFrigates/posts/eve-online-2026-171374966" target="_blank" rel="noopener"><b><cite>EVE Faction Warfare Yearbook 2026</cite></b></a> by <a href="https://www.patreon.com/cw/EVEFrigates" target="_blank" rel="noopener">EVE Frigates</a>. Victory point and loyalty point figures come from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener"><b>EVE University Wiki</b></a>, cross-checked against <a href="https://eve-fw.net/#Info" target="_blank" rel="noopener">eve-fw.net</a> and CCP’s patch notes. Credit and thanks to all of them; the Yearbook and the wiki go much deeper and are well worth reading.</div>
+  <div class="credit">The complex rules on this page are summarised in our own words from the <a href="https://www.patreon.com/EVEFrigates/posts/eve-online-2026-171374966" target="_blank" rel="noopener"><b><cite>EVE Faction Warfare Yearbook 2026</cite></b></a> by <a href="https://www.patreon.com/cw/EVEFrigates" target="_blank" rel="noopener">EVE Frigates</a>. Victory point and loyalty point figures come from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener"><b>EVE University Wiki</b></a>, cross-checked against <a href="https://eve-fw.net/#Info" target="_blank" rel="noopener">eve-fw.net</a> and CCP’s patch notes. Thanks to all of them; the Yearbook and the wiki go much deeper and are well worth reading. <a href="#sources">Full list of sources</a>.</div>
 
   <h1>Which complexes can my ship enter?</h1>
   <p class="lead">Faction warfare is fought over complexes: combat sites you capture by staying inside them. Most complexes have an entry gate that only lets certain ships through, so the ship you bring decides where you can fight. Pick your ship below to see where it fits.</p>
 
-  <section class="card picker" aria-label="Complex eligibility picker">
+  <nav class="toc" aria-label="On this page">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#picker">Pick your ship</a></li>
+      <li><a href="#glance">All ships and complexes at a glance</a></li>
+      <li><a href="#names">Reading complex names</a></li>
+      <li><a href="#exceptions">Exceptions that catch people out</a></li>
+      <li><a href="#rewards-h">Rewards: victory points and LP</a></li>
+      <li><a href="#battlefields">Battlefields</a></li>
+      <li><a href="#insurgencies">Pirate insurgencies</a></li>
+      <li><a href="#before-you-enlist">Before you enlist</a></li>
+      <li><a href="#neutral">Flying in without joining a militia</a></li>
+    </ol>
+  </nav>
+
+  <section class="card picker" id="picker" aria-label="Complex eligibility picker">
     <div class="choice">
       <h3>1. How big is your ship?</h3>
       <div class="opts" id="sizeOpts">
@@ -144,12 +170,12 @@ ul.points li{margin:4px 0}
     <div class="verdict" id="verdict" aria-live="polite"><p class="hint">Choose a size and a kind to see which complexes your ship can enter.</p></div>
   </section>
 
-  <h2>All ships and complexes at a glance</h2>
+  <h2 id="glance">All ships and complexes at a glance</h2>
   <p>Green means the ship can take the gate into that complex. Columns are grouped by complex size, from the smallest on the left to the largest on the right.</p>
   <div class="gridwrap"><table class="grid" id="grid"></table></div>
-  <p class="legend">✓ = can enter, ★ = can enter and gets a site bonus. BSC = basic, NVY = navy, ADV = advanced, ELT = elite. Open complexes have no gate, so anything can fly in, titans included.</p>
+  <p class="legend">✓ = can enter, ★ = can enter and gets a site bonus. BSC = basic, NVY = navy, ADV = advanced, ELT = elite.</p>
 
-  <h2>Reading complex names on the probe scanner</h2>
+  <h2 id="names">Reading complex names on the probe scanner</h2>
   <p>Complexes show up as combat sites in your probe scanner, and their names tell you everything you need before you warp. Take this one:</p>
   <div class="scan" aria-label="Example: Gallente Small ADV-1">
     <div class="part"><b>Gallente</b><span>whose side the complex belongs to</span></div>
@@ -165,26 +191,33 @@ ul.points li{margin:4px 0}
     <div class="tier" style="border-top-color:#8a9bb3"><b>Basic (BSC)</b><br>Tech 1 ships only.</div>
     <div class="tier" style="border-top-color:#4f8fd6"><b>Navy (NVY)</b><br>Tech 1 and navy ships.</div>
     <div class="tier" style="border-top-color:#d6a24f"><b>Advanced (ADV)</b><br>Tech 1, navy, pirate and Tech 2 ships.</div>
-    <div class="tier" style="border-top-color:#c95b5b"><b>Elite (ELT)</b><br>Everything, Tech 3 included. Tech 3 destroyers get +500 shield, armor and hull inside.</div>
+    <div class="tier" style="border-top-color:#c95b5b"><b>Elite (ELT)</b><br>Everything, Tech 3 included.</div>
   </div>
   <p>Open complexes sit outside this system entirely: there’s no gate at all, so any ship can fly in, from a frigate all the way up to a titan.</p>
 
-  <h3>How long it takes to capture</h3>
-  <p>Small complexes are quick and big ones take longer. The smallest frigate-only scout sites with a basic gate take about 5 minutes; the other scout, assault frigate and small sites take about 10; medium, moderate, large and open sites take about 15. Plan for the whole timer: you have to stay inside the capture area until it runs out.</p>
+  <h2 id="exceptions">The exceptions that catch people out</h2>
+  <ul class="points">
+    <li><b>Tech 3 ships need a bigger gate than their size suggests.</b> A Tech 3 destroyer can’t use a Small advanced complex, but fits into a Medium advanced one. A Tech 3 cruiser can’t use a Medium advanced complex, but fits into a Large advanced one. The one special case is an elite site built for Tech 3 destroyers, the Contested Field Research Facility.</li>
+    <li><b>Some ships count as pirate ships, even if they don’t look it.</b> Sisters of EVE ships (Astero, Stratios, Nestor), Society of Conscious Thought ships (Metamorphosis, Sunesis, Gnosis, Praxis), EDENCOM ships (Skybreaker, Stormbringer, Thunderchild) and Triglavian ships (Damavik, Vedmak, Drekavac, Leshak) are all treated as pirate ships, so they need an advanced or elite gate.</li>
+    <li><b>Assault frigates have their own site.</b> Assault frigate complexes let only assault frigates in, which makes them a good place for an even fight.</li>
+    <li><b>Some sites reward the right hull.</b> Elite sites give Tech 3 destroyers an extra 500 shield, armor and hull, and Moderate sites boost battlecruiser skill bonuses by 20% (Command Ship skills excepted), so those are the places to bring them.</li>
+    <li><b>Moderate advanced sites only appear during pirate insurgencies.</b> Normal faction warfare has the Moderate navy site; the advanced version spawns in insurgency systems from stage 2.</li>
+  </ul>
 
-  <h2>Rewards: victory points and loyalty points</h2>
+  <h2 id="rewards-h">Rewards: victory points and loyalty points</h2>
   <p>Every site you capture does two things. It moves the system toward changing hands, measured in <b>victory points (VP)</b>: it takes 75,000 VP to make an enemy system vulnerable, and capturing sites in your own system takes VP away from the attacker. And it pays you <b>loyalty points (LP)</b>, the militia currency you spend in its LP store.</p>
+  <p>To get either, you have to stay inside the capture area until the site’s timer runs out: about 5 minutes for the smallest scout sites, 10 for other frigate and small sites, and 15 for everything bigger. The table gives each site’s timer.</p>
   <div class="caveat"><b>How reliable are these numbers?</b> Faction warfare has changed many times, and no single source has everything. We cross-checked CCP’s own patch notes, the EVE University Wiki and eve-fw.net. Victory point values marked C come straight from CCP. The LP figures agree between the wiki and eve-fw.net, but the wiki notes its LP table may be out of date, so treat exact payouts as a guide and check in game.</div>
   <div class="gridwrap"><table class="rewards" id="rewards"></table></div>
   <div class="site-info" id="siteInfo" role="dialog" aria-modal="false" hidden></div>
-  <p class="legend">Source tags: <b>C</b> = CCP patch notes, <b>W</b> = EVE University Wiki, <b>F</b> = eve-fw.net, <b>Y</b> = FW Yearbook 2026; several letters mean those sources agree (hover a tag for details). “–” means no source publishes that figure, and an <b>i</b> button beside a site shows what’s special about it, and “frontlines only” marks sites that never spawn in command operations systems (hover for their base reward). Site names end in the number of pilots the LP reward scales to, so “-1” and “-2” are separate rows.</p>
+  <p class="legend">Source tags (hover one for details): <b>C</b> = CCP patch notes, <b>W</b> = EVE University Wiki, <b>F</b> = eve-fw.net, <b>Y</b> = FW Yearbook 2026; several letters mean those sources agree. “–” means no source publishes that figure. An <b>i</b> button beside a site shows what’s special about it. “Frontlines only” marks sites that never spawn in command operations systems; hover it for the base reward. Site names end in the number of pilots the LP scales to, so “-1” and “-2” sites get separate rows.</p>
   <h3>How the LP works</h3>
   <ul class="points">
     <li><b>Where you plex matters most.</b> Frontline systems pay 50% more than command operations systems, and rearguard systems pay almost nothing (a 99% cut).</li>
     <li><b>LP is split, not earned per minute.</b> Everyone inside the capture radius when the timer finishes gets an equal share, however long they were there. Leave early and you get nothing.</li>
     <li><b>Defending pays only when it’s needed.</b> Capturing a site in your own faction’s system pays the full reward while that system is contested or vulnerable, and nothing once it’s stable.</li>
     <li><b>Three sites only spawn in frontline systems:</b> Scout BSC-1, Field Research ELT-5 and Moderate NVY-3, so they always pay the frontline rate. Scout BSC-1 is a solo Tech 1 frigate site whose NPCs spawn twice as often and are more likely to carry warp disruptors; Field Research applies three random effects (from a pool of 20) to everyone inside.</li>
-    <li><b>Battlefields are the big ones.</b> A won battlefield gives 2,000 VP and 150,000 LP to the winning side, shared fully by up to 30 pilots. <a href="#battlefields">How battlefields work</a>.</li>
+    <li><b>Battlefields are the big ones:</b> 150,000 LP for the winning side. <a href="#battlefields">How battlefields work</a>.</li>
   </ul>
 
   <h3>Spending your LP</h3>
@@ -199,15 +232,6 @@ ul.points li{margin:4px 0}
     <li><b>Check the volume.</b> A great ISK per LP means little if hardly anyone buys the item: it might take days or weeks to sell, and if other pilots are cashing in the same offer, the market can be flooded and the price drops as you sell. It’s common for the top offers by ISK per LP to show little or no buy volume, so an offer with a lower ISK per LP that trades in large numbers is often the better deal.</li>
     <li><b>Prices move.</b> These tools are a guide, so check the market in game before you spend a large amount of LP.</li>
     <li><b>Ask your corporation about an LP buyback.</b> Many faction warfare corporations buy their members’ LP for ISK at a set rate, a simple, steady way to cash in without hauling or trading.</li>
-  </ul>
-
-  <h2>The exceptions that catch people out</h2>
-  <ul class="points">
-    <li><b>Tech 3 ships need a bigger gate than their size suggests.</b> A Tech 3 destroyer can’t use a Small advanced complex, but fits into a Medium advanced one. A Tech 3 cruiser can’t use a Medium advanced complex, but fits into a Large advanced one. The one special case is an elite site built for Tech 3 destroyers, the Contested Field Research Facility.</li>
-    <li><b>Some ships count as pirate ships, even if they don’t look it.</b> Sisters of EVE ships (Astero, Stratios, Nestor), Society of Conscious Thought ships (Metamorphosis, Sunesis, Gnosis, Praxis), EDENCOM ships (Skybreaker, Stormbringer, Thunderchild) and Triglavian ships (Damavik, Vedmak, Drekavac, Leshak) are all treated as pirate ships, so they need an advanced or elite gate.</li>
-    <li><b>Assault frigates have their own site.</b> Assault frigate complexes let only assault frigates in, which makes them a good place for an even fight.</li>
-    <li><b>Some sites reward the right hull.</b> Elite sites give Tech 3 destroyers an extra 500 shield, armor and hull, and Moderate sites boost battlecruiser skill bonuses by 20% (Command Ship skills excepted), so those are the places to bring them.</li>
-    <li><b>Moderate advanced sites only appear during pirate insurgencies.</b> Normal faction warfare has the Moderate navy site; the advanced version spawns in insurgency systems from stage 2.</li>
   </ul>
 
   <h2 id="battlefields">Battlefields</h2>
@@ -241,7 +265,7 @@ ul.points li{margin:4px 0}
   </ul>
   <p class="legend">Battlefield rules have changed several times since they arrived in 2022, most recently with Cradle of War in 2026, which briefly cut the LP to 50,000 and added NPC freighters before both changes were reversed two weeks later. If something here doesn’t match what you see in game, trust the game.</p>
 
-  <h2>Pirate insurgencies</h2>
+  <h2 id="insurgencies">Pirate insurgencies</h2>
   <p>Want to fly for the pirates instead? Our <a href="pirate-guide.html">pirate faction warfare guide</a> covers joining the Guristas or the Angel Cartel, how insurgencies work, and fixing your standings to enlist.</p>
   <ul class="points">
     <li>While pirates are running an insurgency in a system, every complex there is an advanced one, so more kinds of ship can get in.</li>
@@ -278,11 +302,21 @@ ul.points li{margin:4px 0}
   </ul>
   <p>Many corps stage from a high-sec system on the edge of the warzone, which the enemy militia can’t enter without their navy coming after them. Ask about staging and logistics when you look for a corp; good ones will have answers ready.</p>
 
-  <h2>Flying in without joining a militia</h2>
+  <h2 id="neutral">Flying in without joining a militia</h2>
   <p>You don’t have to join a militia to take part, but entering a complex as a neutral marks you as a suspect. That means militia pilots can attack you without any security status penalty, while you still take the usual security status and standing hits if you attack first.</p>
 
-  <section class="sources">
-    <b>Sources.</b> Complex types, tiers, capture times and the special cases above are summarised from the <a href="https://www.patreon.com/EVEFrigates/posts/eve-online-2026-171374966" target="_blank" rel="noopener"><cite>EVE Faction Warfare Yearbook 2026</cite></a> by <a href="https://www.patreon.com/cw/EVEFrigates" target="_blank" rel="noopener">EVE Frigates</a>, with thanks to its authors. Victory point and loyalty point figures, and the notes on how LP is shared, come from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki’s faction warfare page</a>, available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-ShareAlike 4.0</a>; the wiki itself flags its LP figures as possibly out of date. Battlefield details come from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki</a> and CCP’s <a href="https://www.eveonline.com/news/view/patch-notes-version-20-10-2" target="_blank" rel="noopener">version 20.10 patch notes</a>, <a href="https://www.eveonline.com/news/view/factional-warfare-overhaul" target="_blank" rel="noopener">Factional Warfare Overhaul</a> and <a href="https://www.eveonline.com/news/view/feedback-and-iteration-factional-warfare" target="_blank" rel="noopener">Feedback and Iteration</a> articles, with the typical fight length from the Minmatar militia’s <a href="https://my.minmatar.org/guides/faction-warfare-plexing/" target="_blank" rel="noopener">plexing guide</a>. For spending LP, we recommend the <a href="https://www.fuzzwork.co.uk/lpstore/" target="_blank" rel="noopener">Fuzzwork LP Store</a> by Steve Ronuken and <a href="https://maraarin.github.io/EVE-Online-Loyalty-Point-Comparator/" target="_blank" rel="noopener">Eden’s Loyalty</a> by Arin Mara. Scout BSC-1, Field Research ELT-5 and Moderate NVY-3 figures come from CCP’s <a href="https://www.eveonline.com/news/view/cradle-of-war-expansion-notes" target="_blank" rel="noopener">Cradle of War expansion notes</a>. Figures were cross-checked against <a href="https://eve-fw.net/#Info" target="_blank" rel="noopener">eve-fw.net</a>’s plex table and CCP’s official patch notes, especially <a href="https://wiki.eveuniversity.org/UniWiki:Patch_Notes/Patch_Notes_-_Version_21.05" target="_blank" rel="noopener">version 21.05</a> (the current victory point values, mirrored on the wiki) and <a href="https://www.eveonline.com/news/view/patch-notes-version-24-01" target="_blank" rel="noopener">version 24.01</a> (the Small AF-1 and Moderate ADV-3 sites, the ELT-5 site and battlefield changes). Notes on open sites taking capital ships, what the number in a site’s name means for LP rewards, and the Elite and Moderate site bonuses come from our own pilots’ experience in game. The docking restrictions, corporation enlistment rules and border staging systems in “Before you enlist” come from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki</a>; the advice on alts, logistics and corps comes from our own pilots. The wording, layout and interactive picker are our own. Game rules can change with patches, so if something here doesn’t match what you see in game, trust the game, and <a href="https://discord.gg/DjvDtTMSy4" target="_blank" rel="noopener">let us know on our Discord</a>.
+  <section class="sources" id="sources">
+    <b>Sources</b>
+    <ul>
+      <li><b>Complex types, tiers, capture times and special cases:</b> the <a href="https://www.patreon.com/EVEFrigates/posts/eve-online-2026-171374966" target="_blank" rel="noopener"><cite>EVE Faction Warfare Yearbook 2026</cite></a> by <a href="https://www.patreon.com/cw/EVEFrigates" target="_blank" rel="noopener">EVE Frigates</a>, with thanks to its authors.</li>
+      <li><b>Victory points, LP and how LP is shared:</b> the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki’s faction warfare page</a>, available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-ShareAlike 4.0</a> (the wiki flags its LP figures as possibly out of date). Cross-checked against <a href="https://eve-fw.net/#Info" target="_blank" rel="noopener">eve-fw.net</a>’s plex table and CCP’s patch notes, especially <a href="https://wiki.eveuniversity.org/UniWiki:Patch_Notes/Patch_Notes_-_Version_21.05" target="_blank" rel="noopener">version 21.05</a> (the current victory point values, mirrored on the wiki) and <a href="https://www.eveonline.com/news/view/patch-notes-version-24-01" target="_blank" rel="noopener">version 24.01</a> (the Small AF-1 and Moderate ADV-3 sites, the ELT-5 site and battlefield changes).</li>
+      <li><b>Scout BSC-1, Field Research ELT-5 and Moderate NVY-3:</b> CCP’s <a href="https://www.eveonline.com/news/view/cradle-of-war-expansion-notes" target="_blank" rel="noopener">Cradle of War expansion notes</a>.</li>
+      <li><b>Battlefields:</b> the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki</a> and CCP’s <a href="https://www.eveonline.com/news/view/patch-notes-version-20-10-2" target="_blank" rel="noopener">version 20.10 patch notes</a>, <a href="https://www.eveonline.com/news/view/factional-warfare-overhaul" target="_blank" rel="noopener">Factional Warfare Overhaul</a> and <a href="https://www.eveonline.com/news/view/feedback-and-iteration-factional-warfare" target="_blank" rel="noopener">Feedback and Iteration</a> articles, with the typical fight length from the Minmatar militia’s <a href="https://my.minmatar.org/guides/faction-warfare-plexing/" target="_blank" rel="noopener">plexing guide</a>.</li>
+      <li><b>Spending LP:</b> we recommend the <a href="https://www.fuzzwork.co.uk/lpstore/" target="_blank" rel="noopener">Fuzzwork LP Store</a> by Steve Ronuken and <a href="https://maraarin.github.io/EVE-Online-Loyalty-Point-Comparator/" target="_blank" rel="noopener">Eden’s Loyalty</a> by Arin Mara.</li>
+      <li><b>Before you enlist:</b> docking restrictions, corporation enlistment rules and border staging systems from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener">EVE University Wiki</a>; the advice on alts, logistics and corps from our own pilots.</li>
+      <li><b>Our own pilots’ experience in game:</b> open sites taking capital ships, what the number in a site’s name means for LP rewards, and the Elite and Moderate site bonuses.</li>
+    </ul>
+    <p>The wording, layout and interactive picker are our own. Game rules can change with patches, so if something here doesn’t match what you see in game, trust the game, and <a href="https://discord.gg/DjvDtTMSy4" target="_blank" rel="noopener">let us know on our Discord</a>.</p>
   </section>
   <p class="ccp-notice">© 2014 CCP hf. All rights reserved. “EVE”, “EVE Online”, “CCP”, and all related logos and images are trademarks or registered trademarks of CCP hf. This is a fan-made site and isn’t affiliated with or endorsed by CCP.</p>
 </main>
@@ -291,7 +325,6 @@ ul.points li{margin:4px 0}
 (() => {
   const $ = id => document.getElementById(id);
   const SIZES = ["frigate", "destroyer", "cruiser", "battlecruiser", "battleship"];
-  const SIZE_NAME = { frigate: "frigate", destroyer: "destroyer", cruiser: "cruiser", battlecruiser: "battlecruiser", battleship: "battleship" };
   const TECH_NAME = { t1: "Tech 1", navy: "navy", pirate: "pirate", t2: "Tech 2", af: "assault frigate", t3: "Tech 3" };
   // Complex types, smallest to largest. maxSize: biggest hull allowed; tiers: which kinds may enter.
   const COMPLEXES = [
@@ -340,7 +373,7 @@ ul.points li{margin:4px 0}
     const r = REWARDS[id]; if (!r) return "";
     const parts = [];
     if (r.insurgency && !r.vp) return r.insurgency;
-    parts.push(r.vp != null ? `${typeof r.vp[0] === "number" ? fmtN(r.vp[0]) : r.vp[0]} VP` : "VP not published");
+    parts.push(r.vp != null ? `${fmtN(r.vp[0])} VP` : "VP not published");
     const cmd = range(r.lp.map(x => x[1])), front = range(r.lp.map(x => x[2]));
     if (r.frontOnly && front) parts.push(`${front} LP, frontline systems only`);
     else if (cmd || front) parts.push(cmd ? `${cmd} LP (frontline ${front})` : `${front} LP in frontline systems`);
@@ -362,10 +395,10 @@ ul.points li{margin:4px 0}
       if (c.id === "field") return size === "destroyer" ? [true, "The elite site built with Tech 3 destroyers in mind."] : [false, "Too small for a cruiser."];
       if (!c.tiers.includes("t3")) return [false, c.id.endsWith("-nvy") ? "Navy gates don’t let Tech 3 ships in." : "Only elite gates let Tech 3 ships into a site this size."];
       const need = size === "destroyer" ? "cruiser" : "battleship"; // the smallest complex a T3 hull fits into, by its max hull
-      if (sizeRank(c.maxSize) < sizeRank(need)) return [false, `Tech 3 ${SIZE_NAME[size]}s need a ${size === "destroyer" ? "Medium" : "Large"} advanced complex or bigger.`];
-      return [true, `Tech 3 ${SIZE_NAME[size]}s fit through advanced gates from ${size === "destroyer" ? "Medium" : "Large"} up.`];
+      if (sizeRank(c.maxSize) < sizeRank(need)) return [false, `Tech 3 ${size}s need a ${size === "destroyer" ? "Medium" : "Large"} advanced complex or bigger.`];
+      return [true, `Tech 3 ${size}s fit through advanced gates from ${size === "destroyer" ? "Medium" : "Large"} up.`];
     }
-    if (sizeRank(size) > sizeRank(c.maxSize)) return [false, `Too big: the gate takes ${SIZE_NAME[c.maxSize]}s and smaller.`];
+    if (sizeRank(size) > sizeRank(c.maxSize)) return [false, `Too big: the gate takes ${c.maxSize}s and smaller.`];
     if (!c.tiers.includes(tech)) {
       const t = c.id.endsWith("-bsc") ? "Basic gates only let Tech 1 ships in." : c.id.endsWith("-nvy") ? "Navy gates only let Tech 1 and navy ships in." : "Not allowed through this gate.";
       return [false, t];
@@ -391,13 +424,13 @@ ul.points li{margin:4px 0}
     $("techOpts").querySelectorAll("button").forEach(b => {
       b.setAttribute("aria-pressed", String(pick.tech === b.dataset.v));
       b.disabled = !!pick.size && !VALID[pick.size].includes(b.dataset.v);
-      b.title = b.disabled ? `There are no ${TECH_NAME[b.dataset.v]} ${SIZE_NAME[pick.size]}s` : "";
+      b.title = b.disabled ? `There are no ${TECH_NAME[b.dataset.v]} ${pick.size}s` : "";
     });
     const box = $("verdict");
     if (!pick.size || !pick.tech) { box.innerHTML = `<p class="hint">Choose a size and a kind to see which complexes your ship can enter.</p>`; return; }
     const results = COMPLEXES.map(c => [c, ...canEnter(pick.size, pick.tech, c)]);
     const yes = results.filter(r => r[1]);
-    const label = pick.tech === "af" ? "an assault frigate" : `a ${TECH_NAME[pick.tech]} ${SIZE_NAME[pick.size]}`.replace(/^a ([aeiou])/i, "an $1");
+    const label = pick.tech === "af" ? "an assault frigate" : `a ${TECH_NAME[pick.tech]} ${pick.size}`.replace(/^a ([aeiou])/i, "an $1");
     const sum = document.createElement("div"); sum.className = "sum";
     sum.textContent = `With ${label}, you can enter ${yes.length} of ${COMPLEXES.length} complex types.`;
     const ul = document.createElement("ul"); ul.className = "vlist";
@@ -428,7 +461,7 @@ ul.points li{margin:4px 0}
       VALID[size].forEach((tech, i) => {
         const tr = document.createElement("tr"); if (i === 0) tr.className = "groupstart";
         const th = document.createElement("th"); th.scope = "row";
-        th.textContent = tech === "af" ? "Assault frigate" : `${TECH_NAME[tech].charAt(0).toUpperCase() + TECH_NAME[tech].slice(1)} ${SIZE_NAME[size]}`;
+        th.textContent = tech === "af" ? "Assault frigate" : `${TECH_NAME[tech].charAt(0).toUpperCase() + TECH_NAME[tech].slice(1)} ${size}`;
         tr.append(th);
         COMPLEXES.forEach(c => {
           const [ok, why] = canEnter(size, tech, c);
@@ -506,7 +539,7 @@ ul.points li{margin:4px 0}
         if (c.group !== lastGroup && i === 0) { tr.className = "groupstart"; lastGroup = c.group; }
         let vpCell = "<td></td>";
         if (i === 0) {
-          if (r.vp) vpCell = `<td class="vp">${typeof r.vp[0] === "number" ? fmtN(r.vp[0]) : r.vp[0]}${srcTag(r.vp[1])}</td>`;
+          if (r.vp) vpCell = `<td class="vp">${fmtN(r.vp[0])}${srcTag(r.vp[1])}</td>`;
           else if (r.insurgency) vpCell = `<td class="na" title="Insurgency sites push corruption or suppression instead of victory points">1.5% corruption${srcTag("c")}</td>`;
           else vpCell = `<td class="na">–</td>`;
         }
