@@ -54,8 +54,6 @@ p{margin:0 0 12px;max-width:75ch}
 .vlist li{display:grid;grid-template-columns:1.6em 11em 1fr;gap:8px;align-items:start;padding:7px 10px;border-radius:4px}
 .vlist li.yes{background:var(--yes-bg)}
 .vlist li.no{background:var(--no-bg)}
-.vlist li.idle{background:var(--panel2)}
-.vlist li.idle .ic{color:var(--muted)}
 .vlist .ic{font-weight:700;text-align:center}
 .vlist li.yes .ic{color:var(--yes)} .vlist li.no .ic{color:var(--no)}
 .vlist .cn{font-weight:600;color:var(--ink)}
@@ -169,7 +167,7 @@ nav.toc li > a:hover{text-decoration:underline}
       </div>
       <p class="hint" id="techHint">Not sure? Navy ships usually have “Navy Issue”, “Fleet Issue” or a navy name in them. Ships from the Sisters of EVE, Society of Conscious Thought, EDENCOM and Triglavians count as pirate ships here.</p>
     </div>
-    <div class="verdict" id="verdict" aria-live="polite"></div>
+    <div class="verdict" id="verdict" aria-live="polite"><p class="hint">Choose a size and a kind to see which complexes your ship can enter.</p></div>
   </section>
 
   <h2 id="glance">All ships and complexes at a glance</h2>
@@ -412,18 +410,6 @@ nav.toc li > a:hover{text-decoration:underline}
   // A bonus can require a kind of ship, a size, or both (the Elite site's bonus is for Tech 3 destroyers).
   const bonusFor = (size, tech, c) => c.bonus && (!c.bonus.tech || c.bonus.tech === tech) && (!c.bonus.size || c.bonus.size === size) ? c.bonus.text : null;
 
-  // Who a complex's gate lets in, in plain words, for the picker before a ship is chosen.
-  const TIER_WHO = { bsc: "Tech 1 only", nvy: "Tech 1 and navy", adv: "Tech 1, navy, pirate and Tech 2", elt: "everything, Tech 3 included" };
-  function gateLine(c) {
-    if (c.open) return "No gate: any ship, up to titans.";
-    if (c.afOnly) return "Assault frigates only.";
-    const tier = c.id === "field" ? "elt" : c.id.split("-").pop();
-    // Advanced gates take Tech 3 destroyers from Medium up, and Tech 3 cruisers from Large up.
-    const t3 = tier === "adv" && c.tiers.includes("t3") ? (c.maxSize === "battleship" ? ", plus Tech 3 destroyers and cruisers" : ", plus Tech 3 destroyers") : "";
-    const hull = c.frigOnly ? "Frigates only" : `${c.maxSize.charAt(0).toUpperCase() + c.maxSize.slice(1)}s and smaller`;
-    return `${hull}; ${TIER_WHO[tier]}${t3}.`;
-  }
-
   // ---------- Picker ----------
   const pick = { size: null, tech: null };
   function setOpts(groupId, key) {
@@ -441,18 +427,7 @@ nav.toc li > a:hover{text-decoration:underline}
       b.title = b.disabled ? `There are no ${TECH_NAME[b.dataset.v]} ${pick.size}s` : "";
     });
     const box = $("verdict");
-    if (!pick.size || !pick.tech) {
-      // No ship yet: list every complex type with its gate, so the panel is useful before a pick.
-      const sum = document.createElement("div"); sum.className = "sum";
-      sum.textContent = `${COMPLEXES.length} complex types. Choose a size and a kind to see which ones your ship can enter.`;
-      const ul = document.createElement("ul"); ul.className = "vlist";
-      COMPLEXES.forEach(c => {
-        const li = document.createElement("li"); li.className = "idle";
-        li.innerHTML = `<span class="ic" aria-hidden="true">·</span><span class="cn">${c.name}</span><span class="why">${gateLine(c)} <span class="hint">(${c.mins} min capture, reward scales to ${c.pilots} pilot${c.pilots === "1" ? "" : "s"})</span><span class="rw">${rewardLine(c.id)}</span></span>`;
-        ul.append(li);
-      });
-      box.replaceChildren(sum, ul); return;
-    }
+    if (!pick.size || !pick.tech) { box.innerHTML = `<p class="hint">Choose a size and a kind to see which complexes your ship can enter.</p>`; return; }
     const results = COMPLEXES.map(c => [c, ...canEnter(pick.size, pick.tech, c)]);
     const yes = results.filter(r => r[1]);
     const label = pick.tech === "af" ? "an assault frigate" : `a ${TECH_NAME[pick.tech]} ${pick.size}`.replace(/^a ([aeiou])/i, "an $1");
@@ -467,7 +442,7 @@ nav.toc li > a:hover{text-decoration:underline}
     });
     box.replaceChildren(sum, ul);
   }
-  setOpts("sizeOpts", "size"); setOpts("techOpts", "tech"); renderPicker();
+  setOpts("sizeOpts", "size"); setOpts("techOpts", "tech");
 
   // ---------- Reference grid ----------
   function renderGrid() {
