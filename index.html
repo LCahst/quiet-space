@@ -1541,7 +1541,7 @@ footer .contact p{margin:0 0 10px}
       const b = document.createElement("b");
       b.textContent = loud ? (loud30 ? fmt(g.k30 * 24) : String(g.pvp)) : fmt(g.act / g.n);
       const small = document.createElement("small");
-      small.textContent = loud ? (loud30 ? "kills per day, 30-day avg" : "kills last hour") : "activity per system";
+      small.textContent = loud ? (loud30 ? "kills per day, 30-day avg (ESI)" : "kills last hour (ESI)") : "activity per system";
       stat.append(b, small);
       li.append(main, stat);
       return li;
@@ -3647,7 +3647,7 @@ footer .contact p{margin:0 0 10px}
       const head = el("h4", null, `Weekly pattern in ${sys ? sys.n : "this system"}`);
       const facts = el("dl");
       facts.append(kv("30-day average", `${v[0].toFixed(1)} jumps per hour`),
-        kv("Ship and pod kills", `${v[1].toFixed(2)} per hour`), kv("NPC kills", `${v[2].toFixed(1)} per hour`));
+        kv("Ship and pod kills (ESI)", `${v[1].toFixed(2)} per hour`), kv("NPC kills", `${v[2].toFixed(1)} per hour`));
       const note = el("p", "d-note", "Loading weekly pattern…");
       pop.append(head, facts, note);
       const reg = sys ? regionOf(sys) : undefined;
@@ -5566,6 +5566,20 @@ footer .contact p{margin:0 0 10px}
   $("routeDialog").addEventListener("click", e => { if (e.target === $("routeDialog")) $("routeDialog").close(); });
 
   // ---------- Kill breakdown (loud mode) ----------
+  // zKillboard kills per day over the last 30 days, from isk.json (all kills) or, with the PvP boxes ticked, from its
+  // kill-log split. Days are counted up to when the file was written, with today as part of a day, so the average
+  // isn't understated while today is still filling.
+  function zDays(days, updated) {
+    const u = new Date(updated), frac = (u.getUTCHours() * 60 + u.getUTCMinutes()) / 1440;
+    return Math.max(1 / 24, Math.min(30, (days || 1) - 1 + frac));
+  }
+  function zDaily(id) {
+    const isk = prebuilt.isk, mode = killMode(), sp = isk.split;
+    const w = mode !== "all" && sp && sp.windows && sp.windows["30"] && sp.windows["30"][mode];
+    if (w) { const e = w.systems[id]; return e ? e[1] / zDays(sp.days, isk.updated) : 0; }
+    const e = isk.windows["30"].systems[id];
+    return e ? e[1] / zDays(isk.days, isk.updated) : 0;
+  }
   // A pie of where kills happen, grouped by whose space it is, by region or by security level, with a
   // ranked list beside it that names every slice and gives its figure. Leaves out Jove space and
   // wormholes (the page's catalog has no wormhole systems). Uses only data the page has already loaded.
@@ -5574,7 +5588,8 @@ footer .contact p{margin:0 0 10px}
     { v: "z15", label: "Kills, last 15 minutes (zKillboard)", ok: () => !!recentSnap, get: id => recentKills(id, 15), z: true },
     { v: "z60", label: "Kills, last hour (zKillboard)", ok: () => !!recentSnap, get: id => recentKills(id, 60), z: true },
     { v: "g60", label: "Gate kills, last hour (within 100 km of a stargate)", ok: () => gateOn, get: id => recentKills(id, 60, true), z: true },
-    { v: "k30", label: "Kills per day, 30-day average", ok: () => !!prebuilt.activity, get: id => { const v = prebuilt.activity.systems[id]; return v ? v[1] * 24 : 0; }, dec: 1 },
+    { v: "k30", label: "Kills per day, 30-day average (ESI)", ok: () => !!prebuilt.activity, get: id => { const v = prebuilt.activity.systems[id]; return v ? v[1] * 24 : 0; }, dec: 1 },
+    { v: "z30", label: "Kills per day, 30-day average (zKillboard)", ok: () => !!(prebuilt.isk && prebuilt.isk.windows && prebuilt.isk.windows["30"]), get: id => zDaily(id), dec: 1, z: true },
     { v: "isk7", label: "ISK destroyed, 7 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "7"), isk: true },
     { v: "isk30", label: "ISK destroyed, 30 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "30"), isk: true },
     { v: "npc", label: "NPC kills, last hour (ratting)", ok: () => liveLoaded, get: id => { const k = kills[id]; return k ? k.npc : 0; } }
@@ -5682,6 +5697,11 @@ footer .contact p{margin:0 0 10px}
     const notes = [];
     if (m.v === "esi" || m.v === "npc") notes.push("ESI’s figures cover the most recently completed hour.");
     if (m.v === "g60") notes.push("A gate kill is one within 100 km of a stargate.");
+    if (m.v === "k30") notes.push("ESI counts every ship and pod destroyed, including deaths that never reach zKillboard (often to NPCs or CONCORD), so it runs about 2–5 times zKillboard’s counts, most of all in high sec.");
+    if (m.v === "z30") {
+      const sp = prebuilt.isk.split, d = killMode() !== "all" && sp ? sp.days : prebuilt.isk.days;
+      notes.push(`zKillboard has the kills someone shared with it.${d && d < 30 ? ` Averaged over the ${d} days collected so far.` : ""}`);
+    }
     if (m.z && killMode() === "pvp") notes.push("PvP kills only: a player, a player-owned structure or CONCORD was among the attackers.");
     if (m.z && killMode() === "ship") notes.push("PvP ship and pod kills only: a piloted ship or capsule lost to a player pilot or CONCORD. Structure and deployable losses, and kills made only by a structure, are left out.");
     if (!m.z && pvpOn && m.v !== "npc") notes.push("PvP kills only applies to zKillboard counts; this one includes deaths to NPCs too.");
