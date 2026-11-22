@@ -826,7 +826,7 @@ footer .contact p{margin:0 0 10px}
       <!-- Kill counts: its own group, so it doesn't read as a security option -->
       <fieldset class="control kill-counts" id="pvpGroup" hidden>
         <legend>Kill counts</legend>
-        <label class="checkline" title="Count only zKillboard kills where a player pilot, a player corporation’s structure or CONCORD was among the attackers. Leaves out deaths to rats and other NPCs. ESI’s hourly figures can’t be split this way."><input type="checkbox" id="pvpOnly"> PvP kills only (zKillboard counts)</label>
+        <label class="checkline" title="Count only zKillboard kills where a player pilot, a player corporation’s structure or CONCORD was among the attackers. Leaves out deaths to rats and other NPCs. Applies to zKillboard’s recent, 24-hour, 7-day and 30-day figures; ESI’s hourly figures can’t be split this way."><input type="checkbox" id="pvpOnly"> PvP kills only (zKillboard counts)</label>
         <label class="checkline k-indent" id="pvpShipsLabel" hidden title="Leave out structures: losses of citadels, other structures and deployables (nothing with a pilot), and kills made only by a player’s structure."><input type="checkbox" id="pvpShips"> Ships and pods only (leave out structures)</label>
       </fieldset>
     </div>
@@ -860,8 +860,8 @@ footer .contact p{margin:0 0 10px}
           <th scope="colgroup" colspan="4" class="grp" id="esiGroup" title="CCP’s official figures from ESI, which cover the most recently completed hour">Last hour</th>
           <th scope="colgroup" class="grp c-recent" id="liveGroup" title="Kills reported to zKillboard, updated about every minute and live while this page is open">Live</th>
           <th scope="col" rowspan="2" class="num two c-avg" title="Average gate jumps per hour over the last 30 days">30-day<br>avg</th>
-          <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 7 days">ISK<br>7d</th>
-          <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 30 days">ISK<br>30d</th>
+          <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 7 days (zKillboard; follows PvP kills only)">ISK<br>7d</th>
+          <th scope="col" rowspan="2" class="num two c-isk" title="ISK destroyed in the last 30 days (zKillboard; follows PvP kills only)">ISK<br>30d</th>
           <th scope="col" rowspan="2" class="num two c-size" title="Distance from the star to the farthest planet, stargate or station">Size<br>(AU)</th>
           <th scope="col" rowspan="2" class="c-adv" title="What each system matched in your advanced search">Matched</th>
           <th scope="col" rowspan="2">Links</th>
@@ -3716,7 +3716,14 @@ footer .contact p{margin:0 0 10px}
     if (v >= 1e6) return Math.round(v / 1e6) + "M";
     return Math.round(v / 1e3) + "K";
   }
-  const iskOf = (id, w) => { const e = prebuilt.isk && prebuilt.isk.windows[w] && prebuilt.isk.windows[w].systems[id]; return e ? e[0] : 0; };
+  // The 7- or 30-day window for the PvP tick boxes: all kills, PvP kills, or PvP ship and pod kills (from the kill log).
+  function iskWin(w) {
+    const d = prebuilt.isk; if (!d) return null;
+    const mode = killMode(), sp = d.split && d.split.windows && d.split.windows[w];
+    return mode !== "all" && sp && sp[mode] ? sp[mode] : d.windows[w];
+  }
+  const iskFiltered = () => !!(prebuilt.isk && prebuilt.isk.split && killMode() !== "all");
+  const iskOf = (id, w) => { const win = iskWin(w), e = win && win.systems[id]; return e ? e[0] : 0; };
   function iskList(win, typeNames) {
     const ol = document.createElement("ol");
     if (!win || !win.top || !win.top.length) { const li = el("li", "d-note", "No kills recorded yet."); ol.append(li); return ol; }
@@ -3766,12 +3773,15 @@ footer .contact p{margin:0 0 10px}
     const d = prebuilt.isk;
     if (prebuilt.iskSample) body.append(el("span", "isk-sample", "Preview: made-up numbers, not real kills"));
     const cols = el("div", "isk-cols");
-    const soFar = (label, need) => d.days && d.days < need ? `${label} (${d.days} so far)` : label;
-    const c7 = el("div"); c7.append(el("h3", null, soFar("Last 7 days", 7)), iskList(d.windows["7"], d.types));
+    const days = iskFiltered() ? d.split.days : d.days;
+    const soFar = (label, need) => days && days < need ? `${label} (${days} so far)` : label;
+    const c7 = el("div"); c7.append(el("h3", null, soFar("Last 7 days", 7)), iskList(iskWin("7"), d.types));
     const label30 = soFar("Last 30 days", 30);
-    const c30 = el("div"); c30.append(el("h3", null, label30), iskList(d.windows["30"], d.types));
+    const c30 = el("div"); c30.append(el("h3", null, label30), iskList(iskWin("30"), d.types));
     cols.append(c7, c30);
     body.append(cols);
+    const kind = killMode() === "ship" ? "PvP ship and pod kills only" : killMode() === "pvp" ? "PvP kills only" : "All kills, including deaths to NPCs";
+    body.append(el("p", "d-note", `${kind} (zKillboard; it may miss some kills or get them late).`));
   }
   // ---------- Go Loud! ----------
   let loud = false;
@@ -5590,8 +5600,8 @@ footer .contact p{margin:0 0 10px}
     { v: "g60", label: "Gate kills, last hour (within 100 km of a stargate)", ok: () => gateOn, get: id => recentKills(id, 60, true), z: true },
     { v: "k30", label: "Kills per day, 30-day average (ESI)", ok: () => !!prebuilt.activity, get: id => { const v = prebuilt.activity.systems[id]; return v ? v[1] * 24 : 0; }, dec: 1 },
     { v: "z30", label: "Kills per day, 30-day average (zKillboard)", ok: () => !!(prebuilt.isk && prebuilt.isk.windows && prebuilt.isk.windows["30"]), get: id => zDaily(id), dec: 1, z: true },
-    { v: "isk7", label: "ISK destroyed, 7 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "7"), isk: true },
-    { v: "isk30", label: "ISK destroyed, 30 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "30"), isk: true },
+    { v: "isk7", label: "ISK destroyed, 7 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "7"), isk: true, z: true },
+    { v: "isk30", label: "ISK destroyed, 30 days", ok: () => !!prebuilt.isk, get: id => iskOf(id, "30"), isk: true, z: true },
     { v: "npc", label: "NPC kills, last hour (ratting)", ok: () => liveLoaded, get: id => { const k = kills[id]; return k ? k.npc : 0; } }
   ];
   // Empire space keeps a fixed order (and fixed colours) so slices never swap colours between counts.
@@ -5965,6 +5975,7 @@ footer .contact p{margin:0 0 10px}
     $("pvpShipsLabel").hidden = !(pvpOn && recentSnap && recentSnap.pvpShipSlices);
     try { localStorage.setItem("quietspace.pvpOnly", pvpOn ? "1" : "0"); localStorage.setItem("quietspace.pvpShips", pvpShipsOn ? "1" : "0"); } catch (e) {}
     onFilterChange();
+    renderIskCard();
     if ($("statsDialog").open) drawStats();
   }
   $("pvpOnly").addEventListener("change", onPvpChange);
