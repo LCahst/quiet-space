@@ -108,14 +108,14 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
     <b>On this page</b>
     <ol>
       <li><a href="#factions">The two pirate factions</a></li>
-      <li><a href="#standing">The standing you need</a></li>
-      <li><a href="#enlist">How to enlist</a></li>
       <li><a href="#consequences">What enlisting means for you</a></li>
+      <li><a href="#standing">The standing you need</a></li>
+      <li><a href="#fix-standings">Fixing your standings</a></li>
+      <li><a href="#enlist">How to enlist</a></li>
       <li><a href="#awoxing">Friendly fire and awoxing</a></li>
       <li><a href="#insurgencies">How insurgencies work</a></li>
       <li><a href="#stages">Corruption and suppression</a></li>
       <li><a href="#zarzakh">Zarzakh, the pirate hub</a></li>
-      <li><a href="#fix-standings">Fixing your standings</a></li>
     </ol>
   </nav>
 
@@ -142,6 +142,17 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
     </section>
   </div>
 
+  <h2 id="consequences">What enlisting means for you</h2>
+  <div class="caveat danger"><b>Enlisting makes you a legal target for two whole militias.</b> Read this before you click Enlist Me.</div>
+  <ul class="points">
+    <li><b>You’re at war with two empires.</b> Guristas are at war with the Caldari and Gallente; Angels with the Amarr and Minmatar.</li>
+    <li><b>Their militias can shoot you anywhere in New Eden,</b> high-sec included, without CONCORD stepping in and without any hit to their security status. (The same goes for you shooting them.)</li>
+    <li><b>Their faction navies will hunt you in their high-sec space.</b> If you jump into a high-sec system owned by an empire you’re at war with, its navy ships will come after you and hit hard, so don’t linger. Systems caught up in an active insurgency are the exception: from corruption stage 2, navy and police ships stop spawning there.</li>
+    <li><b>At high corruption, the rules of engagement change.</b> In a system at the highest corruption stage, high-sec loses most of CONCORD’s protection and low-sec allows warp bubbles and bombs. See <a href="#stages">Corruption and suppression</a>.</li>
+    <li><b>Shopping gets harder.</b> The biggest danger is other players, not NPCs: as a pirate you’re fair game for <b>two</b> enemy militias instead of one, and their pilots know where the trade hubs are. Unless you use an alt, you’ll have to haul every ship and module you buy yourself, and the systems around trade hubs become some of the most dangerous places you can fly. Two of the four big hubs are also in high-sec your enemies’ navies patrol: Jita and Dodixie for the Guristas, Amarr and Rens for the Angels.</li>
+    <li><b>Have a plan before you enlist.</b> A trading and hauling alt who stays out of the militia, or a faction warfare corp that keeps ships on contract, turns supply runs from a gamble into a chore. Our <a href="fw-guide.html#before-you-enlist">faction warfare guide</a> covers this in more detail.</li>
+  </ul>
+
   <h2 id="standing">The standing you need</h2>
   <p>To enlist, your character needs an <b>unmodified standing of at least 0.0</b> with the pirate faction you want to join.</p>
   <div class="caveat"><b>This changed in September 2025.</b> When pirate faction warfare launched with the Havoc expansion in 2023, the minimum was -2.0. CCP raised it to 0.0 in version 23.01, so older guides that say -2.0 are out of date.</div>
@@ -151,10 +162,65 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
     <li><b>Joining a corporation that’s already enlisted</b> also needs you to be above -5.0 with its faction.</li>
   </ul>
 
+  <h2 id="fix-standings">Fixing your standings</h2>
+  <p>If your standing with the pirate faction is below 0.0 (common for anyone who has run missions against pirates), here are your options, roughly from easiest to hardest.</p>
+  <div class="options">
+    <section class="option">
+      <h3>Join a pirate faction warfare corporation <span class="tag easy">Easiest</span></h3>
+      <p>A corporation enlists on its members’ <i>average</i> standing, so a corporation of pilots in good standing can carry you if you’re only a little below zero, as long as you’re above -5.0. You also get experienced corpmates to fly with, which counts for a lot in faction warfare.</p>
+    </section>
+    <section class="option">
+      <h3>Train the right skills <span class="tag easy">Passive</span></h3>
+      <ul class="points">
+        <li><b>Social</b> raises your real standing gains from missions by 5% per level, so it helps you reach the 0.0 you need. Train it before running the arcs or missions below.</li>
+        <li><b>Connections</b> raises your <i>effective</i> standing with empire factions you’re already positive with. That helps you reach the 3.0 needed for the empire agents that start the pirate epic arcs.</li>
+        <li><b>Diplomacy</b> (for factions you’re negative with) and <b>Criminal Connections</b> (for pirate factions you’re positive with) also raise <i>effective</i> standing only: useful for agent access, but they won’t get you past the enlistment check.</li>
+      </ul>
+    </section>
+    <section class="option">
+      <h3>Run your pirate faction’s epic arc <span class="tag mid">Best payoff</span></h3>
+      <p>Each pirate faction has an epic arc, a mission chain whose final mission gives a <b>large boost to your base standing</b> with that pirate faction (shown in the arc as +30%). You can repeat an epic arc every 90 days.</p>
+      <p>The useful trick: <b>you can start them from empire agents</b>, so even if your pirate standing is poor, you can begin with good empire standing instead. You need at least <b>3.0 effective standing</b> with the agent, their corporation or their faction, and no worse than -2.0 with anyone involved.</p>
+      <div class="tablewrap">
+        <table class="agents">
+          <thead><tr><th scope="col">Arc</th><th scope="col">Uses standing with</th><th scope="col">Agent</th><th scope="col">Location</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="2"><a href="https://wiki.eveuniversity.org/Smash_and_Grab" target="_blank" rel="noopener">Smash and Grab</a> (Guristas)</td><td>Gallente Federation or Federal Intelligence Office</td><td>Arment Caute (Security)</td><td>Orvolle, Placid <span class="sec" style="background:#60dba3">0.7</span></td></tr>
+            <tr><td>Caldari State or Ytiri</td><td>Atma Aulato (Distribution)</td><td>Obe, The Forge <span class="sec" style="background:#ce440f;color:#fff">0.3</span></td></tr>
+            <tr><td rowspan="2"><a href="https://wiki.eveuniversity.org/Angel_Sound" target="_blank" rel="noopener">Angel Sound</a> (Angels)</td><td>Amarr Empire or Amarr Navy</td><td>Arajna Ashia (Security)</td><td>Sendaya, Derelik <span class="sec" style="background:#ce440f;color:#fff">0.3</span></td></tr>
+            <tr><td>Minmatar Republic or Republic Security Service</td><td>Aton Hordner (Security)</td><td>Egbinger, Molden Heath <span class="sec" style="background:#ce440f;color:#fff">0.3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="points">
+        <li><b>Only the Gallente agent, in Orvolle, is in high-sec.</b> The others are in low-sec, so travel carefully.</li>
+        <li><b>The arcs themselves run in pirate null-sec</b> (Venal for the Guristas, Curse for the Angels), where gate camps and warp bubbles are common. A fast ship that can’t be bubbled, like an interceptor, makes life much easier.</li>
+        <li><b>They cost some empire standing:</b> Smash and Grab lowers your Caldari standing (by 2.4% to 12%) and your Gallente standing slightly; Angel Sound lowers your Minmatar standing by about 2.4%.</li>
+      </ul>
+    </section>
+    <section class="option">
+      <h3>Run pirate COSMOS missions <span class="tag risk">One chance only</span></h3>
+      <p>COSMOS missions are short storyline chains that give faction and corporation standing. The Guristas’ are in the E-8CSQ constellation in Vale of the Silent, and the Angels’ are in the I-3ODK constellation in Feythabolis, both in null-sec.</p>
+      <div class="caveat danger"><b>You can only ever do each COSMOS mission once.</b> Failing one, or letting it expire, locks you out of that mission and the rest of its chain forever. And as soon as you talk to the agent, you get an offer that expires in seven days, so don’t speak to them until you’re ready to run it.</div>
+    </section>
+    <section class="option">
+      <h3>Boost your gains with a Glamourex booster <span class="tag mid">Event or store</span></h3>
+      <p>Glamourex boosters work like extra levels of the Social skill: the Potent version gives <b>+50%</b> to standing gains. Take one before an epic arc or COSMOS chain to get much more out of it. There are two ways to get them, and they behave differently:</p>
+      <ul class="points">
+        <li><b>From in-game events</b> such as Capsuleer Day: these are items that <b>stop working after a set date</b>, so check the description before you buy one on the market.</li>
+        <li><b>In packs from the official EVE Online store:</b> these don’t go stale. They wait in your <b>unclaimed items</b> until you redeem them, but they’re applied to your character <b>the moment you redeem them</b> and only last a limited time from then, so redeem one just before you start the arc or missions.</li>
+      </ul>
+    </section>
+    <section class="option">
+      <h3>Use a standings service <span class="tag paid">Costs ISK</span></h3>
+      <p>Some player corporations raise NPC standings for you, for a fee paid in ISK, the in-game currency. One long-running service advertises on the <a href="https://forums.eveonline.com/t/we-raise-npc-standings-lower-broker-relist-fees-access-epic-arcs-mission-r-d-agents-and-more/21688" target="_blank" rel="noopener">official EVE forums</a> and has a <a href="https://discord.com/invite/tBJmdmtvQq" target="_blank" rel="noopener">Discord server</a>. These are run by players, not CCP, so read how they work and check their reputation before you send any ISK.</p>
+    </section>
+  </div>
+
   <h2 id="enlist">How to enlist</h2>
   <ol class="steps">
-    <li><b>Open the Insurgencies window:</b> in the Neocom (the menu at the top left), go to <b>Activities → Insurgencies</b>.</li>
-    <li><b>Choose your faction:</b> click <b>Open Faction Selection</b>, switch to the <b>Pirates</b> tab, and pick the Guristas Pirates or the Angel Cartel.</li>
+    <li><b>Open Theaters of War:</b> in the Neocom (the menu at the top left), go to <b>Activities → Theaters of War</b>.</li>
+    <li><b>Choose your faction:</b> pick <b>Pirate</b> faction warfare, then the Guristas Pirates or the Angel Cartel.</li>
     <li><b>Get somewhere you can enlist:</b> if you aren’t docked at one, click <b>Initiate Enlistment</b>, which sets a route in your Neocom. You can enlist in two kinds of place:
       <ul>
         <li><b>The Fulcrum in <a href="#zarzakh">Zarzakh</a></b>, for either faction. Zarzakh’s gates connect to low-sec systems (Alsavoinon in Placid and <a href="#turnur">Turnur</a> in Metropolis), so it’s usually the safer trip, though Turnur has <a href="#turnur">risks of its own</a>. Until you’ve enlisted you’ll pay Zarzakh’s gate toll, and you can only leave through the gate you came in by for six hours.</li>
@@ -166,17 +232,6 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
   <ul class="points">
     <li><b>Leaving:</b> you can retire from the militia at any time while docked, but you’ll have to wait <b>24 hours</b> before you can enlist again.</li>
     <li><b>Joining as a corporation:</b> a corporation’s CEO or a director can enlist the whole corporation, and every member joins along with it.</li>
-  </ul>
-
-  <h2 id="consequences">What enlisting means for you</h2>
-  <div class="caveat danger"><b>Enlisting makes you a legal target for two whole militias.</b> Read this before you click Enlist Me.</div>
-  <ul class="points">
-    <li><b>You’re at war with two empires.</b> Guristas are at war with the Caldari and Gallente; Angels with the Amarr and Minmatar.</li>
-    <li><b>Their militias can shoot you anywhere in New Eden,</b> high-sec included, without CONCORD stepping in and without any hit to their security status. (The same goes for you shooting them.)</li>
-    <li><b>Their faction navies will hunt you in their high-sec space.</b> If you jump into a high-sec system owned by an empire you’re at war with, its navy ships will come after you and hit hard, so don’t linger. Systems caught up in an active insurgency are the exception: from corruption stage 2, navy and police ships stop spawning there.</li>
-    <li><b>At high corruption, the rules of engagement change.</b> In a system at the highest corruption stage, high-sec loses most of CONCORD’s protection and low-sec allows warp bubbles and bombs. See <a href="#stages">Corruption and suppression</a>.</li>
-    <li><b>Shopping gets harder.</b> The biggest danger is other players, not NPCs: as a pirate you’re fair game for <b>two</b> enemy militias instead of one, and their pilots know where the trade hubs are. Unless you use an alt, you’ll have to haul every ship and module you buy yourself, and the systems around trade hubs become some of the most dangerous places you can fly. Two of the four big hubs are also in high-sec your enemies’ navies patrol: Jita and Dodixie for the Guristas, Amarr and Rens for the Angels.</li>
-    <li><b>Have a plan before you enlist.</b> A trading and hauling alt who stays out of the militia, or a faction warfare corp that keeps ships on contract, turns supply runs from a gamble into a chore. Our <a href="fw-guide.html#before-you-enlist">faction warfare guide</a> covers this in more detail.</li>
   </ul>
 
   <h2 id="awoxing">Friendly fire and awoxing</h2>
@@ -321,61 +376,6 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
     <li><b>Deathless NPC fleets</b> (“Zarzakh” and “Outer Zarzakh”) patrol the gates and stations, here and in the neighbouring systems. They attack anyone not aligned with the pirates, and anyone with a retribution timer.</li>
     <li><b>Empire militia pilots often camp the system</b> despite all that, so it isn’t the safe haven it was meant to be. Watch local before you undock.</li>
   </ul>
-
-  <h2 id="fix-standings">Fixing your standings</h2>
-  <p>If your standing with the pirate faction is below 0.0 (common for anyone who has run missions against pirates), here are your options, roughly from easiest to hardest.</p>
-  <div class="options">
-    <section class="option">
-      <h3>Join a pirate faction warfare corporation <span class="tag easy">Easiest</span></h3>
-      <p>A corporation enlists on its members’ <i>average</i> standing, so a corporation of pilots in good standing can carry you if you’re only a little below zero, as long as you’re above -5.0. You also get experienced corpmates to fly with, which counts for a lot in faction warfare.</p>
-    </section>
-    <section class="option">
-      <h3>Train the right skills <span class="tag easy">Passive</span></h3>
-      <ul class="points">
-        <li><b>Social</b> raises your real standing gains from missions by 5% per level, so it helps you reach the 0.0 you need. Train it before running the arcs or missions below.</li>
-        <li><b>Connections</b> raises your <i>effective</i> standing with empire factions you’re already positive with. That helps you reach the 3.0 needed for the empire agents that start the pirate epic arcs.</li>
-        <li><b>Diplomacy</b> (for factions you’re negative with) and <b>Criminal Connections</b> (for pirate factions you’re positive with) also raise <i>effective</i> standing only: useful for agent access, but they won’t get you past the enlistment check.</li>
-      </ul>
-    </section>
-    <section class="option">
-      <h3>Run your pirate faction’s epic arc <span class="tag mid">Best payoff</span></h3>
-      <p>Each pirate faction has an epic arc, a mission chain whose final mission gives a <b>large boost to your base standing</b> with that pirate faction (shown in the arc as +30%). You can repeat an epic arc every 90 days.</p>
-      <p>The useful trick: <b>you can start them from empire agents</b>, so even if your pirate standing is poor, you can begin with good empire standing instead. You need at least <b>3.0 effective standing</b> with the agent, their corporation or their faction, and no worse than -2.0 with anyone involved.</p>
-      <div class="tablewrap">
-        <table class="agents">
-          <thead><tr><th scope="col">Arc</th><th scope="col">Uses standing with</th><th scope="col">Agent</th><th scope="col">Location</th></tr></thead>
-          <tbody>
-            <tr><td rowspan="2"><a href="https://wiki.eveuniversity.org/Smash_and_Grab" target="_blank" rel="noopener">Smash and Grab</a> (Guristas)</td><td>Gallente Federation or Federal Intelligence Office</td><td>Arment Caute (Security)</td><td>Orvolle, Placid <span class="sec" style="background:#60dba3">0.7</span></td></tr>
-            <tr><td>Caldari State or Ytiri</td><td>Atma Aulato (Distribution)</td><td>Obe, The Forge <span class="sec" style="background:#ce440f;color:#fff">0.3</span></td></tr>
-            <tr><td rowspan="2"><a href="https://wiki.eveuniversity.org/Angel_Sound" target="_blank" rel="noopener">Angel Sound</a> (Angels)</td><td>Amarr Empire or Amarr Navy</td><td>Arajna Ashia (Security)</td><td>Sendaya, Derelik <span class="sec" style="background:#ce440f;color:#fff">0.3</span></td></tr>
-            <tr><td>Minmatar Republic or Republic Security Service</td><td>Aton Hordner (Security)</td><td>Egbinger, Molden Heath <span class="sec" style="background:#ce440f;color:#fff">0.3</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <ul class="points">
-        <li><b>Only the Gallente agent, in Orvolle, is in high-sec.</b> The others are in low-sec, so travel carefully.</li>
-        <li><b>The arcs themselves run in pirate null-sec</b> (Venal for the Guristas, Curse for the Angels), where gate camps and warp bubbles are common. A fast ship that can’t be bubbled, like an interceptor, makes life much easier.</li>
-        <li><b>They cost some empire standing:</b> Smash and Grab lowers your Caldari standing (by 2.4% to 12%) and your Gallente standing slightly; Angel Sound lowers your Minmatar standing by about 2.4%.</li>
-      </ul>
-    </section>
-    <section class="option">
-      <h3>Run pirate COSMOS missions <span class="tag risk">One chance only</span></h3>
-      <p>COSMOS missions are short storyline chains that give faction and corporation standing. The Guristas’ are in the E-8CSQ constellation in Vale of the Silent, and the Angels’ are in the I-3ODK constellation in Feythabolis, both in null-sec.</p>
-      <div class="caveat danger"><b>You can only ever do each COSMOS mission once.</b> Failing one, or letting it expire, locks you out of that mission and the rest of its chain forever. And as soon as you talk to the agent, you get an offer that expires in seven days, so don’t speak to them until you’re ready to run it.</div>
-    </section>
-    <section class="option">
-      <h3>Boost your gains with a Glamourex booster <span class="tag mid">Event or store</span></h3>
-      <p>Glamourex boosters work like extra levels of the Social skill: the Potent version gives <b>+50%</b> to standing gains. Take one before an epic arc or COSMOS chain to get much more out of it. There are two ways to get them, and they behave differently:</p>
-      <ul class="points">
-        <li><b>From in-game events</b> such as Capsuleer Day: these are items that <b>stop working after a set date</b>, so check the description before you buy one on the market.</li>
-        <li><b>In packs from the official EVE Online store:</b> these don’t go stale. They wait in your <b>unclaimed items</b> until you redeem them, but they’re applied to your character <b>the moment you redeem them</b> and only last a limited time from then, so redeem one just before you start the arc or missions.</li>
-      </ul>
-    </section>
-    <section class="option">
-      <h3>Use a standings service <span class="tag paid">Costs ISK</span></h3>
-      <p>Some player corporations raise NPC standings for you, for a fee paid in ISK, the in-game currency. One long-running service advertises on the <a href="https://forums.eveonline.com/t/we-raise-npc-standings-lower-broker-relist-fees-access-epic-arcs-mission-r-d-agents-and-more/21688" target="_blank" rel="noopener">official EVE forums</a> and has a <a href="https://discord.com/invite/tBJmdmtvQq" target="_blank" rel="noopener">Discord server</a>. These are run by players, not CCP, so read how they work and check their reputation before you send any ISK.</p>
-    </section>
-  </div>
 
   <section class="sources">
     <p><b>Sources and further reading.</b> Written by LCahst for Quiet Space. Details were checked against the EVE University Wiki’s pages on <a href="https://wiki.eveuniversity.org/Insurgency" target="_blank" rel="noopener">insurgencies</a>, <a href="https://wiki.eveuniversity.org/Corruption_and_Suppression" target="_blank" rel="noopener">corruption and suppression</a>, the <a href="https://wiki.eveuniversity.org/Forward_Operating_Base" target="_blank" rel="noopener">Forward Operating Base</a>, the <a href="https://wiki.eveuniversity.org/Ambition_modifier" target="_blank" rel="noopener">ambition modifier</a>, <a href="https://wiki.eveuniversity.org/Zarzakh" target="_blank" rel="noopener">Zarzakh</a>, the <a href="https://wiki.eveuniversity.org/Smash_and_Grab" target="_blank" rel="noopener">Smash and Grab</a> and <a href="https://wiki.eveuniversity.org/Angel_Sound" target="_blank" rel="noopener">Angel Sound</a> epic arcs, <a href="https://wiki.eveuniversity.org/COSMOS" target="_blank" rel="noopener">COSMOS</a> and <a href="https://wiki.eveuniversity.org/Social" target="_blank" rel="noopener">social skills</a>, available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-ShareAlike 4.0</a>, and against CCP’s <a href="https://www.eveonline.com/news/view/havoc-expansion-notes" target="_blank" rel="noopener">Havoc expansion notes</a>. Turnur’s wormhole connections are mapped by <a href="https://eve-scout.com/#/" target="_blank" rel="noopener">EVE-Scout</a>. Zarzakh’s story comes from CCP’s <a href="https://www.eveonline.com/news/view/zarzakh-and-the-deathless" target="_blank" rel="noopener">Zarzakh and the Deathless</a> and the Deathless Circle lore, as covered by <a href="https://nosygamer.blogspot.com/2023/09/the-deathless-circle-eve-onlines-newest.html" target="_blank" rel="noopener">The Nosy Gamer</a>. The 0.0 standing requirement comes from CCP’s version 23.01 patch notes (September 2025), as recorded on the wiki. The -5.0 corporation rules and friendly-fire penalties come from CCP’s <a href="https://www.eveonline.com/news/view/standings-and-awoxing-update" target="_blank" rel="noopener">Standings &amp; Awoxing Update</a> (March 2026) and <a href="https://www.eveonline.com/news/view/cradle-of-war-expansion-notes" target="_blank" rel="noopener">Cradle of War expansion notes</a> (June 2026). Insurgency rules change from time to time, so if something here doesn’t match what you see in game, trust the game, and <a href="https://discord.gg/DjvDtTMSy4" target="_blank" rel="noopener">let us know on our Discord</a>.</p>

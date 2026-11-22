@@ -110,11 +110,14 @@ ul.points li{margin:4px 0}
 nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 18px 14px;margin:18px 0 22px;font-family:var(--cond)}
 nav.toc > b{display:block;font-family:var(--sans);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--line)}
 nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc;display:grid;gap:6px 32px}
-@media (min-width:640px){nav.toc ol{grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,auto);grid-auto-flow:column}}
+@media (min-width:640px){nav.toc ol{grid-template-columns:1fr 1fr;grid-template-rows:repeat(7,auto);grid-auto-flow:column}}
 nav.toc li{counter-increment:toc;display:grid;grid-template-columns:1.6em 1fr;align-items:baseline;line-height:1.4}
 nav.toc li::before{content:counter(toc);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;padding-right:.6em}
 nav.toc li > a{text-decoration:none}
 nav.toc li > a:hover{text-decoration:underline}
+ol.steps{margin:0 0 12px;padding-left:1.3em;max-width:78ch}
+ol.steps li{margin:5px 0}
+ol.steps > li{padding-left:4px}
 .danger{background:rgba(217,83,79,.08);border-color:rgba(217,83,79,.45);color:#f0c4c2}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;margin:8px 0 12px}
 .options{display:grid;gap:12px;margin:10px 0}
@@ -156,6 +159,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:520px;font-family:var
       <li><a href="#before-you-enlist">Before you enlist</a></li>
       <li><a href="#standing">The standing you need</a></li>
       <li><a href="#fix-standings">Fixing your standings</a></li>
+      <li><a href="#enlist">How to enlist</a></li>
       <li><a href="#awoxing">Friendly fire and awoxing</a></li>
       <li><a href="#names">Reading complex names</a></li>
       <li><a href="#picker-h">Which complexes can my ship enter?</a></li>
@@ -273,6 +277,18 @@ table.agents{border-collapse:collapse;width:100%;min-width:520px;font-family:var
     </section>
   </div>
   <p><b>Once you’re in, faction warfare keeps your standing up.</b> Military Campaign objectives give standing with your empire, with no losses elsewhere, and each promotion in your militia gives a one-off standing bonus.</p>
+
+  <h2 id="enlist">How to enlist</h2>
+  <ol class="steps">
+    <li><b>Open Theaters of War:</b> in the Neocom (the menu at the top left), go to <b>Activities → Theaters of War</b>.</li>
+    <li><b>Choose your side:</b> pick <b>Empire</b> faction warfare, then the empire you want to fight for. (The Pirate option is covered in our <a href="pirate-guide.html#enlist">pirate guide</a>.)</li>
+    <li><b>Enlist while docked at a station owned by that empire.</b> Khanid Kingdom and Ammatar Mandate stations don’t count as Amarr.</li>
+  </ol>
+  <ul class="points">
+    <li><b>If you’re in an NPC corporation,</b> enlisting moves you into your empire’s militia corporation: the 24th Imperial Crusade (Amarr), State Protectorate (Caldari), Federal Defense Union (Gallente) or Tribal Liberation Force (Minmatar).</li>
+    <li><b>Joining as a corporation:</b> a corporation’s CEO or a director can enlist the whole corporation, and it takes effect after the next downtime. Every member joins along with it, alts included.</li>
+    <li><b>Leaving:</b> you can retire from the militia at any time while docked, but you’ll have to wait <b>24 hours</b> before you can enlist again.</li>
+  </ul>
 
   <h2 id="awoxing">Friendly fire and awoxing</h2>
   <p>“Awoxing” means attacking pilots on your own side. In faction warfare, everyone in your militia counts as your side, even pilots in other corporations, and the game punishes friendly fire through your standing with your empire.</p>
