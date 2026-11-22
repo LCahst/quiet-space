@@ -131,24 +131,75 @@ nav.toc li > a:hover{text-decoration:underline}
 <main>
   <div class="credit">The complex rules on this page are summarised in our own words from the <a href="https://www.patreon.com/EVEFrigates/posts/eve-online-2026-171374966" target="_blank" rel="noopener"><b><cite>EVE Faction Warfare Yearbook 2026</cite></b></a> by <a href="https://www.patreon.com/cw/EVEFrigates" target="_blank" rel="noopener">EVE Frigates</a>. Victory point and loyalty point figures come from the <a href="https://wiki.eveuniversity.org/Faction_warfare" target="_blank" rel="noopener"><b>EVE University Wiki</b></a>, cross-checked against <a href="https://eve-fw.net/#Info" target="_blank" rel="noopener">eve-fw.net</a> and CCP’s patch notes. Thanks to all of them; the Yearbook and the wiki go much deeper and are well worth reading. <a href="#sources">Full list of sources</a>.</div>
 
-  <h1>Which complexes can my ship enter?</h1>
-  <p class="lead">Faction warfare is fought over complexes: combat sites you capture by staying inside them. Most complexes have an entry gate that only lets certain ships through, so the ship you bring decides where you can fight. Pick your ship below to see where it fits.</p>
+  <h1>Getting started in faction warfare</h1>
+  <p class="lead">Faction warfare is fought over complexes: combat sites you capture by staying inside them, which push the system toward your side and pay you loyalty points. This guide walks through it in the order you’ll meet it: what enlisting means for you, finding and reading complexes, which ships fit where, and what you earn.</p>
 
   <nav class="toc" aria-label="On this page">
     <b>On this page</b>
     <ol>
-      <li><a href="#picker">Pick your ship</a></li>
-      <li><a href="#glance">All ships and complexes at a glance</a></li>
+      <li><a href="#before-you-enlist">Before you enlist</a></li>
       <li><a href="#names">Reading complex names</a></li>
+      <li><a href="#picker-h">Which complexes can my ship enter?</a></li>
+      <li><a href="#glance">All ships and complexes at a glance</a></li>
       <li><a href="#exceptions">Exceptions that catch people out</a></li>
       <li><a href="#rewards-h">Rewards: victory points and LP</a></li>
       <li><a href="#battlefields">Battlefields</a></li>
+      <li><a href="#spend-lp">Spending your LP</a></li>
       <li><a href="#insurgencies">Pirate insurgencies</a></li>
-      <li><a href="#before-you-enlist">Before you enlist</a></li>
-      <li><a href="#neutral">Flying in without joining a militia</a></li>
     </ol>
   </nav>
 
+  <h2 id="before-you-enlist">Before you enlist: staying alive and supplied</h2>
+  <div class="caveat"><b>Joining a militia puts you at war everywhere, not just in the warzone.</b> Enemy militia pilots can attack you anywhere in New Eden, high-sec included, without CONCORD stepping in. Pirate militias are at war with two empires at once, so they feel this twice as much.</div>
+  <p>Fighting is the easy part to plan for. What catches new pilots out is everything around it: getting ships, modules and ammo to where the fighting is, and getting home again.</p>
+
+  <h3>Why logistics get harder</h3>
+  <ul class="points">
+    <li><b>The whole route is dangerous.</b> Most of what you buy comes from a high-sec trade hub, and enemy militia can catch you on any jump between the hub and your base, not only once you reach low-sec. High-sec is where many new pilots feel safest, and it’s often where they get caught.</li>
+    <li><b>Some hubs are off limits.</b> If you’re at war with the empire that owns a trade hub, its navy will attack you there. Pick a hub you can reach safely before you enlist.</li>
+    <li><b>Ships can get stranded.</b> In enemy-held systems behind the frontline (their Command Operations and Rearguard systems), you can only dock or undock in a capsule, not in a ship. Anything you left there stays there until you move it another way.</li>
+  </ul>
+
+  <h3>Why alts help</h3>
+  <ul class="points">
+    <li><b>A dedicated faction warfare alt</b> keeps your main free to use high-sec and every trade hub as normal. This is one of the most popular set-ups, and it matters even more for pirate militias.</li>
+    <li><b>If you enlist your main, a support alt</b> that stays out of the militia can buy at the trade hub, haul to your staging system and contract items to you, with no war targets on it. It can also take contracts for ships stranded in enemy-held systems.</li>
+    <li><b>Keep the alt in a different corp.</b> When a corporation enlists, every character in it is enlisted too, alts included.</li>
+  </ul>
+
+  <h3>Why a faction warfare corp helps</h3>
+  <p>Whether you fly a main or an alt, joining a faction warfare corp is the single best thing you can do to stay in the fight. It helps in almost every part of faction warfare:</p>
+  <ul class="points">
+    <li><b>Supplies:</b> most corps keep fitted ships on corp contracts in their staging system, so you can replace a loss without a trip to the trade hub.</li>
+    <li><b>Ship replacement (SRP):</b> many corps pay back some or all of the ships you lose on corp fleets.</li>
+    <li><b>Intel:</b> shared intel channels and Discord tell you where the enemy is before you undock.</li>
+    <li><b>Fleets, leadership and training:</b> experienced pilots who will show you fits, tactics and when to run.</li>
+    <li><b>People to fly with.</b> Friends make losses easier to shrug off and wins more fun, and a group survives far better than a pilot alone.</li>
+  </ul>
+  <p>Many corps stage from a high-sec system on the edge of the warzone, which the enemy militia can’t enter without their navy coming after them. Ask about staging and logistics when you look for a corp; good ones will have answers ready.</p>
+
+  <h2 id="names">Reading complex names on the probe scanner</h2>
+  <p>Complexes show up as combat sites in your probe scanner, and their names tell you everything you need before you warp. Take this one:</p>
+  <div class="scan" aria-label="Example: Gallente Small ADV-1">
+    <div class="part"><b>Gallente</b><span>whose side the complex belongs to</span></div>
+    <div class="part"><b>Small</b><span>the size, which sets the biggest hull allowed</span></div>
+    <div class="part"><b>ADV</b><span>the tier, which sets which kinds of ship are allowed</span></div>
+    <div class="part"><b>-1</b><span>how many pilots the reward scales to</span></div>
+  </div>
+  <p>That last number matters for your wallet. The loyalty point (LP) reward for capturing a site is shared among the pilots in it, and it scales up to that many pilots. Bring more than the number shown and each pilot’s LP payout starts to shrink. A “-1” site is built for one pilot; a “-4” site can reward four without anyone losing out.</p>
+  <p>The first time anyone warps to a complex, it appears on everyone’s overview in that system, so you can warp straight to it after that. You can also spot ships sitting in an active complex with a narrow, short-range directional scan (combat recon ships are the exception: they don’t show up this way).</p>
+
+  <h3>The four tiers, from strictest to most open</h3>
+  <div class="tiers">
+    <div class="tier" style="border-top-color:#8a9bb3"><b>Basic (BSC)</b><br>Tech 1 ships only.</div>
+    <div class="tier" style="border-top-color:#4f8fd6"><b>Navy (NVY)</b><br>Tech 1 and navy ships.</div>
+    <div class="tier" style="border-top-color:#d6a24f"><b>Advanced (ADV)</b><br>Tech 1, navy, pirate and Tech 2 ships.</div>
+    <div class="tier" style="border-top-color:#c95b5b"><b>Elite (ELT)</b><br>Everything, Tech 3 included.</div>
+  </div>
+  <p>Open complexes sit outside this system entirely: there’s no gate at all, so any ship can fly in, from a frigate all the way up to a titan.</p>
+
+  <h2 id="picker-h">Which complexes can my ship enter?</h2>
+  <p>Most complexes have an entry gate that only lets certain ships through, so the ship you bring decides where you can fight. Pick your ship to see where it fits.</p>
   <section class="card picker" id="picker" aria-label="Complex eligibility picker">
     <div class="choice">
       <h3>1. Ship size</h3>
@@ -178,26 +229,6 @@ nav.toc li > a:hover{text-decoration:underline}
   <div class="gridwrap"><table class="grid" id="grid"></table></div>
   <p class="legend">✓ = can enter, ★ = can enter and gets a site bonus. BSC = basic, NVY = navy, ADV = advanced, ELT = elite.</p>
 
-  <h2 id="names">Reading complex names on the probe scanner</h2>
-  <p>Complexes show up as combat sites in your probe scanner, and their names tell you everything you need before you warp. Take this one:</p>
-  <div class="scan" aria-label="Example: Gallente Small ADV-1">
-    <div class="part"><b>Gallente</b><span>whose side the complex belongs to</span></div>
-    <div class="part"><b>Small</b><span>the size, which sets the biggest hull allowed</span></div>
-    <div class="part"><b>ADV</b><span>the tier, which sets which kinds of ship are allowed</span></div>
-    <div class="part"><b>-1</b><span>how many pilots the reward scales to</span></div>
-  </div>
-  <p>That last number matters for your wallet. The loyalty point (LP) reward for capturing a site is shared among the pilots in it, and it scales up to that many pilots. Bring more than the number shown and each pilot’s LP payout starts to shrink. A “-1” site is built for one pilot; a “-4” site can reward four without anyone losing out.</p>
-  <p>The first time anyone warps to a complex, it appears on everyone’s overview in that system, so you can warp straight to it after that. You can also spot ships sitting in an active complex with a narrow, short-range directional scan (combat recon ships are the exception: they don’t show up this way).</p>
-
-  <h3>The four tiers, from strictest to most open</h3>
-  <div class="tiers">
-    <div class="tier" style="border-top-color:#8a9bb3"><b>Basic (BSC)</b><br>Tech 1 ships only.</div>
-    <div class="tier" style="border-top-color:#4f8fd6"><b>Navy (NVY)</b><br>Tech 1 and navy ships.</div>
-    <div class="tier" style="border-top-color:#d6a24f"><b>Advanced (ADV)</b><br>Tech 1, navy, pirate and Tech 2 ships.</div>
-    <div class="tier" style="border-top-color:#c95b5b"><b>Elite (ELT)</b><br>Everything, Tech 3 included.</div>
-  </div>
-  <p>Open complexes sit outside this system entirely: there’s no gate at all, so any ship can fly in, from a frigate all the way up to a titan.</p>
-
   <h2 id="exceptions">The exceptions that catch people out</h2>
   <ul class="points">
     <li><b>Tech 3 ships need a bigger gate than their size suggests.</b> A Tech 3 destroyer can’t use a Small advanced complex, but fits into a Medium advanced one. A Tech 3 cruiser can’t use a Medium advanced complex, but fits into a Large advanced one. The one special case is an elite site built for Tech 3 destroyers, the Contested Field Research Facility.</li>
@@ -221,20 +252,6 @@ nav.toc li > a:hover{text-decoration:underline}
     <li><b>Defending pays only when it’s needed.</b> Capturing a site in your own faction’s system pays the full reward while that system is contested or vulnerable, and nothing once it’s stable.</li>
     <li><b>Three sites only spawn in frontline systems:</b> Scout BSC-1, Field Research ELT-5 and Moderate NVY-3, so they always pay the frontline rate. Scout BSC-1 is a solo Tech 1 frigate site whose NPCs spawn twice as often and are more likely to carry warp disruptors; Field Research applies three random effects (from a pool of 20) to everyone inside.</li>
     <li><b>Battlefields are the big ones:</b> 150,000 LP for the winning side. <a href="#battlefields">How battlefields work</a>.</li>
-  </ul>
-
-  <h3>Spending your LP</h3>
-  <p>You spend LP in your militia’s loyalty point store, where most offers also cost some ISK and a few need other items too. You can fly what you buy, or sell it for ISK, and how much ISK each LP turns into varies hugely from offer to offer. Two free tools compare every offer for you:</p>
-  <ul class="points">
-    <li><a href="https://www.fuzzwork.co.uk/lpstore/" target="_blank" rel="noopener"><b>Fuzzwork LP Store</b></a>: pick a corporation to see each offer’s ISK per LP, priced as a 5% buy at Jita, with Jita trading volume beside it. It can also search for which stores sell a given item.</li>
-    <li><a href="https://maraarin.github.io/EVE-Online-Loyalty-Point-Comparator/" target="_blank" rel="noopener"><b>Eden’s Loyalty</b></a>, the LP comparator by Arin Mara: one sortable table of every LP store offer in the game, with the cost of any required items, the 5% buy price, the 5% buy volume and the ISK per LP, priced in The Forge.</li>
-  </ul>
-  <p><b>Before you buy something to resell:</b></p>
-  <ul class="points">
-    <li><b>Go by the 5% buy price, not the sell price.</b> Sell orders show what other sellers hope to get. The 5% buy price, the average of the highest 5% of buy orders, is much closer to what you’ll actually get if you sell straight away, and one stray order can’t distort it.</li>
-    <li><b>Check the volume.</b> A great ISK per LP means little if hardly anyone buys the item: it might take days or weeks to sell, and if other pilots are cashing in the same offer, the market can be flooded and the price drops as you sell. It’s common for the top offers by ISK per LP to show little or no buy volume, so an offer with a lower ISK per LP that trades in large numbers is often the better deal.</li>
-    <li><b>Prices move.</b> These tools are a guide, so check the market in game before you spend a large amount of LP.</li>
-    <li><b>Ask your corporation about an LP buyback.</b> Many faction warfare corporations buy their members’ LP for ISK at a set rate, a simple, steady way to cash in without hauling or trading.</li>
   </ul>
 
   <h2 id="battlefields">Battlefields</h2>
@@ -268,6 +285,20 @@ nav.toc li > a:hover{text-decoration:underline}
   </ul>
   <p class="legend">Battlefield rules have changed several times since they arrived in 2022, most recently with Cradle of War in 2026, which briefly cut the LP to 50,000 and added NPC freighters before both changes were reversed two weeks later. If something here doesn’t match what you see in game, trust the game.</p>
 
+  <h2 id="spend-lp">Spending your LP</h2>
+  <p>You spend LP in your militia’s loyalty point store, where most offers also cost some ISK and a few need other items too. You can fly what you buy, or sell it for ISK, and how much ISK each LP turns into varies hugely from offer to offer. Two free tools compare every offer for you:</p>
+  <ul class="points">
+    <li><a href="https://www.fuzzwork.co.uk/lpstore/" target="_blank" rel="noopener"><b>Fuzzwork LP Store</b></a>: pick a corporation to see each offer’s ISK per LP, priced as a 5% buy at Jita, with Jita trading volume beside it. It can also search for which stores sell a given item.</li>
+    <li><a href="https://maraarin.github.io/EVE-Online-Loyalty-Point-Comparator/" target="_blank" rel="noopener"><b>Eden’s Loyalty</b></a>, the LP comparator by Arin Mara: one sortable table of every LP store offer in the game, with the cost of any required items, the 5% buy price, the 5% buy volume and the ISK per LP, priced in The Forge.</li>
+  </ul>
+  <p><b>Before you buy something to resell:</b></p>
+  <ul class="points">
+    <li><b>Go by the 5% buy price, not the sell price.</b> Sell orders show what other sellers hope to get. The 5% buy price, the average of the highest 5% of buy orders, is much closer to what you’ll actually get if you sell straight away, and one stray order can’t distort it.</li>
+    <li><b>Check the volume.</b> A great ISK per LP means little if hardly anyone buys the item: it might take days or weeks to sell, and if other pilots are cashing in the same offer, the market can be flooded and the price drops as you sell. It’s common for the top offers by ISK per LP to show little or no buy volume, so an offer with a lower ISK per LP that trades in large numbers is often the better deal.</li>
+    <li><b>Prices move.</b> These tools are a guide, so check the market in game before you spend a large amount of LP.</li>
+    <li><b>Ask your corporation about an LP buyback.</b> Many faction warfare corporations buy their members’ LP for ISK at a set rate, a simple, steady way to cash in without hauling or trading.</li>
+  </ul>
+
   <h2 id="insurgencies">Pirate insurgencies</h2>
   <p>Want to fly for the pirates instead? Our <a href="pirate-guide.html">pirate faction warfare guide</a> covers joining the Guristas or the Angel Cartel, how insurgencies work, and fixing your standings to enlist.</p>
   <ul class="points">
@@ -275,38 +306,6 @@ nav.toc li > a:hover{text-decoration:underline}
     <li>If a system reaches the highest corruption level (stage 5), low-sec starts to behave much like null-sec, warp bubbles included. Fly with that in mind.</li>
     <li>You can follow live insurgencies, corruption and suppression on our <a href="fw.html">faction warfare map</a> with the pirate focus button.</li>
   </ul>
-
-  <h2 id="before-you-enlist">Before you enlist: staying alive and supplied</h2>
-  <div class="caveat"><b>Joining a militia puts you at war everywhere, not just in the warzone.</b> Enemy militia pilots can attack you anywhere in New Eden, high-sec included, without CONCORD stepping in. Pirate militias are at war with two empires at once, so they feel this twice as much.</div>
-  <p>Fighting is the easy part to plan for. What catches new pilots out is everything around it: getting ships, modules and ammo to where the fighting is, and getting home again.</p>
-
-  <h3>Why logistics get harder</h3>
-  <ul class="points">
-    <li><b>The whole route is dangerous.</b> Most of what you buy comes from a high-sec trade hub, and enemy militia can catch you on any jump between the hub and your base, not only once you reach low-sec. High-sec is where many new pilots feel safest, and it’s often where they get caught.</li>
-    <li><b>Some hubs are off limits.</b> If you’re at war with the empire that owns a trade hub, its navy will attack you there. Pick a hub you can reach safely before you enlist.</li>
-    <li><b>Ships can get stranded.</b> In enemy-held systems behind the frontline (their Command Operations and Rearguard systems), you can only dock or undock in a capsule, not in a ship. Anything you left there stays there until you move it another way.</li>
-  </ul>
-
-  <h3>Why alts help</h3>
-  <ul class="points">
-    <li><b>A dedicated faction warfare alt</b> keeps your main free to use high-sec and every trade hub as normal. This is one of the most popular set-ups, and it matters even more for pirate militias.</li>
-    <li><b>If you enlist your main, a support alt</b> that stays out of the militia can buy at the trade hub, haul to your staging system and contract items to you, with no war targets on it. It can also take contracts for ships stranded in enemy-held systems.</li>
-    <li><b>Keep the alt in a different corp.</b> When a corporation enlists, every character in it is enlisted too, alts included.</li>
-  </ul>
-
-  <h3>Why a faction warfare corp helps</h3>
-  <p>Whether you fly a main or an alt, joining a faction warfare corp is the single best thing you can do to stay in the fight. It helps in almost every part of faction warfare:</p>
-  <ul class="points">
-    <li><b>Supplies:</b> most corps keep fitted ships on corp contracts in their staging system, so you can replace a loss without a trip to the trade hub.</li>
-    <li><b>Ship replacement (SRP):</b> many corps pay back some or all of the ships you lose on corp fleets.</li>
-    <li><b>Intel:</b> shared intel channels and Discord tell you where the enemy is before you undock.</li>
-    <li><b>Fleets, leadership and training:</b> experienced pilots who will show you fits, tactics and when to run.</li>
-    <li><b>People to fly with.</b> Friends make losses easier to shrug off and wins more fun, and a group survives far better than a pilot alone.</li>
-  </ul>
-  <p>Many corps stage from a high-sec system on the edge of the warzone, which the enemy militia can’t enter without their navy coming after them. Ask about staging and logistics when you look for a corp; good ones will have answers ready.</p>
-
-  <h2 id="neutral">Flying in without joining a militia</h2>
-  <p>You don’t have to join a militia to take part, but entering a complex as a neutral marks you as a suspect. That means militia pilots can attack you without any security status penalty, while you still take the usual security status and standing hits if you attack first.</p>
 
   <section class="sources" id="sources">
     <b>Sources</b>
