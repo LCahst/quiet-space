@@ -535,7 +535,7 @@ td.c-recent.fresh{animation:recentpulse 1.6s ease-out 2}
   header.site{padding-top:16px;gap:10px}
   header.site .head-right{width:100%;gap:8px;justify-content:flex-start;flex-wrap:wrap}
   header.site .map-link{padding:6px 9px;font-size:.8rem}
-  header.site .loud-btn{font-size:.85rem;padding:6px 12px;margin-left:auto;letter-spacing:.06em}
+  header.site .loud-btn{font-size:.85rem;padding:6px 12px;letter-spacing:.06em}
   header.site .status-wrap{width:100%;align-items:flex-start}
   header.site .status-line{justify-content:flex-start}
   header.site .status{text-align:left;font-size:.8rem}
@@ -732,9 +732,9 @@ footer .contact p{margin:0 0 10px}
       </span>
     </a>
     <div class="head-right">
+      <button class="loud-btn" id="loudBtn" type="button" aria-pressed="false">Go Loud!</button>
       <a class="map-link" href="fw.html"><span class="pip fw" aria-hidden="true"></span>Faction warfare</a>
       <a class="map-link" href="killmap.html"><span class="pip" aria-hidden="true"></span>Live kill map</a>
-      <button class="loud-btn" id="loudBtn" type="button" aria-pressed="false">Go Loud!</button>
       <div class="status-wrap">
         <div class="status" id="status">Connecting to ESI…</div>
         <div class="status-line"><div class="status-sub" id="recentStatus" hidden></div><button class="status-refresh" id="refreshBtn" type="button" title="Fetch the latest hourly figures from ESI">Refresh ESI data</button></div>
