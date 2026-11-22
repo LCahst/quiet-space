@@ -15,6 +15,7 @@ The site shows each system's last-hour traffic, a 30-day average with weekly pat
 - `scripts/` holds the jobs the Action runs:
   - `collect-activity.mjs` records traffic hourly and builds the averages and weekly patterns.
   - `collect-isk.mjs` reads zKillboard's live kill feed hourly and builds the 7- and 30-day ISK destroyed rankings.
+  - `backfill-kills.mjs` (manual, the Action's "backfill kills" option) fills the last 30 days from zKillboard's daily archives. Kills it adds are valued at ESI average prices, since the archives don't carry zKillboard's values.
   - `collect-insurgency.mjs` records pirate insurgencies hourly from CCP's Frontlines data.
   - `collect-warzone.mjs` saves the Frontlines warzone feed hourly (who holds each system, contested progress, advantage).
   - `lib/fwships.mjs` builds the faction warfare ship statistics from the kills the ISK collector reads.

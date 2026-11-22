@@ -13,6 +13,10 @@ on:
         description: "Rebuild all map and station data from scratch"
         type: boolean
         default: false
+      backfill_kills:
+        description: "Fill the last 30 days of kills from zKillboard's daily archives (run once; safe to repeat)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write   # to save the data branch
@@ -67,6 +71,12 @@ jobs:
       - name: Record traffic and update averages and weekly patterns
         continue-on-error: true
         run: node scripts/collect-activity.mjs
+
+      # Manual only: adds kills the saved data doesn't have; the next step then rebuilds the 30-day figures
+      - name: Fill the last 30 days of kills from zKillboard's archives (manual option)
+        if: github.event_name == 'workflow_dispatch' && inputs.backfill_kills
+        continue-on-error: true
+        run: node scripts/backfill-kills.mjs
 
       - name: Record kills and ISK destroyed (zKillboard live feed, every run)
         continue-on-error: true
