@@ -105,6 +105,16 @@ jobs:
           node scripts/wh/collect-wh-kills.mjs
           node scripts/wh/collect-wh-prices.mjs
 
+      # Events section: Jita prices for the current event's turn-in items, tokens and trader shop.
+      # The event facts are hand-written and committed in events/data; prices go to the data branch.
+      - name: Update event prices
+        if: github.event.schedule != '2,32,47 * * * *'
+        continue-on-error: true
+        env:
+          EV_OUT: data/events
+          EV_CACHE: data/events-cache
+        run: node scripts/events/collect-event-prices.mjs
+
       - name: Update public player structures (daily, manual, or if missing)
         if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch' || hashFiles('data/public/structures-count.json') == ''
         continue-on-error: true
@@ -135,6 +145,11 @@ jobs:
           cp wormholes/data/*.json _site/wormholes/data/
           # the latest kill figures and prices from the data branch replace the committed fallback copies
           if [ -d data/wormholes ]; then cp data/wormholes/*.json _site/wormholes/data/; fi
+          mkdir -p _site/events/data
+          cp events/*.html events/events.css events/events.js _site/events/
+          cp events/data/*.json _site/events/data/
+          # the latest prices from the data branch replace the committed fallback copy
+          if [ -d data/events ]; then cp data/events/*.json _site/events/data/; fi
 
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5

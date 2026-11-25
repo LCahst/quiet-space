@@ -1,0 +1,42 @@
+{
+  "checked": "2026-11-25",
+  "note": "Hand-written. An event with an end date in the past moves to the past list by itself; dates are UTC.",
+  "current": [
+    {
+      "id": "fractured-skies", "name": "Fractured Skies: Military Campaigns", "page": "fractured-skies.html",
+      "start": "2026-11-10T11:00:00Z", "end": "2027-01-10T11:00:00Z", "endApprox": true,
+      "summary": "Four empire campaigns, raced Amarr against Minmatar and Caldari against Gallente. Run expedition sites, hack caches or take intel from FW complexes, then turn the items in at your empire's War HQ for ISK, LP and tokens."
+    },
+    {
+      "id": "rogue-drone-outbreaks", "name": "Rogue Drone Outbreaks", "page": "fractured-skies.html#also",
+      "start": "2026-11-10T11:00:00Z", "end": null,
+      "summary": "New with Fractured Skies and mostly in Gallente space: combat and data sites in outbreak systems that drop Outbreak Initiation Thread (sold to NPC buy orders). Find them under Opportunities, Interstellar Events."
+    },
+    {
+      "id": "login-black-friday", "name": "Fractured Skies daily login gifts (Black Friday round)",
+      "start": "2026-11-27T11:00:00Z", "end": null,
+      "summary": "A second round of daily login gifts with skill points for Alpha and Omega pilots (the first round ran 11–24 November)."
+    },
+    {
+      "id": "insurgencies", "name": "Pirate insurgencies", "page": "../fw.html",
+      "start": null, "end": null,
+      "summary": "Guristas and Angel Cartel insurgencies spread corruption through the warzones. Follow them live on our faction warfare map with the pirate focus button."
+    }
+  ],
+  "upcoming": [
+    { "date": "2026-11-27T11:00:00Z", "name": "Black Friday login gifts start", "detail": "The second round of Fractured Skies daily login gifts.", "source": "https://www.eveonline.com/news/view/patch-notes-version-24-02" },
+    { "date": null, "approx": "December 2026 (expected)", "name": "Winter event", "detail": "Not announced yet. Last year's Winter Nexus was announced in late November or early December and ran 9 December to 12 January. CCP changes these events every year.", "source": null },
+    { "date": "2027-01-05T11:00:00Z", "name": "Campaign bonuses switch on", "detail": "Each objective an empire completed unlocks a system-wide bonus in its space until the first Conquest.", "source": "https://www.eveonline.com/news/view/military-campaigns-update" },
+    { "date": "2027-01-10T11:00:00Z", "approx": "about 10 January", "name": "Military Campaigns end", "detail": "From the in-game timers. Turn in before then.", "source": null },
+    { "date": null, "approx": "mid-January 2027", "name": "Battle for the Emergent Artifact", "detail": "A four-way battle in low-sec. The empire that finished its campaign first in each race brings its general, who gives bonuses to enlisted pilots.", "source": "https://www.eveonline.com/news/view/military-campaigns-update" },
+    { "date": null, "approx": "February 2027", "name": "First Conquest", "detail": "The campaign bonuses last until then.", "source": "https://www.eveonline.com/news/view/military-campaigns-update" }
+  ],
+  "past": [
+    { "name": "Crimson Harvest", "start": "2026-10-06", "end": "2026-11-03", "line": "Blood Raider event with points challenges; boosters ran until 10 November." },
+    { "name": "Cradle of War Military Campaigns", "start": "2026-06-09", "end": "2026-11-10", "line": "The first empire campaigns; their results (new stargates, the Oris tax cut, the Imperial Navy tackle modules) went live with Fractured Skies." },
+    { "name": "Operation Avalon", "start": "2026-07-07", "end": "2026-07-20", "line": "A short event tied to EVE Vanguard." },
+    { "name": "Capsuleer Day XXIII: Warpath", "start": "2026-04-30", "end": "2026-06-02", "line": "The yearly anniversary event." },
+    { "name": "Gallente Election YC128", "start": "2026-03-19", "end": "2026-04-16", "line": "Pilots backed candidates in the Federation's presidential election." },
+    { "name": "Winter Nexus 2025", "start": "2025-12-09", "end": "2026-01-12", "line": "Volatile Ice Storms, a login track and the Perseverance ice-mining destroyer." }
+  ]
+}

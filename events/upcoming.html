@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Upcoming EVE Online events</title>
+<meta name="description" content="What's coming up in EVE Online: announced dates and expected events.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%237a5a2e'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EEV%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="events.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">
+    <span class="mark" aria-hidden="true">EV</span>
+    <span><b>Events</b><small>What's running in New Eden, how to take part and what it pays</small></span>
+  </a>
+  <nav class="links"><a href="index.html">Overview</a><a href="fractured-skies.html">Fractured Skies</a><a href="upcoming.html" aria-current="page">Upcoming</a><a href="../index.html">Back to the site</a></nav>
+</header>
+<main>
+  <h1>Coming up</h1>
+  <p class="lead">Dates CCP has announced, and events we expect but that aren't announced yet. Expected events are marked as such; we add details as soon as CCP publishes them.</p>
+  <div class="warnbox"><b>A note on new events:</b> I'll post information on new events as they drop. It can take a few days to get everything together, so please be patient: there's a lot of information to review and verify, so that I can give you reliable information and numbers for each event.</div>
+  <ol class="timeline" id="upcoming"></ol>
+</main>
+<script src="events.js"></script>
+<script>
+(async () => {
+  const ev = await EV.load("events");
+  const now = Date.now();
+  document.getElementById("upcoming").innerHTML = ev.upcoming.filter(u => !u.date || new Date(u.date) > now).map(u =>
+    `<li><span class="d">${u.date ? EV.date(u.date, true) : EV.esc(u.approx)}</span><span><b>${EV.esc(u.name)}</b>${u.date ? "" : ` <span class="status st-soon">expected</span>`}<br><span class="muted">${EV.esc(u.detail)}</span>${u.source ? ` <a href="${EV.esc(u.source)}" target="_blank" rel="noopener">Source</a>` : ""}</span></li>`).join("");
+  EV.footer(`<p>Checked ${EV.date(ev.checked)}. Dates are UTC.</p>`);
+})().catch(e => { document.querySelector("main").insertAdjacentHTML("afterbegin", `<p class="warnbox">Couldn't load the event list (${EV.esc(e.message)}).</p>`); });
+</script>
+</body>
+</html>

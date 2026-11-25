@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EVE Online events: what's running now</title>
+<meta name="description" content="What's running in EVE Online right now, what's coming up, and the past year's events.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%237a5a2e'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EEV%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="events.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">
+    <span class="mark" aria-hidden="true">EV</span>
+    <span><b>Events</b><small>What's running in New Eden, how to take part and what it pays</small></span>
+  </a>
+  <nav class="links"><a href="index.html" aria-current="page">Overview</a><a href="fractured-skies.html">Fractured Skies</a><a href="upcoming.html">Upcoming</a><a href="../index.html">Back to the site</a></nav>
+</header>
+<main>
+  <h1>Events in EVE right now</h1>
+  <p class="lead">What's running, when it ends, and where to start. Each event has its own page with how to take part, live Jita prices for its rewards, and its achievements.</p>
+  <div class="warnbox"><b>A note on new events:</b> I'll post information on new events as they drop. It can take a few days to get everything together, so please be patient: there's a lot of information to review and verify, so that I can give you reliable information and numbers for each event.</div>
+
+  <h2>Running now</h2>
+  <div class="evcards" id="current"></div>
+
+  <h2>Coming up</h2>
+  <ol class="timeline" id="upcoming"></ol>
+  <p class="note"><a href="upcoming.html">More about what's coming up</a></p>
+
+  <h2>The past year</h2>
+  <p class="note">CCP changes its events every year, so these are listed for reference only.</p>
+  <ul class="past" id="past"></ul>
+</main>
+<script src="events.js"></script>
+<script>
+(async () => {
+  const ev = await EV.load("events");
+  const now = Date.now();
+  const ended = e => e.end && new Date(e.end) <= now;
+
+  // not started yet: it's listed under Coming up instead, and moves here by itself on its start date
+  const started = e => !e.start || new Date(e.start) <= now;
+  document.getElementById("current").innerHTML = ev.current.filter(e => started(e) && !ended(e)).map(e => {
+    const st = EV.status(e.start, e.end);
+    const when = e.end ? `Ends ${e.endApprox ? "about " : ""}<b>${EV.date(e.end)}</b> · ${EV.until(e.end)}` : e.start && new Date(e.start) > now ? `Starts <b>${EV.date(e.start, true)}</b>` : "No end date";
+    const tag = e.page ? "a" : "div";
+    return `<${tag} class="evcard"${e.page ? ` href="${EV.esc(e.page)}"` : ""}>
+      <h3>${EV.esc(e.name)} <span class="status ${st.cls}">${st.text}</span></h3>
+      <div class="when">${when}</div>
+      <p>${EV.esc(e.summary)}</p></${tag}>`;
+  }).join("");
+
+  const upcoming = ev.upcoming.filter(u => !u.date || new Date(u.date) > now);
+  document.getElementById("upcoming").innerHTML = upcoming.map(u =>
+    `<li><span class="d">${u.date ? EV.date(u.date) : EV.esc(u.approx)}</span><span><b>${EV.esc(u.name)}</b> <span class="muted">${EV.esc(u.detail)}</span></span></li>`).join("");
+
+  // past: the hand-written list plus anything from "current" whose end date has passed, newest first
+  const past = [...ev.current.filter(ended).map(e => ({ name: e.name, start: e.start, end: e.end, line: e.summary })), ...ev.past]
+    .sort((a, b) => new Date(b.end) - new Date(a.end));
+  document.getElementById("past").innerHTML = past.map(p =>
+    `<li><span class="d">${EV.date(p.start)} – ${EV.date(p.end)}</span><span><b>${EV.esc(p.name)}</b> <span class="muted">${EV.esc(p.line)}</span></span></li>`).join("");
+
+  EV.footer(`<p>Event list checked ${EV.date(ev.checked)}. Dates are UTC.</p>`);
+})().catch(e => { document.querySelector("main").insertAdjacentHTML("afterbegin", `<p class="warnbox">Couldn't load the event list (${EV.esc(e.message)}).</p>`); });
+</script>
+</body>
+</html>

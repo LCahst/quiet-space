@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fractured Skies Military Campaigns: how to take part, rewards and prices</title>
+<meta name="description" content="EVE Online's Fractured Skies Military Campaigns: what to do for each empire, where, what each turn-in pays, live Jita prices for tokens and trader items, and the campaign achievements.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%237a5a2e'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EEV%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="events.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">
+    <span class="mark" aria-hidden="true">EV</span>
+    <span><b>Events</b><small>What's running in New Eden, how to take part and what it pays</small></span>
+  </a>
+  <nav class="links"><a href="index.html">Overview</a><a href="fractured-skies.html" aria-current="page">Fractured Skies</a><a href="upcoming.html">Upcoming</a><a href="../index.html">Back to the site</a></nav>
+</header>
+<main>
+  <h1>Fractured Skies: Military Campaigns</h1>
+  <p class="lead">Each empire runs a campaign to find the Emergent Artifact, raced against its rival: Amarr against Minmatar, Caldari against Gallente. You help by running expedition sites, hacking caches or taking intel from faction warfare complexes, then trading what you find to your empire's trader for ISK, loyalty points and campaign tokens. You don't have to be enlisted in faction warfare.</p>
+  <p class="when" id="dates"></p>
+  <div class="endbox" id="ended" hidden></div>
+  <div class="warnbox" id="participate"><b>Before you hand anything in:</b> open the objective in the Opportunities window and click <b>Participate now</b>. Without it you still get the token, but no ISK and no LP for the items.</div>
+
+  <h2 id="empire">Pick your empire</h2>
+  <div class="picker" id="picker" role="group" aria-label="Empire"></div>
+  <dl class="facts" id="facts"></dl>
+  <p class="note">Campaign progress changes by the hour, so we don't copy it here: check it in game under Theaters of War, Campaigns, or on each objective in the Opportunities window.</p>
+
+  <nav class="toc" aria-label="On this page"><a href="#what">What to do</a><a href="#turnin">Turning in</a><a href="#worth">Turn in or sell?</a><a href="#shop">Trader shop</a><a href="#achievements">Achievements</a><a href="#next">What happens next</a><a href="#also">Also running</a><a href="#sources">Sources</a></nav>
+
+  <h2 id="what">What to do</h2>
+  <p>Three objectives are open in every campaign. The mining objectives are already finished in all four, so mining no longer earns ISK or LP; the ore can still be traded for tokens.</p>
+  <div class="acts" id="acts"></div>
+
+  <h2 id="turnin">Turning in</h2>
+  <ol class="steps" id="steps"></ol>
+  <div class="tablewrap"><table class="t" id="payTable"></table></div>
+  <p class="note">The LP is paid per 100 items, so a 450-item trade leaves part of an LP block unpaid. Trading in multiples of 900 (two tokens at a time) loses nothing. The LP for expedition and cache items goes to the empire's navy; for intel, to its faction warfare militia.</p>
+
+  <h2 id="worth">Turn in or sell?</h2>
+  <p>What each item is worth if you sell it at Jita now, against what turning it in pays: the ISK and LP for the item plus a 450th of a token at its Jita price. Set what an LP is worth to you; 800 ISK is a cautious figure for empire navy LP.</p>
+  <form class="controls" onsubmit="return false"><label>Your ISK per LP<input type="number" id="lpValue" value="800" min="0" step="50"></label></form>
+  <div class="tablewrap"><table class="t" id="worthTable"></table></div>
+  <p class="note" id="worthNote"></p>
+
+  <h2 id="shop">Trader shop</h2>
+  <p id="shopIntro"></p>
+  <div class="tablewrap"><table class="t" id="shopTable"></table></div>
+  <p class="note">ISK per token uses the Jita buy price (what you'd get selling now). Items marked "rarely traded" changed hands fewer than 10 times in 30 days, so their order book says little about their worth. The scanning blueprint crates can't be sold on the market.</p>
+
+  <h2 id="achievements">Achievements</h2>
+  <p id="achIntro"></p>
+  <div class="tablewrap"><table class="t" id="achTable"></table></div>
+  <p class="note" id="hidden"></p>
+
+  <h2 id="next">What happens next</h2>
+  <ul class="points" id="nextList"></ul>
+
+  <h2 id="also">Also running</h2>
+  <div class="acts">
+    <div class="act" style="--emp:#8a6fd1">
+      <h3>SARO Black Sites</h3>
+      <p class="sub">High-sec and low-sec, spawned by EVE Vanguard players. Find them on the map with the Activity filter set to SARO Black Sites.</p>
+      <dl>
+        <dt>SARO Lockup (combat)</dt><dd>High-sec: three waves and a boss; only the boss drops loot. Low-sec: two waves overlapping the boss, harder with better loot; don't use drones there, as the boss has a Vorton Projector. Players use a Zealot or Vagabond. Also drops a few expedition items.</dd>
+        <dt>SARO Surveillance Outpost (data, level 2)</dt><dd>Two cans to hack; also drops a few cache items.</dd>
+        <dt>SARO Ore Holding (mining)</dt><dd>Campaign ore for all four empires: X-Grade in high-sec, Z-Grade in low-sec.</dd>
+      </dl>
+    </div>
+    <div class="act" style="--emp:#5aa07a">
+      <h3>Rogue Drone Outbreaks</h3>
+      <p class="sub">Mostly in Gallente space. Find them in the Opportunities window under Interstellar Events.</p>
+      <dl>
+        <dt>Infested Research Facility (combat)</dt><dd>No ship restrictions. Three waves up to battlecruisers; kill the jammers first, then shoot the Infestation Rendezvous Cluster for the loot. Deal and tank EM and thermal.</dd>
+        <dt>Infestation Harborage (data, level 2)</dt><dd>Three cans to hack.</dd>
+        <dt>Loot</dt><dd>Outbreak Initiation Thread, sold to NPC buy orders for about 100k ISK each; roughly 10m ISK per site.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <ul class="points" id="sources"></ul>
+</main>
+<script src="events.js"></script>
+<script>
+(async () => {
+  const [fs, prices] = await Promise.all([EV.load("fractured-skies"), EV.optional("prices")]);
+  const P = name => prices?.items?.[name] || null;
+  const R = fs.rewards, N = fs.itemsPerToken;
+  const keys = ["amarr", "caldari", "gallente", "minmatar"];
+  let key = localStorage.getItem("ev-empire");
+  if (!keys.includes(key)) key = "amarr";
+
+  // Once the end date passes, the page says so at the top and stops telling people to take part.
+  // ?asof=YYYY-MM-DD shows the page as it will look on that day (for checking this before it happens).
+  const asof = new URLSearchParams(location.search).get("asof");
+  const now = asof ? new Date(asof + "T12:00:00Z") : new Date();
+  if (now >= new Date(fs.end)) {
+    const box = document.getElementById("ended");
+    box.innerHTML = `<b>This event has ended.</b> The Military Campaigns closed around ${EV.date(fs.end)}. What's below is kept for reference: the objectives, turn-ins and trader may no longer be available, and the prices are today's. See the <a href="index.html">events overview</a> for what's running now.`;
+    box.hidden = false;
+    document.getElementById("participate").hidden = true;
+    document.body.classList.add("is-ended");
+  }
+
+  document.getElementById("dates").innerHTML = now >= new Date(fs.end) ? `Ran <b>${EV.date(fs.start)}</b> to about <b>${EV.date(fs.end)}</b>` : `Started <b>${EV.date(fs.start, true)}</b> · ends about <b>${EV.date(fs.end, true)}</b> · <span id="left">${EV.until(fs.end)}</span> <span class="muted">(${EV.esc(fs.endNote)})</span>`;
+
+  const picker = document.getElementById("picker");
+  picker.innerHTML = keys.map(k => `<button type="button" data-k="${k}" style="--c:${fs.empires[k].color}">${fs.empires[k].name}</button>`).join("");
+  picker.addEventListener("click", e => { const b = e.target.closest("button"); if (b) { key = b.dataset.k; localStorage.setItem("ev-empire", key); render(); } });
+  document.getElementById("lpValue").addEventListener("input", () => renderWorth());
+
+  const lpv = () => Math.max(0, +document.getElementById("lpValue").value || 0);
+  const pay = a => R[a].iskPerItem + R[a].lpPer100 / 100 * lpv();
+
+  function render() {
+    const e = fs.empires[key], rv = fs.empires[e.rival];
+    document.body.style.setProperty("--emp", e.color);
+    picker.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === key)));
+    const fact = (k, v) => `<div><dt>${k}</dt><dd>${v}</dd></div>`;
+    document.getElementById("facts").innerHTML =
+      fact("Campaign", `<span class="emp">${EV.esc(e.campaign)}</span>`) +
+      fact("Racing against", `${EV.esc(rv.name)}: ${EV.esc(rv.campaign)}`) +
+      fact("War HQ and trader", `${EV.esc(e.trader)}, outside ${EV.esc(e.station)}`) +
+      fact("Token", EV.esc(e.token) + (P(e.token)?.buy ? ` <span class="muted">· Jita buy ${EV.isk(P(e.token).buy)}</span>` : "")) +
+      fact("General", EV.esc(e.general)) +
+      fact("LP goes to", `${EV.esc(e.navy)} (expedition, cache) · ${EV.esc(e.militia)} (intel)`);
+
+    const rew = a => `<div class="pay">Pays <b>${EV.num(R[a].iskPerItem)} ISK</b> and <b>${EV.num(R[a].lpPer100 / 100)} LP</b> per item, plus 1 ${EV.esc(e.token)} per ${N} items.</div>`;
+    const cacheHow = key === "gallente"
+      ? `The Federation has no Drifter technology, so Gallente pilots hack <b>Rogue Fabricated Cache</b> sites instead (Rogue Hoard, Stockpile and Trove containers) with a Relic Analyzer.`
+      : `Three containers wait inside; you can hack only one, and the other two explode. Hack the <b>${EV.esc(e.cacheContainer)}</b> with a Relic Analyzer to get ${EV.esc(e.name)} items.`;
+    document.getElementById("acts").innerHTML = `
+      <div class="act"><h3>Expedition sites</h3><p class="sub">${EV.esc(e.expeditionSite)} · bring <b>${EV.esc(e.items.expedition)}</b> to ${EV.esc(e.warHq)}</p><dl>
+        <dt>Where</dt><dd>Combat anomalies in ${EV.esc(e.state)} high-sec and low-sec; most common in bulwark systems (high-sec) and in faction warfare systems ${EV.esc(e.name)} holds (low-sec, harder). They show in the probe scanner window without probes.</dd>
+        <dt>What happens</dt><dd>Five waves of frigates and destroyers from the ${EV.esc(e.enemies)} (${e.enemyShips.map(EV.esc).join(", ")}), with heavy energy neutralizing. Then five special wrecks hold the items. They can't be tractored and salvage drones don't work: you need a <b>salvager module</b>.</dd>
+        <dt>Ships</dt><dd>CCP suggests a well-fit assault frigate or navy destroyer (6 Nov). The Erstschlag wiki's fits use a Hawk, Retribution or Enyo (Nov 2026); the Enyo needs good skills. Fit an MWD rather than an afterburner to reach the wrecks, and a capacitor rig against the neuts. Orbit a special wreck while you fight so you're ready to salvage.</dd>
+        <dt>Also from</dt><dd>A few drop in SARO Lockups (below).</dd></dl>${rew("expedition")}</div>
+      <div class="act"><h3>Cache hacking</h3><p class="sub">${EV.esc(e.cacheSite)} · bring <b>${EV.esc(e.items.cache)}</b> to ${EV.esc(e.warHq)}</p><dl>
+        <dt>Where</dt><dd>Relic signatures you scan down with probes: level 2 in high-sec and low-sec, level 3 in class 1–3 wormholes, where they're more common and pay more.</dd>
+        <dt>What happens</dt><dd>${cacheHow} No NPCs, but other players hunt these sites.</dd>
+        <dt>Ships</dt><dd>Any exploration ship with a Relic Analyzer; a cloak helps, since the sites draw hunters.</dd>
+        <dt>Also from</dt><dd>A few drop in SARO Surveillance Outposts (below).</dd></dl>${rew("cache")}</div>
+      <div class="act"><h3>Faction warfare intel</h3><p class="sub">Enemy-held complexes · bring <b>${EV.esc(e.items.intel)}</b> to ${EV.esc(e.warHq)}</p><dl>
+        <dt>Where</dt><dd>Faction warfare complexes held by the ${EV.esc(rv.state)}. Kill the ${EV.esc(e.enemyNavy)} NPCs defending them; they drop the intel.</dd>
+        <dt>Enlisting</dt><dd>Not required, but recommended: unenlisted pilots get a <b>suspect timer</b> on entering a complex, so anyone can shoot them. See our <a href="../fw-guide.html">faction warfare guide</a> and the live <a href="../fw.html">warzone map</a>.</dd>
+        <dt>Ships</dt><dd>Whatever the complex allows: each complex size has its own ship limit.</dd></dl>${rew("intel")}</div>`;
+
+    document.getElementById("steps").innerHTML = [
+      `In the Opportunities window, open the objective (for example "Deliver ${EV.esc(e.items.expedition)} in ${EV.esc(e.warHq)}") and click <b>Participate now</b>. Do it once for each objective you'll hand items in for.`,
+      `Fly to <b>${EV.esc(e.warHq)}</b>. The <b>${EV.esc(e.trader)}</b> is a freighter in space just outside ${EV.esc(e.station)}. If you can't see it, tick <b>Item Trader</b> in your overview settings (Filters, Types Shown).`,
+      `Right-click the freighter, open the Item Trader, choose <b>Campaign Turn-Ins</b>, pick the item, set the number of trades and click <b>Trade Items</b>. The ISK and LP arrive at once.`,
+      `Each trade takes <b>${N} items</b> (or ${EV.num(fs.orePerToken)} ${EV.esc(e.ore)}) and gives 1 ${EV.esc(e.token)}. Spend tokens at the same trader, or sell them.`
+    ].map(s => `<li>${s}</li>`).join("");
+
+    document.getElementById("payTable").innerHTML = `<thead><tr><th>Item</th><th class="num">ISK per item</th><th class="num">LP per 100</th><th class="num">${N} items pay<small>besides the token</small></th><th class="num">Objective target</th></tr></thead><tbody>` +
+      ["expedition", "cache", "intel"].map(a => `<tr><td>${EV.esc(e.items[a])}<br><span class="muted">${R[a].label}</span></td><td class="num">${EV.num(R[a].iskPerItem)}</td><td class="num">${EV.num(R[a].lpPer100)}</td><td class="num">${EV.isk(R[a].iskPerItem * N)} ISK<br>${EV.num(R[a].lpPer100 / 100 * N)} LP</td><td class="num">${EV.num(R[a].target)}</td></tr>`).join("") +
+      `<tr><td>${EV.esc(e.ore)}<br><span class="muted">Mining (objective finished)</span></td><td class="num">–</td><td class="num">–</td><td class="num">token only<br><span class="muted">${EV.num(fs.orePerToken)} per token</span></td><td class="num">done</td></tr></tbody>`;
+
+    renderWorth(); renderShop(); renderAch(); renderNext();
+  }
+
+  function renderWorth() {
+    const e = fs.empires[key], tok = P(e.token)?.buy;
+    if (!prices) { document.getElementById("worthTable").innerHTML = `<tbody><tr><td>Prices aren't available right now.</td></tr></tbody>`; return; }
+    const row = (name, label, perItem, units) => {
+      const p = P(name), buy = p?.buy;
+      const value = perItem + (tok ? tok / units : 0);
+      const diff = buy != null ? value - buy : null;
+      const verdict = buy == null ? `<span class="muted">no buyers at Jita</span>` : diff >= 0 ? `<span class="verdict good">Turn in</span>` : `<span class="verdict bad">Sell</span>`;
+      return `<tr><td>${EV.esc(name)}<br><span class="muted">${label}</span></td><td class="num">${EV.isk(buy)}</td><td class="num">${EV.isk(perItem)}</td><td class="num">${EV.isk(tok ? tok / units : null)}</td><td class="num"><b>${EV.isk(value)}</b></td><td>${verdict}${diff != null ? ` <span class="muted">(${diff >= 0 ? "+" : ""}${EV.isk(diff)} each)</span>` : ""}</td></tr>`;
+    };
+    document.getElementById("worthTable").innerHTML = `<thead><tr><th>Item</th><th class="num">Jita buy<small>sell it now</small></th><th class="num">ISK + LP<small>per item</small></th><th class="num">Token share<small>1/${N} of a token</small></th><th class="num">Turn-in value<small>per item</small></th><th>Better to</th></tr></thead><tbody>` +
+      ["expedition", "cache", "intel"].map(a => row(e.items[a], R[a].label, pay(a), N)).join("") +
+      row(e.ore, "Mining: objective finished, token only", 0, fs.orePerToken) + `</tbody>`;
+    document.getElementById("worthNote").innerHTML = `Token valued at the Jita buy price of ${EV.esc(e.token)}${tok ? ` (${EV.isk(tok)})` : " (no buy orders right now)"}. Prices from ${EV.esc(prices.market)}, ${new Date(prices.fetchedAt).toISOString().slice(0, 16).replace("T", " ")} UTC. If you buy the items on buy orders instead of farming them, the same sum tells you whether a trade pays for itself.`;
+  }
+
+  let shopSort = "cost"; // cheapest first by default; the headers switch to ISK per token or by name
+  function renderShop() {
+    const e = fs.empires[key];
+    const rows = [...fs.commonShop, ...e.shop].map(([cat, name, cost, count = 1]) => {
+      const p = P(name), each = p?.buy ?? null;
+      return { cat, name, cost, count, buy: each, sell: p?.sell ?? null, perToken: each != null && !p.thin ? each * count / cost : null, thin: p?.thin, traded: p?.traded30d, noMarket: !p || (p.buy == null && p.sell == null && !p.traded30d) };
+    });
+    rows.sort((a, b) => shopSort === "value" ? (b.perToken ?? -1) - (a.perToken ?? -1) : shopSort === "cost" ? a.cost - b.cost || a.name.localeCompare(b.name) : a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+    document.getElementById("shopIntro").innerHTML = `Everything the ${EV.esc(e.trader)} sells for ${EV.esc(e.token)}s, with what it fetches at Jita. When the campaign finishes, its navy modules move to the ${EV.esc(e.militia)} loyalty point store.`;
+    const th = (k, label, cls = "") => `<th class="${cls}"><button type="button" data-sort="${k}">${label}${shopSort === k ? " ▾" : ""}</button></th>`;
+    document.getElementById("shopTable").innerHTML = `<thead><tr>${th("cat", "Item")}${th("cost", "Tokens", "num")}<th class="num">Jita buy</th><th class="num">Jita sell</th>${th("value", "ISK per token", "num")}</tr></thead><tbody>` +
+      rows.map(r => `<tr><td>${EV.esc(r.count > 1 ? `${r.count}× ${r.name}` : r.name)}<br><span class="muted">${r.cat}${r.thin && !r.noMarket ? " · rarely traded" : ""}${r.noMarket ? " · not on the market" : ""}</span></td><td class="num">${EV.num(r.cost)}</td><td class="num">${EV.isk(r.buy == null ? null : r.buy * r.count)}</td><td class="num">${r.thin ? `<span class="muted">${EV.isk(r.sell == null ? null : r.sell * r.count)}</span>` : EV.isk(r.sell == null ? null : r.sell * r.count)}</td><td class="num"><b>${EV.isk(r.perToken)}</b></td></tr>`).join("") + `</tbody>`;
+  }
+  document.getElementById("shopTable").addEventListener("click", ev => { const b = ev.target.closest("button[data-sort]"); if (b) { shopSort = b.dataset.sort; renderShop(); } });
+
+  function renderAch() {
+    const e = fs.empires[key];
+    document.getElementById("achIntro").innerHTML = `Five achievements under "${EV.esc(e.achievementGroup)}", each with three steps: the first pays 10,000 SP, the second 15,000 SP and a Penumbral Shadows SKIN, the third 75,000 SP and a title. Finishing all five adds 100,000 SP and the title <b>${EV.esc(e.campaignTitle)}</b>. With the six hidden achievements, a campaign is worth 1.2 million SP. They expire about ${EV.date(fs.achievementsExpire)}.`;
+    document.getElementById("achTable").innerHTML = `<thead><tr><th>Achievement</th><th>Do this</th><th>SKIN (step 2)</th><th>Title (step 3)</th></tr></thead><tbody>` +
+      e.achievements.map(([n, task, skin, title]) => `<tr><td><b>${EV.esc(n)}</b></td><td>${EV.esc(task)}</td><td>${EV.esc(skin)}</td><td>${EV.esc(title)}</td></tr>`).join("") + `</tbody>`;
+    document.getElementById("hidden").textContent = `Six hidden achievements stay secret until you complete them; each pays 100,000 SP and a title: ${e.hiddenTitles.join(", ")}.`;
+  }
+
+  function renderNext() {
+    const e = fs.empires[key], rv = fs.empires[e.rival];
+    document.getElementById("nextList").innerHTML = [
+      `<b>About ${EV.date(fs.end)}:</b> the campaigns end. Objectives also close early once the community reaches their target.`,
+      `<b>5 January:</b> each objective an empire completed switches on a bonus across its space until the Conquest embargo fails. ${EV.esc(e.name)}: ${Object.entries(e.bonuses).map(([k, v]) => `${k === "ore" ? "mining" : k}: ${EV.esc(v)}`).join("; ")}.`,
+      `<b>Mid-January:</b> a four-way battle in low-sec for the Emergent Artifact. If ${EV.esc(e.campaign)} finishes before ${EV.esc(rv.campaign)}, ${EV.esc(e.general)} joins the battle with command bonuses for enlisted ${EV.esc(e.name)} pilots.`,
+      `<b>The Drifter module:</b> CCP's pages disagree on whether the limited-time Drifter module goes to the first empire to finish its campaign or to the battle's winner; we'll update this when it's clear.`,
+      `<b>February:</b> the first Conquest; the campaign bonuses last until then.`
+    ].map(s => `<li>${s}</li>`).join("");
+  }
+
+  document.getElementById("sources").innerHTML = fs.sources.map(([t, u]) => `<li><a href="${EV.esc(u)}" target="_blank" rel="noopener">${EV.esc(t)}</a></li>`).join("") +
+    `<li>Our own in-game checks on ${EV.date(fs.checked)}: campaign pages, every objective's rewards breakdown, the achievements and the Amarr trader's shop.</li>`;
+
+  render();
+  setInterval(() => { const l = document.getElementById("left"); if (l) l.textContent = EV.until(fs.end); }, 60000);
+  EV.footer(`<p>Event facts checked ${EV.date(fs.checked)}.${prices ? ` Prices ${new Date(prices.fetchedAt).toISOString().slice(0, 16).replace("T", " ")} UTC.` : ""}</p>`);
+})().catch(e => { document.querySelector("main").insertAdjacentHTML("afterbegin", `<p class="warnbox">Couldn't load this page's data (${EV.esc(e.message)}).</p>`); });
+</script>
+</body>
+</html>
