@@ -169,13 +169,20 @@
   };
   if (kills) {
     const { slotHours, groups } = kills.heat;
+    // EVE time is UTC; also show each hour in the visitor's own time zone (today's offset, so summer time is right)
+    const clock = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+    const localAt = (h, m) => { const d = new Date(); d.setUTCHours(h, m, 0, 0); return clock.format(d); };
+    const onUtc = new Date().getTimezoneOffset() === 0;
+    const hourTip = (h, v) => `<b>${String(h).padStart(2, "0")}:00–${String(h).padStart(2, "0")}:59 EVE time</b>`
+      + (onUtc ? "" : `<br>${localAt(h, 0)}–${localAt(h, 59)} your time`)
+      + `<br>${WH.dec(v)} PvP kills an hour`;
     seg("heatSeg", ["All", ...WH.GROUPS.map(g => g.key)], key => {
       const per = Array.from({ length: 24 }, (_, h) => {
         let n = 0, hrs = 0;
         for (let d = 0; d < 7; d++) { n += groups[key][d * 24 + h]; hrs += slotHours[d * 24 + h]; }
         return hrs ? n / hrs : 0;
       });
-      WH.bars(document.getElementById("heat"), per.map((v, h) => ({ label: String(h).padStart(2, "0"), value: v, tip: `<b>${String(h).padStart(2, "0")}:00–${String(h).padStart(2, "0")}:59</b> EVE time: ${WH.dec(v)} PvP kills an hour` })),
+      WH.bars(document.getElementById("heat"), per.map((v, h) => ({ label: String(h).padStart(2, "0"), value: v, tip: hourTip(h, v) })),
         { every: 2, title: `PvP kills per hour of day, ${key}`, xName: "Hour (EVE time)", yName: "PvP kills an hour" });
       // the table view shows the averages to one decimal
       document.querySelectorAll("#heat tbody td.num").forEach((td, i) => td.textContent = WH.dec(per[i]));

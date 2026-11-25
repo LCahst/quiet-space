@@ -88,7 +88,7 @@ table.t{border-collapse:collapse;font-family:var(--cond);font-size:.92rem;width:
 .chart svg{display:block;width:100%;height:auto;overflow:visible}
 .chart .grid line{stroke:#1d2a3c;stroke-width:1}
 .chart .axis text{fill:var(--muted);font-family:var(--cond);font-size:11px}
-.chart .bar{fill:var(--bar)}
+.chart .bar{fill:var(--bar);pointer-events:none} /* the hover area under each bar takes the mouse, bar included */
 .chart .hit{fill:transparent;cursor:default}
 .chart .hit:hover + .bar,.chart .bar.hi{fill:var(--bar-hi)}
 .tip{position:absolute;pointer-events:none;background:#16202e;border:1px solid #4b6a92;border-radius:4px;padding:5px 9px;font-family:var(--cond);font-size:.85rem;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.4);transform:translate(-50%,-100%);margin-top:-8px}
