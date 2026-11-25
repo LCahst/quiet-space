@@ -94,6 +94,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
 .advrow .pc{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
 .advrow .pts{color:var(--muted);font-size:.8rem;min-width:7.5em;text-align:right}
 .net{margin:6px 0 8px;font-weight:700}
+.race{display:grid;grid-template-columns:5.2em 1fr auto;gap:6px 8px;align-items:center;margin:6px 0 10px}
+.race .rn{font-weight:500}
+.race .dots{display:flex;flex-wrap:wrap;gap:3px}
+.race .dots i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--muted);box-sizing:border-box}
+.race .rs{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .advbars{display:grid;grid-template-columns:5.2em 1fr 3em;gap:2px 8px;align-items:center;margin:6px 0 2px}
 .advbars .an{font-weight:500}
 .advbars .atrack{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
@@ -1206,6 +1211,29 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     for (const c of pv.camps) {
       const facts = el("dl", "facts"), fact = (k, v) => facts.append(el("dt", null, k), el("dd", null, v));
       const mine = [...pv.iset].filter(id => insurgency.systems[id].c === c.id);
+      // Race to win, as in the game's Insurgency Progress panel: one dot per system each side needs at
+      // stage 5 (its target, which includes any ambition), filled for each system already there.
+      const forecast = c.state === "FORECAST";
+      if (forecast && c.start) {
+        // Forecasts that began before patch 24.02.1 (24 Nov 2026, 11:00 UTC) last 48 hours; later ones 16.
+        const t0 = new Date(c.start), hrs = t0 < new Date("2026-11-24T11:00:00Z") ? 48 : 16;
+        const at = new Date(t0.getTime() + hrs * 3600e3);
+        panel.append(el("p", "muted", `Forecasting: the FOB is in ${c.origin ? c.origin.name || "?" : "?"} and no sites spawn yet. It should go active around ${at.toLocaleString(undefined, { weekday: "short", hour: "2-digit", minute: "2-digit" })} (a ${hrs}-hour forecast).`));
+      }
+      if (c.corruptionThreshold || c.suppressionThreshold) {
+        const race = el("div", "race");
+        const row = (name, color, done, target) => {
+          if (!target) return;
+          const dots = el("div", "dots");
+          for (let i = 0; i < target; i++) { const d = document.createElement("i"); if (i < done) { d.style.background = color; d.style.borderColor = color; } if (i >= 5) d.style.borderStyle = "dashed"; dots.append(d); }
+          const sc = el("span", "rs", `${done} of ${target}`); sc.style.color = color;
+          race.append(el("span", "rn", name), dots, sc);
+        };
+        row(P_.short, pc, mine.filter(id => insurgency.systems[id].cs === 5).length, c.corruptionThreshold);
+        row("Empires", SUPPRESS, mine.filter(id => insurgency.systems[id].ss === 5).length, c.suppressionThreshold);
+        const h = el("div", "muted adv-h", "Race to win: systems at stage 5"); h.title = "Each side wins by getting this many systems to stage 5 (corruption for the pirates, suppression for the empires). Dashed dots are extra systems a side needs because of its ambition from earlier wins.";
+        panel.append(h, race);
+      }
       const avg = key => mine.length ? (mine.reduce((t, id) => t + (insurgency.systems[id][key] || 0), 0) / mine.length).toFixed(1) : "?";
       fact("Origin", c.origin ? (catalog.systems[c.origin.id] ? catalog.systems[c.origin.id].n : c.origin.name || "?") : "?");
       if (c.state) fact("State", c.state.charAt(0) + c.state.slice(1).toLowerCase());
@@ -1213,8 +1241,6 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       fact("Systems affected", String(mine.length));
       fact("Average corruption", `level ${avg("cs")}`);
       fact("Average suppression", `level ${avg("ss")}`);
-      fact("Fully corrupted (level 5)", String(mine.filter(id => insurgency.systems[id].cs === 5).length));
-      fact("Fully suppressed (level 5)", String(mine.filter(id => insurgency.systems[id].ss === 5).length));
       panel.append(facts);
     }
     const inf = [...pv.iset];
