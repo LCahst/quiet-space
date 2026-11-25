@@ -387,7 +387,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:520px;font-family:var
   </ul>
 
   <h2 id="supply-caches">Advantage, supply depots and caches</h2>
-  <p>In every frontline and command operations system, each side has an <b>advantage</b> score, and the side ahead gets a victory point bonus equal to the gap. The in-game guide’s example: if the Amarr hold 30% and the Minmatar 10%, every VP the Amarr earn there gets a 20% bonus. Each system starts with a base score from the friendly frontline and command operations systems around it, and the objectives below move it up or down.</p>
+  <p>In every frontline and command operations system, each side has an <b>advantage</b> score, and the side ahead gets a victory point bonus equal to the gap. The in-game guide’s example: if the Amarr hold 30% and the Minmatar 10%, every VP the Amarr earn there gets a 20% bonus. Each system starts with a base score from the friendly frontline and command operations systems around it, and the objectives below move it up or down, up to a maximum of 100%.</p>
   <p>In each system one side is <b>defending</b> (it holds the system) and the other is <b>attacking</b>, and some objectives only help one of them. To see the scores, open <b>Theaters of War</b>: the <b>Warzone Details</b> tab lists every system’s advantage, and selecting a system shows its advantage tracker.</p>
   <div class="tablewrap">
     <table class="agents">
@@ -399,7 +399,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:520px;font-family:var
         <tr><td>Supply cache</td><td>The attackers’ structure: defenders destroy it</td><td>About −2% for the attackers</td><td>15,000 to everyone who damaged it</td></tr>
         <tr><td>Propaganda Broadcast Structure</td><td>Deploy one and keep it alive for 10 minutes</td><td>About +1% for your side</td><td>About 10,000*</td></tr>
         <tr><td>Listening Outpost</td><td>Deploy one and keep it alive for 10 minutes</td><td>About −1% for the enemy</td><td>About 10,000*</td></tr>
-        <tr><td>Neighbouring systems</td><td>Hold the frontline and command operations systems around it</td><td>Sets the base score; about +10% for each one*</td><td>–</td></tr>
+        <tr><td>Neighbouring systems</td><td>Hold the frontline and command operations systems around it</td><td>Sets the base score: +10% for each one</td><td>–</td></tr>
       </tbody>
     </table>
   </div>
@@ -408,7 +408,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:520px;font-family:var
     <li><b>Both can be shot.</b> Each one shows on everyone’s overview, NPC waves pause its timer, and if it’s destroyed before the 10 minutes are up, no advantage is awarded.</li>
     <li><b>The Rendezvous Point NPCs</b> got uniform resistances in Cradle of War (June 2026), and each wave now warps in faster once the last one is dead.</li>
   </ul>
-  <p class="legend">Which side each objective helps, and the VP bonus, come from the game’s own Objectives tab and Factional Warfare Guide (in the Agency, under Theaters of War). CCP gives the sizes as points (+15,000 for a battlefield, +2,000 for a Rendezvous Point, ±1,000 for Propaganda and Listening); the percentages are what those work out to, matching the EVE University Wiki. Some player guides give Propaganda and Listening as 2%, which looks out of date. * Figures marked with an asterisk come from player guides, not CCP. We found nothing reliable on whether advantage fades over time or how quickly a Rendezvous Point respawns, so we’ve left those out.</p>
+  <p class="legend">Which side each objective helps, and the VP bonus, come from the game’s own Objectives tab and Factional Warfare Guide (in the Agency, under Theaters of War). CCP gives the sizes as points (+15,000 for a battlefield, +2,000 for a Rendezvous Point, ±1,000 for Propaganda and Listening); the percentages are what those work out to, matching the EVE University Wiki. Some player guides give Propaganda and Listening as 2%, which looks out of date. The +10% per neighbouring system and the 100% cap match CCP’s live warzone data, which splits each side’s advantage into this “terrain” part and the part earned from objectives. * Figures marked with an asterisk come from player guides, not CCP. We found nothing reliable on whether advantage fades over time or how quickly a Rendezvous Point respawns, so we’ve left those out.</p>
   <h3>Supply depots and caches</h3>
   <ul class="points">
     <li><b>Two kinds, one for each side:</b> supply depots belong to the defenders and supply caches to the attackers, and while they stand they feed their side’s advantage. Both are NPC structures that spawn in frontline and command operations systems several times a day.</li>
