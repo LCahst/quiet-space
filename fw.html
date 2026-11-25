@@ -293,14 +293,15 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   const deltaOf = id => (prevAmounts && prevAmounts[id] !== undefined && fw.has(id) && !flippedSince(id)) ? fw.get(id).amount - prevAmounts[id] : null;
   const changeText = id => flippedSince(id) ? `Flipped to ${FACTIONS[fw.get(id).occupier] ? FACTIONS[fw.get(id).occupier].short : "?"}` : fmtDelta(deltaOf(id));
   const changeColor = id => flippedSince(id) ? (FACTIONS[fw.get(id).occupier] ? FACTIONS[fw.get(id).occupier].color : "var(--muted)") : deltaColor(id, deltaOf(id));
+  const roundDelta = d => Math.round(d * 1000) / 10; // percentage points, one decimal
   function fmtDelta(d) {
     if (d === null) return "";
-    const v = Math.round(d * 1000) / 10;
+    const v = roundDelta(d);
     return v === 0 ? "no change" : `${v > 0 ? "+" : "\u2212"}${Math.abs(v).toFixed(1)}%`;
   }
   // Gains show in the attacker's colour, losses (the defender pushing back) in the defender's.
   function deltaColor(id, d) {
-    if (!d) return "var(--muted)";
+    if (!d || roundDelta(d) === 0) return "var(--muted)"; // anything shown as "no change" stays neutral
     const occ = fw.get(id).occupier;
     const f = d > 0 ? enemyOf(zone, occ) : occ;
     return FACTIONS[f] ? FACTIONS[f].color : "var(--muted)";
@@ -345,20 +346,24 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   }
   // Zones of control: a Voronoi cell per system (the area closer to it than to any other system),
   // capped to a rough circle so the outer edge of the warzone looks organic rather than boxy.
-  function buildCells(ids, neighbours) {
+  // tight: cap each cell near its own nearest-neighbour spacing, so a system squeezed between close
+  // neighbours gets a small rounded patch instead of a long spike reaching into empty space.
+  function buildCells(ids, neighbours, tight) {
     const P = id => [galaxy[id][0], -galaxy[id][2]]; // top-down, north up
     const all = ids.concat(neighbours);
     const pts = new Map(all.map(id => [id, P(id)]));
     // typical spacing: median distance to the nearest other system
-    const nn = ids.map(id => { const p = pts.get(id); let best = Infinity; for (const o of all) { if (o === id) continue; const q = pts.get(o); best = Math.min(best, Math.hypot(p[0] - q[0], p[1] - q[1])); } return best; }).sort((a, b) => a - b);
+    const nearest = new Map(ids.map(id => { const p = pts.get(id); let best = Infinity; for (const o of all) { if (o === id) continue; const q = pts.get(o); best = Math.min(best, Math.hypot(p[0] - q[0], p[1] - q[1])); } return [id, best]; }));
+    const nn = [...nearest.values()].sort((a, b) => a - b);
     const typical = nn[Math.floor(nn.length / 2)] || 0.3;
     const R = typical * 1.9;
     const cells = new Map();
     for (const id of ids) {
       const p = pts.get(id);
+      const r = tight ? Math.min(R, Math.max(typical * 0.9, nearest.get(id) * 1.6)) : R;
       // start with a 28-sided "circle", each edge labelled "cap"
       let poly = [];
-      for (let k = 0; k < 28; k++) { const a = k / 28 * Math.PI * 2; poly.push({ x: p[0] + Math.cos(a) * R, y: p[1] + Math.sin(a) * R, e: "cap" }); }
+      for (let k = 0; k < 28; k++) { const a = k / 28 * Math.PI * 2; poly.push({ x: p[0] + Math.cos(a) * r, y: p[1] + Math.sin(a) * r, e: "cap" }); }
       for (const o of all) {
         if (o === id) continue;
         const q = pts.get(o);
@@ -1081,7 +1086,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     const pts = focus.map(id => galaxy[id]);
     const pad = 0.35 * Math.max(1, Math.max(...pts.map(p => p[0])) - Math.min(...pts.map(p => p[0])));
     const bounds = { minX: Math.min(...pts.map(p => p[0])) - pad, maxX: Math.max(...pts.map(p => p[0])) + pad, minZ: Math.min(...pts.map(p => p[2])) - pad, maxZ: Math.max(...pts.map(p => p[2])) + pad };
-    pv = { camps, ids, set, iset, neighbours, origins, dist, bounds, cells: buildCells(ids, neighbours) };
+    pv = { camps, ids, set, iset, neighbours, origins, dist, bounds, cells: buildCells(ids, neighbours, true) };
   }
   const insOf = id => (pv && pv.iset.has(id)) ? insurgency.systems[id] : null;
   function segRing(x, y, radius, filled, color, width) {
@@ -1136,7 +1141,8 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     for (const id of pv.neighbours) { const [x, y] = S(...P(id)); g.beginPath(); g.arc(x, y, 2 * dpr, 0, Math.PI * 2); g.fillStyle = "rgba(160,175,200,0.35)"; g.fill(); }
     // markers
     const taken = [], labelOn = $("labels").checked;
-    const ordered = pv.ids.slice().sort((a, b) => (pv.iset.has(b) ? 1 : 0) - (pv.iset.has(a) ? 1 : 0)); // infected names get priority
+    const rank = id => pv.origins.includes(id) ? 2 : pv.iset.has(id) ? 1 : 0;
+    const ordered = pv.ids.slice().sort((a, b) => rank(b) - rank(a)); // origin name first, then infected names
     for (const id of ordered) {
       const e = insOf(id), [x, y] = S(...P(id)), origin = pv.origins.includes(id);
       if (origin) {
@@ -1155,8 +1161,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       if (labelOn) {
         const label = e ? `${sysName(id)}  C${e.cs ?? "?"} S${e.ss ?? "?"}` : sysName(id);
         g.font = `${e ? 12 : 10.5}px "Saira Semi Condensed", sans-serif`.replace(/^(\d+(\.\d+)?)px/, m => (parseFloat(m) * dpr) + "px");
-        const off = (e ? (origin ? 20 : 16) : 5) * dpr, w = g.measureText(label).width, bx = x + off, by = y - 7 * dpr, h = 13 * dpr;
-        if (!taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1])) {
+        const off = (e ? (origin ? 20 : 16) : 5) * dpr, w = g.measureText(label).width, by = y - 7 * dpr, h = 13 * dpr;
+        const free = bx => !taken.some(t => bx < t[0] + t[2] && bx + w > t[0] && by < t[1] + h && by + h > t[1]);
+        // right of the marker if there's room, otherwise (infected systems only) try the left
+        const bx = [x + off, ...(e ? [x - off - w] : [])].find(free);
+        if (bx !== undefined) {
           taken.push([bx, by, w + 4 * dpr]);
           g.lineWidth = 3 * dpr; g.strokeStyle = "rgba(5,8,14,0.85)"; g.lineJoin = "round"; g.strokeText(label, bx, y + 4 * dpr);
           g.fillStyle = e ? "rgba(245,240,225,0.95)" : "rgba(170,182,200,0.6)"; g.fillText(label, bx, y + 4 * dpr);
