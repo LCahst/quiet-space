@@ -63,7 +63,7 @@
   if (params.get("s")) $("q").value = params.get("s");
   if (params.get("pl")) $("pl").value = params.get("pl");
 
-  const staticText = s => s.statics.map(x => `${x.code} <span class="muted">→ ${WH.esc(x.targetLabel)}</span>${x.confirmed ? "" : ` <span class="badge b-warn" title="Only ${x.sources.join(", ")} lists this">?</span>`}`).join("<br>");
+  const staticText = s => s.statics.map(x => `<span class="nowrap">${x.code} <span class="muted">→ ${WH.esc(x.targetLabel)}</span></span>${x.confirmed ? "" : ` <span class="badge b-warn" title="Only ${x.sources.join(", ")} lists this">?</span>`}`).join("<br>");
   const LIMIT = 300;
   let current = null;
   function run() {

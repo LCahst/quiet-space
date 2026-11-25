@@ -58,6 +58,17 @@ table.t{border-collapse:collapse;font-family:var(--cond);font-size:.92rem;width:
 .t thead th{background:var(--panel);font-weight:600;position:sticky;top:0;white-space:nowrap}
 .t thead th small{display:block;color:var(--muted);font-weight:400}
 .t td.num,.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.t .expect{min-width:260px} /* a paragraph per row: squeezed narrow it made every row very tall */
+.t .expect-row{display:none}
+@media (max-width:640px){
+  /* phones: the paragraph moves to a full-width line under each site, held in view while the numbers scroll sideways */
+  .t th.expect,.t td.expect{display:none}
+  .t .expect-row{display:table-row}
+  .t tr.site td{border-bottom:0;padding-bottom:2px}
+  .t .expect-row td{padding-top:0}
+  .tablewrap{container-type:inline-size}
+  .t .expect-row td>div{position:sticky;left:10px;width:calc(100cqw - 20px)} /* the visible box width, less the cell padding */
+}
 .t tbody tr:hover td{background:rgba(159,180,212,.05)}
 .t tr.sel td{background:rgba(159,180,212,.12)}
 .t button.rowbtn{all:unset;cursor:pointer;color:#8fbaf0;text-decoration:underline;text-underline-offset:2px}

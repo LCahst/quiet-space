@@ -24,7 +24,7 @@
 
   <h2>Can my ship go through?</h2>
   <form class="controls" onsubmit="return false">
-    <label>Ship<input type="search" id="ship" list="shipList" placeholder="e.g. Nestor, Orca, Naglfar" autocomplete="off"></label>
+    <label>Ship<input type="search" id="ship" list="shipList" placeholder="e.g. Nestor, Orca" autocomplete="off"></label>
     <datalist id="shipList"></datalist>
     <label>Propulsion module<select id="prop"><option value="0">None</option></select></label>
     <label title="A propulsion module adds its mass only while it's running">Module running<select id="propOn"><option value="1">Yes</option><option value="0">No</option></select></label>
@@ -158,7 +158,7 @@
   function run() {
     const q = $("code").value.trim().toUpperCase(), to = $("to").value;
     $("holes").querySelector("tbody").innerHTML = H.filter(h => (!q || h.code.includes(q)) && (!to || h.targetLabel === to)).map(h =>
-      `<tr><td><b>${h.code}</b></td><td>${WH.esc(h.targetLabel)}</td><td class="num">${WH.massShort(h.maxJumpMass)}</td><td class="num">${WH.massShort(h.totalMass)}</td><td class="num">${h.regenPerDay ? WH.massShort(h.regenPerDay) : "–"}</td><td class="num">${WH.hours(h.lifetimeMin)}</td><td class="cond">${WH.sigText(sigs?.holes[h.code])}</td></tr>`).join("");
+      `<tr><td><b>${h.code}</b></td><td>${WH.esc(h.targetLabel)}</td><td class="num">${WH.massShort(h.maxJumpMass)}</td><td class="num">${WH.massShort(h.totalMass)}</td><td class="num">${h.regenPerDay ? WH.massShort(h.regenPerDay) : "–"}</td><td class="num">${WH.hours(h.lifetimeMin)}</td><td class="cond nowrap">${WH.sigText(sigs?.holes[h.code])}</td></tr>`).join("");
   }
   $("code").addEventListener("input", run); $("to").addEventListener("input", run);
   run();

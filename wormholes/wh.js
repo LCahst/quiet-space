@@ -158,6 +158,8 @@ const WH = (() => {
     const step = niceStep(max), top = Math.ceil(max / step) * step;
     const n = values.length, slot = (W - L - R) / n, bw = Math.max(2, slot - 2); // 2px gap between bars
     const y = v => T + (H - T - B) * (1 - v / top);
+    // label every nth bar, more sparsely if the labels (about 6.5px a character at 11px) would run together
+    const every = Math.max(opts.every || 1, Math.ceil((Math.max(...values.map(v => String(v.label).length)) * 6.5 + 6) / slot));
     let g = "";
     for (let t = 0; t <= top; t += step) g += `<line x1="${L}" x2="${W - R}" y1="${y(t)}" y2="${y(t)}"/><text x="${L - 6}" y="${y(t) + 4}" text-anchor="end">${t >= 1000 ? `${t / 1000}k` : t}</text>`;
     let b = "", x = "";
@@ -167,7 +169,7 @@ const WH = (() => {
       // bar anchored to the baseline, rounded 4px at the data end only
       const d = h <= 0 ? "" : `M${x0},${H - B}V${y(v.value) + r}Q${x0},${y(v.value)} ${x0 + r},${y(v.value)}H${x0 + bw - r}Q${x0 + bw},${y(v.value)} ${x0 + bw},${y(v.value) + r}V${H - B}Z`;
       b += `<rect class="hit" x="${L + i * slot}" y="${T}" width="${slot}" height="${H - T - B}" data-i="${i}"/><path class="bar" d="${d}"/>`;
-      if (i % (opts.every || 1) === 0) x += `<text x="${x0 + bw / 2}" y="${H - 6}" text-anchor="middle">${esc(v.label)}</text>`;
+      if (i % every === 0) x += `<text x="${x0 + bw / 2}" y="${H - 6}" text-anchor="middle">${esc(v.label)}</text>`;
     });
     el.classList.add("chart");
     el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.title || "")}"><g class="grid axis">${g}</g><g>${b}</g><g class="axis">${x}</g></svg><div class="tip" hidden></div>
@@ -221,12 +223,14 @@ const WH = (() => {
       const pre = cls <= 3 && s.kind === "Combat anomaly" && d ? '<span class="dated" title="EVE University recorded these waves before CCP rebuilt C1–C3 combat sites in September 2026">pre-2026 waves</span>' : "";
       const unsure = d?.uncertain ? `<span class="dated" title="${esc(d.uncertain)}">check counts</span>` : "";
       const ew = d ? [d.peakWaveNeutGJs ? `neuts up to ${d.peakWaveNeutGJs} GJ/s` : "", d.websters ? `${d.websters} ships that web` : "", d.scramblers ? `${d.scramblers} that scram` : "", d.remoteRepairers ? `${d.remoteRepairers} that repair others` : ""].filter(Boolean).join(", ") : "";
-      return `<tr><td>${d ? `<a href="${d.url}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}<br><span class="muted">${s.kind}</span></td>
+      const expect = `${esc(s.factors.join("; "))}${ew ? `<br><span class="muted">Waves include: ${esc(ew)}.</span>` : ""}${d?.triggers?.length ? `<br><span class="cond"><b>Triggers:</b> ${triggerText(d)}</span>` : ""}${s.note ? `<br><span class="muted">${esc(s.note)}</span>${src(s.noteSrc)}` : ""}${d?.note ? `<br><span class="muted">${esc(d.note)}</span>${src("euSites")}` : ""}`;
+      // the text sits in its own column on wide screens and on a full-width line under the numbers on phones
+      return `<tr class="site"><td>${d ? `<a href="${d.url}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}<br><span class="muted">${s.kind}</span></td>
         <td><span class="tier tier${s.tier}">${s.tier}</span> ${TIER_LABEL[s.tier]}</td>
         <td class="num">${loot}</td><td class="num">${d ? d.waves : "–"}</td><td class="num">${d ? num(d.ehp / 1000) + "k" + (d.ehpIfExtraSpawns > d.ehp ? `<br><span class="muted">${num(d.ehpIfExtraSpawns / 1000)}k with extra spawns</span>` : "") : "–"}</td><td class="num">${d ? num(d.peakWaveDps) + (d.peakWaveDpsIfExtraSpawns > d.peakWaveDps ? `<br><span class="muted">${num(d.peakWaveDpsIfExtraSpawns)} with extra spawns</span>` : "") : "–"}${pre}${unsure}</td>
-        <td>${esc(s.factors.join("; "))}${ew ? `<br><span class="muted">Waves include: ${esc(ew)}.</span>` : ""}${d?.triggers?.length ? `<br><span class="cond"><b>Triggers:</b> ${triggerText(d)}</span>` : ""}${s.note ? `<br><span class="muted">${esc(s.note)}</span>${src(s.noteSrc)}` : ""}${d?.note ? `<br><span class="muted">${esc(d.note)}</span>${src("euSites")}` : ""}</td></tr>`;
+        <td class="expect">${expect}</td></tr><tr class="expect-row"><td colspan="6"><div>${expect}</div></td></tr>`;
     }).join("");
-    return `<div class="tablewrap"><table class="t"><thead><tr><th>Site<small>links to EVE University's wave tables</small></th><th>Danger</th><th class="num">Blue loot<small>ISK</small></th><th class="num">Waves</th><th class="num">Total EHP<small>guaranteed spawns</small></th><th class="num">Strongest wave<small>DPS if all fire</small></th><th>What to expect</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    return `<div class="tablewrap"><table class="t"><thead><tr><th>Site<small>links to EVE University's wave tables</small></th><th>Danger</th><th class="num">Blue loot<small>ISK</small></th><th class="num">Waves</th><th class="num">Total EHP<small>guaranteed spawns</small></th><th class="num">Strongest wave<small>DPS if all fire</small></th><th class="expect">What to expect</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   }
 
   // signature level text for a hole type (data/hole-signatures.json); kind = "static" | "wandering" | undefined
