@@ -139,8 +139,10 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
 }
 @media (max-width:900px){
   main{grid-template-columns:1fr;grid-template-rows:60vh auto}
-  aside{border-left:0;border-top:1px solid var(--line)}
-  body{overflow:auto}
+  aside{border-left:0;border-top:1px solid var(--line);overflow:visible}
+  /* the page grows and scrolls as a whole, so the panel gets its full height under the map */
+  html,body{height:auto}
+  body{min-height:100%;grid-template-rows:auto auto auto;overflow:visible}
 }
 </style>
 </head>
@@ -452,9 +454,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   }
   function fit() {
     const b = (pirateMode && pv) ? pv.bounds : zone.bounds, w = Math.max(1, b.maxX - b.minX), h = Math.max(1, b.maxZ - b.minZ);
-    view.scale = Math.min(cv.width / (w * 1.18), cv.height / (h * 1.18));
+    // names sit to the right of each system, so keep room for the rightmost ones (matters on narrow phones)
+    const labelRoom = 70 * dpr;
+    view.scale = Math.min((cv.width - labelRoom) / (w * 1.18), cv.height / (h * 1.18));
     fitScale = view.scale;
-    view.x = (b.minX + b.maxX) / 2; view.y = -(b.minZ + b.maxZ) / 2;
+    view.x = (b.minX + b.maxX) / 2 + labelRoom / 2 / view.scale; view.y = -(b.minZ + b.maxZ) / 2;
   }
   let stripeCache = {};
   function stripes(color) {
