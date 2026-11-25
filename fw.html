@@ -1243,7 +1243,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       fact("Average suppression", `level ${avg("ss")}`);
       panel.append(facts);
     }
-    const inf = [...pv.iset];
+    // The ranked lists only mean something once sites spawn, so systems in a forecasting campaign are left out
+    // and the lists are hidden while every campaign here is still forecasting.
+    const live = new Set(pv.camps.filter(c => c.state !== "FORECAST").map(c => c.id));
+    const inf = [...pv.iset].filter(id => live.has(insurgency.systems[id].c));
+    if (inf.length) {
     panel.append(el("h2", null, "Most corrupted"));
     panel.append(rankList(inf.slice().sort((a, b) => (insOf(b).cs - insOf(a).cs) || ((insOf(b).cp || 0) - (insOf(a).cp || 0))).slice(0, 6),
       id => { const e = insOf(id); return { val: `Level ${e.cs}`, sub: `Suppression level ${e.ss ?? "?"}${pv.dist.has(id) ? `, ${pv.dist.get(id)} jump${pv.dist.get(id) === 1 ? "" : "s"} from origin` : ""}`, bar: [(e.cs || 0) / 5, pc] }; }, "No systems affected."));
@@ -1254,6 +1258,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     const far = inf.filter(id => pv.dist.has(id)).sort((a, b) => pv.dist.get(b) - pv.dist.get(a)).slice(0, 6);
     const maxJ = far.length ? pv.dist.get(far[0]) || 1 : 1;
     panel.append(rankList(far, id => ({ val: `${pv.dist.get(id)} jump${pv.dist.get(id) === 1 ? "" : "s"}`, sub: `Corruption level ${insOf(id).cs ?? "?"}, ${regionOf(id)}`, bar: [pv.dist.get(id) / maxJ, pc] }), "No systems affected."));
+    }
     if (insurgency.updated) { const f = el("dl", "facts"); f.append(el("dt", null, "Insurgency data from"), el("dd", null, timeOf(new Date(insurgency.updated)))); panel.append(f); }
   }
   function pirateLegend(lg) {
