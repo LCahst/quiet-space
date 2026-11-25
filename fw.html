@@ -49,7 +49,9 @@ main{display:grid;grid-template-columns:1fr 360px;min-height:0}
 .stage{position:relative;min-width:0;min-height:0;overflow:hidden}
 #map{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 #map.drag{cursor:grabbing}
-.tip{position:absolute;pointer-events:none;background:rgba(14,21,33,.94);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-family:var(--cond);font-size:.85rem;min-width:200px;max-width:280px;transform:translate(14px,-50%);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.tip{position:absolute;pointer-events:none;background:rgba(14,21,33,.94);border:1px solid var(--line);border-radius:4px;padding:7px 10px;font-family:var(--cond);font-size:.85rem;min-width:170px;max-width:240px;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:tipin .12s ease-out}
+@keyframes tipin{from{opacity:0}}
+.tip .more{color:var(--muted);font-size:.75rem;margin-top:3px}
 .tip b{font-family:var(--sans);font-size:.98rem}
 .tip .row{display:flex;justify-content:space-between;gap:12px}
 .tip .row span:first-child{color:var(--muted)}
@@ -684,7 +686,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     const [mx, my] = canvasXY((a.x + b.x) / 2, (a.y + b.y) / 2);
     pinch = { d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), scale: view.scale,
       wx: (mx - cv.width / 2) / view.scale + view.x, wy: (my - cv.height / 2) / view.scale + view.y };
-    drag = null; cv.classList.add("drag"); $("tip").hidden = true; hoverId = null;
+    drag = null; cv.classList.add("drag"); hideTip();
   }
   cv.addEventListener("pointerdown", e => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -706,12 +708,38 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       const dx = (e.clientX - drag.x) * dpr, dy = (e.clientY - drag.y) * dpr;
       if (Math.hypot(dx, dy) > 4) { drag.moved = true; cv.classList.add("drag"); }
       view.x = drag.vx - dx / view.scale; view.y = drag.vy - dy / view.scale;
-      $("tip").hidden = true; hoverId = null;
+      hideTip();
       return;
     }
-    hoverId = systemAt(e.offsetX * dpr, e.offsetY * dpr);
-    showTip(hoverId, e.offsetX, e.offsetY);
+    hover(systemAt(e.offsetX * dpr, e.offsetY * dpr), e.offsetX, e.offsetY);
   });
+  // The hovered system highlights at once, but its box waits for the cursor to rest on it briefly,
+  // so sweeping across the map doesn't flash a box at every system passed. Once shown, it follows the cursor.
+  const TIP_DELAY = 450;
+  let tipTimer = null, tipAt = [0, 0];
+  function hover(id, px, py) {
+    tipAt = [px, py];
+    if (id === hoverId) { if (!$("tip").hidden) placeTip(px, py); return; }
+    hoverId = id; hideTip(false);
+    if (id) tipTimer = setTimeout(() => { tipTimer = null; if (hoverId === id) showTip(id, ...tipAt); }, TIP_DELAY);
+  }
+  function hideTip(clearHover = true) {
+    clearTimeout(tipTimer); tipTimer = null; $("tip").hidden = true;
+    if (clearHover) hoverId = null;
+  }
+  // Right of the cursor if it fits, else left; vertically centred on it but kept inside the map.
+  // If neither side fits (narrow screens), go above or below instead. Never over the system itself.
+  function placeTip(px, py) {
+    const tip = $("tip"), st = $("stage"), W = st.clientWidth, H = st.clientHeight;
+    const w = tip.offsetWidth, h = tip.offsetHeight, gap = 16, m = 8;
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    let x, y;
+    if (px + gap + w <= W - m) x = px + gap;
+    else if (px - gap - w >= m) x = px - gap - w;
+    if (x !== undefined) y = clamp(py - h / 2, m, H - h - m);
+    else { x = clamp(px - w / 2, m, W - w - m); y = py - gap - h >= m ? py - gap - h : Math.min(py + gap, H - h - m); }
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
   function endPointer(e, tapped) {
     pointers.delete(e.pointerId);
     if (pinch) {
@@ -734,9 +762,9 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   }
   cv.addEventListener("pointerup", e => endPointer(e, true));
   cv.addEventListener("pointercancel", e => endPointer(e, false));
-  cv.addEventListener("pointerleave", () => { $("tip").hidden = true; hoverId = null; });
+  cv.addEventListener("pointerleave", () => hideTip());
   cv.addEventListener("wheel", e => {
-    e.preventDefault();
+    e.preventDefault(); hideTip(); // the map moves under the box while zooming; it comes back once the cursor rests
     const mx = e.offsetX * dpr, my = e.offsetY * dpr;
     const wx = (mx - cv.width / 2) / view.scale + view.x, wy = (my - cv.height / 2) / view.scale + view.y;
     view.scale = Math.min(2000, Math.max(5, view.scale * Math.exp(-e.deltaY * 0.0015)));
@@ -770,30 +798,25 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       const sysd = catalog.systems[id], dd = displaySec(sysd ? sysd.s : null);
       const rw = (a, b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
       tip.innerHTML = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(sysd && sysd.s)}">${dd === null ? "?" : dd.toFixed(1)}</span><div class="muted">${regionOf(id)}, outside the warzone</div>`
-        + rw("Jumps, last hour", (jumps1[id] || 0).toLocaleString()) + rw("Kills, last hour", (kills1[id] || 0).toLocaleString())
-        + (kills24 ? rw("PvP kills, 24 hours (zKillboard)", pvp24(id).toLocaleString()) : "");
-      tip.hidden = false;
-      const w = $("stage").clientWidth;
-      tip.style.left = Math.min(px, w - 300) + "px"; tip.style.top = Math.max(60, py) + "px";
+        + rw("Last hour", `${(jumps1[id] || 0).toLocaleString()} jumps, ${(kills1[id] || 0).toLocaleString()} kills`);
+      tip.hidden = false; placeTip(px, py);
       return;
     }
+    // Kept short so it covers little of the map: the full breakdown is in the panel on click.
     const s = fw.get(id), occ = FACTIONS[s.occupier], role = zone.roles.get(id);
     const d = displaySec(catalog.systems[id] ? catalog.systems[id].s : null);
     const row = (a, b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
-    let html = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(catalog.systems[id] && catalog.systems[id].s)}">${d === null ? "?" : d.toFixed(1)}</span><div class="muted">${regionOf(id)}, ${ROLE_NAMES[role]}</div>`;
-    html += row("Occupied by", occ ? occ.short : "?");
-    html += row(s.contested ? "Contested" : "Status", s.contested ? pct(s.amount) : "Uncontested");
-    if (deltaOf(id) !== null || flippedSince(id)) html += row(`Change since ${timeOf(prevAt)}`, `<span style="color:${changeColor(id)}">${changeText(id)}</span>`);
+    let html = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(catalog.systems[id] && catalog.systems[id].s)}">${d === null ? "?" : d.toFixed(1)}</span><div class="muted">${occ ? occ.short : "?"} held, ${ROLE_NAMES[role].toLowerCase()}</div>`;
+    const change = ((s.contested && deltaOf(id) !== null) || flippedSince(id)) ? ` <span style="color:${changeColor(id)}">(${changeText(id)})</span>` : "";
+    html += row(s.contested ? "Contested" : "Status", (s.contested ? pct(s.amount) : "Uncontested") + change);
     const A = advantageOf(s);
-    if (A) html += row("Advantage", A.list.map(a => `<span style="color:${FACTIONS[a.f] ? FACTIONS[a.f].color : "inherit"}">${a.total}%</span>`).join(" vs "));
     if (A) html += row("VP bonus", A.even ? "None (even)" : `<span style="color:${FACTIONS[A.leader] ? FACTIONS[A.leader].color : "inherit"}">${FACTIONS[A.leader] ? FACTIONS[A.leader].short : A.leader} +${A.net}%</span>`);
-    html += row("Jumps, last hour", (jumps1[id] || 0).toLocaleString());
-    html += row("Kills, last hour", (kills1[id] || 0).toLocaleString());
-    if (kills24) html += row("PvP kills, 24 hours (zKillboard)", pvp24(id).toLocaleString());
-    if (activity) { const v = activity.systems[id]; html += row("30-day avg jumps", (v ? v[0] : 0).toFixed(1)); }
-    tip.innerHTML = html; tip.hidden = false;
-    const w = $("stage").clientWidth;
-    tip.style.left = Math.min(px, w - 300) + "px"; tip.style.top = Math.max(60, py) + "px";
+    // with a heat overlay on, show the number it's shading by
+    const metric = ($("overlay").value || ":").split(":")[0], TIP_METRIC = { kills24: "PvP kills, 24 hours", jumps: "Jumps, last hour", avg: "30-day avg jumps" };
+    if (TIP_METRIC[metric]) { const v = metricValue(id, metric); if (v !== null) html += row(TIP_METRIC[metric], metric === "avg" ? v.toFixed(1) : v.toLocaleString()); }
+    if (kills1[id] || metric === "kills1") html += row("Kills, last hour", (kills1[id] || 0).toLocaleString());
+    html += `<div class="more">Click for full details</div>`;
+    tip.innerHTML = html; tip.hidden = false; placeTip(px, py);
   }
   let flight = null;
   function select(id) {
@@ -1211,16 +1234,14 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
   function pirateTip(id, px, py) {
     const tip = $("tip"), e = insOf(id), sysd = catalog.systems[id], d = displaySec(sysd ? sysd.s : null);
     const pc = FACTIONS[zone.pirate].color, row = (a, b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
-    let html = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(sysd && sysd.s)}">${d === null ? "?" : d.toFixed(1)}</span><div class="muted">${regionOf(id)}${pv.origins.includes(id) ? ", campaign origin" : ""}</div>`;
+    let html = `<b>${sysName(id)}</b> <span class="chip" style="background:${secColor(sysd && sysd.s)}">${d === null ? "?" : d.toFixed(1)}</span>${pv.origins.includes(id) ? `<div class="muted">Campaign origin</div>` : ""}`;
     if (e) {
-      html += row("Corruption", `Level ${e.cs ?? "?"}${e.cp != null ? `, ${Math.round(e.cp * 10) / 10}%` : ""}${lvl(e.cs, pc)}`);
-      html += row("Suppression", `Level ${e.ss ?? "?"}${e.sp != null ? `, ${Math.round(e.sp * 10) / 10}%` : ""}${lvl(e.ss, SUPPRESS)}`);
+      html += row("Corruption", `Level ${e.cs ?? "?"}${lvl(e.cs, pc)}`);
+      html += row("Suppression", `Level ${e.ss ?? "?"}${lvl(e.ss, SUPPRESS)}`);
     } else html += `<div class="muted">Not part of the insurgency</div>`;
-    if (pv.dist.has(id)) html += row("Jumps from origin", pv.dist.get(id));
-    html += row("Kills, last hour", (kills1[id] || 0).toLocaleString());
-    tip.innerHTML = html; tip.hidden = false;
-    const w = $("stage").clientWidth;
-    tip.style.left = Math.min(px, w - 300) + "px"; tip.style.top = Math.max(60, py) + "px";
+    if (kills1[id]) html += row("Kills, last hour", kills1[id].toLocaleString());
+    if (pv.set.has(id)) html += `<div class="more">Click for full details</div>`;
+    tip.innerHTML = html; tip.hidden = false; placeTip(px, py);
   }
   function renderPiratePanel(panel) {
     const P_ = FACTIONS[zone.pirate], pc = P_.color;
