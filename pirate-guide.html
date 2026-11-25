@@ -252,15 +252,15 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
     <li><b>A Forward Operating Base (FOB) appears.</b> This pirate structure is placed in a low-sec faction warfare system near the frontline, and it’s the pirates’ base for the campaign: pirate militia can dock, fit and tether there, and the Zarzakh Shipcaster sends them straight to it. Anything you leave at the FOB is sent to Zarzakh when the insurgency ends (it used to go to the nearest low-sec system).</li>
     <li><b>Forecasting, for 16 hours.</b> The FOB’s location and the first four target systems are revealed, so both sides can prepare, but no sites spawn yet and the FOB can’t be attacked.</li>
     <li><b>The active phase, up to 14 days in all.</b> Insurgency sites start spawning, and both sides race to push systems to the top stage.</li>
-    <li><b>It spreads.</b> When a system reaches corruption stage 3, a neighbouring system (security 0.0 to 0.8) joins the insurgency and starts spawning sites too.</li>
+    <li><b>It spreads.</b> When a system reaches corruption stage 3, a neighbouring system joins the insurgency (never one at 0.8 security or above, or in null-sec) and starts spawning sites too.</li>
     <li><b>It ends</b> in a pirate win, an empire win or a tie, and the payouts go out.</li>
   </ol>
   <p class="legend">CCP shortened insurgencies from 14 days to 7 and lengthened forecasting from 24 hours to 48 in September 2026, then reversed course on 24 November 2026: insurgencies can run 14 days again and forecasting is down to 16 hours. Insurgencies already running on 24 November kept the old timers.</p>
 
   <h3>How each side wins</h3>
   <ul class="points">
-    <li><b>Pirates win</b> by pushing their target number of systems to <b>corruption stage 5</b>. They then take temporary control of the FOB’s system. When the insurgency ends, they hand it back to its old owner, but its infrastructure hub becomes vulnerable about 24 hours (and one downtime) later, giving either empire militia a quick chance to flip it. After a pirate win, assets left at the FOB can be delivered right away or arrive in Zarzakh on their own after a day, and CCP’s notes say the tax on them drops to 0.5% instead of 15%.</li>
-    <li><b>Empires win</b> by pushing their target number of systems to <b>suppression stage 5</b>. That makes the FOB vulnerable, and they then have to <b>destroy it</b>, after a single armor reinforcement timer of 3 hours (give or take an hour). Destroying it raises suppression by one stage in every insurgency system, and the insurgency winds down over 48 hours.</li>
+    <li><b>Pirates win</b> by pushing their target number of systems to <b>corruption stage 5</b>. Every system in the insurgency also moves up a corruption stage, and the pirates take the FOB’s system out of the warzone for a while, so the systems around it become frontlines. When the insurgency ends, they hand it back to its old owner, but its infrastructure hub becomes vulnerable about 24 hours (and one downtime) later, giving either empire militia a quick chance to flip it. After a pirate win, assets left at the FOB can be delivered right away or arrive in Zarzakh on their own after a day, and CCP’s notes say the tax on them drops to 0.5% instead of 15%.</li>
+    <li><b>Empires win</b> by pushing their target number of systems to <b>suppression stage 5</b>. That makes the FOB vulnerable (so does fully suppressing every system in the insurgency), and they then have to <b>destroy it</b>, after a single armor reinforcement timer of 3 hours (give or take an hour). Destroying it raises suppression by one stage in every insurgency system, and the insurgency winds down over 48 hours.</li>
     <li><b>Neither side reaching its target</b> ends in a tie, with no bonus payout for anyone.</li>
   </ul>
 
@@ -270,7 +270,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
     <li><b>Winning adds +1 ambition</b> to the winning side, so it needs one more system at stage 5 next time. A side on a streak can climb to <b>+7</b>, meaning <b>12 systems</b>.</li>
     <li><b>Only one side can have ambition at a time.</b> If the underdog wins, it doesn’t gain ambition straight away: instead, the favourite’s ambition drops by 1. Only once the favourite is back to the neutral 5 systems do further wins start building the other side’s ambition.</li>
     <li><b>Losing with ambition costs 1,</b> down to the minimum of 5 systems.</li>
-    <li><b>Where to see it:</b> each side’s current target is shown in the Insurgency window, and the in-game pirate insurgency guide in the Agency explains it too.</li>
+    <li><b>Where to see it:</b> open <b>Theaters of War</b> and choose <b>Pirates</b>. Under <b>Insurgency Progress</b>, each side’s target is a row of numbered dots that fill in as its systems reach stage 5; the extra dots past 5 are that side’s ambition. Before an insurgency starts, the same panel shows a countdown and where the FOB has spawned. The pirate insurgency guide in the Agency explains it too.</li>
   </ul>
   <div class="tablewrap">
     <table class="stages ambition">
@@ -310,7 +310,7 @@ table.agents{border-collapse:collapse;width:100%;min-width:620px;font-family:var
     <li><b>Reward crates from named NPCs:</b> once a system’s corruption or suppression is high enough, roaming NPCs start warping around it, including rare named ones (Zohar’s Chosen for the Angels, Hakuzosu’s Steelscale for the Guristas, and Upwell ‘Kingbird’ fortifications for the empires). Their loot can be turned in for reward crates: pirates at the <b>Pirate Laundering Facilities</b> in the FOB system, empire pilots at the <b>Counter-Insurgency Outposts</b> in their faction’s War HQ system (Onnamon for the Caldari, Intaki for the Gallente, Mehatoor for the Amarr, Amo for the Minmatar).</li>
     <li><b>EVE Vanguard:</b> insurgency missions in CCP’s shooter, EVE Vanguard, also feed into corruption and suppression.</li>
   </ul>
-  <p>Follow live insurgencies, with each system’s corruption and suppression, on our <a href="fw.html">faction warfare map</a> using the pirate focus button.</p>
+  <p>Follow live insurgencies, with each system’s corruption and suppression, on our <a href="fw.html">faction warfare map</a> using the pirate focus button. In game, <b>Insurgency Systems</b> in the Agency (under Theaters of War, Pirate Insurgencies) lists every insurgency system, filters them by corruption or suppression stage, shows which activities are in each and can set a route there.</p>
 
   <h2 id="stages">Corruption and suppression</h2>
   <p>Every insurgency system has a corruption level (the pirates’ side) and a suppression level (the empires’ side), from 1 to 5. Each completed activity adds a percentage toward the next level (see the table above), and every level brings new effects for the side that earned it.</p>
