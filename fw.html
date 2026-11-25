@@ -161,6 +161,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
         <option value="jumps:least">Least gate jumps, last hour</option>
         <option value="avg:most">Busiest, 30-day average</option>
         <option value="avg:least">Quietest, 30-day average</option>
+        <option value="adv:lead" title="Who is ahead on advantage in each system, shaded by the victory point bonus it gives them">Advantage (VP bonus)</option>
       </select>
     </label>
     <button type="button" class="pbtn" id="pirateBtn" aria-pressed="false" title="Focus on the pirate insurgency">&#9760; Pirate focus</button>
@@ -300,17 +301,17 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     return FACTIONS[f] ? FACTIONS[f].color : "var(--muted)";
   }
   const timeOf = d => d ? d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) : "";
-  // Advantage as shares: each faction's total as a share of everyone's combined. Net advantage is the
-  // leader's share minus the next strongest faction's share.
+  // Advantage: each faction's total is already a percentage (0 to 100) of the advantage it could hold in
+  // the system: "terrain" from friendly frontline and command operations systems next door (10 each), plus
+  // "dynamic" from objectives. The side ahead gets a victory point bonus equal to the gap (the in-game
+  // guide: Amarr 30%, Minmatar 10% gives Amarr +20% VP).
   function advantageOf(s) {
     const list = (s.adv || []).filter(a => a.total > 0).sort((a, b) => b.total - a.total);
-    const sum = list.reduce((t, a) => t + a.total, 0);
-    if (!sum) return null;
-    const shares = list.map(a => ({ ...a, share: a.total / sum }));
-    const net = shares[0].share - (shares[1] ? shares[1].share : 0);
-    return { shares, leader: shares[0].f, net, even: Math.round(net * 100) === 0 };
+    if (!list.length) return null;
+    const net = list[0].total - (list[1] ? list[1].total : 0);
+    return { list, leader: list[0].f, net, even: net === 0 };
   }
-  const pct0 = v => `${Math.round(v * 100)}%`;
+  const ADV_NOTE = "The side ahead gets this much extra victory points for each capture here: the gap between the two sides' advantage.";
 
   // ---------- Warzone geometry ----------
   let zoneKey = "cg", zone = null;
@@ -458,7 +459,10 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
         const att = FACTIONS[enemyOf(zone, s.occupier)];
         g.save(); g.globalAlpha = Math.min(0.85, Math.pow(s.amount, 1.6) * 0.9); g.fillStyle = stripes(hexA(att.color, heatOn ? 0.5 : 0.9)); g.fill(); g.restore();
       }
-      if (heatOn) {
+      if (metric === "adv") {
+        const A = advantageOf(s);
+        if (A && !A.even) { g.fillStyle = hexA(FACTIONS[A.leader] ? FACTIONS[A.leader].color : "#888888", 0.1 + Math.min(A.net, 60) / 60 * 0.6); g.fill(); }
+      } else if (heatOn) {
         const v = metricValue(id, metric);
         if (v !== null) {
           let t = maxV ? Math.sqrt(v / maxV) : 0;
@@ -744,7 +748,8 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     html += row(s.contested ? "Contested" : "Status", s.contested ? pct(s.amount) : "Uncontested");
     if (deltaOf(id) !== null || flippedSince(id)) html += row(`Change since ${timeOf(prevAt)}`, `<span style="color:${changeColor(id)}">${changeText(id)}</span>`);
     const A = advantageOf(s);
-    if (A) html += row("Net advantage", A.even ? "Even" : `<span style="color:${FACTIONS[A.leader] ? FACTIONS[A.leader].color : "inherit"}">${FACTIONS[A.leader] ? FACTIONS[A.leader].short : A.leader} +${pct0(A.net)}</span>`);
+    if (A) html += row("Advantage", A.list.map(a => `<span style="color:${FACTIONS[a.f] ? FACTIONS[a.f].color : "inherit"}">${a.total}%</span>`).join(" vs "));
+    if (A) html += row("VP bonus", A.even ? "None (even)" : `<span style="color:${FACTIONS[A.leader] ? FACTIONS[A.leader].color : "inherit"}">${FACTIONS[A.leader] ? FACTIONS[A.leader].short : A.leader} +${A.net}%</span>`);
     html += row("Jumps, last hour", (jumps1[id] || 0).toLocaleString());
     html += row("Kills, last hour", (kills1[id] || 0).toLocaleString());
     if (kills24) html += row("PvP kills, 24 hours (zKillboard)", pvp24(id).toLocaleString());
@@ -802,32 +807,34 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
 
     panel.append(facts);
 
-    // Advantage across the warzone: each faction's share of all advantage in the warzone's systems,
-    // as bars with percentages, the number of systems it leads, and the warzone-wide net advantage.
+    // Advantage across the warzone: each faction's average advantage over the warzone's systems, how
+    // many systems it leads in, and the systems with the biggest victory point bonus right now.
     const totals = {}, leads = {};
     zone.ids.forEach(id => {
       const s = fw.get(id);
       (s.adv || []).forEach(a => { totals[a.f] = (totals[a.f] || 0) + a.total; });
       const A = advantageOf(s); if (A && !A.even) leads[A.leader] = (leads[A.leader] || 0) + 1;
     });
-    const sum = Object.values(totals).reduce((t, v) => t + v, 0);
-    if (sum > 0) {
-      panel.append(el("h2", null, "Advantage across the warzone"));
-      const shares = zone.sides.concat(zone.pirate).map(f => ({ f, share: (totals[f] || 0) / sum })).sort((a, b) => b.share - a.share);
+    if (Object.values(totals).some(v => v > 0)) {
+      const h = el("h2", null, "Advantage across the warzone"); h.title = ADV_NOTE;
+      panel.append(h);
       const bars = el("div", "advbars");
-      shares.forEach(({ f, share }) => {
+      zone.sides.concat(zone.pirate).map(f => ({ f, avg: (totals[f] || 0) / zone.ids.length })).sort((a, b) => b.avg - a.avg).forEach(({ f, avg }) => {
         const F = FACTIONS[f];
         const track = el("div", "atrack"), fill = document.createElement("i");
-        fill.style.cssText = `width:${share * 100}%;background:${F.color}`; track.append(fill);
-        const pc = el("span", "ap", pct0(share)); pc.style.color = F.color;
+        fill.style.cssText = `width:${avg}%;background:${F.color}`; track.append(fill);
+        const pc = el("span", "ap", `${Math.round(avg)}%`); pc.style.color = F.color;
         const n = leads[f] || 0;
-        bars.append(el("span", "an", F.short), track, pc, el("span", "apts", `leads in ${n} system${n === 1 ? "" : "s"}`));
+        bars.append(el("span", "an", F.short), track, pc, el("span", "apts", `average; ahead in ${n} system${n === 1 ? "" : "s"}`));
       });
       panel.append(bars);
-      const net = shares[0].share - (shares[1] ? shares[1].share : 0), even = Math.round(net * 100) === 0;
-      const netEl = el("div", "net", even ? "Net advantage: even" : `Net advantage: ${FACTIONS[shares[0].f].short} +${pct0(net)}`);
-      if (!even) netEl.style.color = FACTIONS[shares[0].f].color;
-      panel.append(netEl);
+      const top = zone.ids.filter(id => { const A = advantageOf(fw.get(id)); return A && !A.even; })
+        .sort((x, y) => advantageOf(fw.get(y)).net - advantageOf(fw.get(x)).net).slice(0, 6);
+      const h2 = el("h2", null, "Biggest VP bonuses"); h2.title = ADV_NOTE;
+      panel.append(h2, rankList(top, id => {
+        const A = advantageOf(fw.get(id)), L = FACTIONS[A.leader] || { short: "?", color: "#ccc" };
+        return { val: `+${A.net}%`, sub: `${L.short} ahead, ${A.list.map(a => a.total + "%").join(" vs ")}`, bar: [A.net / 100, L.color] };
+      }, "No system has a VP bonus right now."));
     }
 
     // Closest to flipping
@@ -964,19 +971,19 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     else {
       // One progress bar per faction, filled to its share of the advantage, with the percentage at the end.
       const bars = el("div", "advbars");
-      A.shares.forEach(a => {
+      A.list.forEach(a => {
         const F = FACTIONS[a.f] || { short: String(a.f), color: "#888" };
         const name = el("span", "an", F.short);
         const track = el("div", "atrack"), fill = document.createElement("i");
-        fill.style.cssText = `width:${a.share * 100}%;background:${F.color}`;
+        fill.style.cssText = `width:${a.total}%;background:${F.color}`;
         track.append(fill);
-        track.title = `${a.terrain} terrain + ${a.dynamic} dynamic = ${a.total}`;
-        const pc = el("span", "ap", pct0(a.share)); pc.style.color = F.color;
-        bars.append(name, track, pc, el("span", "apts", `${a.terrain} terrain + ${a.dynamic} dynamic`));
+        const pc = el("span", "ap", `${a.total}%`); pc.style.color = F.color;
+        bars.append(name, track, pc, el("span", "apts", `${a.terrain} from neighbouring systems + ${a.dynamic} from objectives`));
       });
       card.append(bars);
       const L = FACTIONS[A.leader] || { short: "?", color: "#ccc" };
-      const net = el("div", "net", A.even ? "Net advantage: even" : `Net advantage: ${L.short} +${pct0(A.net)}`);
+      const net = el("div", "net", A.even ? "Even: no VP bonus" : `VP bonus: ${L.short} +${A.net}%`);
+      net.title = ADV_NOTE;
       if (!A.even) net.style.color = L.color;
       card.append(net);
     }
@@ -1008,7 +1015,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     r2.innerHTML = `<span>Systems:</span><span><svg viewBox="0 0 14 14"><path d="M7 1l6 6-6 6-6-6z" fill="#9fb4d4" stroke="#fff"/></svg>Frontline</span><span><svg viewBox="0 0 14 14"><rect x="2.5" y="2.5" width="9" height="9" fill="#9fb4d4" stroke="#fff"/></svg>Command</span><span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="4" fill="#9fb4d4" stroke="#fff"/></svg>Rearguard</span><span><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="none" stroke="#ffffff55" stroke-width="2"/><path d="M7 1.5a5.5 5.5 0 0 1 5.5 5.5" fill="none" stroke="#fff" stroke-width="2"/></svg>Contested (ring and stripes show progress)</span><span><svg viewBox="0 0 14 14"><path d="M1 7h12" stroke="#ffc882" stroke-width="4" opacity=".55"/><path d="M1 7h12" stroke="#fff6e8" stroke-width="1.6"/></svg>Frontline border</span><span><svg viewBox="0 0 14 14"><path d="M1 7h12" stroke="#04070c" stroke-width="3.4"/><path d="M1 7h12" stroke="#96cdff" stroke-width="1.3"/></svg>Gate route</span>`;
     lg.append(r1, r2);
     const [metric, mode] = ($("overlay").value || ":").split(":");
-    if (metric) {
+    if (metric === "adv") {
+      const r3 = el("div", "lrow"); r3.title = ADV_NOTE;
+      r3.innerHTML = `<span>Shaded in the colour of the side ahead on advantage: the stronger the shade, the bigger its VP bonus (full at +60% or more)</span>`;
+      lg.append(r3);
+    } else if (metric) {
       const r3 = el("div", "lrow");
       const grad = mode === "least" ? `linear-gradient(90deg,${heatColor(1, "least", .9)},${heatColor(0, "least", .3)})` : `linear-gradient(90deg,${heatColor(0, "most", .5)},${heatColor(1, "most", .95)})`;
       if (metric === "kills24") r3.title = K24_NOTE;
