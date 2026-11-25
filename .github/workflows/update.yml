@@ -34,7 +34,7 @@ jobs:
     timeout-minutes: 120
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy1.outputs.page_url || steps.deploy2.outputs.page_url || steps.deploy3.outputs.page_url }}
     env:
       DATA_DIR: data
     steps:
@@ -122,5 +122,19 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
-      - id: deploy
+      # GitHub sometimes takes a while to list an artifact that was just uploaded, and deploy-pages then fails
+      # with "No artifacts named github-pages were found". Wait and try again before giving up.
+      - id: deploy1
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+      - if: steps.deploy1.outcome == 'failure'
+        run: sleep 30
+      - id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+      - if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
+        run: sleep 90
+      - id: deploy3
+        if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
         uses: actions/deploy-pages@v5
