@@ -1,0 +1,1699 @@
+{
+ "sdeBuild": 3720952,
+ "sdeReleased": "2026-11-19T11:07:08Z",
+ "builtAt": "2026-11-21T17:54:35.266Z",
+ "note": "Holes that can open in each class besides its statics (Tripwire's per-type 'from' lists, cross-checked with Wanderer's per-class lists and whtype.info). alsoStatic = some systems of the class have it as a static. Pochven links left out.",
+ "classes": {
+  "1": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C125",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "F353",
+    "target": 12,
+    "targetLabel": "Thera",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "H121",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J244",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "J377",
+    "target": 8,
+    "targetLabel": "Low-sec (Turnur)",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J492",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L614",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M609",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "N110",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "O883",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "S804",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z060",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   }
+  ],
+  "2": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J377",
+    "target": 8,
+    "targetLabel": "Low-sec (Turnur)",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J492",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z647",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "A239",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "B274",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "D382",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E545",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "F135",
+    "target": 12,
+    "targetLabel": "Thera",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "N062",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "O477",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "R474",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Y683",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   }
+  ],
+  "3": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J377",
+    "target": 8,
+    "targetLabel": "Low-sec (Turnur)",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J492",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "V301",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "A982",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "D845",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "F135",
+    "target": 12,
+    "targetLabel": "Thera",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "I182",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "K346",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "N770",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "N968",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "T405",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "U210",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   }
+  ],
+  "4": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J377",
+    "target": 8,
+    "targetLabel": "Low-sec (Turnur)",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J492",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "P060",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "C247",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "D845",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "F135",
+    "target": 12,
+    "targetLabel": "Thera",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "H900",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "K329",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "K346",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "N290",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "N766",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "S047",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "U210",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "U574",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "X877",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   }
+  ],
+  "5": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J492",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire"
+    ],
+    "disputed": "whtype.info doesn't list it here"
+   },
+   {
+    "code": "Y790",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "D364",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "E175",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "F135",
+    "target": 12,
+    "targetLabel": "Thera",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "K346",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "M267",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "U210",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "D792",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 1000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C140",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "H296",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "V753",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z142",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   }
+  ],
+  "6": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J492",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire"
+    ],
+    "disputed": "whtype.info doesn't list it here"
+   },
+   {
+    "code": "Q317",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "F135",
+    "target": 12,
+    "targetLabel": "Thera",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G024",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "K346",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "L477",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "Z457",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 375000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "B520",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 1000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "D792",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 1000000000,
+    "alsoStatic": false,
+    "sources": [
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C140",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C248",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C391",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   },
+   {
+    "code": "V911",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "W237",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z142",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 2000000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "wanderer",
+     "whtype"
+    ]
+   }
+  ],
+  "12": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "J377",
+    "target": 8,
+    "targetLabel": "Low-sec (Turnur)",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q063",
+    "target": 7,
+    "targetLabel": "High-sec",
+    "maxJumpMass": 62000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "V301",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 62000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "A982",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "I182",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "N770",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "N968",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "T405",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 375000000,
+    "alsoStatic": false,
+    "sources": [
+     "tripwire",
+     "whtype"
+    ]
+   },
+   {
+    "code": "E587",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 1000000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   },
+   {
+    "code": "V898",
+    "target": 8,
+    "targetLabel": "Low-sec",
+    "maxJumpMass": 1000000000,
+    "alsoStatic": true,
+    "sources": [
+     "tripwire"
+    ]
+   }
+  ],
+  "13": [
+   {
+    "code": "A009",
+    "target": 13,
+    "targetLabel": "C13",
+    "maxJumpMass": 5000000,
+    "alsoStatic": false,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "C008",
+    "target": 5,
+    "targetLabel": "C5",
+    "maxJumpMass": 5000000,
+    "alsoStatic": true,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "E004",
+    "target": 1,
+    "targetLabel": "C1",
+    "maxJumpMass": 5000000,
+    "alsoStatic": true,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "G008",
+    "target": 6,
+    "targetLabel": "C6",
+    "maxJumpMass": 5000000,
+    "alsoStatic": true,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "L005",
+    "target": 2,
+    "targetLabel": "C2",
+    "maxJumpMass": 5000000,
+    "alsoStatic": true,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "M001",
+    "target": 4,
+    "targetLabel": "C4",
+    "maxJumpMass": 5000000,
+    "alsoStatic": true,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "Q003",
+    "target": 9,
+    "targetLabel": "Null-sec",
+    "maxJumpMass": 5000000,
+    "alsoStatic": true,
+    "sources": [
+     "whtype"
+    ]
+   },
+   {
+    "code": "Z006",
+    "target": 3,
+    "targetLabel": "C3",
+    "maxJumpMass": 5000000,
+    "alsoStatic": true,
+    "sources": [
+     "whtype"
+    ]
+   }
+  ]
+ }
+}

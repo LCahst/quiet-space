@@ -1,0 +1,558 @@
+{
+ "builtAt": "2026-11-21T16:01:38.361Z",
+ "source": "Rykki's Guide ore tab, read 2026-11-21; ore volumes and NPC stats from CCP's static data; where each site appears from EVE University.",
+ "sites": {
+  "Average Frontier Deposit": {
+   "area": "Frontier",
+   "where": "every class",
+   "blueLootIsk": 4200000,
+   "defenders": [
+    "3 Emergent Patroller",
+    "1 Awakened Patroller"
+   ],
+   "defenderCount": 4,
+   "defenderEhp": 28167,
+   "defenderDps": 90,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 30000,
+     "m3": 480000
+    },
+    {
+     "name": "Bistot",
+     "units": 40000,
+     "m3": 640000
+    },
+    {
+     "name": "Gneiss",
+     "units": 450000,
+     "m3": 2250000
+    },
+    {
+     "name": "Kernite",
+     "units": 300000,
+     "m3": 360000
+    },
+    {
+     "name": "Omber",
+     "units": 300000,
+     "m3": 180000
+    },
+    {
+     "name": "Pyroxeres",
+     "units": 700000,
+     "m3": 210000
+    }
+   ],
+   "totalM3": 4120000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Common Perimeter Deposit": {
+   "area": "Perimeter",
+   "where": "every class",
+   "blueLootIsk": 2000000,
+   "defenders": [
+    "5 Emergent Patroller"
+   ],
+   "defenderCount": 5,
+   "defenderEhp": 15000,
+   "defenderDps": 80,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 20000,
+     "m3": 320000
+    },
+    {
+     "name": "Bistot",
+     "units": 30000,
+     "m3": 480000
+    },
+    {
+     "name": "Gneiss",
+     "units": 40000,
+     "m3": 200000
+    },
+    {
+     "name": "Kernite",
+     "units": 300000,
+     "m3": 360000
+    },
+    {
+     "name": "Omber",
+     "units": 300000,
+     "m3": 180000
+    },
+    {
+     "name": "Pyroxeres",
+     "units": 520000,
+     "m3": 156000
+    }
+   ],
+   "totalM3": 1696000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Exceptional Core Deposit": {
+   "area": "Core",
+   "where": "C5 and C6 (rarely lower)",
+   "blueLootIsk": 15900000,
+   "defenders": [
+    "1 Sleepless Sentinel"
+   ],
+   "defenderCount": 1,
+   "defenderEhp": 147714,
+   "defenderDps": 465,
+   "scrams": true,
+   "tier": 2,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 80000,
+     "m3": 1280000
+    },
+    {
+     "name": "Bistot",
+     "units": 120000,
+     "m3": 1920000
+    },
+    {
+     "name": "Gneiss",
+     "units": 160000,
+     "m3": 800000
+    },
+    {
+     "name": "Kernite",
+     "units": 1000000,
+     "m3": 1200000
+    },
+    {
+     "name": "Omber",
+     "units": 1000000,
+     "m3": 600000
+    },
+    {
+     "name": "Pyroxeres",
+     "units": 1530000,
+     "m3": 459000
+    }
+   ],
+   "totalM3": 6259000,
+   "listedOnly": null,
+   "note": "Rykki's Guide lists the 1,530,000-unit ore as Plagioclase; EVE University lists Pyroxeres, and Plagioclase isn't a wormhole ore (cerlestes.de), so it's shown as Pyroxeres."
+  },
+  "Infrequent Core Deposit": {
+   "area": "Core",
+   "where": "C5 and C6 (rarely lower)",
+   "blueLootIsk": 5800000,
+   "defenders": [
+    "2 Awakened Defender"
+   ],
+   "defenderCount": 2,
+   "defenderEhp": 53666,
+   "defenderDps": 118,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 50000,
+     "m3": 800000
+    },
+    {
+     "name": "Bistot",
+     "units": 70000,
+     "m3": 1120000
+    },
+    {
+     "name": "Gneiss",
+     "units": 90000,
+     "m3": 450000
+    },
+    {
+     "name": "Kernite",
+     "units": 800000,
+     "m3": 960000
+    },
+    {
+     "name": "Omber",
+     "units": 800000,
+     "m3": 480000
+    },
+    {
+     "name": "Pyroxeres",
+     "units": 1930000,
+     "m3": 579000
+    }
+   ],
+   "totalM3": 4389000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Isolated Core Deposit": {
+   "area": "Core",
+   "where": "C5 and C6 (rarely lower)",
+   "blueLootIsk": 1800000,
+   "defenders": [
+    "2 Emergent Patroller",
+    "1 Awakened Watchman"
+   ],
+   "defenderCount": 3,
+   "defenderEhp": 14750,
+   "defenderDps": 63,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 36000,
+     "m3": 576000
+    },
+    {
+     "name": "Bistot",
+     "units": 48000,
+     "m3": 768000
+    },
+    {
+     "name": "Gneiss",
+     "units": 72000,
+     "m3": 360000
+    },
+    {
+     "name": "Kernite",
+     "units": 720000,
+     "m3": 864000
+    },
+    {
+     "name": "Omber",
+     "units": 720000,
+     "m3": 432000
+    }
+   ],
+   "totalM3": 3000000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Ordinary Perimeter Deposit": {
+   "area": "Perimeter",
+   "where": "every class",
+   "blueLootIsk": 2000000,
+   "defenders": [
+    "3 Emergent Patroller",
+    "2 Emergent Watchman"
+   ],
+   "defenderCount": 5,
+   "defenderEhp": 13000,
+   "defenderDps": 72,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 10000,
+     "m3": 160000
+    },
+    {
+     "name": "Bistot",
+     "units": 20000,
+     "m3": 320000
+    },
+    {
+     "name": "Gneiss",
+     "units": 20000,
+     "m3": 100000
+    },
+    {
+     "name": "Hedbergite",
+     "units": 200000,
+     "m3": 600000
+    },
+    {
+     "name": "Kernite",
+     "units": 200000,
+     "m3": 240000
+    },
+    {
+     "name": "Pyroxeres",
+     "units": 1620000,
+     "m3": 486000
+    }
+   ],
+   "totalM3": 1906000,
+   "listedOnly": null,
+   "note": "Rykki's Guide lists 200,000 Hedbergite here, but cerlestes.de doesn't list Hedbergite as a wormhole ore. Unconfirmed."
+  },
+  "Rarified Core Deposit": {
+   "area": "Core",
+   "where": "C5 and C6 (rarely lower)",
+   "blueLootIsk": 37600000,
+   "defenders": [
+    "2 Awakened Sentinel",
+    "1 Sleepless Sentinel"
+   ],
+   "defenderCount": 3,
+   "defenderEhp": 232048,
+   "defenderDps": 617,
+   "scrams": true,
+   "tier": 3,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 100000,
+     "m3": 1600000
+    },
+    {
+     "name": "Bistot",
+     "units": 160000,
+     "m3": 2560000
+    },
+    {
+     "name": "Gneiss",
+     "units": 200000,
+     "m3": 1000000
+    },
+    {
+     "name": "Kernite",
+     "units": 1200000,
+     "m3": 1440000
+    },
+    {
+     "name": "Omber",
+     "units": 1000000,
+     "m3": 600000
+    },
+    {
+     "name": "Pyroxeres",
+     "units": 960000,
+     "m3": 288000
+    }
+   ],
+   "totalM3": 7488000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Uncommon Core Deposit": {
+   "area": "Core",
+   "where": "C5 and C6 (rarely lower)",
+   "blueLootIsk": 1800000,
+   "defenders": [
+    "2 Emergent Watchman",
+    "1 Awakened Escort"
+   ],
+   "defenderCount": 3,
+   "defenderEhp": 16000,
+   "defenderDps": 79,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 40000,
+     "m3": 640000
+    },
+    {
+     "name": "Bistot",
+     "units": 60000,
+     "m3": 960000
+    },
+    {
+     "name": "Gneiss",
+     "units": 70000,
+     "m3": 350000
+    },
+    {
+     "name": "Kernite",
+     "units": 590000,
+     "m3": 708000
+    },
+    {
+     "name": "Omber",
+     "units": 600000,
+     "m3": 360000
+    },
+    {
+     "name": "Pyroxeres",
+     "units": 500000,
+     "m3": 150000
+    }
+   ],
+   "totalM3": 3168000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Unexceptional Frontier Deposit": {
+   "area": "Frontier",
+   "where": "every class",
+   "blueLootIsk": 2000000,
+   "defenders": [
+    "1 Emergent Escort",
+    "2 Emergent Patroller",
+    "2 Emergent Watchman"
+   ],
+   "defenderCount": 5,
+   "defenderEhp": 11300,
+   "defenderDps": 79,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 30000,
+     "m3": 480000
+    },
+    {
+     "name": "Bistot",
+     "units": 50000,
+     "m3": 800000
+    },
+    {
+     "name": "Gneiss",
+     "units": 60000,
+     "m3": 300000
+    },
+    {
+     "name": "Kernite",
+     "units": 400000,
+     "m3": 480000
+    },
+    {
+     "name": "Omber",
+     "units": 400000,
+     "m3": 240000
+    }
+   ],
+   "totalM3": 2300000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Unusual Core Deposit": {
+   "area": "Core",
+   "where": "C5 and C6 (rarely lower)",
+   "blueLootIsk": 5800000,
+   "defenders": [
+    "1 Awakened Defender",
+    "1 Awakened Upholder"
+   ],
+   "defenderCount": 2,
+   "defenderEhp": 39083,
+   "defenderDps": 102,
+   "scrams": false,
+   "tier": 1,
+   "ore": [
+    {
+     "name": "Arkonor",
+     "units": 70000,
+     "m3": 1120000
+    },
+    {
+     "name": "Bistot",
+     "units": 100000,
+     "m3": 1600000
+    },
+    {
+     "name": "Gneiss",
+     "units": 120000,
+     "m3": 600000
+    },
+    {
+     "name": "Kernite",
+     "units": 800000,
+     "m3": 960000
+    },
+    {
+     "name": "Omber",
+     "units": 800000,
+     "m3": 480000
+    }
+   ],
+   "totalM3": 4760000,
+   "listedOnly": null,
+   "note": null
+  },
+  "Shattered Debris Field": {
+   "area": "Shattered",
+   "where": "shattered systems only",
+   "blueLootIsk": 5200000,
+   "defenders": [
+    "2 Emergent Defender",
+    "1 Awakened Defender"
+   ],
+   "defenderCount": 3,
+   "defenderEhp": 35233,
+   "defenderDps": 105,
+   "scrams": false,
+   "tier": 1,
+   "ore": [],
+   "totalM3": 0,
+   "listedOnly": [
+    "Arkonor",
+    "Bistot",
+    "Crokite",
+    "Dark Ochre",
+    "Gneiss",
+    "Hedbergite",
+    "Hemorphite",
+    "Jaspet",
+    "Kernite",
+    "Mercoxit",
+    "Omber",
+    "Plagioclase",
+    "Pyroxeres",
+    "Scordite",
+    "Spodumain",
+    "Veldspar",
+    "Concentrated Veldspar",
+    "Crystalline Crokite",
+    "Fiery Kernite",
+    "Gleaming Spodumain",
+    "Luminous Kermite",
+    "Massive Scordite",
+    "Monoclinic Bistot",
+    "Obsidian Ochre",
+    "Pristine Jaspet",
+    "Prime Arkonor",
+    "Prismatic Gneiss",
+    "Pure Jaspet",
+    "Radiant Hemorphite",
+    "Solid Pyroxeres",
+    "Viscous Pyroxeres",
+    "Vitreous Mercoxit",
+    "Vivid Hemorite"
+   ],
+   "note": null
+  },
+  "Shattered Ice Field": {
+   "area": "Shattered",
+   "where": "shattered systems only",
+   "blueLootIsk": 5200000,
+   "defenders": [
+    "2 Emergent Defender",
+    "1 Awakened Defender"
+   ],
+   "defenderCount": 3,
+   "defenderEhp": 35233,
+   "defenderDps": 105,
+   "scrams": false,
+   "tier": 1,
+   "ore": [],
+   "totalM3": 0,
+   "listedOnly": [
+    "Dark Glitter",
+    "Enriched Clear Icicle",
+    "Gelidus",
+    "Glare Crust",
+    "Krystallos",
+    "Pristine White Glaze",
+    "Smooth Glacial Mass",
+    "Thick Blue Ice"
+   ],
+   "note": null
+  }
+ }
+}

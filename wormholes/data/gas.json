@@ -1,0 +1,211 @@
+{
+ "builtAt": "2026-11-21T16:01:38.359Z",
+ "source": "Rykki's Guide gas tab, read 2026-11-21; NPC stats and fullerite volumes from CCP's static data.",
+ "sites": {
+  "Barren Perimeter Reservoir": {
+   "blueLootIsk": 2000000,
+   "defenders": [
+    "3 Emergent Patroller",
+    "2 Emergent Watchman"
+   ],
+   "defenderCount": 5,
+   "defenderEhp": 13000,
+   "defenderDps": 72,
+   "gas": [
+    {
+     "type": "C50",
+     "units": 12000,
+     "m3": 12000
+    },
+    {
+     "type": "C60",
+     "units": 6000,
+     "m3": 6000
+    }
+   ],
+   "totalM3": 18000
+  },
+  "Bountiful Frontier Reservoir": {
+   "blueLootIsk": 20000000,
+   "defenders": [
+    "6 Emergent Defender",
+    "4 Awakened Defender"
+   ],
+   "defenderCount": 10,
+   "defenderEhp": 132532,
+   "defenderDps": 374,
+   "gas": [
+    {
+     "type": "C28",
+     "units": 20000,
+     "m3": 40000
+    },
+    {
+     "type": "C32",
+     "units": 4000,
+     "m3": 20000
+    }
+   ],
+   "totalM3": 60000
+  },
+  "Instrumental Core Reservoir": {
+   "blueLootIsk": 63600000,
+   "defenders": [
+    "4 Sleepless Sentinel"
+   ],
+   "defenderCount": 4,
+   "defenderEhp": 590856,
+   "defenderDps": 1860,
+   "gas": [
+    {
+     "type": "C320",
+     "units": 24000,
+     "m3": 120000
+    },
+    {
+     "type": "C540",
+     "units": 2000,
+     "m3": 20000
+    }
+   ],
+   "totalM3": 140000
+  },
+  "Minor Perimeter Reservoir": {
+   "blueLootIsk": 2000000,
+   "defenders": [
+    "2 Awakened Patroller"
+   ],
+   "defenderCount": 2,
+   "defenderEhp": 38334,
+   "defenderDps": 84,
+   "gas": [
+    {
+     "type": "C70",
+     "units": 12000,
+     "m3": 12000
+    },
+    {
+     "type": "C72",
+     "units": 6000,
+     "m3": 12000
+    }
+   ],
+   "totalM3": 24000
+  },
+  "Ordinary Perimeter Reservoir": {
+   "blueLootIsk": 2400000,
+   "defenders": [
+    "3 Emergent Patroller",
+    "3 Emergent Watchman"
+   ],
+   "defenderCount": 6,
+   "defenderEhp": 15000,
+   "defenderDps": 84,
+   "gas": [
+    {
+     "type": "C72",
+     "units": 12000,
+     "m3": 24000
+    },
+    {
+     "type": "C84",
+     "units": 6000,
+     "m3": 12000
+    }
+   ],
+   "totalM3": 36000
+  },
+  "Sizeable Perimeter Reservoir": {
+   "blueLootIsk": 2400000,
+   "defenders": [
+    "3 Emergent Patroller",
+    "3 Emergent Watchman"
+   ],
+   "defenderCount": 6,
+   "defenderEhp": 15000,
+   "defenderDps": 84,
+   "gas": [
+    {
+     "type": "C50",
+     "units": 6000,
+     "m3": 6000
+    },
+    {
+     "type": "C84",
+     "units": 12000,
+     "m3": 24000
+    }
+   ],
+   "totalM3": 30000
+  },
+  "Token Perimeter Reservoir": {
+   "blueLootIsk": 1800000,
+   "defenders": [
+    "2 Emergent Escort",
+    "1 Awakened Watchman"
+   ],
+   "defenderCount": 3,
+   "defenderEhp": 11350,
+   "defenderDps": 77,
+   "gas": [
+    {
+     "type": "C60",
+     "units": 12000,
+     "m3": 12000
+    },
+    {
+     "type": "C70",
+     "units": 6000,
+     "m3": 6000
+    }
+   ],
+   "totalM3": 18000
+  },
+  "Vast Frontier Reservoir": {
+   "blueLootIsk": 23200000,
+   "defenders": [
+    "4 Awakened Defender",
+    "4 Awakened Upholder"
+   ],
+   "defenderCount": 8,
+   "defenderEhp": 156332,
+   "defenderDps": 408,
+   "gas": [
+    {
+     "type": "C28",
+     "units": 4000,
+     "m3": 8000
+    },
+    {
+     "type": "C32",
+     "units": 20000,
+     "m3": 100000
+    }
+   ],
+   "totalM3": 108000
+  },
+  "Vital Core Reservoir": {
+   "blueLootIsk": 74800000,
+   "defenders": [
+    "4 Emergent Keeper",
+    "4 Sleepless Keeper"
+   ],
+   "defenderCount": 8,
+   "defenderEhp": 372116,
+   "defenderDps": 2348,
+   "gas": [
+    {
+     "type": "C320",
+     "units": 2000,
+     "m3": 10000
+    },
+    {
+     "type": "C540",
+     "units": 24000,
+     "m3": 240000
+    }
+   ],
+   "totalM3": 250000
+  }
+ }
+}

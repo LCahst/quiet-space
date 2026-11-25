@@ -1,0 +1,92 @@
+{
+ "sdeBuild": 3720952,
+ "sdeReleased": "2026-11-19T11:07:08Z",
+ "builtAt": "2026-11-21T17:54:35.266Z",
+ "note": "Mass added while a propulsion module is running (massAddition), by armour plates (always), and by Higgs Anchor rigs (% of hull mass). CCP data.",
+ "propulsion": {
+  "1MN AB": [
+   500000
+  ],
+  "5MN MWD": [
+   500000
+  ],
+  "10MN AB": [
+   5000000
+  ],
+  "50MN MWD": [
+   5000000
+  ],
+  "100MN AB": [
+   50000000
+  ],
+  "500MN MWD": [
+   50000000
+  ],
+  "10000MN AB": [
+   500000000
+  ],
+  "50000MN MWD": [
+   500000000
+  ]
+ },
+ "plates": {
+  "100mm": [
+   20000,
+   25000,
+   32500,
+   35000,
+   37500
+  ],
+  "200mm": [
+   90000,
+   100000,
+   120000,
+   140000,
+   150000
+  ],
+  "400mm": [
+   225000,
+   250000,
+   300000,
+   350000,
+   375000
+  ],
+  "800mm": [
+   900000,
+   1000000,
+   1200000,
+   1350000,
+   1450000
+  ],
+  "1600mm": [
+   2250000,
+   2500000,
+   3000000,
+   3500000,
+   3750000
+  ],
+  "25000mm": [
+   68000000,
+   80000000,
+   88000000
+  ]
+ },
+ "higgs": [
+  {
+   "name": "Small Higgs Anchor I",
+   "massPercent": 100
+  },
+  {
+   "name": "Medium Higgs Anchor I",
+   "massPercent": 100
+  },
+  {
+   "name": "Large Higgs Anchor I",
+   "massPercent": 100
+  },
+  {
+   "name": "Capital Higgs Anchor I",
+   "massPercent": 100
+  }
+ ]
+}

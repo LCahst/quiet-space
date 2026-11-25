@@ -92,6 +92,19 @@ jobs:
         continue-on-error: true
         run: node scripts/collect-warzone.mjs
 
+      # Wormhole section: class-level kill figures from the kill log above, and Jita gas and ore prices.
+      # The reference data (classes, statics, sites...) is built by hand and committed in wormholes/data;
+      # these two files go to the data branch so they survive between runs, with their small caches.
+      - name: Update wormhole kill figures and Jita prices
+        if: github.event.schedule != '2,32,47 * * * *'
+        continue-on-error: true
+        env:
+          WH_OUT: data/wormholes
+          WH_CACHE: data/wormholes-cache
+        run: |
+          node scripts/wh/collect-wh-kills.mjs
+          node scripts/wh/collect-wh-prices.mjs
+
       - name: Update public player structures (daily, manual, or if missing)
         if: github.event.schedule == '45 11 * * *' || github.event_name == 'workflow_dispatch' || hashFiles('data/public/structures-count.json') == ''
         continue-on-error: true
@@ -117,6 +130,11 @@ jobs:
           mkdir -p _site/data
           cp index.html killmap.html fw.html ships.html fw-guide.html pirate-guide.html _site/
           if [ -d data/public ]; then cp -r data/public/. _site/data/; fi
+          mkdir -p _site/wormholes/data
+          cp wormholes/*.html wormholes/wh.css wormholes/wh.js _site/wormholes/
+          cp wormholes/data/*.json _site/wormholes/data/
+          # the latest kill figures and prices from the data branch replace the committed fallback copies
+          if [ -d data/wormholes ]; then cp data/wormholes/*.json _site/wormholes/data/; fi
 
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5

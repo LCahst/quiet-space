@@ -1,0 +1,1798 @@
+{
+ "sdeBuild": 3720952,
+ "sdeReleased": "2026-11-19T11:07:08Z",
+ "builtAt": "2026-11-21T17:54:35.266Z",
+ "note": "CCP dogma. lifetimeMin = attribute 1382 read as minutes (inferred from 960/1440/2880 values).",
+ "holes": [
+  {
+   "code": "A009",
+   "published": false,
+   "target": 13,
+   "targetLabel": "C13",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34439
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "A239",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30678
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "A641",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30657
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "A982",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30685
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "B041",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 2880,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30645
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "B274",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30677
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "B449",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30647
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "B520",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 2880,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30713
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "B735",
+   "published": false,
+   "target": 15,
+   "targetLabel": "Drifter (Barbican)",
+   "lifetimeMin": 960,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    35651
+   ],
+   "distributions": [
+    731
+   ],
+   "special": false
+  },
+  {
+   "code": "C008",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34138
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "C125",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 960,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30661
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "C140",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30705
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "C247",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30691
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "C248",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30715
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "C391",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 2880,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30714
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "C414",
+   "published": false,
+   "target": 17,
+   "targetLabel": "Drifter (Conflux)",
+   "lifetimeMin": 960,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    35653
+   ],
+   "distributions": [
+    731
+   ],
+   "special": false
+  },
+  {
+   "code": "C729",
+   "published": false,
+   "target": -1,
+   "targetLabel": "Special (Pochven links)",
+   "lifetimeMin": 720,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 410000000,
+   "ids": [
+    56026,
+    56535,
+    56536,
+    56537,
+    56538,
+    56539,
+    56545,
+    56546,
+    56547,
+    56548,
+    56549,
+    56550,
+    56551,
+    56552,
+    56553,
+    56554,
+    56555,
+    56556,
+    56557,
+    56558,
+    56559,
+    56560,
+    56561,
+    56562,
+    56563,
+    56564,
+    56565
+   ],
+   "distributions": [
+    2925,
+    2926,
+    2927,
+    2938,
+    2988,
+    2990,
+    2928,
+    2929,
+    2930,
+    2931,
+    2932,
+    2933,
+    2934,
+    2935,
+    2936,
+    2937,
+    2939,
+    2940,
+    2941,
+    2942,
+    2943,
+    2944,
+    2945,
+    2946,
+    2947,
+    2948,
+    2989
+   ],
+   "special": true
+  },
+  {
+   "code": "D364",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 960,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30699
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "D382",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30672
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "D792",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30704
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "D845",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 5000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30695
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "E004",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34134
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "E175",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30701
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "E545",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30679
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "E587",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    34370
+   ],
+   "distributions": [
+    709
+   ],
+   "special": false
+  },
+  {
+   "code": "F135",
+   "published": false,
+   "target": 12,
+   "targetLabel": "Thera",
+   "lifetimeMin": 960,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    34372
+   ],
+   "distributions": [
+    709
+   ],
+   "special": false
+  },
+  {
+   "code": "F216",
+   "published": false,
+   "target": 25,
+   "targetLabel": "Pochven",
+   "lifetimeMin": 720,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    56542,
+    56543
+   ],
+   "distributions": [
+    2951,
+    2952
+   ],
+   "special": true
+  },
+  {
+   "code": "F353",
+   "published": false,
+   "target": 12,
+   "targetLabel": "Thera",
+   "lifetimeMin": 960,
+   "totalMass": 100000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    34371
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "G008",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34139
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "G024",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30708
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "H121",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30660
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "H296",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30702
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "H900",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30693
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "I078",
+   "published": false,
+   "target": 25,
+   "targetLabel": "Pochven",
+   "lifetimeMin": 720,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    92287
+   ],
+   "distributions": [
+    4134
+   ],
+   "special": true
+  },
+  {
+   "code": "I182",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30681
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "J244",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30667,
+    73748
+   ],
+   "distributions": [
+    303,
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "J377",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    73749
+   ],
+   "distributions": [
+    3128
+   ],
+   "special": false
+  },
+  {
+   "code": "J492",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    87827
+   ],
+   "distributions": [
+    3671
+   ],
+   "special": false
+  },
+  {
+   "code": "K162",
+   "published": false,
+   "target": null,
+   "targetLabel": null,
+   "lifetimeMin": null,
+   "totalMass": null,
+   "regenPerDay": null,
+   "maxJumpMass": null,
+   "ids": [
+    30831
+   ],
+   "distributions": [
+    null
+   ],
+   "special": false
+  },
+  {
+   "code": "K329",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30697
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "K346",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30688
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "L005",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34135
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "L031",
+   "published": false,
+   "target": 12,
+   "targetLabel": "Thera",
+   "lifetimeMin": 960,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    34367
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "L477",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30709
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "L614",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30664
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "L687",
+   "published": false,
+   "target": 25,
+   "targetLabel": "Pochven",
+   "lifetimeMin": 720,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    92288
+   ],
+   "distributions": [
+    4136
+   ],
+   "special": true
+  },
+  {
+   "code": "M001",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34137
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "M164",
+   "published": false,
+   "target": 12,
+   "targetLabel": "Thera",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    34366
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "M267",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 960,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30700
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "M555",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30644
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "M609",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 960,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30663
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "N062",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30675
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "N110",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30666
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "N290",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30696
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "N432",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30643
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "N766",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30690
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "N770",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30684
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "N944",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30648
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "N968",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30682
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "O128",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30642
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "O477",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30673
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "O546",
+   "published": false,
+   "target": 25,
+   "targetLabel": "Pochven",
+   "lifetimeMin": 720,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    92289
+   ],
+   "distributions": [
+    4138
+   ],
+   "special": true
+  },
+  {
+   "code": "O753",
+   "published": false,
+   "target": 25,
+   "targetLabel": "Pochven",
+   "lifetimeMin": 720,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    97882
+   ],
+   "distributions": [
+    4188
+   ],
+   "special": true
+  },
+  {
+   "code": "O883",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 960,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30662
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "P060",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30689
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "Q003",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34140
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "Q063",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    34368
+   ],
+   "distributions": [
+    709
+   ],
+   "special": false
+  },
+  {
+   "code": "Q317",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30707
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "R051",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30658
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "R081",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 720,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    56541
+   ],
+   "distributions": [
+    2950
+   ],
+   "special": false
+  },
+  {
+   "code": "R259",
+   "published": false,
+   "target": 18,
+   "targetLabel": "Drifter (Redoubt)",
+   "lifetimeMin": 960,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    35654
+   ],
+   "distributions": [
+    731
+   ],
+   "special": false
+  },
+  {
+   "code": "R327",
+   "published": false,
+   "target": 25,
+   "targetLabel": "Pochven",
+   "lifetimeMin": 720,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    97881
+   ],
+   "distributions": [
+    4187
+   ],
+   "special": true
+  },
+  {
+   "code": "R474",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30676
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "R943",
+   "published": false,
+   "target": 2,
+   "targetLabel": "C2",
+   "lifetimeMin": 960,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30583
+   ],
+   "distributions": [
+    297
+   ],
+   "special": false
+  },
+  {
+   "code": "S047",
+   "published": false,
+   "target": 7,
+   "targetLabel": "High-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30686
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "S199",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30649
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "S804",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30665
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "S877",
+   "published": false,
+   "target": 14,
+   "targetLabel": "Drifter (Sentinel)",
+   "lifetimeMin": 960,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    35650
+   ],
+   "distributions": [
+    731
+   ],
+   "special": false
+  },
+  {
+   "code": "T405",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30683
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "T458",
+   "published": false,
+   "target": 12,
+   "targetLabel": "Thera",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    34338
+   ],
+   "distributions": [
+    302
+   ],
+   "special": false
+  },
+  {
+   "code": "U210",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30687
+   ],
+   "distributions": [
+    303
+   ],
+   "special": false
+  },
+  {
+   "code": "U319",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 2880,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30646
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "U372",
+   "published": false,
+   "target": 25,
+   "targetLabel": "Pochven",
+   "lifetimeMin": 720,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    56544
+   ],
+   "distributions": [
+    2953
+   ],
+   "special": true
+  },
+  {
+   "code": "U574",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 1440,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30694
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "V283",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    30659
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "V301",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30680
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "V753",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 1440,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30703
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "V898",
+   "published": false,
+   "target": 8,
+   "targetLabel": "Low-sec",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 1000000000,
+   "ids": [
+    34369
+   ],
+   "distributions": [
+    709
+   ],
+   "special": false
+  },
+  {
+   "code": "V911",
+   "published": false,
+   "target": 5,
+   "targetLabel": "C5",
+   "lifetimeMin": 1440,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30711
+   ],
+   "distributions": [
+    300
+   ],
+   "special": false
+  },
+  {
+   "code": "V928",
+   "published": false,
+   "target": 16,
+   "targetLabel": "Drifter (Vidette)",
+   "lifetimeMin": 960,
+   "totalMass": 750000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    35652
+   ],
+   "distributions": [
+    731
+   ],
+   "special": false
+  },
+  {
+   "code": "W237",
+   "published": false,
+   "target": 6,
+   "targetLabel": "C6",
+   "lifetimeMin": 1440,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30712
+   ],
+   "distributions": [
+    301
+   ],
+   "special": false
+  },
+  {
+   "code": "X450",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 720,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    56540
+   ],
+   "distributions": [
+    2949
+   ],
+   "special": false
+  },
+  {
+   "code": "X702",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 1440,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30584
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "X877",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30692
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "Y683",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30674
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "Y790",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30698
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "Z006",
+   "published": false,
+   "target": 3,
+   "targetLabel": "C3",
+   "lifetimeMin": 270,
+   "totalMass": 3000000000,
+   "regenPerDay": 3000000000,
+   "maxJumpMass": 5000000,
+   "ids": [
+    34136
+   ],
+   "distributions": [
+    298
+   ],
+   "special": false
+  },
+  {
+   "code": "Z060",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 1000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30668
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "Z142",
+   "published": false,
+   "target": 9,
+   "targetLabel": "Null-sec",
+   "lifetimeMin": 960,
+   "totalMass": 3300000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 2000000000,
+   "ids": [
+    30706
+   ],
+   "distributions": [
+    304
+   ],
+   "special": false
+  },
+  {
+   "code": "Z457",
+   "published": false,
+   "target": 4,
+   "targetLabel": "C4",
+   "lifetimeMin": 960,
+   "totalMass": 2000000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 375000000,
+   "ids": [
+    30710
+   ],
+   "distributions": [
+    299
+   ],
+   "special": false
+  },
+  {
+   "code": "Z647",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 960,
+   "totalMass": 500000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30671
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  },
+  {
+   "code": "Z971",
+   "published": false,
+   "target": 1,
+   "targetLabel": "C1",
+   "lifetimeMin": 960,
+   "totalMass": 100000000,
+   "regenPerDay": 0,
+   "maxJumpMass": 62000000,
+   "ids": [
+    30579
+   ],
+   "distributions": [
+    296
+   ],
+   "special": false
+  }
+ ]
+}

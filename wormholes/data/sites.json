@@ -1,0 +1,2303 @@
+{
+ "builtAt": "2026-11-21T16:01:38.361Z",
+ "sdeBuild": 3720952,
+ "source": "Wave lists and blue loot from Rykki's Guide (Grubu's maintained version, a community Google Sheet), cross-checked against EVE University's site pages (CC BY-SA 4.0); NPC stats from CCP's static data. EHP and DPS are computed here.",
+ "rykki": "Grubu's Maintained Nolak's Updated Karr's Modified Rykki's Guide 1.5 (https://docs.google.com/spreadsheets/d/e/2PACX-1vSaCHnBRDw8Ki6nuamMzQv3InN978Zh7F6RcwlYdJHnlQkDrrdz5zrG3Of_8eoyxeqJimMHt9-7GjLn/pubhtml), read 2026-11-21; sheet last automatic update 11/21/2026 13:07:59.",
+ "note": "peakWaveDps = every NPC in the strongest wave shooting one target; real incoming damage is lower (range, tracking, target switching). Possible extra spawns are left out except in ehpIfExtraSpawns. Blue loot sells to NPC buy orders at fixed prices, so the ISK figures hold unless CCP changes the loot.",
+ "checks": [
+  {
+   "name": "2026 NPC versions have the same stats as the older ones",
+   "ok": true,
+   "detail": "19 pairs; differ: none"
+  },
+  {
+   "name": "every NPC in the wave lists is in CCP's roster",
+   "ok": true,
+   "detail": "all found"
+  },
+  {
+   "name": "per-ship DPS matches EVE University's rows (±3 DPS or 3%)",
+   "ok": true,
+   "detail": "13 ships checked"
+  },
+  {
+   "name": "48 sites",
+   "ok": true,
+   "detail": "48"
+  },
+  {
+   "name": "site loot = sum of per-ship loot where every ship's loot is known (known exceptions listed)",
+   "ok": true,
+   "detail": "7 sites checked; off: Forgotten Core Data Field: ships sum to 281.8m, sheet says 279m"
+  },
+  {
+   "name": "gas: nine sites, volumes match CCP's m³ per unit",
+   "ok": true,
+   "detail": "all match"
+  },
+  {
+   "name": "gas: Ordinary Perimeter defenders = Sizeable's (CCP 23.02)",
+   "ok": true,
+   "detail": "3 Emergent Patroller,3 Emergent Watchman"
+  },
+  {
+   "name": "ore: twelve sites, volumes match CCP's m³ per unit",
+   "ok": true,
+   "detail": "all match"
+  },
+  {
+   "name": "ore: Exceptional Core Deposit guarded by one Sleepless Sentinel (as EVE University says)",
+   "ok": true,
+   "detail": "1 Sleepless Sentinel"
+  }
+ ],
+ "sites": {
+  "Forgotten Perimeter Coronation Platform": {
+   "source": "rykki",
+   "eveUniIsk": [
+    12800000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 12800000,
+   "waves": 3,
+   "npcs": 17,
+   "ehp": 178019,
+   "ehpIfExtraSpawns": 178019,
+   "peakWaveDps": 225,
+   "peakWaveDpsIfExtraSpawns": 225,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 18,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Patroller",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 3
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 2,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    12800000
+   ],
+   "iskPerThousandEhp": 71902,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Perimeter_Coronation_Platform"
+  },
+  "Forgotten Perimeter Power Array": {
+   "source": "rykki",
+   "eveUniIsk": [
+    9200000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    2
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 9200000,
+   "waves": 3,
+   "npcs": 11,
+   "ehp": 109834,
+   "ehpIfExtraSpawns": 109834,
+   "peakWaveDps": 172,
+   "peakWaveDpsIfExtraSpawns": 172,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 12,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Patroller",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Escort",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    9200000
+   ],
+   "iskPerThousandEhp": 83763,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Perimeter_Power_Array"
+  },
+  "Perimeter Ambush Point": {
+   "source": "rykki",
+   "eveUniIsk": [
+    8600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 8600000,
+   "waves": 3,
+   "npcs": 13,
+   "ehp": 130300,
+   "ehpIfExtraSpawns": 130300,
+   "peakWaveDps": 194,
+   "peakWaveDpsIfExtraSpawns": 194,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 0,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Escort",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Escort",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 1,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    8600000
+   ],
+   "iskPerThousandEhp": 66002,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Perimeter_Ambush_Point"
+  },
+  "Perimeter Camp": {
+   "source": "rykki",
+   "eveUniIsk": [
+    9600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    2
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 9600000,
+   "waves": 3,
+   "npcs": 20,
+   "ehp": 124917,
+   "ehpIfExtraSpawns": 124917,
+   "peakWaveDps": 192,
+   "peakWaveDpsIfExtraSpawns": 192,
+   "peakWave": 1,
+   "peakWaveNeutGJs": 9,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Watchman",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    9600000
+   ],
+   "iskPerThousandEhp": 76851,
+   "edited": "2025-03-07",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Perimeter_Camp"
+  },
+  "Phase Catalyst Node": {
+   "source": "rykki",
+   "eveUniIsk": [
+    7400000
+   ],
+   "iskDisagrees": true,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 9000000,
+   "waves": 3,
+   "npcs": 22,
+   "ehp": 128266,
+   "ehpIfExtraSpawns": 128266,
+   "peakWaveDps": 302,
+   "peakWaveDpsIfExtraSpawns": 302,
+   "peakWave": 1,
+   "peakWaveNeutGJs": 12,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Vigilant Sentry Tower",
+     "count": 4
+    },
+    {
+     "wave": 1,
+     "ship": "Emergent Escort",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Escort",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [
+    "wave 1: 1st Death Trigger (Vigilant Sentry Tower)"
+   ],
+   "websters": 2,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    9000000
+   ],
+   "iskPerThousandEhp": 70167,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Phase_Catalyst_Node"
+  },
+  "The Line": {
+   "source": "rykki",
+   "eveUniIsk": [
+    10400000
+   ],
+   "iskDisagrees": true,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 12000000,
+   "waves": 3,
+   "npcs": 18,
+   "ehp": 112734,
+   "ehpIfExtraSpawns": 112734,
+   "peakWaveDps": 155,
+   "peakWaveDpsIfExtraSpawns": 155,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 30,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Watchman",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 3,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    12000000
+   ],
+   "iskPerThousandEhp": 106445,
+   "edited": "2023-01-15",
+   "note": "The last wave is five neuting cruisers; a passive tank is recommended.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/The_Line"
+  },
+  "Unsecured Perimeter Amplifier": {
+   "source": "rykki",
+   "eveUniIsk": [
+    10200000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 10200000,
+   "waves": 3,
+   "npcs": 12,
+   "ehp": 121834,
+   "ehpIfExtraSpawns": 121834,
+   "peakWaveDps": 201,
+   "peakWaveDpsIfExtraSpawns": 201,
+   "peakWave": 2,
+   "peakWaveNeutGJs": 12,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Patroller",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Escort",
+     "count": 3
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    10200000
+   ],
+   "iskPerThousandEhp": 83720,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Perimeter_Amplifier"
+  },
+  "Unsecured Perimeter Information Center": {
+   "source": "rykki",
+   "eveUniIsk": [
+    11800000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    2
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 11800000,
+   "waves": 3,
+   "npcs": 16,
+   "ehp": 160252,
+   "ehpIfExtraSpawns": 160252,
+   "peakWaveDps": 209,
+   "peakWaveDpsIfExtraSpawns": 209,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 18,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Patroller",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 3
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    11800000
+   ],
+   "iskPerThousandEhp": 73634,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Perimeter_Information_Center"
+  },
+  "Forgotten Perimeter Gateway": {
+   "source": "rykki",
+   "eveUniIsk": [
+    19100000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 19100000,
+   "waves": 3,
+   "npcs": 14,
+   "ehp": 293037,
+   "ehpIfExtraSpawns": 293037,
+   "peakWaveDps": 598,
+   "peakWaveDpsIfExtraSpawns": 598,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 6,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Watchman",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Patroller",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    19100000
+   ],
+   "iskPerThousandEhp": 65179,
+   "edited": "2024-06-23",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Perimeter_Gateway"
+  },
+  "Forgotten Perimeter Habitation Coils": {
+   "source": "rykki",
+   "eveUniIsk": [
+    25400000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    4
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 25400000,
+   "waves": 4,
+   "npcs": 31,
+   "ehp": 392236,
+   "ehpIfExtraSpawns": 392236,
+   "peakWaveDps": 479,
+   "peakWaveDpsIfExtraSpawns": 479,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 0,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Escort",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 4
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Patroller",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 13,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    25400000
+   ],
+   "iskPerThousandEhp": 64757,
+   "edited": "2024-06-29",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Perimeter_Habitation_Coils"
+  },
+  "Perimeter Checkpoint": {
+   "source": "rykki",
+   "eveUniIsk": [
+    12900000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 12900000,
+   "waves": 3,
+   "npcs": 15,
+   "ehp": 246501,
+   "ehpIfExtraSpawns": 246501,
+   "peakWaveDps": 306,
+   "peakWaveDpsIfExtraSpawns": 306,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 0,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Patroller",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    12900000
+   ],
+   "iskPerThousandEhp": 52332,
+   "edited": "2025-03-07",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Perimeter_Checkpoint"
+  },
+  "Perimeter Hangar": {
+   "source": "rykki",
+   "eveUniIsk": [
+    15600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 15600000,
+   "waves": 3,
+   "npcs": 11,
+   "ehp": 211120,
+   "ehpIfExtraSpawns": 211120,
+   "peakWaveDps": 424,
+   "peakWaveDpsIfExtraSpawns": 424,
+   "peakWave": 2,
+   "peakWaveNeutGJs": 6,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Patroller",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Escort",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    15600000
+   ],
+   "iskPerThousandEhp": 73892,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Perimeter_Hangar"
+  },
+  "Sleeper Data Sanctuary": {
+   "source": "rykki",
+   "eveUniIsk": [
+    10400000,
+    11600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 11600000,
+   "waves": 3,
+   "npcs": 14,
+   "ehp": 249795,
+   "ehpIfExtraSpawns": 249795,
+   "peakWaveDps": 385,
+   "peakWaveDpsIfExtraSpawns": 385,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 10,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Escort",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Escort",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 4,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    11600000
+   ],
+   "iskPerThousandEhp": 46438,
+   "edited": "2024-06-23",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Sleeper_Data_Sanctuary"
+  },
+  "The Ruins of Enclave Cohort 27": {
+   "source": "rykki",
+   "eveUniIsk": [
+    15600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 15600000,
+   "waves": 3,
+   "npcs": 13,
+   "ehp": 205835,
+   "ehpIfExtraSpawns": 267168,
+   "peakWaveDps": 354,
+   "peakWaveDpsIfExtraSpawns": 354,
+   "peakWave": 1,
+   "peakWaveNeutGJs": 3,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Patroller",
+     "count": 6
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 5
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    15600000
+   ],
+   "iskPerThousandEhp": 75789,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/The_Ruins_of_Enclave_Cohort_27"
+  },
+  "Unsecured Perimeter Comms Relay": {
+   "source": "rykki",
+   "eveUniIsk": [
+    15500000,
+    18300000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    1
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 20200000,
+   "waves": 3,
+   "npcs": 11,
+   "ehp": 257453,
+   "ehpIfExtraSpawns": 375216,
+   "peakWaveDps": 566,
+   "peakWaveDpsIfExtraSpawns": 566,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 12,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Watchman",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Patroller",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 0,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    20200000
+   ],
+   "iskPerThousandEhp": 78461,
+   "edited": "2024-06-29",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Perimeter_Comms_Relay"
+  },
+  "Unsecured Perimeter Transponder Farm": {
+   "source": "rykki",
+   "eveUniIsk": [
+    26700000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 26700000,
+   "waves": 4,
+   "npcs": 34,
+   "ehp": 395354,
+   "ehpIfExtraSpawns": 395354,
+   "peakWaveDps": 467,
+   "peakWaveDpsIfExtraSpawns": 467,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 6,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Escort",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Patroller",
+     "count": 4
+    },
+    {
+     "wave": 3,
+     "ship": "Emergent Escort",
+     "count": 4
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 12,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    26700000
+   ],
+   "iskPerThousandEhp": 67534,
+   "edited": "2024-06-23",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Perimeter_Transponder_Farm"
+  },
+  "Forgotten Frontier Quarantine Outpost": {
+   "source": "rykki",
+   "eveUniIsk": [
+    76500000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 79400000,
+   "waves": 4,
+   "npcs": 28,
+   "ehp": 520183,
+   "ehpIfExtraSpawns": 520183,
+   "peakWaveDps": 708,
+   "peakWaveDpsIfExtraSpawns": 708,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 18,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Preserver",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Defender",
+     "count": 3
+    },
+    {
+     "wave": 3,
+     "ship": "Emergent Upholder",
+     "count": 4
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 14,
+   "scramblers": 0,
+   "remoteRepairers": 11,
+   "blueLootIsk": [
+    79400000
+   ],
+   "iskPerThousandEhp": 152639,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Frontier_Quarantine_Outpost"
+  },
+  "Forgotten Frontier Recursive Depot": {
+   "source": "rykki",
+   "eveUniIsk": [
+    92500000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 92500000,
+   "waves": 4,
+   "npcs": 25,
+   "ehp": 521235,
+   "ehpIfExtraSpawns": 521235,
+   "peakWaveDps": 1424,
+   "peakWaveDpsIfExtraSpawns": 1424,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 42,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Defender",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Defender",
+     "count": 3
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Upholder",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 15,
+   "scramblers": 6,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    92500000
+   ],
+   "iskPerThousandEhp": 177463,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Frontier_Recursive_Depot"
+  },
+  "Fortification Frontier Stronghold": {
+   "source": "rykki",
+   "eveUniIsk": [
+    41100000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 41100000,
+   "waves": 3,
+   "npcs": 13,
+   "ehp": 279348,
+   "ehpIfExtraSpawns": 279348,
+   "peakWaveDps": 677,
+   "peakWaveDpsIfExtraSpawns": 677,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 16,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Defender",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Upholder",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 5,
+   "scramblers": 0,
+   "remoteRepairers": 1,
+   "blueLootIsk": [
+    41100000
+   ],
+   "iskPerThousandEhp": 147128,
+   "edited": "2025-03-07",
+   "note": "Killing the Awakened Preserver in the last wave ends the site early.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Fortification_Frontier_Stronghold"
+  },
+  "Outpost Frontier Stronghold": {
+   "source": "rykki",
+   "eveUniIsk": [
+    45100000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 45100000,
+   "waves": 3,
+   "npcs": 14,
+   "ehp": 451633,
+   "ehpIfExtraSpawns": 451633,
+   "peakWaveDps": 816,
+   "peakWaveDpsIfExtraSpawns": 816,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 0,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Defender",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Defender",
+     "count": 4
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 7,
+   "scramblers": 0,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    45100000
+   ],
+   "iskPerThousandEhp": 99860,
+   "edited": "2023-01-15",
+   "note": "No neuts, but high alpha from the sentries and battleship in wave 1.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Outpost_Frontier_Stronghold"
+  },
+  "Solar Cell": {
+   "source": "rykki",
+   "eveUniIsk": [
+    43000000,
+    53900000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 43000000,
+   "waves": 3,
+   "npcs": 14,
+   "ehp": 354352,
+   "ehpIfExtraSpawns": 448352,
+   "peakWaveDps": 788,
+   "peakWaveDpsIfExtraSpawns": 788,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 12,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Preserver",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Emergent Upholder",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 6,
+   "scramblers": 1,
+   "remoteRepairers": 3,
+   "blueLootIsk": [
+    43000000
+   ],
+   "iskPerThousandEhp": 121348,
+   "edited": "2025-01-19",
+   "note": "The higher value includes the possible extra battleship. Killing the Preserver in the last wave ends the site early.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Solar_Cell"
+  },
+  "The Oruze Construct": {
+   "source": "rykki",
+   "eveUniIsk": [
+    41600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 44500000,
+   "waves": 3,
+   "npcs": 14,
+   "ehp": 280134,
+   "ehpIfExtraSpawns": 296934,
+   "peakWaveDps": 593,
+   "peakWaveDpsIfExtraSpawns": 593,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 24,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Upholder",
+     "count": 4
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Defender",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 9,
+   "scramblers": 0,
+   "remoteRepairers": 2,
+   "blueLootIsk": [
+    44500000
+   ],
+   "iskPerThousandEhp": 158853,
+   "edited": "2026-08-02",
+   "note": "Killing the Sleepless Upholder in the last wave ends the site.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/The_Oruze_Construct"
+  },
+  "Unsecured Frontier Database": {
+   "source": "rykki",
+   "eveUniIsk": [
+    88400000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 88400000,
+   "waves": 4,
+   "npcs": 28,
+   "ehp": 501231,
+   "ehpIfExtraSpawns": 501231,
+   "peakWaveDps": 1071,
+   "peakWaveDpsIfExtraSpawns": 1071,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 44,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Preserver",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Defender",
+     "count": 4
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Upholder",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 18,
+   "scramblers": 5,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    88400000
+   ],
+   "iskPerThousandEhp": 176366,
+   "edited": "2024-06-11",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Frontier_Database"
+  },
+  "Unsecured Frontier Receiver": {
+   "source": "rykki",
+   "eveUniIsk": [
+    75100000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    2,
+    3
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 75100000,
+   "waves": 4,
+   "npcs": 26,
+   "ehp": 499183,
+   "ehpIfExtraSpawns": 499183,
+   "peakWaveDps": 708,
+   "peakWaveDpsIfExtraSpawns": 708,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 18,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Preserver",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Preserver",
+     "count": 1
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Defender",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [
+    "wave 3: Trigger on Attack (Sleepless Defender)"
+   ],
+   "websters": 13,
+   "scramblers": 0,
+   "remoteRepairers": 10,
+   "blueLootIsk": [
+    75100000
+   ],
+   "iskPerThousandEhp": 150446,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Frontier_Receiver"
+  },
+  "Forgotten Frontier Conversion Module": {
+   "source": "rykki",
+   "eveUniIsk": [
+    115000000
+   ],
+   "iskDisagrees": true,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 146500000,
+   "waves": 3,
+   "npcs": 31,
+   "ehp": 1354402,
+   "ehpIfExtraSpawns": 1519270,
+   "peakWaveDps": 2152,
+   "peakWaveDpsIfExtraSpawns": 2152,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 80,
+   "triggers": [
+    {
+     "wave": 2,
+     "ship": "Sleepless Defender",
+     "count": 3
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 18,
+   "scramblers": 4,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    146500000
+   ],
+   "iskPerThousandEhp": 108166,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Frontier_Conversion_Module"
+  },
+  "Forgotten Frontier Evacuation Center": {
+   "source": "rykki",
+   "eveUniIsk": [
+    115000000
+   ],
+   "iskDisagrees": true,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 91600000,
+   "waves": 3,
+   "npcs": 15,
+   "ehp": 741467,
+   "ehpIfExtraSpawns": 835467,
+   "peakWaveDps": 1340,
+   "peakWaveDpsIfExtraSpawns": 1340,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 0,
+   "triggers": [
+    {
+     "wave": 2,
+     "ship": "Sleepless Preserver",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 6,
+   "scramblers": 0,
+   "remoteRepairers": 5,
+   "blueLootIsk": [
+    91600000
+   ],
+   "iskPerThousandEhp": 123539,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Frontier_Evacuation_Center"
+  },
+  "Frontier Barracks": {
+   "source": "rykki",
+   "eveUniIsk": [
+    86700000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 86700000,
+   "waves": 3,
+   "npcs": 16,
+   "ehp": 589461,
+   "ehpIfExtraSpawns": 589461,
+   "peakWaveDps": 1471,
+   "peakWaveDpsIfExtraSpawns": 1471,
+   "peakWave": 2,
+   "peakWaveNeutGJs": 30,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Preserver",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Upholder",
+     "count": 3
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 3,
+   "scramblers": 3,
+   "remoteRepairers": 9,
+   "blueLootIsk": [
+    86700000
+   ],
+   "iskPerThousandEhp": 147084,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Frontier_Barracks"
+  },
+  "Frontier Command Post": {
+   "source": "rykki",
+   "eveUniIsk": [
+    92300000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 92300000,
+   "waves": 3,
+   "npcs": 32,
+   "ehp": 804980,
+   "ehpIfExtraSpawns": 804980,
+   "peakWaveDps": 1196,
+   "peakWaveDpsIfExtraSpawns": 1196,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 12,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Preserver",
+     "count": 4
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Defender",
+     "count": 6
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 10,
+   "scramblers": 4,
+   "remoteRepairers": 9,
+   "blueLootIsk": [
+    92300000
+   ],
+   "iskPerThousandEhp": 114661,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Frontier_Command_Post"
+  },
+  "Integrated Terminus": {
+   "source": "rykki",
+   "eveUniIsk": [
+    55300000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 56800000,
+   "waves": 3,
+   "npcs": 26,
+   "ehp": 449908,
+   "ehpIfExtraSpawns": 449908,
+   "peakWaveDps": 666,
+   "peakWaveDpsIfExtraSpawns": 666,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 30,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Defender",
+     "count": 4
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Upholder",
+     "count": 4
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 11,
+   "scramblers": 3,
+   "remoteRepairers": 7,
+   "blueLootIsk": [
+    56800000
+   ],
+   "iskPerThousandEhp": 126248,
+   "edited": "2023-01-15",
+   "note": "EVE University calls it the easiest C4 site; a well-tanked battleship or strategic cruiser can run it.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Integrated_Terminus"
+  },
+  "Sleeper Information Sanctum": {
+   "source": "rykki",
+   "eveUniIsk": [
+    81800000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 86100000,
+   "waves": 3,
+   "npcs": 17,
+   "ehp": 713242,
+   "ehpIfExtraSpawns": 718842,
+   "peakWaveDps": 1624,
+   "peakWaveDpsIfExtraSpawns": 1624,
+   "peakWave": 2,
+   "peakWaveNeutGJs": 27,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Preserver",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Safeguard",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 10,
+   "scramblers": 3,
+   "remoteRepairers": 7,
+   "blueLootIsk": [
+    86100000
+   ],
+   "iskPerThousandEhp": 120716,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Sleeper_Information_Sanctum"
+  },
+  "Unsecured Frontier Digital Nexus": {
+   "source": "rykki",
+   "eveUniIsk": [
+    115000000
+   ],
+   "iskDisagrees": true,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 130100000,
+   "waves": 3,
+   "npcs": 25,
+   "ehp": 1233882,
+   "ehpIfExtraSpawns": 1398750,
+   "peakWaveDps": 2152,
+   "peakWaveDpsIfExtraSpawns": 2152,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 80,
+   "triggers": [
+    {
+     "wave": 2,
+     "ship": "Sleepless Defender",
+     "count": 3
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 15,
+   "scramblers": 8,
+   "remoteRepairers": 0,
+   "blueLootIsk": [
+    130100000
+   ],
+   "iskPerThousandEhp": 105440,
+   "edited": "2025-01-30",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Frontier_Digital_Nexus"
+  },
+  "Unsecured Frontier Trinary Hub": {
+   "source": "rykki",
+   "eveUniIsk": [
+    115000000
+   ],
+   "iskDisagrees": true,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 91600000,
+   "waves": 3,
+   "npcs": 15,
+   "ehp": 741467,
+   "ehpIfExtraSpawns": 835467,
+   "peakWaveDps": 1340,
+   "peakWaveDpsIfExtraSpawns": 1340,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 0,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Preserver",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Preserver",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 6,
+   "scramblers": 0,
+   "remoteRepairers": 5,
+   "blueLootIsk": [
+    91600000
+   ],
+   "iskPerThousandEhp": 123539,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Frontier_Trinary_Hub"
+  },
+  "Core Garrison": {
+   "source": "rykki",
+   "eveUniIsk": [
+    253000000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    3
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 253400000,
+   "waves": 4,
+   "npcs": 40,
+   "ehp": 1766775,
+   "ehpIfExtraSpawns": 1766775,
+   "peakWaveDps": 1943,
+   "peakWaveDpsIfExtraSpawns": 1943,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 72,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Sentinel",
+     "count": 5
+    },
+    {
+     "wave": 2,
+     "ship": "Emergent Keeper",
+     "count": 6
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Sentinel",
+     "count": 3
+    }
+   ],
+   "dta": [
+    "Awakened Sentinel"
+   ],
+   "triggerNotes": [],
+   "websters": 29,
+   "scramblers": 17,
+   "remoteRepairers": 6,
+   "blueLootIsk": [
+    253400000
+   ],
+   "iskPerThousandEhp": 143425,
+   "edited": "2024-06-12",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Core_Garrison"
+  },
+  "Core Stronghold": {
+   "source": "rykki",
+   "eveUniIsk": [
+    234900000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    4
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 234900000,
+   "waves": 4,
+   "npcs": 36,
+   "ehp": 1616508,
+   "ehpIfExtraSpawns": 1616508,
+   "peakWaveDps": 2714,
+   "peakWaveDpsIfExtraSpawns": 2714,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 24,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Sentinel",
+     "count": 4
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Warden",
+     "count": 2
+    },
+    {
+     "wave": 3,
+     "ship": "Awakened Sentinel",
+     "count": 7
+    }
+   ],
+   "dta": [
+    "Sleepless Keeper"
+   ],
+   "triggerNotes": [],
+   "websters": 17,
+   "scramblers": 10,
+   "remoteRepairers": 9,
+   "blueLootIsk": [
+    234900000
+   ],
+   "iskPerThousandEhp": 145313,
+   "edited": "2024-06-12",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Core_Stronghold"
+  },
+  "Forgotten Core Data Field": {
+   "source": "rykki",
+   "eveUniIsk": [
+    279000000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    1
+   ],
+   "iskFromShips": 281800000,
+   "extraSpawnIsk": null,
+   "sheetIsk": 279000000,
+   "waves": 4,
+   "npcs": 45,
+   "ehp": 1414444,
+   "ehpIfExtraSpawns": 1414444,
+   "peakWaveDps": 2306,
+   "peakWaveDpsIfExtraSpawns": 2306,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 78,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Keeper",
+     "count": 5
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Keeper",
+     "count": 3
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Keeper",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 30,
+   "scramblers": 28,
+   "remoteRepairers": 11,
+   "blueLootIsk": [
+    281800000
+   ],
+   "iskPerThousandEhp": 199230,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Core_Data_Field"
+  },
+  "Forgotten Core Information Pen": {
+   "source": "rykki",
+   "eveUniIsk": [
+    330000000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": 332900000,
+   "extraSpawnIsk": 15900000,
+   "sheetIsk": 332900000,
+   "waves": 4,
+   "npcs": 42,
+   "ehp": 1617698,
+   "ehpIfExtraSpawns": 1765412,
+   "peakWaveDps": 3213,
+   "peakWaveDpsIfExtraSpawns": 3213,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 96,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Keeper",
+     "count": 3
+    },
+    {
+     "wave": 3,
+     "ship": "Awakened Warden",
+     "count": 4
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 14,
+   "scramblers": 11,
+   "remoteRepairers": 15,
+   "blueLootIsk": [
+    332900000
+   ],
+   "iskPerThousandEhp": 205786,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Core_Information_Pen"
+  },
+  "Oruze Osobnyk": {
+   "source": "rykki",
+   "eveUniIsk": [
+    164700000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    3
+   ],
+   "iskFromShips": 148800000,
+   "extraSpawnIsk": 15900000,
+   "sheetIsk": 164700000,
+   "waves": 3,
+   "npcs": 23,
+   "ehp": 1084143,
+   "ehpIfExtraSpawns": 1172772,
+   "peakWaveDps": 1511,
+   "peakWaveDpsIfExtraSpawns": 2076,
+   "peakWave": 1,
+   "peakWaveNeutGJs": 54,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Sentinel",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Guardian",
+     "count": 1
+    }
+   ],
+   "dta": [
+    "Emergent Keeper"
+   ],
+   "triggerNotes": [],
+   "websters": 16,
+   "scramblers": 10,
+   "remoteRepairers": 7,
+   "blueLootIsk": [
+    148800000
+   ],
+   "iskPerThousandEhp": 137251,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Oruze_Osobnyk"
+  },
+  "Quarantine Area": {
+   "source": "rykki",
+   "eveUniIsk": [
+    146900000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    3
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 146900000,
+   "waves": 3,
+   "npcs": 26,
+   "ehp": 1039000,
+   "ehpIfExtraSpawns": 1039000,
+   "peakWaveDps": 1572,
+   "peakWaveDpsIfExtraSpawns": 1572,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 36,
+   "triggers": [
+    {
+     "wave": 2,
+     "ship": "Sleepless Sentinel",
+     "count": 2
+    }
+   ],
+   "dta": [
+    "Sleepless Keeper"
+   ],
+   "triggerNotes": [],
+   "websters": 17,
+   "scramblers": 10,
+   "remoteRepairers": 3,
+   "blueLootIsk": [
+    146900000
+   ],
+   "iskPerThousandEhp": 141386,
+   "edited": "2023-01-15",
+   "note": "Triggers are random.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Quarantine_Area"
+  },
+  "Unsecured Frontier Enclave Relay": {
+   "source": "rykki",
+   "eveUniIsk": [
+    329900000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    2
+   ],
+   "iskFromShips": 314000000,
+   "extraSpawnIsk": 15900000,
+   "sheetIsk": 329900000,
+   "waves": 4,
+   "npcs": 41,
+   "ehp": 1767189,
+   "ehpIfExtraSpawns": 1914903,
+   "peakWaveDps": 2400,
+   "peakWaveDpsIfExtraSpawns": 2400,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 45,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Keeper",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Keeper",
+     "count": 2
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Keeper",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 10,
+   "scramblers": 7,
+   "remoteRepairers": 24,
+   "blueLootIsk": [
+    314000000
+   ],
+   "iskPerThousandEhp": 177683,
+   "edited": "2023-01-15",
+   "note": "114m ISK of it comes from the waves before hacking.",
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Frontier_Enclave_Relay"
+  },
+  "Unsecured Frontier Server Bank": {
+   "source": "rykki",
+   "eveUniIsk": [
+    272100000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": 272100000,
+   "extraSpawnIsk": null,
+   "sheetIsk": 272100000,
+   "waves": 4,
+   "npcs": 43,
+   "ehp": 1322060,
+   "ehpIfExtraSpawns": 1322060,
+   "peakWaveDps": 2331,
+   "peakWaveDpsIfExtraSpawns": 2331,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 57,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Keeper",
+     "count": 5
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Keeper",
+     "count": 4
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Keeper",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 27,
+   "scramblers": 25,
+   "remoteRepairers": 12,
+   "blueLootIsk": [
+    272100000
+   ],
+   "iskPerThousandEhp": 205815,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Frontier_Server_Bank"
+  },
+  "Core Bastion": {
+   "source": "rykki",
+   "eveUniIsk": [
+    455600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    3,
+    4
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 445600000,
+   "waves": 4,
+   "npcs": 53,
+   "ehp": 3586652,
+   "ehpIfExtraSpawns": 3586652,
+   "peakWaveDps": 3513,
+   "peakWaveDpsIfExtraSpawns": 3513,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 162,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Keeper",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Warden",
+     "count": 4
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Guardian",
+     "count": 4
+    }
+   ],
+   "dta": [
+    "Sleepless Guardian"
+   ],
+   "triggerNotes": [],
+   "websters": 31,
+   "scramblers": 24,
+   "remoteRepairers": 15,
+   "blueLootIsk": [
+    445600000
+   ],
+   "iskPerThousandEhp": 124238,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Core_Bastion"
+  },
+  "Core Citadel": {
+   "source": "rykki",
+   "eveUniIsk": [
+    610100000
+   ],
+   "iskDisagrees": true,
+   "wavesDifferFromEveUni": [
+    4
+   ],
+   "iskFromShips": 310100000,
+   "extraSpawnIsk": null,
+   "sheetIsk": 310100000,
+   "waves": 4,
+   "npcs": 37,
+   "ehp": 2234995,
+   "ehpIfExtraSpawns": 2234995,
+   "peakWaveDps": 3059,
+   "peakWaveDpsIfExtraSpawns": 3059,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 90,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Warden",
+     "count": 1
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Warden",
+     "count": 1
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Keeper",
+     "count": 3
+    }
+   ],
+   "dta": [
+    "Emergent Keeper"
+   ],
+   "triggerNotes": [],
+   "websters": 6,
+   "scramblers": 6,
+   "remoteRepairers": 27,
+   "blueLootIsk": [
+    310100000
+   ],
+   "iskPerThousandEhp": 138748,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Core_Citadel"
+  },
+  "Forgotten Core Assembly Hall": {
+   "source": "rykki",
+   "eveUniIsk": [
+    642500000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 642500000,
+   "waves": 4,
+   "npcs": 67,
+   "ehp": 4964631,
+   "ehpIfExtraSpawns": 5223710,
+   "peakWaveDps": 4987,
+   "peakWaveDpsIfExtraSpawns": 5680,
+   "peakWave": 1,
+   "peakWaveNeutGJs": 216,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Warden",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Warden",
+     "count": 1
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Warden",
+     "count": 2
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 40,
+   "scramblers": 34,
+   "remoteRepairers": 12,
+   "blueLootIsk": [
+    642500000
+   ],
+   "iskPerThousandEhp": 129415,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Core_Assembly_Hall"
+  },
+  "Forgotten Core Circuitry Disassembler": {
+   "source": "rykki",
+   "eveUniIsk": [
+    657600000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    4
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 657600000,
+   "waves": 4,
+   "npcs": 103,
+   "ehp": 4212696,
+   "ehpIfExtraSpawns": 4471775,
+   "peakWaveDps": 6059,
+   "peakWaveDpsIfExtraSpawns": 6059,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 204,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Warden",
+     "count": 9
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Warden",
+     "count": 7
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Guardian",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 62,
+   "scramblers": 51,
+   "remoteRepairers": 29,
+   "blueLootIsk": [
+    657600000
+   ],
+   "iskPerThousandEhp": 156100,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Forgotten_Core_Circuitry_Disassembler"
+  },
+  "Strange Energy Readings": {
+   "source": "rykki",
+   "eveUniIsk": [
+    293000000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    3
+   ],
+   "iskFromShips": 260000000,
+   "extraSpawnIsk": 31800000,
+   "sheetIsk": 291800000,
+   "waves": 3,
+   "npcs": 34,
+   "ehp": 1621882,
+   "ehpIfExtraSpawns": 1799140,
+   "peakWaveDps": 3353,
+   "peakWaveDpsIfExtraSpawns": 3353,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 144,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Awakened Warden",
+     "count": 5
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Guardian",
+     "count": 3
+    }
+   ],
+   "dta": [
+    "Sleepless Keeper"
+   ],
+   "triggerNotes": [],
+   "websters": 9,
+   "scramblers": 9,
+   "remoteRepairers": 20,
+   "blueLootIsk": [
+    260000000
+   ],
+   "iskPerThousandEhp": 160308,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Strange_Energy_Readings"
+  },
+  "The Mirror": {
+   "source": "rykki",
+   "eveUniIsk": [
+    363000000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    3
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 363200000,
+   "waves": 3,
+   "npcs": 52,
+   "ehp": 2526236,
+   "ehpIfExtraSpawns": 2526236,
+   "peakWaveDps": 3383,
+   "peakWaveDpsIfExtraSpawns": 3383,
+   "peakWave": 2,
+   "peakWaveNeutGJs": 132,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Warden",
+     "count": 3
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Guardian",
+     "count": 3
+    }
+   ],
+   "dta": [
+    "Sleepless Keeper"
+   ],
+   "triggerNotes": [],
+   "websters": 25,
+   "scramblers": 25,
+   "remoteRepairers": 15,
+   "blueLootIsk": [
+    363200000
+   ],
+   "iskPerThousandEhp": 143771,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/The_Mirror"
+  },
+  "Unsecured Core Backup Array": {
+   "source": "rykki",
+   "eveUniIsk": [
+    688300000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    2
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 688300000,
+   "waves": 4,
+   "npcs": 74,
+   "ehp": 5328714,
+   "ehpIfExtraSpawns": 5587793,
+   "peakWaveDps": 5056,
+   "peakWaveDpsIfExtraSpawns": 5056,
+   "peakWave": 4,
+   "peakWaveNeutGJs": 216,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Sleepless Warden",
+     "count": 2
+    },
+    {
+     "wave": 2,
+     "ship": "Sleepless Warden",
+     "count": 2
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Warden",
+     "count": 3
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 42,
+   "scramblers": 34,
+   "remoteRepairers": 17,
+   "blueLootIsk": [
+    688300000
+   ],
+   "iskPerThousandEhp": 129168,
+   "edited": "2025-09-04",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Core_Backup_Array"
+  },
+  "Unsecured Core Emergence": {
+   "source": "rykki",
+   "eveUniIsk": [
+    627100000
+   ],
+   "iskDisagrees": false,
+   "wavesDifferFromEveUni": [
+    1,
+    2,
+    4
+   ],
+   "iskFromShips": null,
+   "extraSpawnIsk": null,
+   "sheetIsk": 627100000,
+   "waves": 4,
+   "npcs": 101,
+   "ehp": 3447186,
+   "ehpIfExtraSpawns": 4483502,
+   "peakWaveDps": 5116,
+   "peakWaveDpsIfExtraSpawns": 6059,
+   "peakWave": 3,
+   "peakWaveNeutGJs": 126,
+   "triggers": [
+    {
+     "wave": 1,
+     "ship": "Emergent Warden",
+     "count": 9
+    },
+    {
+     "wave": 2,
+     "ship": "Awakened Warden",
+     "count": 7
+    },
+    {
+     "wave": 3,
+     "ship": "Sleepless Guardian",
+     "count": 1
+    }
+   ],
+   "dta": [],
+   "triggerNotes": [],
+   "websters": 55,
+   "scramblers": 44,
+   "remoteRepairers": 29,
+   "blueLootIsk": [
+    627100000
+   ],
+   "iskPerThousandEhp": 181916,
+   "edited": "2023-01-15",
+   "note": null,
+   "uncertain": null,
+   "url": "https://wiki.eveuniversity.org/Unsecured_Core_Emergence"
+  }
+ }
+}

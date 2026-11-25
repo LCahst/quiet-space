@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wormhole types and ship restrictions</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%234d5f86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EWH%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="wh.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">
+    <span class="mark" aria-hidden="true">WH</span>
+    <span><b>Wormhole space</b><small>Classes, effects, statics, activity and site guide</small></span>
+  </a>
+  <nav class="links"><a href="index.html">Overview</a><a href="search.html">Wormhole search</a><a href="holes.html" aria-current="page">Hole types &amp; ship restrictions</a><a href="guide.html">Site guide</a><a href="../index.html">Back to the site</a></nav>
+</header>
+<main>
+  <h1>Wormhole types and ship restrictions</h1>
+  <p class="lead">Every wormhole has a code (shown when you look at it) that says where it leads, how heavy a ship can jump through it, how much mass it takes before it collapses, and how long it lasts. A K162 is the far side of a hole someone opened from elsewhere; it takes the stats of the hole on the other side. All figures are from CCP's data and checked against the live server.</p>
+
+  <h2>Can my ship go through?</h2>
+  <form class="controls" onsubmit="return false">
+    <label>Ship<input type="search" id="ship" list="shipList" placeholder="e.g. Nestor, Orca, Naglfar" autocomplete="off"></label>
+    <datalist id="shipList"></datalist>
+    <label>Propulsion module<select id="prop"><option value="0">None</option></select></label>
+    <label title="A propulsion module adds its mass only while it's running">Module running<select id="propOn"><option value="1">Yes</option><option value="0">No</option></select></label>
+    <label>Armour plates<select id="plate"><option value="0">None</option></select></label>
+    <label>How many<select id="plates"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+    <label>Higgs Anchor rig<select id="higgs"><option value="0">No</option><option value="1">Yes</option></select></label>
+  </form>
+  <div id="fit"></div>
+
+  <h2 id="sizes">Size limits</h2>
+  <p class="note">The heaviest ship that can jump is set by the hole's per-jump limit. This is base hull mass: propulsion modules, armour plates, Higgs anchor rigs and cargo add more. Titans and supercarriers can't use wormholes at all, whatever their mass.</p>
+  <div class="tablewrap"><table class="t" id="tiers"><thead><tr><th class="num">Per-jump limit</th><th>Hole types</th><th>Ship groups that fit</th></tr></thead><tbody></tbody></table></div>
+
+  <h2 id="reading">Reading a wormhole</h2>
+  <p><b>Show Info is the final word.</b> A wormhole's info window gives the kind of space it leads to as a band (for example “Class 1-3 wormhole systems”, “Low-security systems” or “Drifter wormhole systems”), the largest ship size, the lifetime left (“Less than 1 day” down to “Expired, closure imminent”, the earliest it can close) and the mass left (“More than 50%”, “Less than 50%” or “Less than 10% remaining”). CCP simplified this wording in September 2025; older guides quote the earlier sentences such as “deadly unknown parts of space” for C6.<a class="src" href="https://www.eveonline.com/news/view/patch-notes-version-23-01" target="_blank" rel="noopener">CCP 23.01</a><a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a> See the <a href="index.html#first-steps">first steps</a> on the overview for both versions. Because Show Info only gives a band of classes, the look of the hole helps pin down the exact class, especially from the K162 side.<a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a></p>
+
+  <h3>The halo shows the size limit</h3>
+  <p class="note">The coloured aura around the outside of the hole. Every source that covers it agrees, so this is the most reliable visual clue. Sizes match the jump limits in the <a href="#sizes">size limits table</a> above. Labelled in-game photos on the EVE Geological Survey's wormhole page show the same: a blue frigate hole (Q003), a teal medium hole (V301), a grey large hole (B274) and an amber-gold extra-large hole (Z142).<a class="src" href="https://www.evegeologicalsurvey.com/wormhole-data" target="_blank" rel="noopener">EVE Geological Survey</a></p>
+  <div class="tablewrap" style="max-width:820px"><table class="t"><thead><tr><th>Halo</th><th>Largest ship through it</th><th class="num">Per jump</th><th>Sources</th></tr></thead><tbody>
+    <tr><td><b>Royal blue</b></td><td>Frigates, destroyers and interdictors</td><td class="num">5M kg</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://wiki.eveuniversity.org/Wormhole_attributes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a></td></tr>
+    <tr><td><b>Teal</b></td><td>Battlecruisers and smaller, plus the Nestor. Every hole into or out of a C1 is teal, apart from frigate-only holes (blue).</td><td class="num">62M kg</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://wiki.eveuniversity.org/Wormhole_attributes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a><a class="src" href="https://whdb.scan-stakan.space/wh_colors/" target="_blank" rel="noopener">WHDBX</a></td></tr>
+    <tr><td><b>Grey</b></td><td>Battleships, Marauders and the Orca</td><td class="num">375M kg</td><td><span class="badge b-info">mostly agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://wiki.eveuniversity.org/Wormhole_attributes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a> <span class="muted">(the Tripwire wiki calls it turquoise)</span><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a></td></tr>
+    <tr><td><b>Yellow / gold / amber</b></td><td>Freighters, then capitals on the largest holes (C5 and C6)</td><td class="num">1,000M–2,000M kg</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://wiki.eveuniversity.org/Wormhole_attributes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a></td></tr>
+  </tbody></table></div>
+
+  <h3>The colour through the middle hints at the class</h3>
+  <p class="note">Looking into the hole shows the sky of the system on the other side. These are hints, not proof: the descriptions vary between guides, and lighting changes how a hole looks. Ashy's guide has reference pictures of each class.<a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a></p>
+  <div class="tablewrap" style="max-width:920px"><table class="t"><thead><tr><th>Other side</th><th>What it looks like</th><th>Sources</th></tr></thead><tbody>
+    <tr><td><b>C1</b></td><td>Grey or black-and-white, featureless</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a></td></tr>
+    <tr><td><b>C2</b></td><td>Grey and brown, with a dark spot or lens in the middle</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a><a class="src" href="https://whdb.scan-stakan.space/wh_colors/" target="_blank" rel="noopener">WHDBX</a></td></tr>
+    <tr><td><b>C3</b></td><td>Red and black, or grey with a red cloud <span class="muted">(WHDBX: dark grey with a slight cyan tint)</span></td><td><span class="badge b-info">mostly agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a><a class="src" href="https://whdb.scan-stakan.space/wh_colors/" target="_blank" rel="noopener">WHDBX</a></td></tr>
+    <tr><td><b>C4</b></td><td>Murky dark red or purple, with a white streak or bright white cloud</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a><a class="src" href="https://whdb.scan-stakan.space/wh_colors/" target="_blank" rel="noopener">WHDBX</a></td></tr>
+    <tr><td><b>C5</b></td><td>Dark red with brown <span class="muted">(the Tripwire wiki: orange and white with a white streak)</span></td><td><span class="badge b-warn">disputed</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://whdb.scan-stakan.space/wh_colors/" target="_blank" rel="noopener">WHDBX</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a></td></tr>
+    <tr><td><b>C6</b></td><td>Bright orange or fiery red</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a><a class="src" href="https://whdb.scan-stakan.space/wh_colors/" target="_blank" rel="noopener">WHDBX</a></td></tr>
+    <tr><td><b>High- and low-sec</b></td><td>The empire's colour: Amarr gold, Caldari blue, Gallente green, Minmatar red. Show Info says which security level.</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a><a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a></td></tr>
+    <tr><td><b>Thera, C13 and Drifter</b></td><td>One shared look, cloudy and broken</td><td><span class="badge b-ok">sources agree</span> <a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a><a class="src" href="https://tw.torpedodelivery.com/wiki/whvisual/" target="_blank" rel="noopener">Tripwire wiki</a></td></tr>
+    <tr><td><b>Null-sec</b></td><td>Each region looks different; no simple rule</td><td><a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://ashy.vargur.dev/wormhole-identification/" target="_blank" rel="noopener">Ashy 2020</a></td></tr>
+  </tbody></table></div>
+
+  <h3>Ageing and mass</h3>
+  <p class="note">A hole's halo moves more and more as it gets close to collapsing: seen in game, and also reported by EVE University, which adds that it looks faded in its last four hours.<a class="src" href="https://wiki.eveuniversity.org/Visual_wormhole_identification" target="_blank" rel="noopener">EVE Uni</a> The hole also shrinks as mass goes through it, most noticeably when it drops to half and to a tenth (player reports). Check Show Info before trusting a hole with an expensive ship.</p>
+
+  <h3 id="show-info">Show Info in detail</h3>
+  <p class="note">Under a fixed description (“An unstable wormhole, deep in space. Wormholes of this kind usually collapse after a few days, and can lead to anywhere.”) the info window shows four lines. CCP rewrote them as short, colour-coded text on 9 September 2025.<a class="src" href="https://www.eveonline.com/news/view/patch-notes-version-23-01" target="_blank" rel="noopener">CCP 23.01</a> Older guides, and many players, still quote the earlier sentences, so both are listed. <sup class="seen" title="Seen in game">✓</sup> seen in game.</p>
+  <div class="tablewrap" style="max-width:1000px"><table class="t"><thead><tr><th>Line</th><th>Now (since September 2025)</th><th>Before</th></tr></thead><tbody>
+    <tr><td><b>Destination</b></td><td>“Class 1-3 wormhole systems”<sup class="seen" title="Seen in game">✓</sup>, “Low-security systems”<sup class="seen" title="Seen in game">✓</sup>, “Drifter wormhole systems”<sup class="seen" title="Seen in game">✓</sup>. The other kinds (C4–C5, C6, high- and null-sec, Triglavian space, C13, Thera) follow the same pattern; the C13 and Drifter messages were new in this change.<a class="src" href="https://www.eveonline.com/news/view/patch-notes-version-23-01" target="_blank" rel="noopener">CCP 23.01</a></td><td>“This wormhole seems to lead into unknown parts of space” (C1–C3), “… dangerous unknown parts of space” (C4–C5), “… deadly unknown parts of space” (C6), or the k-space security level.<a class="src" href="https://wiki.eveuniversity.org/Wormhole_attributes" target="_blank" rel="noopener">EVE Uni</a></td></tr>
+    <tr><td><b>Maximum Ship Size</b></td><td>“Small” (frigates, destroyers, specially fitted interdictors) · “Medium” (battlecruisers and smaller, plus unplated Nestors) · “Large”<sup class="seen" title="Seen in game">✓</sup> (battleships, Orcas and smaller) · “Extra large”<sup class="seen" title="Seen in game">✓</sup> (freighters and the Rorqual on 1,000M kg holes; dreadnoughts, carriers and other capitals only on the 2,000M kg holes; never titans or supercarriers). The hole's code tells you which.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a></td><td>“Only the smallest ships…”, “Up to medium size ships…”, “Larger ships…”, “Very large ships can pass through this wormhole”.</td></tr>
+    <tr><td><b>Reliable Lifetime</b></td><td>“Less than 1 day remaining”<sup class="seen" title="Seen in game">✓</sup> (yellow), “Less than 4 hours remaining”<sup class="seen" title="Seen in game">✓</sup> (orange), “Less than 1 hour remaining” (new), “Expired, closure imminent” (red). The earliest it can close; it may last longer, but don't count on it.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://www.eveonline.com/news/view/patch-notes-version-23-01" target="_blank" rel="noopener">CCP 23.01</a></td><td>“…has not yet begun its natural cycle of decay and should last at least another day”, “…is beginning to decay”, “…is reaching the end of its natural lifetime”.</td></tr>
+    <tr><td><b>Mass Stability</b></td><td>“More than 50% remaining”<sup class="seen" title="Seen in game">✓</sup> (blue), “Less than 50% remaining”, “Less than 10% remaining”. Each ship that jumps uses up mass.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://www.eveonline.com/news/view/patch-notes-version-23-01" target="_blank" rel="noopener">CCP 23.01</a></td><td>“…has not yet had its stability significantly disrupted”, “…stability has been reduced, but not to a critical degree yet”, “…stability critically disrupted… on the verge of collapse”.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a></td></tr>
+  </tbody></table></div>
+
+  <h2>Rolling a hole</h2>
+  <p>Every jump takes the ship's mass off the hole's total; once the total is used up the hole collapses. <b>Rolling</b> a hole means collapsing it on purpose, by jumping heavy ships back and forth through it.<a class="src" href="https://wiki.eveuniversity.org/Wormhole_Community_Static_Rolling_Guide" target="_blank" rel="noopener">EVE Uni WC</a></p>
+  <ul class="points">
+    <li><b>To close the door before you work.</b> Every open connection is a way in for hunters. Groups that live in J-space roll the holes they aren't using before they run sites or mine, so they only have to watch for new signatures.<a class="src" href="https://forums.eveonline.com/t/how-to-be-safe-in-wormholes-why-ratting/390584" target="_blank" rel="noopener">EVE forums</a><a class="src" href="https://wiki.bravecollective.com/public/corps/spoopy-newbies/wh-life-guidebook/ratting-guide" target="_blank" rel="noopener">Brave</a> <span class="dated">2020–2023</span></li>
+    <li><b>To get a new connection.</b> A static comes back as soon as it collapses, leading to a different system of the same kind, so a group can roll its static until it leads somewhere useful: a better route out to k-space, a system with sites to run, or someone to fight.<a class="src" href="https://wiki.eveuniversity.org/Wormhole_Community_Static_Rolling_Guide" target="_blank" rel="noopener">EVE Uni WC</a><a class="src" href="https://forums.eveonline.com/t/how-to-be-safe-in-wormholes-why-ratting/390584" target="_blank" rel="noopener">EVE forums</a></li>
+    <li><b>The risks.</b> Rolling takes heavy ships and time, since each pilot can only jump each way once every five minutes, and the last jumps are a gamble because a hole's true mass varies by up to 10%. Whoever jumps last can be left on the wrong side, so rolling ships carry probes or a cloak, and a hole already at its last tenth is usually finished with a heavy interdictor running a Zero-Point Mass Entangler, which weighs less than a frigate.<a class="src" href="https://wiki.eveuniversity.org/Wormhole_Community_Static_Rolling_Guide" target="_blank" rel="noopener">EVE Uni WC</a></li>
+  </ul>
+  <p>How much mass each fitting adds:</p>
+  <div class="tablewrap" style="max-width:560px"><table class="t" id="propTable"><thead><tr><th>Fitting</th><th class="num">Mass added</th></tr></thead><tbody></tbody></table></div>
+  <ul class="points" style="margin-top:10px">
+    <li>A propulsion module adds its mass only while it's running; armour plates add theirs all the time. A <b>Higgs Anchor</b> rig doubles the ship's mass.<a class="src" href="https://developers.eveonline.com/docs/services/static-data/" target="_blank" rel="noopener">CCP data</a></li>
+    <li>Show Info reports mass in three steps: more than half left, less than half, and less than a tenth.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a> A hole's total mass isn't exact: each one spawns with 90–110% of the figure listed for its type, so the last jumps of a roll are never certain.<a class="src" href="https://wiki.eveuniversity.org/Wormhole_attributes" target="_blank" rel="noopener">EVE Uni</a></li>
+    <li>A pilot can't jump the same way through the same hole twice within five minutes (polarisation); it follows the pilot, not the ship, which sets the pace of a roll.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://ashy.vargur.dev/living-in-wormhole-space-primer/" target="_blank" rel="noopener">Ashy 2021</a></li>
+    <li><b>K162s</b> are the far ends of holes opened from elsewhere. One appears on the far side once someone starts a warp to the hole, and that also starts the hole's lifetime clock; until then a fresh hole can sit unseen from the other side.<a class="src" href="https://wiki.eveuniversity.org/Wormhole_attributes" target="_blank" rel="noopener">EVE Uni</a></li>
+  </ul>
+
+  <h2>All wormhole types</h2>
+  <form class="controls" onsubmit="return false">
+    <label>Code<input type="search" id="code" placeholder="e.g. H296" autocomplete="off"></label>
+    <label>Leads to<select id="to"><option value="">Anywhere</option></select></label>
+  </form>
+  <div class="tablewrap"><table class="t" id="holes"><thead><tr><th>Code</th><th>Leads to</th><th class="num">Per jump<small>kg</small></th><th class="num">Total mass<small>kg</small></th><th class="num">Regenerates<small>kg a day</small></th><th class="num">Lifetime</th><th>Signature<small>scan difficulty</small></th></tr></thead><tbody></tbody></table></div>
+  <p class="note" style="margin-top:6px" id="holesNote"></p>
+  <p class="note"><b>Signature:</b> how faint the hole's signature is when you probe for it, on whtype.info's scale from I (easier) to III (harder); some types are fainter as a wandering hole than as a static. The strength figure is Pathfinder's base signature strength, where lower means harder to scan. The two sources agree for all but one type (M267). Neither is CCP data: ESI doesn't publish signature strength.<a class="src" href="https://whtype.info/" target="_blank" rel="noopener">whtype.info</a><a class="src" href="https://github.com/goryn-clade/pathfinder/blob/master/export/csv/README.md" target="_blank" rel="noopener">Pathfinder</a></p>
+</main>
+<script src="wh.js"></script>
+<script>
+(async () => {
+  const [holes, ships, fm, sigs] = await Promise.all([WH.load("holes"), WH.load("ships-fit"), WH.load("fitting-mass").catch(() => null), WH.load("hole-signatures").catch(() => null)]);
+  const $ = id => document.getElementById(id);
+  // Pochven links are out of scope for this section (decision 1); K162 has no stats of its own.
+  const H = holes.holes.filter(h => !h.special && h.maxJumpMass);
+  const hidden = holes.holes.length - H.length;
+  const order = ["High-sec", "Low-sec", "Null-sec", "C1", "C2", "C3", "C4", "C5", "C6", "C13", "Thera"];
+  const dests = [...new Set(H.map(h => h.targetLabel))].sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99));
+  $("to").insertAdjacentHTML("beforeend", dests.map(d => `<option>${WH.esc(d)}</option>`).join(""));
+  $("holesNote").textContent = `${H.length} hole types shown. Not shown: K162 (it copies the hole on the other side) and ${hidden - 1} types that link Pochven, which this section doesn't cover. Lifetime is CCP's stable time; a hole can be collapsed sooner by mass.`;
+
+  const tiers = [...new Set(H.map(h => h.maxJumpMass))].sort((a, b) => a - b);
+  const S = ships.ships.filter(s => !s.barred);
+  $("tiers").querySelector("tbody").innerHTML = tiers.map((t, i) => {
+    const prev = tiers[i - 1] || 0;
+    const groups = {};
+    for (const s of S) if (s.mass <= t) (groups[s.group] ||= []).push(s);
+    const newly = Object.entries(groups).filter(([, l]) => l.some(s => s.mass > prev)).map(([g, l]) => {
+      const all = l.length === S.filter(s => s.group === g).length;
+      return all ? WH.esc(g) : `${WH.esc(g)} <span class="muted">(${l.filter(s => s.mass > prev).map(s => s.name).slice(0, 4).join(", ")}${l.length > 4 ? "…" : ""})</span>`;
+    });
+    const codes = H.filter(h => h.maxJumpMass === t).map(h => h.code);
+    return `<tr><td class="num"><b>${WH.massShort(t)}</b></td><td>${codes.length} types<br><span class="muted">${codes.slice(0, 8).join(", ")}${codes.length > 8 ? "…" : ""}</span></td><td>${i ? "Everything above, plus: " : ""}${newly.join(", ")}</td></tr>`;
+  }).join("");
+
+  $("shipList").innerHTML = ships.ships.map(s => `<option value="${WH.esc(s.name)}">`).join("");
+  // fittings (CCP data): propulsion massAddition (largest of each size), plates, Higgs
+  const propList = fm ? Object.entries(fm.propulsion).map(([k, v]) => [k, Math.max(...v)]) : [];
+  const plateList = fm ? Object.entries(fm.plates).filter(([k]) => k !== "25000mm").map(([k, v]) => [k, Math.max(...v)]) : [];
+  $("prop").insertAdjacentHTML("beforeend", propList.map(([k, v]) => `<option value="${v}">${k} (+${WH.massShort(v)} kg)</option>`).join(""));
+  $("plate").insertAdjacentHTML("beforeend", plateList.map(([k, v]) => `<option value="${v}">${k} (up to +${WH.num(v / 1000)} t each)</option>`).join(""));
+  if (fm) $("propTable").querySelector("tbody").innerHTML = [
+    ...propList.map(([k, v]) => `<tr><td>${k.replace("AB", "afterburner").replace("MWD", "microwarpdrive")} (running)</td><td class="num">+${WH.massShort(v)} kg</td></tr>`),
+    ...plateList.map(([k, v]) => `<tr><td>${k} armour plate</td><td class="num">up to +${WH.num(v / 1000)} t</td></tr>`),
+    `<tr><td>Higgs Anchor rig</td><td class="num">× 2 hull mass</td></tr>`].join("");
+
+  const update = () => {
+    const s = ships.ships.find(x => x.name.toLowerCase() === $("ship").value.trim().toLowerCase());
+    if (!s) { $("fit").innerHTML = ""; return; }
+    if (s.barred) { $("fit").innerHTML = `<p class="card"><b>${WH.esc(s.name)}</b> (${WH.esc(s.group)}, ${WH.massShort(s.mass)} kg) <span class="bad">can't enter wormhole space</span>: titans and supercarriers are barred from wormholes whatever their mass.${WH.src("euWhSpace")}</p>`; return; }
+    const prop = +$("prop").value * +$("propOn").value, plates = +$("plate").value * +$("plates").value, higgs = +$("higgs").value;
+    const total = s.mass * (higgs ? 2 : 1) + plates + prop;
+    const parts = [`${WH.massShort(s.mass)} kg hull`, higgs ? "doubled by the Higgs Anchor" : "", plates ? `+${WH.num(plates / 1000)} t of plates` : "", prop ? `+${WH.massShort(prop)} kg propulsion (running)` : ""].filter(Boolean).join(", ");
+    $("fit").innerHTML = `<div class="card"><p class="cond"><b>${WH.esc(s.name)}</b> · ${WH.esc(s.group)} · <b>${WH.massShort(total)} kg</b> <span class="muted">(${parts})</span></p>
+      <ul class="mods">${tiers.map(t => {
+        const ok = total <= t, n = H.filter(h => h.maxJumpMass === t).length;
+        return `<li><span>${WH.massShort(t)} kg holes <span class="muted">(${n} types)</span></span><b class="${ok ? "good" : "bad"}">${ok ? `fits, ${WH.pct(total, t)} of the limit` : "too heavy"}</b></li>`;
+      }).join("")}</ul>
+      <p class="note" style="margin-top:6px">Mass from CCP's data. Cargo and other fittings add a little more; check your ship's mass in game before relying on a close margin.${higgs && plates ? " CCP's data doesn't say whether the Higgs Anchor also doubles plate mass; this assumes it doesn't." : ""}</p></div>`;
+  };
+  ["ship", "prop", "propOn", "plate", "plates", "higgs"].forEach(id => $(id).addEventListener("input", update));
+
+  function run() {
+    const q = $("code").value.trim().toUpperCase(), to = $("to").value;
+    $("holes").querySelector("tbody").innerHTML = H.filter(h => (!q || h.code.includes(q)) && (!to || h.targetLabel === to)).map(h =>
+      `<tr><td><b>${h.code}</b></td><td>${WH.esc(h.targetLabel)}</td><td class="num">${WH.massShort(h.maxJumpMass)}</td><td class="num">${WH.massShort(h.totalMass)}</td><td class="num">${h.regenPerDay ? WH.massShort(h.regenPerDay) : "–"}</td><td class="num">${WH.hours(h.lifetimeMin)}</td><td class="cond">${WH.sigText(sigs?.holes[h.code])}</td></tr>`).join("");
+  }
+  $("code").addEventListener("input", run); $("to").addEventListener("input", run);
+  run();
+  WH.footer();
+})();
+</script>
+</body>
+</html>

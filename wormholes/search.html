@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wormhole search: find a J-space system</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%234d5f86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EWH%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="wh.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">
+    <span class="mark" aria-hidden="true">WH</span>
+    <span><b>Wormhole space</b><small>Classes, effects, statics, activity and site guide</small></span>
+  </a>
+  <nav class="links"><a href="index.html">Overview</a><a href="search.html" aria-current="page">Wormhole search</a><a href="holes.html">Hole types &amp; ship restrictions</a><a href="guide.html">Site guide</a><a href="../index.html">Back to the site</a></nav>
+</header>
+<main>
+  <h1>Wormhole search</h1>
+  <p class="lead">Find a system by its J-code, or filter by class, effect, static and planets. Pick a system to see its effect in numbers, its statics with what fits through them, and its planets.</p>
+
+  <form class="controls" id="f" onsubmit="return false">
+    <label>System name<input type="search" id="q" placeholder="J123456 or part of one" autocomplete="off" spellcheck="false"></label>
+    <label>Class<select id="cls"><option value="">Any</option></select></label>
+    <label>Effect<select id="eff"><option value="">Any</option><option value="none">No effect</option></select></label>
+    <label>Has a static to<select id="to"><option value="">Anywhere</option></select></label>
+    <label>Has a planet type<select id="pl" title="Shattered systems can't use their planets for PI"><option value="">Any</option></select></label>
+    <label>Shattered<select id="sh"><option value="">Either</option><option value="1">Shattered only</option><option value="0">Not shattered</option></select></label>
+  </form>
+  <p class="note" id="count"></p>
+  <div class="tablewrap" style="max-height:420px;overflow-y:auto"><table class="t" id="res"><thead><tr><th>System</th><th>Class</th><th>Effect</th><th>Statics</th><th class="num">Planets</th><th class="num">Moons</th></tr></thead><tbody></tbody></table></div>
+
+  <section id="detail" style="margin-top:18px"></section>
+</main>
+<script src="wh.js"></script>
+<script>
+(async () => {
+  const [sys, holes, effects, ships] = await Promise.all(["systems", "holes", "effects", "ships-fit"].map(WH.load));
+  const sigs = await WH.load("hole-signatures").catch(() => null);
+  const S = sys.systems;
+  const holeBy = new Map(holes.holes.map(h => [h.code, h]));
+  const effBy = new Map(effects.effects.map(e => [e.beacon, e]));
+  const groupKey = s => WH.groupOfClass(s.class)?.key;
+  const $ = id => document.getElementById(id);
+
+  // fill filters from the data
+  $("cls").insertAdjacentHTML("beforeend", WH.GROUPS.map(g => `<option value="${g.key}">${WH.esc(g.name)}</option>`).join(""));
+  const kinds = [...new Set(S.filter(s => s.effect).map(s => s.effect.kind))].sort();
+  $("eff").insertAdjacentHTML("beforeend", kinds.map(k => `<option>${WH.esc(k)}</option>`).join(""));
+  const order = ["High-sec", "Low-sec", "Null-sec", "C1", "C2", "C3", "C4", "C5", "C6", "C13", "Thera"];
+  const dests = [...new Set(S.flatMap(s => s.statics.map(x => x.targetLabel)))].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  $("to").insertAdjacentHTML("beforeend", dests.map(d => `<option>${WH.esc(d)}</option>`).join(""));
+  const ptypes = [...new Set(S.flatMap(s => Object.keys(s.planetTypes)))].sort();
+  $("pl").insertAdjacentHTML("beforeend", ptypes.map(p => `<option>${WH.esc(p)}</option>`).join(""));
+
+  const params = new URLSearchParams(location.search);
+  if (params.get("class")) $("cls").value = params.get("class");
+  if (params.get("sh")) $("sh").value = params.get("sh");
+  if (params.get("eff")) $("eff").value = params.get("eff");
+  if (params.get("s")) $("q").value = params.get("s");
+  if (params.get("pl")) $("pl").value = params.get("pl");
+
+  const staticText = s => s.statics.map(x => `${x.code} <span class="muted">→ ${WH.esc(x.targetLabel)}</span>${x.confirmed ? "" : ` <span class="badge b-warn" title="Only ${x.sources.join(", ")} lists this">?</span>`}`).join("<br>");
+  const LIMIT = 300;
+  let current = null;
+  function run() {
+    const q = $("q").value.trim().toLowerCase(), c = $("cls").value, e = $("eff").value, to = $("to").value, pl = $("pl").value, sh = $("sh").value;
+    const hits = S.filter(s =>
+      (!q || s.name.toLowerCase().includes(q)) && (!c || groupKey(s) === c) &&
+      (!e || (e === "none" ? !s.effect : s.effect?.kind === e)) && (!to || s.statics.some(x => x.targetLabel === to)) &&
+      (!pl || s.planetTypes[pl]) && (sh === "" || s.shattered === (sh === "1")));
+    $("count").textContent = `${WH.num(hits.length)} system${hits.length === 1 ? "" : "s"}${hits.length > LIMIT ? `; showing the first ${LIMIT}, narrow the search to see the rest` : ""}.`;
+    $("res").querySelector("tbody").innerHTML = hits.slice(0, LIMIT).map(s => `<tr data-id="${s.id}"${current === s.id ? ' class="sel"' : ""}>
+      <td><button type="button" class="rowbtn">${WH.esc(s.name)}</button>${s.shattered ? ' <span class="badge b-info">shattered</span>' : ""}</td>
+      <td>${WH.esc(WH.groupOfClass(s.class)?.short)}</td><td>${s.effect ? WH.esc(s.effect.kind) : '<span class="muted">none</span>'}</td>
+      <td>${staticText(s)}</td><td class="num">${s.planets}</td><td class="num">${s.moons}</td></tr>`).join("");
+    if (hits.length === 1 && current !== hits[0].id) show(hits[0].id);
+  }
+  ["q", "cls", "eff", "to", "pl", "sh"].forEach(id => $(id).addEventListener("input", run));
+  $("res").addEventListener("click", ev => { const tr = ev.target.closest("tr[data-id]"); if (tr) show(+tr.dataset.id); });
+
+  const fitsIn = m => {
+    const ok = ships.ships.filter(x => !x.barred && x.mass <= m);
+    const groups = [...new Set(ok.map(x => x.group))];
+    const heaviest = ok[ok.length - 1];
+    return `${groups.length} ship groups, heaviest ${WH.esc(heaviest?.name)} (${WH.massShort(heaviest?.mass)} kg)`;
+  };
+  function show(id) {
+    current = id;
+    document.querySelectorAll("#res tr.sel").forEach(r => r.classList.remove("sel"));
+    document.querySelector(`#res tr[data-id="${id}"]`)?.classList.add("sel");
+    const s = S.find(x => x.id === id), g = WH.groupOfClass(s.class);
+    const e = s.effect && effBy.get(s.effect.beacon);
+    const ov = s.effect?.override;
+    history.replaceState(null, "", `?s=${encodeURIComponent(s.name)}`);
+    $("detail").innerHTML = `<h2 style="margin-top:0">${WH.esc(s.name)} <span class="muted cond" style="font-size:.95rem">${WH.esc(g.name)} · ${WH.esc(s.region)} · ${WH.esc(s.constellation)}</span></h2>
+      <div class="detail">
+        <div class="card"><h3 style="margin-top:0">System effect</h3>${e ? `<p class="cond" style="margin-bottom:6px"><b>${WH.esc(s.effect.kind)}</b>, Class ${e.beaconClass} strength</p>${ov ? `<p class="caveat" style="margin:4px 0 8px">As shown by ${WH.esc(ov.source)}. CCP's own effect data says <b>${WH.esc(ov.ccpKind)}</b> at Class ${ov.ccpClass} strength instead.</p>` : ""}
+          <ul class="mods">${e.mods.map(m => `<li><span>${WH.esc(m.label)}</span><b class="${m.good === true ? "good" : m.good === false ? "bad" : ""}">${m.pct > 0 ? "+" : ""}${WH.dec(m.pct, m.pct % 1 ? 1 : 0)}%</b></li>`).join("")}</ul><p class="cond" style="margin:8px 0 0"><a href="index.html?ec=${e.beaconClass}#effect-${s.effect.kind.toLowerCase().replace(/ /g, "-")}">What a ${WH.esc(s.effect.kind)} means for you →</a></p>` : '<p class="muted">No system effect.</p>'}</div>
+        <div class="card"><h3 style="margin-top:0">Statics</h3>${s.statics.map(x => { const h = holeBy.get(x.code); return `<p class="cond" style="margin-bottom:8px"><b>${x.code}</b> to ${WH.esc(x.targetLabel)} ${x.confirmed ? '<span class="badge b-ok">confirmed</span>' : `<span class="badge b-warn">only ${WH.esc(x.sources.join(", "))}</span>`}<br>
+          <span class="muted">Up to ${WH.massShort(h.maxJumpMass)} kg a jump, ${WH.massShort(h.totalMass)} kg in total, lasts ${WH.hours(h.lifetimeMin)}. Fits ${fitsIn(h.maxJumpMass)}. Signature level: ${WH.sigText(sigs?.holes[x.code], "static")}.</span></p>`; }).join("")}</div>
+        <div class="card"><h3 style="margin-top:0">Celestials</h3><dl class="kv"><dt>Star</dt><dd>${WH.esc(s.star?.type || "–")}</dd><dt>Planets</dt><dd>${s.planets}</dd>${Object.entries(s.planetTypes).sort((a, b) => b[1] - a[1]).map(([t, n]) => `<dt>&nbsp;&nbsp;${WH.esc(t)}</dt><dd>${n}</dd>`).join("")}<dt>Moons</dt><dd>${s.moons}</dd></dl>
+          ${s.shattered ? `<p class="note" style="margin-top:8px">Shattered system: planetary interaction isn't possible here.${WH.src("euPI")}</p>` : ""}
+          ${s.noAnchor.includes(65) ? '<p class="note" style="margin-top:8px">Player structures cannot be anchored here.</p>' : ""}</div>
+      </div>
+      <p class="note" style="margin-top:10px">More on this system: <a href="https://zkillboard.com/system/${s.id}/" target="_blank" rel="noopener">zKillboard</a> · <a href="https://anoik.is/systems/${encodeURIComponent(s.name)}" target="_blank" rel="noopener">anoik.is</a></p>`;
+  }
+  run();
+  WH.footer();
+})();
+</script>
+</body>
+</html>

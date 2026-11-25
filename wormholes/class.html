@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wormhole class</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%234d5f86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EWH%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="wh.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">
+    <span class="mark" aria-hidden="true">WH</span>
+    <span><b>Wormhole space</b><small>Classes, effects, statics, activity and site guide</small></span>
+  </a>
+  <nav class="links"><a href="index.html">Overview</a><a href="search.html">Wormhole search</a><a href="holes.html">Hole types &amp; ship restrictions</a><a href="guide.html">Site guide</a><a href="../index.html">Back to the site</a></nav>
+</header>
+<main>
+  <nav class="toc" id="classNav" aria-label="Classes"></nav>
+  <h1 id="title">Wormhole class</h1>
+  <p class="lead" id="intro"></p>
+  <div class="tiles" id="tiles"></div>
+
+  <h2>Where its statics lead</h2>
+  <p class="note">Every system has one or more static wormholes that always lead to the same kind of space; a new one appears when the old one dies. Wandering wormholes and K162s (the far side of a hole opened from elsewhere) come on top. Statics are community-recorded: <span class="badge b-ok">confirmed</span> means Tripwire and Wanderer agree.</p>
+  <div class="tablewrap"><table class="t" id="statics"><thead><tr><th>Leads to</th><th class="num">Systems with this static</th><th>Largest ship size through it</th></tr></thead><tbody></tbody></table></div>
+
+  <h2>Other holes that can open here</h2>
+  <p class="note" id="wandNote"></p>
+  <div class="tablewrap" id="wandWrap"><table class="t" id="wand"><thead><tr><th>Code</th><th>Leads to</th><th>Largest ship size through it</th><th>Sources</th></tr></thead><tbody></tbody></table></div>
+
+  <h2>System effects</h2>
+  <p class="note" id="effNote"></p>
+  <div id="effects" class="detail"></div>
+
+  <h2>Activity</h2>
+  <p class="note" id="actNote"></p>
+  <div class="seg" role="group" aria-label="Window" id="winSeg"></div>
+  <div class="tiles" id="kill"></div>
+
+  <h2 id="sitesH">Sites</h2>
+  <div id="sites"></div>
+
+  <p style="margin-top:22px"><a id="searchLink" href="search.html">List every system in this class</a></p>
+</main>
+<script src="wh.js"></script>
+<script>
+(async () => {
+  const key = new URLSearchParams(location.search).get("c") || "C1";
+  const g = WH.GROUPS.find(x => x.key === key) || WH.GROUPS[0];
+  document.getElementById("classNav").innerHTML = WH.GROUPS.map(x => `<a href="class.html?c=${x.key}"${x.key === g.key ? ' aria-current="page" style="border-color:var(--accent)"' : ""}>${x.short}</a>`).join("");
+  document.title = `${g.name}: wormhole class guide`;
+  document.getElementById("title").textContent = g.name;
+  const [note, srcs] = WH.CLASS_NOTES[g.key];
+  document.getElementById("intro").innerHTML = WH.esc(note) + srcs.map(s => WH.src(s)).join("");
+  document.getElementById("searchLink").href = `search.html?class=${g.key}`;
+
+  const [sys, holes, effects, ships, kills, sitesData, wand] = await Promise.all(["systems", "holes", "effects", "ships-fit", "kills", "sites", "wanderers"].map(n => WH.load(n).catch(() => null)));
+  const list = sys.systems.filter(s => g.classes.includes(s.class));
+  const holeBy = new Map(holes.holes.map(h => [h.code, h]));
+
+  // tiles
+  const eff = list.filter(s => s.effect).length, sh = list.filter(s => s.shattered).length;
+  const planets = list.reduce((a, s) => a + s.planets, 0), moons = list.reduce((a, s) => a + s.moons, 0);
+  const tiles = [["Systems", WH.num(list.length)], ["With a system effect", `${WH.num(eff)} (${WH.pct(eff, list.length)})`], ["Planets", WH.num(planets)], ["Moons", WH.num(moons)]];
+  if (sh && g.key !== "C13") tiles.splice(2, 0, ["Shattered", WH.num(sh)]);
+  document.getElementById("tiles").innerHTML = tiles.map(([a, b]) => `<div class="tile"><b>${b}</b><span>${a}</span></div>`).join("");
+
+  // statics by destination
+  const SIZE = [[5e6, "Frigates and destroyers"], [62e6, "Up to battlecruisers, plus the Nestor"], [375e6, "Up to battleships, Marauders and the Orca"], [410e6, "Up to battleships, Marauders and the Orca"], [1e9, "Up to freighters, jump freighters and the Rorqual"], [2e9, "Capitals (no titans or supercarriers)"]];
+  const sizeText = m => (SIZE.find(([x]) => x === m) || [0, WH.massShort(m)])[1];
+  const dest = {};
+  for (const s of list) for (const st of s.statics) {
+    const d = (dest[st.targetLabel] ||= { n: 0, confirmed: 0, jumps: new Set() });
+    d.n++; if (st.confirmed) d.confirmed++; d.jumps.add(holeBy.get(st.code)?.maxJumpMass);
+  }
+  const order = ["High-sec", "Low-sec", "Null-sec", "C1", "C2", "C3", "C4", "C5", "C6", "C13", "Thera"];
+  document.querySelector("#statics tbody").innerHTML = Object.entries(dest).sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0])).map(([t, d]) =>
+    `<tr><td>${WH.esc(t)}${d.confirmed < d.n ? ` <span class="badge b-warn" title="Tripwire and Wanderer disagree for some of these">${d.n - d.confirmed} unconfirmed</span>` : ""}</td><td class="num">${WH.num(d.n)}</td><td>${[...d.jumps].sort((a, b) => a - b).map(m => `${WH.esc(sizeText(m))} <span class="muted">(${WH.massShort(m)} kg a jump)</span>`).join("<br>")}</td></tr>`).join("");
+
+  // wandering holes
+  const wl = wand?.classes?.[g.classes[0]] || [];
+  if (!wl.length) { document.getElementById("wandWrap").hidden = true; document.getElementById("wandNote").textContent = g.key === "Drifter" ? "Drifter systems connect through their six statics and scanned-down k-space entrances." : "No other hole types are recorded for this class."; }
+  else {
+    document.getElementById("wandNote").innerHTML = `Besides its statics, a ${WH.esc(g.short)} system can have these wandering holes open (and K162s from anywhere that connects in). Recorded by Tripwire, Wanderer and whtype.info; how often each appears isn't recorded anywhere we found. A code marked <span class=\"badge b-info\">also a static</span> can open both ways, so finding two or three holes with the same code doesn't mean extra statics: only the static respawns when it collapses, which is how to tell them apart. Players also report short loops, such as a k-space hole straight to the next system.`;
+    document.querySelector("#wand tbody").innerHTML = wl.map(w => `<tr><td><b>${w.code}</b>${w.alsoStatic ? ' <span class="badge b-info" title="Some systems of this class have it as a static">also a static</span>' : ""}</td><td>${WH.esc(w.targetLabel)}</td><td>${WH.esc(sizeText(w.maxJumpMass))} <span class="muted">(${WH.massShort(w.maxJumpMass)} kg)</span></td><td>${w.disputed ? `<span class="badge b-warn" title="${WH.esc(w.disputed)}">disputed</span> ` : ""}${w.sources.length > 1 ? `<span class="badge b-ok">${w.sources.length} sources</span>` : `<span class="badge b-warn">${WH.esc(w.sources[0])} only</span>`} <span class="muted">${WH.esc(w.sources.join(", "))}</span></td></tr>`).join("");
+  }
+
+  // effects present in this class, at the strength the class actually gets
+  const byKind = {};
+  for (const s of list) if (s.effect) (byKind[s.effect.kind] ||= { n: 0, beacons: {} }), byKind[s.effect.kind].n++, byKind[s.effect.kind].beacons[s.effect.beacon] = (byKind[s.effect.kind].beacons[s.effect.beacon] || 0) + 1;
+  const strength = Object.values(byKind).flatMap(k => Object.keys(k.beacons)).map(id => effects.effects.find(e => e.beacon === +id)?.beaconClass);
+  const strengthClasses = [...new Set(strength)];
+  document.getElementById("effNote").innerHTML = Object.keys(byKind).length
+    ? `Each effect changes ships in the system, more strongly in higher classes. ${strengthClasses.length === 1 && g.classes.length && strengthClasses[0] !== g.classes[0] ? `<b>Systems here use Class ${strengthClasses[0]} strength.</b> ` : ""}Green helps the pilot, red hurts; white cuts both ways (it affects your enemies' modules too). Values from CCP's data.${WH.src("sde")}`
+    : "No system in this class has a system effect.";
+  const overridden = list.filter(s => s.effect?.override);
+  if (overridden.length) document.getElementById("effNote").insertAdjacentHTML("beforeend", `<span class="caveat" style="display:block;margin-top:8px">${overridden.map(s => `<a href="search.html?s=${s.name}">${s.name}</a>`).join(", ")}: shown as ellatha.com, eveapex.com and Wanderer list ${overridden.length > 1 ? "them" : "it"}; CCP's own effect data differs.</span>`);
+  document.getElementById("effects").innerHTML = Object.entries(byKind).sort((a, b) => b[1].n - a[1].n).map(([kind, k]) => {
+    const beacons = Object.entries(k.beacons).sort((a, b) => b[1] - a[1]);
+    return beacons.map(([id, n]) => {
+      const e = effects.effects.find(x => x.beacon === +id);
+      const odd = beacons.length > 1 ? ` <span class="badge b-warn">${n} system${n > 1 ? "s" : ""} at Class ${e.beaconClass} strength</span>` : "";
+      return `<div class="card"><h3 style="margin-top:0">${WH.esc(kind)} <span class="muted cond">${WH.num(n)} systems</span>${odd}</h3><ul class="mods">${e.mods.map(m => `<li><span>${WH.esc(m.label)}</span><b class="${m.good === true ? "good" : m.good === false ? "bad" : ""}">${m.pct > 0 ? "+" : ""}${WH.dec(m.pct, m.pct % 1 ? 1 : 0)}%</b></li>`).join("")}</ul><p class="cond" style="margin:8px 0 0"><a href="index.html?ec=${e.beaconClass}#effect-${kind.toLowerCase().replace(/ /g, "-")}">What a ${WH.esc(kind)} means for you →</a></p></div>`;
+    }).join("");
+  }).join("");
+
+  // activity
+  if (kills) {
+    const show = w => {
+      const W = kills.windows[w], k = W.groups[g.key], days = W.hours / 24;
+      document.getElementById("actNote").innerHTML = `${W.complete ? "" : `<b>Partial window:</b> the kill log covers ${WH.num(W.hours)} of ${w === "24h" ? 24 : w === "7d" ? 168 : 720} hours so far. `}PvP kills only. Figures are for the class as a whole; individual systems are not ranked because most see too few kills to rank fairly. A fight is a run of PvP kills in one system with no gap over an hour.`;
+      const t = [
+        ["Fights", WH.num(k.fights)], ["Combat kills", WH.num(k.pvpCombat)], ["Pods", WH.num(k.pods)], ["Shuttles and rookie ships", WH.num(k.starterShips)],
+        ["ISK destroyed", WH.isk(k.isk)], ["Median ship lost", k.iskMedian ? WH.isk(k.iskMedian) : "–"],
+        ["Structures killed", WH.num(k.structures)], ["Capitals killed", WH.num(k.capitals)],
+        ["Pilots killed by Sleepers or Drifters", WH.num(k.npcDeaths)], ["Systems with PvP", `${WH.num(k.systemsWithPvp)} of ${WH.num(list.length)}`]
+      ];
+      if (k.biggestFight && k.biggestFight.iskShare >= 25) t.push([`Of the ISK came from one fight (${WH.num(k.biggestFight.kills)} kills)`, `${WH.dec(k.biggestFight.iskShare, 0)}%`]);
+      document.getElementById("kill").innerHTML = t.map(([a, b]) => `<div class="tile"><b>${b}</b><span>${a}</span></div>`).join("");
+    };
+    const seg = document.getElementById("winSeg");
+    seg.innerHTML = ["24h", "7d", "30d"].map(w => `<button type="button" data-w="${w}">${w === "24h" ? "24 hours" : w === "7d" ? "7 days" : "30 days"}</button>`).join("");
+    const set = w => { seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.w === w)); show(w); };
+    seg.addEventListener("click", e => { const b = e.target.closest("button"); if (b) set(b.dataset.w); });
+    set("7d");
+  } else document.getElementById("actNote").textContent = "Kill figures not built yet.";
+
+  // sites
+  const cls = g.classes[0];
+  const el = document.getElementById("sites");
+  if (cls >= 1 && cls <= 6) {
+    el.innerHTML = `<p class="note">Danger tiers are this site's own assessment; <a href="guide.html#tiers">how they are worked out</a>. Site names from EVE University; waves and blue loot from Rykki's Guide, checked against EVE University; EHP and DPS worked out from CCP's Sleeper stats. <a href="guide.html#combat">More on these columns</a>.${WH.src("euSites")}</p>
+      ${WH.siteTable(cls, sitesData)}
+      <p class="note" style="margin-top:8px">Gas, ore and the Rampant Drone Fabricator are covered in the <a href="guide.html">site guide</a>.</p>`;
+  } else {
+    document.getElementById("sitesH").textContent = "Sites and what to know";
+    el.innerHTML = `<p>See the <a href="guide.html">site guide</a> for ${g.key === "Drifter" ? "Drifters" : g.key === "C13" ? "small-ship and Wolf-Rayet sites" : "Thera"}.</p>`;
+  }
+  WH.footer();
+})();
+</script>
+</body>
+</html>

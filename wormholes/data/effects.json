@@ -1,0 +1,1850 @@
+{
+ "sdeBuild": 3720952,
+ "sdeReleased": "2026-11-19T11:07:08Z",
+ "builtAt": "2026-11-21T17:54:35.266Z",
+ "note": "Beacon dogma from the SDE. Percent change from base; 'good' = helps the pilot.",
+ "effects": [
+  {
+   "beacon": 30845,
+   "name": "Class 1 Black Hole Effects",
+   "beaconClass": 1,
+   "kind": "Black Hole",
+   "mods": [
+    {
+     "attr": 169,
+     "label": "Inertia (agility penalty)",
+     "value": 1.15,
+     "pct": 15,
+     "good": false
+    },
+    {
+     "attr": 1483,
+     "label": "Missile explosion velocity",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 1469,
+     "label": "Missile velocity",
+     "value": 1.15,
+     "pct": 15,
+     "good": true
+    },
+    {
+     "attr": 1470,
+     "label": "Ship velocity",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 1969,
+     "label": "Stasis webifier strength",
+     "value": 0.85,
+     "pct": -15,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30850,
+   "name": "Class 2 Black Hole Effects",
+   "beaconClass": 2,
+   "kind": "Black Hole",
+   "mods": [
+    {
+     "attr": 169,
+     "label": "Inertia (agility penalty)",
+     "value": 1.22,
+     "pct": 22,
+     "good": false
+    },
+    {
+     "attr": 1483,
+     "label": "Missile explosion velocity",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 1469,
+     "label": "Missile velocity",
+     "value": 1.22,
+     "pct": 22,
+     "good": true
+    },
+    {
+     "attr": 1470,
+     "label": "Ship velocity",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 1969,
+     "label": "Stasis webifier strength",
+     "value": 0.78,
+     "pct": -22,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30851,
+   "name": "Class 3 Black Hole Effects",
+   "beaconClass": 3,
+   "kind": "Black Hole",
+   "mods": [
+    {
+     "attr": 169,
+     "label": "Inertia (agility penalty)",
+     "value": 1.29,
+     "pct": 29,
+     "good": false
+    },
+    {
+     "attr": 1483,
+     "label": "Missile explosion velocity",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 1469,
+     "label": "Missile velocity",
+     "value": 1.29,
+     "pct": 29,
+     "good": true
+    },
+    {
+     "attr": 1470,
+     "label": "Ship velocity",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 1969,
+     "label": "Stasis webifier strength",
+     "value": 0.71,
+     "pct": -29,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30852,
+   "name": "Class 4 Black Hole Effects",
+   "beaconClass": 4,
+   "kind": "Black Hole",
+   "mods": [
+    {
+     "attr": 169,
+     "label": "Inertia (agility penalty)",
+     "value": 1.36,
+     "pct": 36,
+     "good": false
+    },
+    {
+     "attr": 1483,
+     "label": "Missile explosion velocity",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 1469,
+     "label": "Missile velocity",
+     "value": 1.36,
+     "pct": 36,
+     "good": true
+    },
+    {
+     "attr": 1470,
+     "label": "Ship velocity",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 1969,
+     "label": "Stasis webifier strength",
+     "value": 0.64,
+     "pct": -36,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30853,
+   "name": "Class 5 Black Hole Effects",
+   "beaconClass": 5,
+   "kind": "Black Hole",
+   "mods": [
+    {
+     "attr": 169,
+     "label": "Inertia (agility penalty)",
+     "value": 1.43,
+     "pct": 43,
+     "good": false
+    },
+    {
+     "attr": 1483,
+     "label": "Missile explosion velocity",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 1469,
+     "label": "Missile velocity",
+     "value": 1.43,
+     "pct": 43,
+     "good": true
+    },
+    {
+     "attr": 1470,
+     "label": "Ship velocity",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 1969,
+     "label": "Stasis webifier strength",
+     "value": 0.57,
+     "pct": -43,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30854,
+   "name": "Class 6 Black Hole Effects",
+   "beaconClass": 6,
+   "kind": "Black Hole",
+   "mods": [
+    {
+     "attr": 169,
+     "label": "Inertia (agility penalty)",
+     "value": 1.5,
+     "pct": 50,
+     "good": false
+    },
+    {
+     "attr": 1483,
+     "label": "Missile explosion velocity",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 1469,
+     "label": "Missile velocity",
+     "value": 1.5,
+     "pct": 50,
+     "good": true
+    },
+    {
+     "attr": 1470,
+     "label": "Ship velocity",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 1969,
+     "label": "Stasis webifier strength",
+     "value": 0.5,
+     "pct": -50,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30846,
+   "name": "Class 1 Cataclysmic Variable Effects",
+   "beaconClass": 1,
+   "kind": "Cataclysmic Variable",
+   "mods": [
+    {
+     "attr": 1499,
+     "label": "Capacitor capacity",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 1.15,
+     "pct": 15,
+     "good": false
+    },
+    {
+     "attr": 1495,
+     "label": "Local armor repair amount",
+     "value": 0.85,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1496,
+     "label": "Local shield boost amount",
+     "value": 0.85,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1498,
+     "label": "Remote armor repair amount",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 1840,
+     "label": "Remote capacitor transfer amount",
+     "value": 0.85,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1497,
+     "label": "Remote shield repair amount",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30880,
+   "name": "Class 2 Cataclysmic Variable Effects",
+   "beaconClass": 2,
+   "kind": "Cataclysmic Variable",
+   "mods": [
+    {
+     "attr": 1499,
+     "label": "Capacitor capacity",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 1.22,
+     "pct": 22,
+     "good": false
+    },
+    {
+     "attr": 1495,
+     "label": "Local armor repair amount",
+     "value": 0.78,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1496,
+     "label": "Local shield boost amount",
+     "value": 0.78,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1498,
+     "label": "Remote armor repair amount",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 1840,
+     "label": "Remote capacitor transfer amount",
+     "value": 0.78,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1497,
+     "label": "Remote shield repair amount",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30881,
+   "name": "Class 3 Cataclysmic Variable Effects",
+   "beaconClass": 3,
+   "kind": "Cataclysmic Variable",
+   "mods": [
+    {
+     "attr": 1499,
+     "label": "Capacitor capacity",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 1.29,
+     "pct": 29,
+     "good": false
+    },
+    {
+     "attr": 1495,
+     "label": "Local armor repair amount",
+     "value": 0.71,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1496,
+     "label": "Local shield boost amount",
+     "value": 0.71,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1498,
+     "label": "Remote armor repair amount",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 1840,
+     "label": "Remote capacitor transfer amount",
+     "value": 0.71,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1497,
+     "label": "Remote shield repair amount",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30884,
+   "name": "Class 4 Cataclysmic Variable Effects",
+   "beaconClass": 4,
+   "kind": "Cataclysmic Variable",
+   "mods": [
+    {
+     "attr": 1499,
+     "label": "Capacitor capacity",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 1.36,
+     "pct": 36,
+     "good": false
+    },
+    {
+     "attr": 1495,
+     "label": "Local armor repair amount",
+     "value": 0.64,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1496,
+     "label": "Local shield boost amount",
+     "value": 0.64,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1498,
+     "label": "Remote armor repair amount",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 1840,
+     "label": "Remote capacitor transfer amount",
+     "value": 0.64,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1497,
+     "label": "Remote shield repair amount",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30883,
+   "name": "Class 5 Cataclysmic Variable Effects",
+   "beaconClass": 5,
+   "kind": "Cataclysmic Variable",
+   "mods": [
+    {
+     "attr": 1499,
+     "label": "Capacitor capacity",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 1.43,
+     "pct": 43,
+     "good": false
+    },
+    {
+     "attr": 1495,
+     "label": "Local armor repair amount",
+     "value": 0.57,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1496,
+     "label": "Local shield boost amount",
+     "value": 0.57,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1498,
+     "label": "Remote armor repair amount",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 1840,
+     "label": "Remote capacitor transfer amount",
+     "value": 0.57,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1497,
+     "label": "Remote shield repair amount",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30882,
+   "name": "Class 6 Cataclysmic Variable Effects",
+   "beaconClass": 6,
+   "kind": "Cataclysmic Variable",
+   "mods": [
+    {
+     "attr": 1499,
+     "label": "Capacitor capacity",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 1.5,
+     "pct": 50,
+     "good": false
+    },
+    {
+     "attr": 1495,
+     "label": "Local armor repair amount",
+     "value": 0.5,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1496,
+     "label": "Local shield boost amount",
+     "value": 0.5,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1498,
+     "label": "Remote armor repair amount",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 1840,
+     "label": "Remote capacitor transfer amount",
+     "value": 0.5,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1497,
+     "label": "Remote shield repair amount",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30847,
+   "name": "Class 1 Magnetar Effects",
+   "beaconClass": 1,
+   "kind": "Magnetar",
+   "mods": [
+    {
+     "attr": 1967,
+     "label": "Missile explosion radius",
+     "value": 1.3,
+     "pct": 30,
+     "good": false
+    },
+    {
+     "attr": 1968,
+     "label": "Target painter strength",
+     "value": 0.85,
+     "pct": -15,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 0.85,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 244,
+     "label": "Turret tracking",
+     "value": 0.85,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1482,
+     "label": "Weapon and drone damage",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30860,
+   "name": "Class 2 Magnetar Effects",
+   "beaconClass": 2,
+   "kind": "Magnetar",
+   "mods": [
+    {
+     "attr": 1967,
+     "label": "Missile explosion radius",
+     "value": 1.44,
+     "pct": 44,
+     "good": false
+    },
+    {
+     "attr": 1968,
+     "label": "Target painter strength",
+     "value": 0.78,
+     "pct": -22,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 0.78,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 244,
+     "label": "Turret tracking",
+     "value": 0.78,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1482,
+     "label": "Weapon and drone damage",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30861,
+   "name": "Class 3 Magnetar Effects",
+   "beaconClass": 3,
+   "kind": "Magnetar",
+   "mods": [
+    {
+     "attr": 1967,
+     "label": "Missile explosion radius",
+     "value": 1.58,
+     "pct": 58,
+     "good": false
+    },
+    {
+     "attr": 1968,
+     "label": "Target painter strength",
+     "value": 0.71,
+     "pct": -29,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 0.71,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 244,
+     "label": "Turret tracking",
+     "value": 0.71,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1482,
+     "label": "Weapon and drone damage",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30862,
+   "name": "Class 4 Magnetar Effects",
+   "beaconClass": 4,
+   "kind": "Magnetar",
+   "mods": [
+    {
+     "attr": 1967,
+     "label": "Missile explosion radius",
+     "value": 1.72,
+     "pct": 72,
+     "good": false
+    },
+    {
+     "attr": 1968,
+     "label": "Target painter strength",
+     "value": 0.64,
+     "pct": -36,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 0.64,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 244,
+     "label": "Turret tracking",
+     "value": 0.64,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1482,
+     "label": "Weapon and drone damage",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30863,
+   "name": "Class 5 Magnetar Effects",
+   "beaconClass": 5,
+   "kind": "Magnetar",
+   "mods": [
+    {
+     "attr": 1967,
+     "label": "Missile explosion radius",
+     "value": 1.86,
+     "pct": 86,
+     "good": false
+    },
+    {
+     "attr": 1968,
+     "label": "Target painter strength",
+     "value": 0.57,
+     "pct": -43,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 0.57,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 244,
+     "label": "Turret tracking",
+     "value": 0.57,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1482,
+     "label": "Weapon and drone damage",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30864,
+   "name": "Class 6 Magnetar Effects",
+   "beaconClass": 6,
+   "kind": "Magnetar",
+   "mods": [
+    {
+     "attr": 1967,
+     "label": "Missile explosion radius",
+     "value": 2,
+     "pct": 100,
+     "good": false
+    },
+    {
+     "attr": 1968,
+     "label": "Target painter strength",
+     "value": 0.5,
+     "pct": -50,
+     "good": null
+    },
+    {
+     "attr": 237,
+     "label": "Targeting range",
+     "value": 0.5,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 244,
+     "label": "Turret tracking",
+     "value": 0.5,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1482,
+     "label": "Weapon and drone damage",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30844,
+   "name": "Class 1 Pulsar Effects",
+   "beaconClass": 1,
+   "kind": "Pulsar",
+   "mods": [
+    {
+     "attr": 1465,
+     "label": "Armor EM resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1468,
+     "label": "Armor explosive resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1466,
+     "label": "Armor kinetic resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1467,
+     "label": "Armor thermal resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 0.85,
+     "pct": -15,
+     "good": true
+    },
+    {
+     "attr": 1966,
+     "label": "Energy neutralizer/nosferatu strength",
+     "value": 1.3,
+     "pct": 30,
+     "good": null
+    },
+    {
+     "attr": 146,
+     "label": "Shield hit points",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 1.3,
+     "pct": 30,
+     "good": false
+    }
+   ]
+  },
+  {
+   "beacon": 30865,
+   "name": "Class 2 Pulsar Effects",
+   "beaconClass": 2,
+   "kind": "Pulsar",
+   "mods": [
+    {
+     "attr": 1465,
+     "label": "Armor EM resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1468,
+     "label": "Armor explosive resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1466,
+     "label": "Armor kinetic resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1467,
+     "label": "Armor thermal resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 0.78,
+     "pct": -22,
+     "good": true
+    },
+    {
+     "attr": 1966,
+     "label": "Energy neutralizer/nosferatu strength",
+     "value": 1.44,
+     "pct": 44,
+     "good": null
+    },
+    {
+     "attr": 146,
+     "label": "Shield hit points",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 1.44,
+     "pct": 44,
+     "good": false
+    }
+   ]
+  },
+  {
+   "beacon": 30866,
+   "name": "Class 3 Pulsar Effects",
+   "beaconClass": 3,
+   "kind": "Pulsar",
+   "mods": [
+    {
+     "attr": 1465,
+     "label": "Armor EM resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1468,
+     "label": "Armor explosive resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1466,
+     "label": "Armor kinetic resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1467,
+     "label": "Armor thermal resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 0.71,
+     "pct": -29,
+     "good": true
+    },
+    {
+     "attr": 1966,
+     "label": "Energy neutralizer/nosferatu strength",
+     "value": 1.58,
+     "pct": 58,
+     "good": null
+    },
+    {
+     "attr": 146,
+     "label": "Shield hit points",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 1.58,
+     "pct": 58,
+     "good": false
+    }
+   ]
+  },
+  {
+   "beacon": 30867,
+   "name": "Class 4 Pulsar Effects",
+   "beaconClass": 4,
+   "kind": "Pulsar",
+   "mods": [
+    {
+     "attr": 1465,
+     "label": "Armor EM resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1468,
+     "label": "Armor explosive resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1466,
+     "label": "Armor kinetic resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1467,
+     "label": "Armor thermal resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 0.64,
+     "pct": -36,
+     "good": true
+    },
+    {
+     "attr": 1966,
+     "label": "Energy neutralizer/nosferatu strength",
+     "value": 1.72,
+     "pct": 72,
+     "good": null
+    },
+    {
+     "attr": 146,
+     "label": "Shield hit points",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 1.72,
+     "pct": 72,
+     "good": false
+    }
+   ]
+  },
+  {
+   "beacon": 30868,
+   "name": "Class 5 Pulsar Effects",
+   "beaconClass": 5,
+   "kind": "Pulsar",
+   "mods": [
+    {
+     "attr": 1465,
+     "label": "Armor EM resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1468,
+     "label": "Armor explosive resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1466,
+     "label": "Armor kinetic resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1467,
+     "label": "Armor thermal resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 0.57,
+     "pct": -43,
+     "good": true
+    },
+    {
+     "attr": 1966,
+     "label": "Energy neutralizer/nosferatu strength",
+     "value": 1.86,
+     "pct": 86,
+     "good": null
+    },
+    {
+     "attr": 146,
+     "label": "Shield hit points",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 1.86,
+     "pct": 86,
+     "good": false
+    }
+   ]
+  },
+  {
+   "beacon": 30869,
+   "name": "Class 6 Pulsar Effects",
+   "beaconClass": 6,
+   "kind": "Pulsar",
+   "mods": [
+    {
+     "attr": 1465,
+     "label": "Armor EM resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1468,
+     "label": "Armor explosive resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1466,
+     "label": "Armor kinetic resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1467,
+     "label": "Armor thermal resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1500,
+     "label": "Capacitor recharge time",
+     "value": 0.5,
+     "pct": -50,
+     "good": true
+    },
+    {
+     "attr": 1966,
+     "label": "Energy neutralizer/nosferatu strength",
+     "value": 2,
+     "pct": 100,
+     "good": null
+    },
+    {
+     "attr": 146,
+     "label": "Shield hit points",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 2,
+     "pct": 100,
+     "good": false
+    }
+   ]
+  },
+  {
+   "beacon": 30848,
+   "name": "Class 1 Red Giant Effects",
+   "beaconClass": 1,
+   "kind": "Red Giant",
+   "mods": [
+    {
+     "attr": 1486,
+     "label": "Overheat bonus",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 1485,
+     "label": "Overheat damage",
+     "value": 1.15,
+     "pct": 15,
+     "good": false
+    },
+    {
+     "attr": 1488,
+     "label": "Smartbomb damage",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 1487,
+     "label": "Smartbomb range",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30870,
+   "name": "Class 2 Red Giant Effects",
+   "beaconClass": 2,
+   "kind": "Red Giant",
+   "mods": [
+    {
+     "attr": 1486,
+     "label": "Overheat bonus",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 1485,
+     "label": "Overheat damage",
+     "value": 1.22,
+     "pct": 22,
+     "good": false
+    },
+    {
+     "attr": 1488,
+     "label": "Smartbomb damage",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 1487,
+     "label": "Smartbomb range",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30871,
+   "name": "Class 3 Red Giant Effects",
+   "beaconClass": 3,
+   "kind": "Red Giant",
+   "mods": [
+    {
+     "attr": 1486,
+     "label": "Overheat bonus",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 1485,
+     "label": "Overheat damage",
+     "value": 1.29,
+     "pct": 29,
+     "good": false
+    },
+    {
+     "attr": 1488,
+     "label": "Smartbomb damage",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 1487,
+     "label": "Smartbomb range",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30872,
+   "name": "Class 4 Red Giant Effects",
+   "beaconClass": 4,
+   "kind": "Red Giant",
+   "mods": [
+    {
+     "attr": 1486,
+     "label": "Overheat bonus",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 1485,
+     "label": "Overheat damage",
+     "value": 1.36,
+     "pct": 36,
+     "good": false
+    },
+    {
+     "attr": 1488,
+     "label": "Smartbomb damage",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 1487,
+     "label": "Smartbomb range",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30873,
+   "name": "Class 5 Red Giant Effects",
+   "beaconClass": 5,
+   "kind": "Red Giant",
+   "mods": [
+    {
+     "attr": 1486,
+     "label": "Overheat bonus",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 1485,
+     "label": "Overheat damage",
+     "value": 1.43,
+     "pct": 43,
+     "good": false
+    },
+    {
+     "attr": 1488,
+     "label": "Smartbomb damage",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 1487,
+     "label": "Smartbomb range",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30874,
+   "name": "Class 6 Red Giant Effects",
+   "beaconClass": 6,
+   "kind": "Red Giant",
+   "mods": [
+    {
+     "attr": 1486,
+     "label": "Overheat bonus",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 1485,
+     "label": "Overheat damage",
+     "value": 1.5,
+     "pct": 50,
+     "good": false
+    },
+    {
+     "attr": 1488,
+     "label": "Smartbomb damage",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 1487,
+     "label": "Smartbomb range",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30849,
+   "name": "Class 1 Wolf Rayet Effects",
+   "beaconClass": 1,
+   "kind": "Wolf-Rayet",
+   "mods": [
+    {
+     "attr": 148,
+     "label": "Armor hit points",
+     "value": 1.3,
+     "pct": 30,
+     "good": true
+    },
+    {
+     "attr": 1489,
+     "label": "Shield EM resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1490,
+     "label": "Shield explosive resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1491,
+     "label": "Shield kinetic resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 1492,
+     "label": "Shield thermal resistance",
+     "value": 15,
+     "pct": -15,
+     "good": false
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 0.85,
+     "pct": -15,
+     "good": true
+    },
+    {
+     "attr": 1493,
+     "label": "Small weapon damage",
+     "value": 1.6,
+     "pct": 60,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30875,
+   "name": "Class 2 Wolf Rayet Effects",
+   "beaconClass": 2,
+   "kind": "Wolf-Rayet",
+   "mods": [
+    {
+     "attr": 148,
+     "label": "Armor hit points",
+     "value": 1.44,
+     "pct": 44,
+     "good": true
+    },
+    {
+     "attr": 1489,
+     "label": "Shield EM resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1490,
+     "label": "Shield explosive resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1491,
+     "label": "Shield kinetic resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 1492,
+     "label": "Shield thermal resistance",
+     "value": 22,
+     "pct": -22,
+     "good": false
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 0.78,
+     "pct": -22,
+     "good": true
+    },
+    {
+     "attr": 1493,
+     "label": "Small weapon damage",
+     "value": 1.88,
+     "pct": 88,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30876,
+   "name": "Class 3 Wolf Rayet Effects",
+   "beaconClass": 3,
+   "kind": "Wolf-Rayet",
+   "mods": [
+    {
+     "attr": 148,
+     "label": "Armor hit points",
+     "value": 1.58,
+     "pct": 58,
+     "good": true
+    },
+    {
+     "attr": 1489,
+     "label": "Shield EM resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1490,
+     "label": "Shield explosive resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1491,
+     "label": "Shield kinetic resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 1492,
+     "label": "Shield thermal resistance",
+     "value": 29,
+     "pct": -29,
+     "good": false
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 0.71,
+     "pct": -29,
+     "good": true
+    },
+    {
+     "attr": 1493,
+     "label": "Small weapon damage",
+     "value": 2.16,
+     "pct": 116,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30877,
+   "name": "Class 4 Wolf Rayet Effects",
+   "beaconClass": 4,
+   "kind": "Wolf-Rayet",
+   "mods": [
+    {
+     "attr": 148,
+     "label": "Armor hit points",
+     "value": 1.72,
+     "pct": 72,
+     "good": true
+    },
+    {
+     "attr": 1489,
+     "label": "Shield EM resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1490,
+     "label": "Shield explosive resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1491,
+     "label": "Shield kinetic resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 1492,
+     "label": "Shield thermal resistance",
+     "value": 36,
+     "pct": -36,
+     "good": false
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 0.64,
+     "pct": -36,
+     "good": true
+    },
+    {
+     "attr": 1493,
+     "label": "Small weapon damage",
+     "value": 2.44,
+     "pct": 144,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30878,
+   "name": "Class 5 Wolf Rayet Effects",
+   "beaconClass": 5,
+   "kind": "Wolf-Rayet",
+   "mods": [
+    {
+     "attr": 148,
+     "label": "Armor hit points",
+     "value": 1.86,
+     "pct": 86,
+     "good": true
+    },
+    {
+     "attr": 1489,
+     "label": "Shield EM resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1490,
+     "label": "Shield explosive resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1491,
+     "label": "Shield kinetic resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 1492,
+     "label": "Shield thermal resistance",
+     "value": 43,
+     "pct": -43,
+     "good": false
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 0.57,
+     "pct": -43,
+     "good": true
+    },
+    {
+     "attr": 1493,
+     "label": "Small weapon damage",
+     "value": 2.72,
+     "pct": 172,
+     "good": true
+    }
+   ]
+  },
+  {
+   "beacon": 30879,
+   "name": "Class 6 Wolf Rayet Effects",
+   "beaconClass": 6,
+   "kind": "Wolf-Rayet",
+   "mods": [
+    {
+     "attr": 148,
+     "label": "Armor hit points",
+     "value": 2,
+     "pct": 100,
+     "good": true
+    },
+    {
+     "attr": 1489,
+     "label": "Shield EM resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1490,
+     "label": "Shield explosive resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1491,
+     "label": "Shield kinetic resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 1492,
+     "label": "Shield thermal resistance",
+     "value": 50,
+     "pct": -50,
+     "good": false
+    },
+    {
+     "attr": 652,
+     "label": "Signature radius",
+     "value": 0.5,
+     "pct": -50,
+     "good": true
+    },
+    {
+     "attr": 1493,
+     "label": "Small weapon damage",
+     "value": 3,
+     "pct": 200,
+     "good": true
+    }
+   ]
+  }
+ ]
+}

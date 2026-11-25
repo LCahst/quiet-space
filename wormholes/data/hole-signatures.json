@@ -1,0 +1,845 @@
+{
+ "sdeBuild": 3720952,
+ "sdeReleased": "2026-11-19T11:07:08Z",
+ "builtAt": "2026-11-21T17:54:35.266Z",
+ "note": "Signature level I/II/III from whtype.info (static and wandering versions where it gives both); base signature strength from Pathfinder's wormhole.csv. Lower strength = harder to scan. Bands: I ≈ 6.67–10, II ≈ 4–5, III ≈ 1.25–2.5.",
+ "holes": {
+  "A009": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "A239": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "A641": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "A982": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.22,
+   "agrees": true
+  },
+  "B041": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "B274": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "B449": {
+   "levels": [
+    "II",
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "B520": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "C008": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "C125": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 6.67,
+   "agrees": true
+  },
+  "C140": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "C247": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "C248": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "C391": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "C729": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "D364": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 1.25,
+   "agrees": true
+  },
+  "D382": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 6.67,
+   "agrees": true
+  },
+  "D792": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "D845": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "E004": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "E175": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "II",
+   "wandering": "I",
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "E545": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "E587": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "F135": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "F216": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "F353": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "G008": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "G024": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 1.25,
+   "agrees": true
+  },
+  "H121": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "H296": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "H900": {
+   "levels": [
+    "II",
+    "III"
+   ],
+   "static": "III",
+   "wandering": "II",
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "I182": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 4,
+   "agrees": true
+  },
+  "J244": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "J377": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "J492": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "K329": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "K346": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "L005": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "L031": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "L477": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "L614": {
+   "levels": [
+    "II",
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "M001": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "M164": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "M267": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 1.25,
+   "agrees": false
+  },
+  "M555": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "M609": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 4,
+   "agrees": true
+  },
+  "N062": {
+   "levels": [
+    "III"
+   ],
+   "static": "III",
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "N110": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "N290": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "N432": {
+   "levels": [
+    "I",
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "N766": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 4,
+   "agrees": true
+  },
+  "N770": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "N944": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "N968": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "O477": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "II",
+   "wandering": "I",
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "O883": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "P060": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "Q003": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "Q063": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "Q317": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "R051": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "R081": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "R474": {
+   "levels": [
+    "II",
+    "III"
+   ],
+   "static": "III",
+   "wandering": "II",
+   "pathfinderStrength": 2.22,
+   "agrees": true
+  },
+  "R943": {
+   "levels": [
+    "I",
+    "II",
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 6.67,
+   "agrees": true
+  },
+  "S047": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "S199": {
+   "levels": [
+    "I",
+    "II",
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "S804": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 1.25,
+   "agrees": true
+  },
+  "T405": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 6.67,
+   "agrees": true
+  },
+  "T458": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "U210": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "U319": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "U372": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "U574": {
+   "levels": [
+    "II",
+    "III"
+   ],
+   "static": "III",
+   "wandering": "II",
+   "pathfinderStrength": 1.25,
+   "agrees": true
+  },
+  "V283": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "V301": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 5,
+   "agrees": true
+  },
+  "V753": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 6.67,
+   "agrees": true
+  },
+  "V898": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "V911": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "W237": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 6.67,
+   "agrees": true
+  },
+  "X450": {
+   "levels": [
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "X702": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "X877": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 6.67,
+   "agrees": true
+  },
+  "Y683": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "II",
+   "wandering": "I",
+   "pathfinderStrength": 4,
+   "agrees": true
+  },
+  "Y790": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "Z006": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": null,
+   "agrees": null
+  },
+  "Z060": {
+   "levels": [
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 2.5,
+   "agrees": true
+  },
+  "Z142": {
+   "levels": [
+    "I"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "Z457": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "II",
+   "wandering": "I",
+   "pathfinderStrength": 4,
+   "agrees": true
+  },
+  "Z647": {
+   "levels": [
+    "I",
+    "II"
+   ],
+   "static": "I",
+   "wandering": "II",
+   "pathfinderStrength": 10,
+   "agrees": true
+  },
+  "Z971": {
+   "levels": [
+    "I",
+    "II",
+    "III"
+   ],
+   "static": null,
+   "wandering": null,
+   "pathfinderStrength": 10,
+   "agrees": true
+  }
+ }
+}

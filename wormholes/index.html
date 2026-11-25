@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wormhole space: classes, effects, statics and activity</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%234d5f86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EWH%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="wh.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">
+    <span class="mark" aria-hidden="true">WH</span>
+    <span><b>Wormhole space</b><small>Classes, effects, statics, activity and site guide</small></span>
+  </a>
+  <nav class="links"><a href="index.html" aria-current="page">Overview</a><a href="search.html">Wormhole search</a><a href="holes.html">Hole types &amp; ship restrictions</a><a href="guide.html">Site guide</a><a href="../index.html">Back to the site</a></nav>
+</header>
+<main>
+  <div class="notice" id="status">Loading…</div>
+
+  <h1>Wormhole space at a glance</h1>
+  <p class="lead">Wormhole space (J-space) is 2,604 unmapped systems reached only through wormholes, with no stargates and a delayed local channel. Each system has a class that sets how hard its Sleeper sites are and which wormholes it connects to. Pick a class for its effects, statics and sites, or <a href="search.html">look up a single system</a>. The <a href="guide.html">site guide</a> covers what you can do there and what to fly, and <a href="holes.html">hole types</a> what fits through each wormhole.</p>
+  <div class="caveat" style="max-width:none"><b>Learn d-scan first.</b> If you're thinking about flying in J-space and you haven't learned how to use the directional scanner (d-scan), now is the time. Local chat only shows other pilots once they speak, so d-scan is your early warning: run it every few seconds to see the ships, probes and wrecks within 14.4 AU of you, and if a ship you don't recognise turns up, leave or cloak. It can't see cloaked ships. <b>Combat probes mean act now, not be careful.</b> People who live or hunt in wormholes get very good at scanning, and a practised prober can pin you down in seconds, so by the time probes show at the edge of your d-scan you may already be found: align out, warp off or cloak straight away.<a class="src" href="https://wiki.eveuniversity.org/Directional_scan" target="_blank" rel="noopener">EVE Uni</a> More in <a href="guide.html#safety">Staying alive</a>.</div>
+
+  <h2 id="first-steps">Just scanned down a wormhole?</h2>
+  <ol class="points" style="max-width:86ch">
+    <li><b>Bookmark it the moment you arrive.</b> The game doesn't remember where you came in; without a bookmark you have to scan your way out again. Carry a probe launcher and probes in anything you take through.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a></li>
+    <li><b>Show Info on the hole</b> (right-click it). It shows four lines; a K162 shows its destination too.
+      <div class="tablewrap" style="margin:8px 0"><table class="t"><thead><tr><th>Line</th><th>What you'll see</th><th>What it means</th></tr></thead><tbody>
+        <tr><td><b>Destination</b></td><td>“Class 1-3 wormhole systems”<sup class="seen" title="Seen in game">✓</sup>, “Low-security systems”<sup class="seen" title="Seen in game">✓</sup>, “Drifter wormhole systems”<sup class="seen" title="Seen in game">✓</sup> and so on</td><td>The kind of space on the other side, as a band (C1–C3, C4–C5, C6, high, low or null sec, Triglavian, C13, Thera, Drifter)</td></tr>
+        <tr><td><b>Maximum Ship Size</b></td><td>Small · Medium · Large<sup class="seen" title="Seen in game">✓</sup> · Extra large<sup class="seen" title="Seen in game">✓</sup></td><td>The biggest hull that fits: frigates and destroyers · battlecruisers · battleships and the Orca · freighters, then capitals on the largest holes</td></tr>
+        <tr><td><b>Reliable Lifetime</b></td><td>Less than 1 day<sup class="seen" title="Seen in game">✓</sup> · Less than 4 hours<sup class="seen" title="Seen in game">✓</sup> · Less than 1 hour · Expired, closure imminent</td><td>The earliest it can close; it may last longer</td></tr>
+        <tr><td><b>Mass Stability</b></td><td>More than 50%<sup class="seen" title="Seen in game">✓</sup> · Less than 50% · Less than 10%</td><td>How much mass is left; every jump uses some</td></tr>
+      </tbody></table></div>
+      <p class="note"><sup class="seen" title="Seen in game">✓</sup> seen in game. The rest follows CCP's September 2025 wording.<a class="src" href="https://www.eveonline.com/news/view/patch-notes-version-23-01" target="_blank" rel="noopener">CCP 23.01</a><a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a> Colours, the size rules in full and the older wording many guides still quote: <a href="holes.html#show-info">Show Info in detail</a>. Show Info gives a band, not the exact class: the hole's code (anything but K162) or <a href="holes.html#reading">its colour</a> narrows it down.</p></li>
+    <li><b>Look up the code.</b> Anything other than K162 has a fixed destination, size, mass and lifetime: see <a href="holes.html">hole types</a>. A K162 is the far end of a hole someone opened from the other side.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a></li>
+    <li><b>Know the jump rules.</b> You can't jump the same way through the same hole twice within five minutes (polarisation, which follows the pilot, not the ship). Weapon timers don't stop you jumping.<a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a></li>
+    <li><b>Have a way out.</b> If your hole collapses you need another exit: a static, which respawns when it dies, or probes to find one. Stranded without probes, ask in the in-game <b>EvE-Scout</b> channel: Signal Cartel's rescue service keeps password-locked caches anchored across wormhole space, each with a probe launcher and scanner probes, and a scout will give you the location and password of one near you, or send a search-and-rescue team if there isn't one.<a class="src" href="https://www.pcgamer.com/eve-signal-cartel-interview" target="_blank" rel="noopener">PC Gamer</a><a class="src" href="https://wiki.eveuniversity.org/Wormholes" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://www.eve-scout.com/" target="_blank" rel="noopener">EvE-Scout</a> <b>Filaments won't get you out:</b> travel filaments (Needlejack, Pochven and the rest) can't be activated inside a wormhole system, so the only ways out of J-space are a wormhole you scan down or a route someone has already found.</li>
+    <li><b>Map your chain.</b> Wormhole connections change every day, and nothing in the game remembers them for you. A mapper is a website where you, or your whole group, record each hole as you scan it: where it leads, its code, how old it is and how much mass is left. That gives everyone the same picture of the chain (the string of connected systems), the shortest way out to k-space, and which holes are about to die; most sign you in with your EVE account and can follow where you are as you jump. Current ones include <a href="https://wanderer.ltd/" target="_blank" rel="noopener">Wanderer</a>, <a href="https://developers.eveonline.com/docs/community/wormholesystems/" target="_blank" rel="noopener">WormholeSystems</a> and <a href="https://evewayfinder.app/" target="_blank" rel="noopener">Wayfinder</a>, which took over from the public Pathfinder server in 2026. Mappers come and go, so <a href="https://developers.eveonline.com/docs/community/" target="_blank" rel="noopener">CCP's list of community tools</a> is a good place to look; CCP lists them but doesn't endorse them. For getting across New Eden rather than living in J-space, <a href="https://evemetro.com/" target="_blank" rel="noopener">EVE Metro</a> is a paid service, 50 million ISK a month paid in game, that keeps shared bookmarks of wormhole and Thera shortcuts and plans routes through them.<a class="src" href="https://evemetro.com/" target="_blank" rel="noopener">EVE Metro</a> <span class="dated">price as listed Nov 2026</span><a class="src" href="https://wiki.eveuniversity.org/Pathfinder" target="_blank" rel="noopener">EVE Uni</a><a class="src" href="https://wiki.eveuniversity.org/Wanderer" target="_blank" rel="noopener">EVE Uni</a></li>
+  </ol>
+
+  <h2>Kinds of wormhole space</h2>
+  <p class="note">Most systems are ordinary C1–C6 wormholes, but several kinds play quite differently. Counts below come from CCP's data.</p>
+  <div class="rows" id="kinds"></div>
+
+  <h2>Classes</h2>
+  <p class="note" id="killNote"></p>
+  <div class="rows" id="cards"></div>
+
+  <h2 id="effects">Found a system with an effect?</h2>
+  <p class="note">About four in ten C1–C6 systems have a star that changes every ship in the system, yours and everyone else's, Sleepers included. The system info panel tells you which one. Every effect has upsides and downsides, and gets stronger with the class.<a class="src" href="https://developers.eveonline.com/docs/services/static-data/" target="_blank" rel="noopener">CCP data</a></p>
+  <div class="effbar"><span class="cond">Your system's class</span> <div class="seg" role="group" aria-label="Effect strength by class" id="effSeg"></div></div>
+  <div class="effgrid" id="effGrid"></div>
+  <p class="note">Numbers are CCP's, at the strength for the class you pick. Green helps you, red hurts you, white cuts both ways. Look up a single system on <a href="search.html">system search</a> for its exact effect.</p>
+
+  <h2>When is wormhole space busiest?</h2>
+  <p class="note">Average PvP kills in all of J-space for each hour of the day (EVE time), over the period the kill log covers. <span id="heatSpan"></span></p>
+  <div class="seg" role="group" aria-label="Class" id="heatSeg"></div>
+  <div id="heat" style="margin-top:8px"></div>
+
+  <h2>Kills per month</h2>
+  <p class="note">Ships and pods destroyed per month, from zKillboard's totals for each class (all kills, not only PvP). The current month is incomplete. Single evictions can double a month on their own.</p>
+  <div class="seg" role="group" aria-label="Class" id="monthSeg"></div>
+  <div id="months" style="margin-top:8px"></div>
+
+</main>
+<script src="wh.js"></script>
+<script>
+(async () => {
+  const [sys, kills] = await Promise.all([WH.load("systems"), WH.load("kills").catch(() => null)]);
+  const S = sys.systems;
+  const cov = kills?.coverage;
+  document.getElementById("status").innerHTML = `Reference data from CCP build ${sys.sdeBuild} (released ${sys.sdeReleased.slice(0, 10)}).` +
+    (cov ? ` Kill figures cover ${WH.num(cov.hours)} hours (${cov.from.slice(0, 10)} to ${cov.to.slice(0, 16).replace("T", " ")})${cov.fullThirtyDays ? "" : "; the 30-day window is still filling"}.` : " Kill figures not built yet.");
+
+  const w7 = kills?.windows["7d"];
+  document.getElementById("killNote").textContent = w7
+    ? `Kill figures are for the last ${w7.complete ? "7 days" : `${WH.num(w7.hours)} hours (the 7-day window is still filling)`}. A fight is a run of PvP kills in one system with no gap over an hour; counting fights stops one big battle from swamping a class. Combat kills leave out pods, shuttles and rookie ships.`
+    : "";
+
+  // the usual static destinations for a class, as shares of all its statics
+  const staticMix = list => {
+    const n = {}; let all = 0;
+    for (const x of list.flatMap(s => s.statics)) { n[x.targetLabel] = (n[x.targetLabel] || 0) + 1; all++; }
+    return Object.entries(n).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${WH.esc(k)} ${WH.pct(v, all)}`).join(" · ");
+  };
+  const cards = WH.GROUPS.map(g => {
+    const list = S.filter(s => g.classes.includes(s.class));
+    const eff = list.filter(s => s.effect).length, sh = list.filter(s => s.shattered).length;
+    const k = w7?.groups[g.key];
+    const days = w7 ? w7.hours / 24 : 1;
+    const rows = [["Systems", WH.num(list.length)]];
+    if (g.key !== "Thera" && g.key !== "Drifter") rows.push(["With an effect", WH.pct(eff, list.length)]);
+    if (sh && g.key !== "C13") rows.push(["Shattered", WH.num(sh)]);
+    if (k) rows.push(["Fights a day", WH.dec(k.fights / days)], ["Combat kills a day", WH.dec(k.pvpCombat / days)], ["Median ship lost", k.iskMedian ? WH.isk(k.iskMedian) : "–"]);
+    const mix = staticMix(list);
+    return `<div class="row"><div class="row-head"><h3>${WH.esc(g.short)}</h3><div class="sub">${WH.esc(g.name === g.short ? "" : g.name)}</div></div>
+      <div class="row-body"><p>${WH.esc(WH.CLASS_NOTES[g.key][0])}</p>${mix ? `<p class="sub">Statics lead to: ${mix}</p>` : ""}<a href="class.html?c=${g.key}">${WH.esc(g.short)} page: statics, effects, sites and activity →</a></div>
+      <dl class="kv">${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl></div>`;
+  });
+  document.getElementById("cards").innerHTML = cards.join("");
+
+  // ---- kinds of wormhole space ----
+  const reg = S.filter(s => s.class <= 6 && !s.shattered), sh = S.filter(s => s.class <= 6 && s.shattered);
+  const c13 = S.filter(s => s.class === 13), drif = S.filter(s => s.class >= 14 && s.class <= 18);
+  const noEff = reg.filter(s => !s.effect).length;
+  const shK = sh.flatMap(s => s.statics).filter(x => /sec/.test(x.targetLabel)).length, shAll = sh.flatMap(s => s.statics).length;
+  const FACTION = { 500001: "Caldari State", 500002: "Minmatar Republic", 500003: "Amarr Empire", 500026: "Triglavian Collective", 500027: "EDENCOM" };
+  const src = WH.src;
+  const kinds = [
+    ["Regular wormholes", `${WH.num(reg.length)} systems, C1–C6`, `The class sets how hard the Sleeper sites are and which holes connect in and out. About ${WH.pct(noEff, reg.length)} have no system effect. They hold every moon in wormhole space, normal planets for PI, and allow player structures.${src("sde")}`, "class.html?c=C3", "Class pages"],
+    ["Systems with an effect", `${WH.num(S.filter(s => s.effect).length)} systems`, `A Black Hole, Cataclysmic Variable, Magnetar, Pulsar, Red Giant or Wolf-Rayet star changes every ship's stats in the system (see what each one does below). Groups often pick a home for its effect: a Pulsar for shield fleets, a Wolf-Rayet for armour and small ships.${src("sde")}${src("ashyPrimer", "Ashy 2021")}`, "#effects", "What each effect means for you"],
+    ["Shattered wormholes", `${WH.num(sh.length)} systems across C1–C6`, `Systems whose planets were broken apart: no moons, only shattered planets (so no PI), and player structures can't be anchored, so nobody can live in one. They hold the only ice in wormhole space (the Shattered Ice Field) and a Shattered Debris Field ore site. ${WH.pct(shK, shAll)} of their statics lead to k-space.${src("sde")}${src("euShattered")}${src("euPI")}`, "search.html?sh=1", "Find shattered systems"],
+    ["C13: small-ship shattered", `${WH.num(c13.length)} systems`, `Shattered systems that only frigates and destroyers can enter (5M kg holes). Every one has the Wolf-Rayet effect at C6 strength, which triples small-weapon damage, and every one has a static to null-sec.${src("sde")}${src("euWhSpace")}`, "class.html?c=C13", "C13 page"],
+    ["Thera", "one system", `A single huge system with four NPC stations you can dock in, statics to high-, low- and null-sec and many other connections, which makes it a travel hub. Player structures can't be anchored.${src("sde")}${src("euWhSpace")}`, "class.html?c=Thera", "Thera page",
+      `<div class="caveat rowbox"><b>Live connections</b><br>Thera's wormholes change constantly, so any list goes stale within hours. Signal Cartel's EVE-Scout service tracks the current ones, along with Turnur's: <a href="https://www.eve-scout.com/" target="_blank" rel="noopener">EVE-Scout connections</a>.</div>`],
+    ["Drifter systems", `${drif.length} systems`, `Former Drifter hives, each now held by a faction (${drif.map(s => `${WH.esc(s.name)}: ${FACTION[s.factionId] || "?"}`).join("; ")}). Each has one static into every class from C1 to C6 and a C2-strength effect.${src("sde")}${src("euDrifters")}`, "class.html?c=Drifter", "Drifter page",
+      `<div class="caveat rowbox"><b>Using Drifter holes for travel</b><br>` + `Each Drifter system collects an unusually large number of wormholes from k-space, 50–70 at a time, so expect 50 or more signatures inside.${src("euDrifters")}${src("wincoDrifter", "WinterCo")} Their k-space ends are Unidentified Wormholes in Jove Observatory systems, which since March 2026 have to be scanned down.${src("ccp2302", "CCP 23.02")} Together they make a shortcut network across New Eden that some groups scout and bookmark, often with nullified interceptors.${src("wincoDrifter", "WinterCo")} <b>The dangers:</b> Drifter battleships (about 1,300 DPS plus a doomsday) and Autothysian Lancers guard the observatories and the k-space holes and attack anyone who gets close; the Lancers will pod you. The J-space side is deadspace, so you land about 80 km from the hole, and anyone else can be using the same holes. Arrive cloaked or with a microwarpdrive and don't linger.${src("euDrifters")} <b>Size:</b> the k-space ends (B735, C414, R259, S877, V928) take ships up to Large: battleships and the Orca, 375M kg a jump and 750M kg in all, lasting about 16 hours.${src("sde")} We've seen a B735 show “Large” with more than 50% of its mass left, so an older guide's note that these holes always spawn at half mass no longer holds.${src("wincoDrifter", "WinterCo 2025")}` + `</div>`]
+  ];
+  document.getElementById("kinds").innerHTML = kinds.map(([t, sub, body, href, link, box]) => `<div class="row row-2"><div class="row-head"><h3>${t}</h3><div class="sub">${sub}</div></div><div class="row-body"><p>${body}</p>${box || ""}<a href="${href}">${link} →</a></div></div>`).join("");
+
+  // effect panels: what each effect means, with CCP's numbers at the chosen class
+  const eff = await WH.load("effects").catch(() => null);
+  if (eff) {
+    const EFFECTS = {
+      "Pulsar": { gist: "Shields get stronger, armour gets weaker.", tip: `Shield-tanked ships do well and armour-tanked ones struggle. Bigger signatures make everyone easier to lock and hit. Shield fleets like it;${src("ashyPrimer", "Ashy")} site runners usually avoid it.${src("krabbi")}` },
+      "Wolf-Rayet": { gist: "Armour and small ships get stronger, shields weaker.", tip: `Small (frigate-size) weapons hit much harder, and smaller signatures make everyone harder to hit. Good for armour fleets and small ships;${src("ashyPrimer", "Ashy")} workable for site runners.${src("krabbi")}` },
+      "Magnetar": { gist: "Everything hits harder, but struggles against small targets.", tip: `Turrets track worse and missiles spread their damage over a wider blast, so big weapons do less to small, fast ships. Fights are over quickly. Site runners like the extra damage.${src("krabbi")}` },
+      "Black Hole": { gist: "Ships fly faster but turn and align slower.", tip: `Webs are weaker, so a fast ship is hard to pin down. Aligning and entering warp take longer: allow for it when you need to leave. Suits fast ships and missiles; workable for site runners.${src("krabbi")}` },
+      "Cataclysmic Variable": { gist: "Remote repair gets stronger, your own repairers weaker.", tip: `Solo ships that repair themselves suffer; fleets with logistics do well. The capacitor holds more but recharges slower. Site runners usually avoid it.${src("krabbi")}` },
+      "Red Giant": { gist: "Overheating and smartbombs get stronger.", tip: `Overheated modules give more but burn out faster: watch your heat damage. Smartbombs hit harder and reach further. Site runners like it.${src("krabbi")}` }
+    };
+    const slug = k => "effect-" + k.toLowerCase().replace(/ /g, "-");
+    const count = {}; for (const x of S) if (x.effect) count[x.effect.kind] = (count[x.effect.kind] || 0) + 1;
+    const sg = v => (v > 0 ? "+" : "") + WH.dec(v, v % 1 ? 1 : 0) + "%";
+    const drawEff = c => {
+      document.getElementById("effGrid").innerHTML = Object.keys(EFFECTS).map(k => {
+        const e = eff.effects.find(x => x.kind === k && x.beaconClass === c);
+        if (!e) return "";
+        const items = want => e.mods.filter(m => m.good === want).map(m => `<li><span>${WH.esc(m.label)}</span><b class="${want === true ? "good" : want === false ? "bad" : ""}">${sg(m.pct)}</b></li>`).join("");
+        const part = (title, want) => { const h = items(want); return h ? `<div class="effpart"><div class="sub">${title}</div><ul class="mods">${h}</ul></div>` : ""; };
+        return `<div class="effcard" id="${slug(k)}"><h3>${k} <small>${WH.num(count[k] || 0)} systems</small></h3>
+          <p class="gist">${EFFECTS[k].gist}</p>
+          ${part("Helps you", true)}${part("Hurts you", false)}${part("Cuts both ways", null)}
+          <p class="cond efftip">${EFFECTS[k].tip}</p>
+          <a href="search.html?eff=${encodeURIComponent(k)}">Systems with a ${k} →</a></div>`;
+      }).join("");
+    };
+    // ?ec=5 (from system search or a class page) opens the panels at that class's strength
+    const want = +new URLSearchParams(location.search).get("ec");
+    const segEl = document.getElementById("effSeg");
+    segEl.innerHTML = [1, 2, 3, 4, 5, 6].map(c => `<button type="button" data-c="${c}">C${c}</button>`).join("");
+    const setC = c => { segEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.c === c)); drawEff(c); };
+    segEl.addEventListener("click", ev => { const b = ev.target.closest("button"); if (b) setC(+b.dataset.c); });
+    setC(want >= 1 && want <= 6 ? want : 1);
+    if (location.hash.startsWith("#effect-")) { const t = document.getElementById(location.hash.slice(1)); if (t) { t.classList.add("flash"); t.scrollIntoView(); } }
+  }
+
+  // hour-of-day chart from the hour-of-week heat
+  const seg = (id, keys, draw) => {
+    const el = document.getElementById(id);
+    el.innerHTML = keys.map(k => `<button type="button" data-k="${k}">${k}</button>`).join("");
+    const set = k => { el.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.k === k)); draw(k); };
+    el.addEventListener("click", e => { const b = e.target.closest("button"); if (b) set(b.dataset.k); });
+    set(keys[0]);
+  };
+  if (kills) {
+    const { slotHours, groups } = kills.heat;
+    seg("heatSeg", ["All", ...WH.GROUPS.map(g => g.key)], key => {
+      const per = Array.from({ length: 24 }, (_, h) => {
+        let n = 0, hrs = 0;
+        for (let d = 0; d < 7; d++) { n += groups[key][d * 24 + h]; hrs += slotHours[d * 24 + h]; }
+        return hrs ? n / hrs : 0;
+      });
+      WH.bars(document.getElementById("heat"), per.map((v, h) => ({ label: String(h).padStart(2, "0"), value: v, tip: `<b>${String(h).padStart(2, "0")}:00–${String(h).padStart(2, "0")}:59</b> EVE time: ${WH.dec(v)} PvP kills an hour` })),
+        { every: 2, title: `PvP kills per hour of day, ${key}`, xName: "Hour (EVE time)", yName: "PvP kills an hour" });
+      // the table view shows the averages to one decimal
+      document.querySelectorAll("#heat tbody td.num").forEach((td, i) => td.textContent = WH.dec(per[i]));
+    });
+    document.getElementById("heatSpan").textContent = `Based on ${WH.num(kills.coverage.hours)} hours so far.`;
+
+    const mg = kills.zkbMonths.groups;
+    seg("monthSeg", WH.GROUPS.map(g => g.key), key => {
+      const m = Object.entries(mg[key] || {});
+      WH.bars(document.getElementById("months"), m.map(([k, v]) => ({ label: k.slice(2).replace("-", "/"), value: v.ships, tip: `<b>${k}</b>: ${WH.num(v.ships)} destroyed, ${WH.isk(v.isk)} ISK` })),
+        { title: `Ships destroyed per month, ${key}`, xName: "Month", yName: "Ships and pods destroyed" });
+    });
+  }
+  WH.footer();
+})().catch(e => { document.getElementById("status").textContent = `Could not load the data: ${e.message}. Run scripts/wh/build-wormholes.mjs and collect-wh-kills.mjs first.`; });
+</script>
+</body>
+</html>
