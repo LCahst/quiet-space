@@ -357,10 +357,11 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
     const nn = [...nearest.values()].sort((a, b) => a - b);
     const typical = nn[Math.floor(nn.length / 2)] || 0.3;
     const R = typical * 1.9;
-    const cells = new Map();
+    const cells = new Map(), radius = new Map();
     for (const id of ids) {
       const p = pts.get(id);
       const r = tight ? Math.min(R, Math.max(typical * 0.9, nearest.get(id) * 1.6)) : R;
+      radius.set(id, r);
       // start with a 28-sided "circle", each edge labelled "cap"
       let poly = [];
       for (let k = 0; k < 28; k++) { const a = k / 28 * Math.PI * 2; poly.push({ x: p[0] + Math.cos(a) * r, y: p[1] + Math.sin(a) * r, e: "cap" }); }
@@ -373,7 +374,29 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
       }
       if (poly.length >= 3) cells.set(id, poly);
     }
+    if (tight) for (const [id, poly] of cells) cells.set(id, trimShared(poly, pts, radius));
     return cells;
+  }
+  // With capped cells, an edge cut along the bisector with o is only really shared where o's own cell
+  // reaches it (inside o's cap). Elsewhere it borders empty space, so relabel that stretch as "cap".
+  function trimShared(poly, pts, radius) {
+    const out = [];
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[i], b = poly[(i + 1) % poly.length];
+      if (!radius.has(a.e)) { out.push(a); continue; }
+      const [cx, cy] = pts.get(a.e), r = radius.get(a.e);
+      // where the segment a→b is inside o's circle: t in [t0, t1]
+      const dx = b.x - a.x, dy = b.y - a.y, fx = a.x - cx, fy = a.y - cy;
+      const A = dx * dx + dy * dy, B = 2 * (fx * dx + fy * dy), C = fx * fx + fy * fy - r * r, disc = B * B - 4 * A * C;
+      if (!A || disc <= 0) { out.push({ ...a, e: "cap" }); continue; }
+      const s = Math.sqrt(disc), t0 = Math.max(0, (-B - s) / (2 * A)), t1 = Math.min(1, (-B + s) / (2 * A));
+      if (t0 >= t1) { out.push({ ...a, e: "cap" }); continue; }
+      const at = t => ({ x: a.x + dx * t, y: a.y + dy * t });
+      out.push({ ...a, e: t0 > 0 ? "cap" : a.e });
+      if (t0 > 0) out.push({ ...at(t0), e: a.e });
+      if (t1 < 1) out.push({ ...at(t1), e: "cap" });
+    }
+    return out;
   }
   // Keep the part of the polygon closer to p than to q. Each vertex's "e" labels the edge that starts there.
   function clipHalf(poly, p, q, label) {
