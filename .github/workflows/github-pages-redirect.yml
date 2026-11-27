@@ -1,0 +1,29 @@
+name: Point the old github.io address to quietspace.fun
+
+# The site moved to Cloudflare (quietspace.fun) on 2026-11-27. This replaces the old
+# lcahst.github.io/quiet-space site with pages that send visitors to the same page on the new domain.
+# GitHub keeps the last deployment, so this only needs to run again if github-pages-redirect/ changes.
+on:
+  push:
+    branches: [main]
+    paths: ["github-pages-redirect/**"]
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+
+jobs:
+  redirect:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: github-pages-redirect
+      - id: deploy
+        uses: actions/deploy-pages@v5

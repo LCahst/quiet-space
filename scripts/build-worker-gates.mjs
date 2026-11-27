@@ -10,7 +10,7 @@
 // System ids[i]'s gates are the coordinates from starts[i] to starts[i + 1], in km.
 import { readFile, writeFile } from "node:fs/promises";
 
-const src = process.argv[2] || "https://lcahst.github.io/quiet-space/data/gates.json";
+const src = process.argv[2] || "https://quietspace.fun/data/gates.json";
 const gates = /^https?:/.test(src) ? await (await fetch(src)).json() : JSON.parse(await readFile(src, "utf8"));
 
 const ids = Object.keys(gates).map(Number).sort((a, b) => a - b);

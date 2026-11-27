@@ -14,7 +14,7 @@ import gatesBin from "./gates.bin"; // ArrayBuffer (wrangler bundles .bin files 
 import { isAreaKill } from "./area-weapons.mjs";
 
 const R2Z2 ="https://r2z2.zkillboard.com/ephemeral";
-const SEED_URL = "https://lcahst.github.io/quiet-space/data/kills-recent.json"; // GitHub snapshot, used once to start
+const SEED_URL = "https://quietspace.fun/data/kills-recent.json"; // GitHub snapshot, used once to start
 const GATE_KM = 100;            // a kill within this distance of a stargate counts as a gate kill
 const UA = "QuietSpace/1.0 (+https://github.com/LCahst/quiet-space)";
 const MAX_FETCH = 250;          // kills per run: about 30-40 s at zKillboard's pace, so runs never overlap

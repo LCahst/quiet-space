@@ -4114,12 +4114,12 @@ footer .contact p{margin:0 0 10px}
   }
   function runRoute() {
     const o = readRouteForm(), msg = $("rMsg");
-    if (location.protocol === "file:") { msg.innerHTML = `Route planning needs the full stargate map, which is only available on <a href="https://lcahst.github.io/quiet-space/" target="_blank" rel="noopener">the live site</a>.`; return; }
+    if (location.protocol === "file:") { msg.innerHTML = `Route planning needs the full stargate map, which is only available on <a href="https://quietspace.fun/" target="_blank" rel="noopener">the live site</a>.`; return; }
     if (!Object.keys(getMapData().links || {}).length) { msg.textContent = "The stargate map is still loading. Try again in a moment."; return; }
     // Route planning needs every gate connection, which only the hosted site's prebuilt map has.
     const links = getMapData().links, reachable = Object.keys(catalog.systems).filter(id => { const r = regionOf(catalog.systems[id]); return r !== undefined && !UNREACHABLE.has(r) && r !== POCHVEN; });
     if (reachable.filter(id => links[id]).length < reachable.length * 0.95) {
-      msg.innerHTML = location.protocol === "file:" ? `Route planning needs the full stargate map, which is only available on <a href="https://lcahst.github.io/quiet-space/" target="_blank" rel="noopener">the live site</a>.` : "The full stargate map is still loading. Try again in a moment.";
+      msg.innerHTML = location.protocol === "file:" ? `Route planning needs the full stargate map, which is only available on <a href="https://quietspace.fun/" target="_blank" rel="noopener">the live site</a>.` : "The full stargate map is still loading. Try again in a moment.";
       return;
     }
     if (!o.start) { msg.textContent = o.startName ? `No system called “${o.startName}”. Pick one from the list.` : "Choose a start system first."; return; }
@@ -5518,7 +5518,7 @@ footer .contact p{margin:0 0 10px}
     if (r.usualText) lines.push(r.usualText);
     const w = [...routeWarnings(r).entries()].flatMap(([i, list]) => list.map(x => `  ${catalog.systems[r.path[i]].n} (${stepLabel(r, i).toLowerCase()}): ${x.text}`));
     if (w.length) lines.push("", `Warnings as of ${new Date().toISOString().slice(11, 16)} EVE time:`, ...w);
-    lines.push("", `Route map on Dotlan: ${dotlanRoute(r.path)}`, "Planned with Quiet Space: https://lcahst.github.io/quiet-space/");
+    lines.push("", `Route map on Dotlan: ${dotlanRoute(r.path)}`, "Planned with Quiet Space: https://quietspace.fun/");
     return lines.join("\n");
   }
   function downloadRoute(r) {
