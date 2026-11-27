@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quietspace.fun/sitemap.xml

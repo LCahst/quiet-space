@@ -137,6 +137,8 @@ jobs:
         run: |
           mkdir -p _site/data
           cp index.html killmap.html fw.html ships.html fw-guide.html pirate-guide.html _site/
+          # for search engines and link previews (og.png is drawn from scripts/og/og.html)
+          cp robots.txt sitemap.xml og.png _site/
           if [ -d data/public ]; then cp -r data/public/. _site/data/; fi
           mkdir -p _site/wormholes/data
           cp wormholes/*.html wormholes/wh.css wormholes/wh.js _site/wormholes/

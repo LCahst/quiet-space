@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#131b26;color:#dde5ee;font-family:Saira,sans-serif}
+canvas{position:absolute;inset:0}
+.wrap{position:absolute;left:84px;top:150px;right:84px}
+.row{display:flex;align-items:center;gap:30px}
+.mark{width:120px;height:120px;display:grid;place-items:center;background:#72aef0;color:#131b26;font-weight:700;font-size:56px;letter-spacing:.04em;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+h1{margin:0;font-size:104px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1}
+.tag{margin:26px 0 0;font-size:36px;color:#8a97a8;font-weight:500}
+.secs{position:absolute;left:84px;bottom:70px;display:flex;gap:40px;font-family:"Saira Semi Condensed",sans-serif;font-size:28px;color:#dde5ee;font-weight:500}
+.secs span{display:flex;align-items:center;gap:12px}
+.p{width:14px;height:14px;border-radius:50%;background:#ff4d2e;box-shadow:0 0 10px #ff4d2e}
+.p.q{background:#72aef0;box-shadow:0 0 10px #72aef0}
+.p.fw{border-radius:3px;background:linear-gradient(135deg,#3f7fd6 0 50%,#d8a22a 50% 100%);box-shadow:none}
+.p.wh{background:transparent;border:3px solid #7fb8ff;box-shadow:0 0 10px #7fb8ff;width:10px;height:10px}
+.p.ev{background:#d8a22a;box-shadow:0 0 10px #d8a22a;border-radius:3px;transform:rotate(45deg);width:12px;height:12px}
+.url{position:absolute;right:84px;top:64px;font-size:30px;color:#72aef0;font-weight:600;letter-spacing:.02em}
+</style></head><body>
+<canvas id="c" width="1200" height="630"></canvas>
+<div class="url">quietspace.fun</div>
+<div class="wrap"><div class="row"><div class="mark">QS</div><h1>Quiet Space</h1></div>
+<p class="tag">Where nobody else is flying in New Eden right now</p></div>
+<div class="secs"><span><i class="p q"></i>Quiet systems &amp; routes</span><span><i class="p fw"></i>Faction warfare</span><span><i class="p wh"></i>Wormholes</span><span><i class="p ev"></i>Events</span><span><i class="p"></i>Live kills</span></div>
+<script>
+// a faint field of star systems with a few gate lines, seeded so the image is the same every time
+let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+const c=document.getElementById("c").getContext("2d");const pts=[];
+for(let i=0;i<260;i++){pts.push([r()*1200,r()*630,r()]);}
+c.strokeStyle="rgba(114,174,240,.10)";c.lineWidth=1.2;
+for(const a of pts){let best=null,bd=1e9;for(const b of pts){if(a===b)continue;const d=(a[0]-b[0])**2+(a[1]-b[1])**2;if(d<bd){bd=d;best=b}}if(bd<4500){c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(best[0],best[1]);c.stroke();}}
+for(const [x,y,v] of pts){c.fillStyle=v>.96?"rgba(255,77,46,.7)":`rgba(160,190,225,${.12+v*.25})`;c.beginPath();c.arc(x,y,v>.96?3.2:1.6+v*1.2,0,7);c.fill();}
+// darken behind the text so it stays readable
+const g=c.createLinearGradient(0,0,1200,0);g.addColorStop(0,"rgba(19,27,38,.92)");g.addColorStop(.75,"rgba(19,27,38,.55)");g.addColorStop(1,"rgba(19,27,38,.2)");c.fillStyle=g;c.fillRect(0,0,1200,630);
+</script></body></html>

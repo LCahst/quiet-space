@@ -3,7 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Wormhole class</title>
+<title>Wormhole class guide for EVE Online</title>
+<meta name="description" content="EVE Online wormhole class guide: the systems in each class, their effects and statics, Sleeper sites, and how busy the class is.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quiet Space">
+<meta property="og:title" content="Wormhole class guide for EVE Online">
+<meta property="og:description" content="EVE Online wormhole class guide: the systems in each class, their effects and statics, Sleeper sites, and how busy the class is.">
+<meta property="og:image" content="https://quietspace.fun/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%234d5f86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EWH%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +61,10 @@
   const key = new URLSearchParams(location.search).get("c") || "C1";
   const g = WH.GROUPS.find(x => x.key === key) || WH.GROUPS[0];
   document.getElementById("classNav").innerHTML = WH.GROUPS.map(x => `<a href="class.html?c=${x.key}"${x.key === g.key ? ' aria-current="page" style="border-color:var(--accent)"' : ""}>${x.short}</a>`).join("");
-  document.title = `${g.name}: wormhole class guide`;
+  document.title = `${g.name}: EVE Online wormhole class guide`;
+  // one search result per class: point search engines at this class's own address and describe it
+  const canon = document.createElement("link"); canon.rel = "canonical"; canon.href = `https://quietspace.fun/wormholes/class?c=${g.key}`; document.head.appendChild(canon);
+  document.querySelector('meta[name="description"]').content = `${g.name} wormholes in EVE Online: the systems, their effects and statics, Sleeper sites, and how busy the class has been.`;
   document.getElementById("title").textContent = g.name;
   const [note, srcs] = WH.CLASS_NOTES[g.key];
   document.getElementById("intro").innerHTML = WH.esc(note) + srcs.map(s => WH.src(s)).join("");

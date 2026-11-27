@@ -3,7 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Loud Space: live kill map</title>
+<title>Loud Space: live EVE Online kill map</title>
+<meta name="description" content="Every kill in New Eden on a live 2D or 3D map, as zKillboard reports it. Filter by region and ISK value to see where EVE Online’s fights are.">
+<link rel="canonical" href="https://quietspace.fun/killmap">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quiet Space">
+<meta property="og:title" content="Loud Space: live EVE Online kill map">
+<meta property="og:description" content="Every kill in New Eden on a live 2D or 3D map, as zKillboard reports it. Filter by region and ISK value to see where EVE Online’s fights are.">
+<meta property="og:url" content="https://quietspace.fun/killmap">
+<meta property="og:image" content="https://quietspace.fun/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%23d9480f'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='28' text-anchor='middle' fill='%23ffffff'%3ELS%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +38,7 @@ a{color:var(--accent)}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
 .mark{width:40px;height:40px;display:grid;place-items:center;background:#d9480f;color:#fff;font-weight:700;font-size:1.1rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.brand b{display:block;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
+.brand h1{margin:0;font-weight:700;line-height:inherit;display:block;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
 .brand small{color:var(--muted);font-size:.85rem}
 .tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--cond);font-size:.92rem;color:var(--muted)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
@@ -96,7 +107,7 @@ aside{border-left:1px solid var(--line);background:var(--panel);display:grid;gri
 <header>
   <a class="brand" href="index.html" title="Back to Loud Space">
     <span class="mark" aria-hidden="true">LS</span>
-    <span><b>Live kill map</b><small>Every kill in New Eden as zKillboard reports it</small></span>
+    <div><h1>Live kill map</h1><small>Every kill in New Eden as zKillboard reports it</small></div>
   </a>
   <div class="tools">
     <div class="seg" role="group" aria-label="Map view">

@@ -3,7 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Faction warfare: the frontlines</title>
+<title>EVE Online faction warfare map: frontlines and live activity</title>
+<meta name="description" content="Live faction warfare map for both EVE Online warzones: who holds each system, the frontlines, advantage, and where kills and gate traffic are right now.">
+<link rel="canonical" href="https://quietspace.fun/fw">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quiet Space">
+<meta property="og:title" content="EVE Online faction warfare map: frontlines and live activity">
+<meta property="og:description" content="Live faction warfare map for both EVE Online warzones: who holds each system, the frontlines, advantage, and where kills and gate traffic are right now.">
+<meta property="og:url" content="https://quietspace.fun/fw">
+<meta property="og:image" content="https://quietspace.fun/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 0h52l12 12v52H12L0 52z' fill='%23596b86'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23ffffff'%3EFW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +37,7 @@ a{color:#8fbaf0}
 header{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
 .mark{width:40px;height:40px;display:grid;place-items:center;background:#596b86;color:#fff;font-weight:700;font-size:1.05rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.brand b{display:block;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
+.brand h1{margin:0;font-weight:700;line-height:inherit;display:block;font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase}
 .brand small{color:var(--muted);font-size:.85rem}
 .tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--cond);font-size:.92rem;color:var(--muted)}
 .tabs{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
@@ -152,7 +163,7 @@ ol.rank li:hover{background:rgba(255,255,255,.03)}
 <header>
   <a class="brand" href="index.html" title="Back to Quiet Space">
     <span class="mark" aria-hidden="true">FW</span>
-    <span><b>Faction warfare</b><small>The frontlines, who holds what, and where the fighting is</small></span>
+    <div><h1>Faction warfare</h1><small>The frontlines, who holds what, and where the fighting is</small></div>
   </a>
   <div class="tools">
     <div class="tabs" role="tablist" aria-label="Warzone">
